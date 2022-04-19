@@ -4,6 +4,7 @@ ipkg.tmp*
 .project
 .pydevproject
 *.ipk
+*.deb
 *.pyo
 *.pyc
 *.so
