@@ -1,0 +1,12 @@
+ipkg.deps
+ipkg.build*
+ipkg.tmp*
+.project
+.pydevproject
+*.ipk
+*.pyo
+*.pyc
+*.so
+*.la
+*.mo
+*.swp
