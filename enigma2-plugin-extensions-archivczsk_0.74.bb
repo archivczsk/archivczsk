@@ -18,7 +18,7 @@ RDEPENDS_${PN} = "enigma2-plugin-extensions-subssupport (>= 1.5.4) \
     rtmpdump"
 
 SRCREV = "3c1af45c32959e43fad58d57f4119aeb4c11fd64"
-SRC_URI = "git://github.com/archivczsk/archivczsk.git;branch=test"
+SRC_URI = "git://github.com/archivczsk/archivczsk.git;branch=main"
 
 S = "${WORKDIR}/git/build"
 

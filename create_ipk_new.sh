@@ -5,8 +5,10 @@
 ##################################
 ############ SETTINGS ############
 ##################################
-ADDONS_COMMIT="a6336a067dec9ff441e1779496c27496213c9fa2"
-PVER="1.4.0"
+
+# if ADDONS_COMMIT is not set, then no addons will be packed to ipk/deb
+# ADDONS_COMMIT="a6336a067dec9ff441e1779496c27496213c9fa2"
+PVER="1.4.6"
 PLUGINPATH=/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK
 
 

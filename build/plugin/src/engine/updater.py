@@ -340,7 +340,7 @@ class Updater(object):
 		except:
 			log.logError("Check addon '%s' update failed.\n%s" % (addon.name, traceback.format_exc()))
 			raise
-		  
+
 	def update_addon(self, addon):
 		"""updates addon"""
 		
