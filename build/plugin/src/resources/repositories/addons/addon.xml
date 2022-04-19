@@ -17,12 +17,12 @@
     <description>
         This repository contains mostly video addons for czech users.
 
-        Please send feedback, patches or fire any issues on https://github.com/mx3L/archivczsk-doplnky
+        Please send feedback, patches or fire any issues on https://github.com/archivczsk/archivczsk-doplnky
     </description>
     <description lang="cs">
         Tento repozitář obsahuje video doplňky pro česky a slovensky mluvící uživatele.
 
-        Máte-li jakékoliv poznámky, náměty, doplňky k začlenění nebo chcete nahlásit chybu, navštivte https://github.com/mx3L/archivczsk-doplnky
+        Máte-li jakékoliv poznámky, náměty, doplňky k začlenění nebo chcete nahlásit chybu, navštivte https://github.com/archivczsk/archivczsk-doplnky
     </description>
     <platform>all</platform>
   </extension>

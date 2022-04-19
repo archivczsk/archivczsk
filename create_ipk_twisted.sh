@@ -43,7 +43,7 @@ Priority: optional
 Depends: enigma2-plugin-extensions-archivczsk (>=0.74)
 Recommends: python-html, python-threading
 Maintainer: ferko
-Homepage: https://github.com/mx3L/archivczsk/releases
+Homepage: https://github.com/archivczsk/archivczsk/releases
 Description: archivCZSK fix BlackHole image
 EOF
 

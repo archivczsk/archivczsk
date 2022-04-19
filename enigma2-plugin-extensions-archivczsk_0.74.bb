@@ -1,5 +1,5 @@
 SUMMARY = "Plugin for watching sk/cs archives of tv stations"
-HOMEPAGE = "https://github.com/mx3L/archivczsk"
+HOMEPAGE = "https://github.com/archivczsk/archivczsk"
 LICENSE = "GPLv2"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/GPL-2.0;md5=801f80980d171dd6425610833a22dbe6"
 PR = "r0"
@@ -18,7 +18,7 @@ RDEPENDS_${PN} = "enigma2-plugin-extensions-subssupport (>= 1.5.4) \
     rtmpdump"
 
 SRCREV = "3c1af45c32959e43fad58d57f4119aeb4c11fd64"
-SRC_URI = "git://github.com/mx3L/archivczsk.git;branch=test"
+SRC_URI = "git://github.com/archivczsk/archivczsk.git;branch=test"
 
 S = "${WORKDIR}/git/build"
 

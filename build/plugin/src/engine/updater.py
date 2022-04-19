@@ -18,7 +18,6 @@ from Components.config import config, ConfigSubsection, ConfigText, ConfigYesNo
 from Screens.MessageBox import MessageBox
 
 # [0] = user, [1] = branch
-# github_params=('mx3L', 'master')
 github_params=('archivczsk', 'main')
 
 def removePyOC(pyfile):

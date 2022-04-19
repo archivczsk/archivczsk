@@ -68,7 +68,7 @@ Section: extra
 Priority: optional
 Recommends: python-html | python3-html, python-threading | python3-threading, python-json | python3-json, python-zlib | python3-core, python-compression | python3-compression, python-codecs | python3-codecs, python-email | python3-email, python-requests | python3-requests, curl, rtmpdump
 Maintainer: archivczsk@seznam.cz
-Homepage: https://github.com/mx3L/archivczsk/releases
+Homepage: https://github.com/archivczsk/archivczsk/releases
 Description: prehravanie CZ/SK archivov ${VER}
 EOF
 

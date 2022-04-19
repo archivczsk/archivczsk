@@ -25,7 +25,7 @@ Pouzivatelom windows doporucujem stiahnut program[ __putty__](https://the.earth.
 * __SSH telnet__
 
       opkg install curl
-      opkg install http://github.com/mx3L/archivczsk/releases/download/v1.0/subssupport_1.5.5-20170116_all.ipk
+      opkg install http://github.com/archivczsk/archivczsk/releases/download/v1.0/subssupport_1.5.5-20170116_all.ipk
       opkg install http://github.com/.............ipk
       init 4
       init 3
@@ -34,7 +34,7 @@ Pouzivatelom windows doporucujem stiahnut program[ __putty__](https://the.earth.
       -----------------------Debian-----------------------
 
       dpkg -i curl
-      dpkg -i http://github.com/mx3L/archivczsk/releases/download/v1.0/subssupport_1.5.5-20170116_all.deb
+      dpkg -i http://github.com/archivczsk/archivczsk/releases/download/v1.0/subssupport_1.5.5-20170116_all.deb
       dpkg -i http://github.com/.............deb
       init 4
       init 3
@@ -72,7 +72,7 @@ Ak uz mate jednu z predoslych verzii naistalovanu obnovia sa kategorie aj data p
 - Pokial sa Vam nezobrazi archivCZSK v ponuke resp. pri vstupe do zoznamu modulov Vam vypise "cannot import name BrowserLikeRedirectAgent" tak treba spustit cez telnet tento prikaz a restartnut prijmac (fix zaberie cca +4MB v pamati FLASH ale kto chce moze vymazat zolzku '/twisted_origin_backup' a subory *.py v zlozke '/twisted' __az po restarte prijmaca!!!__). 
 
   ```
-  opkg install http://github.com/mx3L/archivczsk/releases/download/v1.0/twisted-16-2-0-fix.ipk
+  opkg install http://github.com/archivczsk/archivczsk/releases/download/v1.0/twisted-16-2-0-fix.ipk
   ```
 
 ## Reporting
@@ -217,7 +217,7 @@ a uprednostnene instalovanie rtmpdump z feedu
 ## Verzia 0.70 beta 4
 **Vseobecne**
 
-* aktualizovane doplnky -> https://github.com/mx3L/archivczsk-doplnky
+* aktualizovane doplnky -> https://github.com/archivczsk/archivczsk-doplnky
 * koukni.cz pridane do EPG vyhladavania
 * oprava GS po ukonceni pluginu
 * oprava GS na niektorych DM image pri spusteni videa
