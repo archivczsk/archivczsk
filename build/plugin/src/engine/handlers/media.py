@@ -16,6 +16,7 @@ from Plugins.Extensions.archivCZSK.engine.tools.util import toString
 from enigma import eTimer
 from Plugins.Extensions.archivCZSK.compat import eConnectCallback
 from Plugins.Extensions.archivCZSK.gui.common import showInfoMessage, showErrorMessage, showWarningMessage
+from Plugins.Extensions.archivCZSK.colors import ConvertColors, DeleteColors
 
 
 class MediaItemHandler(ItemHandler):
@@ -272,7 +273,7 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 								name = i.name.replace("[???]","[%s]"%(i.quality))
 							else:
 								name = "[%s] %s"%(i.quality, i.name)
-						choices.append((toString(name), i))
+						choices.append((DeleteColors(toString(name)), i))
 					self.session.openWithCallback(selected_source,
 							ChoiceBox, _("Please select source"),
 							list = choices,
@@ -331,7 +332,7 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 							name = i.name.replace("[???]","[%s]"%(i.quality))
 						else:
 							name = "[%s] %s"%(i.quality, i.name)
-					choices.append((toString(name), i))
+					choices.append((DeleteColors(toString(name)), i))
 				self.session.openWithCallback(selected_source,
 						ChoiceBox, _("Please select source"),
 						list = choices,
