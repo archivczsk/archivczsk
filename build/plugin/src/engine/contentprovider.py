@@ -525,7 +525,7 @@ class ArchivCZSKContentProvider(ContentProvider):
 		choicelist = [('categories', _("Category list"))]
 		choicelist.extend([(category_key,self.default_categories[category_key]['title']) for category_key in self.default_categories_order])
 		choicelist.extend([(category.id, category.name) for category in self._get_categories(user_only=True)])
-		config.plugins.archivCZSK.defaultCategory = ConfigSelection(default='categories', choices=choicelist)
+		config.plugins.archivCZSK.defaultCategory = ConfigSelection(default='all_addons', choices=choicelist)
 
 	def __save_categories(self):
 		self._categories_io.save()
