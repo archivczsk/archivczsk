@@ -312,7 +312,7 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 				gotParrent = self.getParent() is not None
 			except:
 				pass
-			if gotParrent and (defaultCategory=='all_addons' or defaultCategory=='tv_addons' or defaultCategory=='video_addons'):
+			if gotParrent and (defaultCategory=='all_addons'):
 				categoryAddons is not None and categoryAddons.insert(0, PExit())
 		categoryItems = provider.get_content()
 		BaseContentScreen.__init__(self, session, contentHandler, categoryItems)

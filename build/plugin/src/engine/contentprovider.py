@@ -495,31 +495,14 @@ class ArchivCZSKContentProvider(ContentProvider):
 		all_addons_category.name = _("All addons")
 		all_addons_category.params = {'category_addons':'all_addons'}
 		all_addons_category.image = PNG_PATH + '/category_all.png'
-		tv_addons_category = PCategory()
-		tv_addons_category.name = _("TV addons")
-		tv_addons_category.image = PNG_PATH+'/category_tv.png'
-		tv_addons_category.params = {'category_addons':'tv_addons'}
-		video_addons_category = PCategory()
-		video_addons_category.name = _("Video addons")
-		video_addons_category.image = PNG_PATH+'/category_video.png'
-		video_addons_category.params = {'category_addons':'video_addons'}
-		self.default_categories={
-								 'all_addons':{'item':all_addons_category
-											   ,'title':_("All addons"),
-											   'call':self._get_all_addons
-											   },
-								 'tv_addons':{
-											  'item':tv_addons_category,
-											  'title':_("TV addons"),
-											  'call':self._get_tv_addons
-											  },
-								  'video_addons':{
-												  'item':video_addons_category,
-												  'title':_("Video addons"),
-												  'call':self._get_video_addons
-												  }
-								  }
-		self.default_categories_order = ['all_addons','tv_addons','video_addons']
+		self.default_categories = {
+			'all_addons': {
+				'item':all_addons_category,
+				'title':_("All addons"),
+				'call':self._get_all_addons
+			},
+		}
+		self.default_categories_order = ['all_addons']
 
 	def __create_config(self):
 		choicelist = [('categories', _("Category list"))]
@@ -622,17 +605,6 @@ class ArchivCZSKContentProvider(ContentProvider):
 		addons = self._filter_addons(addons, params)
 		addons = self._sort_addons(addons)
 		return addons
-
-	def _get_video_addons(self, params):
-		addons = [paddon for paddon in self._get_all_addons(params) if not paddon.addon.setting_exist('tv_addon') or not paddon.addon.get_setting('tv_addon')]
-		addons = self._sort_addons(addons)
-		return addons
-
-	def _get_tv_addons(self, params):
-		addons = [paddon for paddon in self._get_all_addons(params) if paddon.addon.setting_exist('tv_addon') and paddon.addon.get_setting('tv_addon')]
-		addons = self._sort_addons(addons)
-		return addons
-
 
 class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, FavoritesMixin):
 
