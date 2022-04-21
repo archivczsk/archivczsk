@@ -1,5 +1,6 @@
 from Screens.MessageBox import MessageBox
 import shutil
+import traceback
 
 from .item import ItemHandler
 from .content import ContentHandler
@@ -42,27 +43,34 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 				#								  })
 
 				if command is not None:
-				   cmd = ("%s"%command).lower()
-				   params = args
-				   if cmd == "show_msg":
-					   #dialogStart = datetime.datetime.now()
-					   self.content_screen.stopLoading()
-					   msgType = 'info'
-					   if 'msgType' in args:
-						   msgType = ("%s"%args['msgType']).lower()
-					   msgTimeout = 15
-					   if 'msgTimeout' in args:
-						   msgTimeout = int(args['msgTimeout'])
-					   canClose = True
-					   if 'canClose' in args:
-						   canClose = args['canClose']
-					   if msgType == 'error':
-						   return showErrorMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
-					   if msgType == 'warning':
-						   return showWarningMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
-					   return showInfoMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
+					cmd = ("%s"%command).lower()
+					params = args
+					if cmd == "show_msg":
+						#dialogStart = datetime.datetime.now()
+						self.content_screen.stopLoading()
+						
+						if 'msgType' in args:
+							msgType = ("%s"%args['msgType']).lower()
+						else:
+							msgType = 'info'
+							
+						if 'msgTimeout' in args:
+							msgTimeout = int(args['msgTimeout'])
+						else:
+							msgTimeout = 15
+							
+						if 'canClose' in args:
+							canClose = args['canClose']
+						else:
+							canClose = True
+							
+						if msgType == 'error':
+							return showErrorMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
+						elif msgType == 'warning':
+							return showWarningMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
+						return showInfoMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
 			except:
-				log.logError("Execute HACK command failed (addon handler).\n%s"%traceback.format_exc())
+				log.logError("Execute HACK command failed (addon handler).\n%s" % traceback.format_exc())
 				command = None
 				args = {}
 
