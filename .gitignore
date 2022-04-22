@@ -1,6 +1,7 @@
 ipkg.deps
 ipkg.build*
 ipkg.tmp*
+tmp
 .project
 .pydevproject
 *.ipk
