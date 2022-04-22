@@ -16,6 +16,7 @@ from Plugins.Extensions.archivCZSK.gui import info
 from Plugins.Extensions.archivCZSK.gui import shortcuts
 from Plugins.Extensions.archivCZSK.gui import download
 from .contentprovider import VideoAddonContentProvider
+from Plugins.Extensions.archivCZSK.compat import DMM_IMAGE
 
 from ..py3compat import *
 
@@ -335,7 +336,12 @@ class AddonSettings(object):
 				self.category_entries[0]['subentries'].append(obj)
 
 				labelplayer = _("Used player")
-				obj = {'lvalues': 'Default|gstplayer|exteplayer3|DMM|DVB (OE>=2.5)', 'default': '0', 'label': labelplayer, 'visible': 'true', 'type': 'enum', 'id': 'auto_used_player'}
+				available_players="Default|gstplayer|exteplayer3"
+				
+				if DMM_IMAGE:
+					available_players += "|DMM|DVB (OE>=2.5)"
+
+				obj = {'lvalues': available_players, 'default': '0', 'label': labelplayer, 'visible': 'true', 'type': 'enum', 'id': 'auto_used_player'}
 				self.category_entries[0]['subentries'].append(obj)
 				#if 'auto_addon_order' in self.category_entries[0]['subentries']:
 				#	 log.logInfo("############auto_addon_order already exist")

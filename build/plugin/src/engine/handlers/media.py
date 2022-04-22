@@ -17,7 +17,8 @@ from enigma import eTimer
 from Plugins.Extensions.archivCZSK.compat import eConnectCallback
 from Plugins.Extensions.archivCZSK.gui.common import showInfoMessage, showErrorMessage, showWarningMessage
 from Plugins.Extensions.archivCZSK.colors import ConvertColors, DeleteColors
-
+from Plugins.Extensions.archivCZSK.engine.player.info import videoPlayerInfo
+from Plugins.Extensions.archivCZSK.compat import DMM_IMAGE
 
 class MediaItemHandler(ItemHandler):
 	""" Template class - handles Media Item interaction """
@@ -141,11 +142,20 @@ class MediaItemHandler(ItemHandler):
 			# enum: 'Predvolený|gstplayer|exteplayer3|DMM|DVB (OE>=2.5)'
 			player_mapping = {
 				'0' : 4097, # Default
-				'1' : 5001, # gstplayer
-				'2' : 5002, # exteplayer3
-				'3' : 8193, # DMM player
-				'4' : 1     # DVB service
 			}
+
+			# fill only available players - if not available player is choosen then default service 4097 will be used
+			if videoPlayerInfo.serviceappAvailable:
+				if videoPlayerInfo.gstplayerAvailable:
+					player_mapping['1'] = 5001, # gstplayer
+				if videoPlayerInfo.exteplayer3Available:
+					player_mapping['2'] = 5002, # exteplayer3
+			
+			if DMM_IMAGE:
+				# this is only available on DreamOS
+				player_mapping['3'] = 8193, # DMM player
+				player_mapping['4'] = 1     # DVB service
+				
 			return player_mapping.get( player, 4097 )
 		
 		if 'forced_player' in kwargs:
@@ -188,8 +198,12 @@ class MediaItemHandler(ItemHandler):
 			item.add_context_menu_item(_("Download"), action=self.download_item, params={'item':item, 'mode':'auto'})
 		if 'play' in provider.capabilities:
 			item.add_context_menu_item(_("Play"), action=self.play_item, params={'item':item, 'mode':'play'})
-			item.add_context_menu_item(_("Play using gstplayer"), action=self.play_item, params={'item':item, 'mode':'play', 'forced_player':5001})
-			item.add_context_menu_item(_("Play using exteplayer3"), action=self.play_item, params={'item':item, 'mode':'play', 'forced_player':5002})
+			if videoPlayerInfo.serviceappAvailable:
+				if videoPlayerInfo.gstplayerAvailable:
+					item.add_context_menu_item(_("Play using gstplayer"), action=self.play_item, params={'item':item, 'mode':'play', 'forced_player':5001})
+				
+				if videoPlayerInfo.exteplayer3Available:
+					item.add_context_menu_item(_("Play using exteplayer3"), action=self.play_item, params={'item':item, 'mode':'play', 'forced_player':5002})
 		if 'play_and_download' in provider.capabilities:
 			item.add_context_menu_item(_("Play and Download"), action=self.play_item, params={'item':item, 'mode':'play_and_download'})
 

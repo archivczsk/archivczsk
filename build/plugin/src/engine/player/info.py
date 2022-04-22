@@ -11,7 +11,9 @@ GSTREAMER10_PATH = '/usr/lib/gstreamer-1.0'
 LIB_PATH = '/usr/lib'
 EPLAYER2_PATH = '/lib/libeplayer2.so'
 EPLAYER3_PATH = '/lib/libeplayer3.so'
-
+GSTPLAYER_PATH = '/usr/bin/gstplayer'
+EXTEPLAYER3_PATH = '/usr/bin/exteplayer3'
+SERVICEAPP_PATH = '/usr/lib/enigma2/python/Plugins/SystemPlugins/ServiceApp/__init__.py'
 
 class VideoPlayerInfo(object):
 	def __init__(self):
@@ -22,11 +24,13 @@ class VideoPlayerInfo(object):
 			log.logDebug('Found gstreamer 1.0')
 			self.type = 'gstreamer'
 			self.version = '1.0'
+			self.gstPath = GSTREAMER10_PATH
 		elif os.path.isdir(GSTREAMER_PATH):
 			print('found gstreamer')
 			log.logDebug('Found gstreamer 0.10')
 			self.type = 'gstreamer'
 			self.version = '0.10'
+			self.gstPath = GSTREAMER_PATH
 		elif os.path.isfile(EPLAYER3_PATH):
 			log.logDebug('Found eplayer3')
 			print('found eplayer3')
@@ -36,6 +40,23 @@ class VideoPlayerInfo(object):
 			print('found eplayer2')
 			self.type = 'eplayer2'
 			
+		# check, if there is ServiceApp plugin installed
+		if os.path.isfile( SERVICEAPP_PATH ) or os.path.isfile( SERVICEAPP_PATH + 'o' ) or os.path.isfile( SERVICEAPP_PATH + 'c'):
+			self.serviceappAvailable = True
+		else:
+			self.serviceappAvailable = False
+			
+		# check if there is gstplayer installed
+		if os.path.isfile( GSTPLAYER_PATH ):
+			self.gstplayerAvailable = True
+		else:
+			self.gstplayerAvailable = False
+
+		# check if there is ExtEplayer3 installed
+		if os.path.isfile( EXTEPLAYER3_PATH ):
+			self.exteplayer3Available = True
+		else:
+			self.exteplayer3Available = False
 
 	def getName(self):
 		if self.type == 'gstreamer':
@@ -47,8 +68,22 @@ class VideoPlayerInfo(object):
 		if self.type == 'eplayer2':
 			return 'Eplayer2'
 	
+	def getAvailablePlayers(self, asString=False):
+		ret = [ self.getName() ]
+		
+		if self.serviceappAvailable:
+			if self.gstplayerAvailable:
+				ret.append('GstPlayer')
+				
+			if self.exteplayer3Available:
+				ret.append('ExtEplayer3')
+		
+		if asString:
+			return ', '.join(ret)
+		return ret
+			
 ######################### Supported protocols ##################################
- 
+
 	def isRTMPSupported(self):
 		"""
 		@return: True if its 100% supported
@@ -56,30 +91,27 @@ class VideoPlayerInfo(object):
 		@return: False not supported
 		"""
 		
-
 		if self.type == 'gstreamer':
-			rtmplib = os.path.join(GSTREAMER_PATH, 'libgstrtmp.so')
-			rtmplib2 = os.path.join(GSTREAMER10_PATH, 'libgstrtmp.so')
+			rtmplib = os.path.join(self.gstPath, 'libgstrtmp.so')
 			
 			librtmp = os.path.join(LIB_PATH, 'librtmp.so.0')
 			librtmp2 = os.path.join(LIB_PATH, 'librtmp.so.1')
 			
 			# flv is file container used in rtmp
-			flvlib = os.path.join(GSTREAMER_PATH, 'libgstflv.so')
-			flvlib2 = os.path.join(GSTREAMER10_PATH, 'libgstflv.so')
-			if (os.path.isfile(rtmplib) or os.path.isfile(rtmplib2)) and (os.path.isfile(librtmp) or os.path.isfile(librtmp2)) and (os.path.isfile(flvlib) or os.path.isfile(flvlib2)):
+			flvlib = os.path.join(self.gstPath, 'libgstflv.so')
+			if os.path.isfile(rtmplib) and (os.path.isfile(librtmp) or os.path.isfile(librtmp2)) and (os.path.isfile(flvlib)):
 				log.logDebug("RTMP supported for 100%...")
 				return True
 
 			msg = ""
-			if not (os.path.isfile(rtmplib) or os.path.isfile(rtmplib2)):
+			if not os.path.isfile(rtmplib):
 				msg+= "\n'libgstrtmp.so' is missing..."
 			if not (os.path.isfile(librtmp) or os.path.isfile(librtmp2)):
 				msg+= "\n'%s' or '%s' is missing..."%(librtmp, librtmp2)
-			if not (os.path.isfile(flvlib) or os.path.isfile(flvlib2)):
+			if not os.path.isfile(flvlib):
 				msg+= "\n'libgstflv.so' is missing..."
 
-			log.logDebug("RTMP not supported (some file missing '/usr/lib/gstreamer-*')...%s"%msg)
+			log.logDebug("RTMP not supported (some file missing '%s')...%s" % (self.gstPath, msg))
 			return False
 			
 		elif self.type == 'eplayer2':
@@ -95,6 +127,7 @@ class VideoPlayerInfo(object):
 				# some older e2 images not support rtmp
 				# even if there is this library(missing support in servicemp3)
 				return None
+			return False
 			
 	def isMMSSupported(self):
 		"""
@@ -103,12 +136,11 @@ class VideoPlayerInfo(object):
 		@return: False not supported
 		"""
 		if self.type == 'gstreamer':
-			mmslib = os.path.join(GSTREAMER_PATH, 'libgstmms.so')
-			mmslib2 = os.path.join(GSTREAMER10_PATH, 'libgstmms.so')
-			if os.path.isfile(mmslib) or os.path.isfile(mmslib2):
+			mmslib = os.path.join(self.gstPath, 'libgstmms.so')
+			if os.path.isfile(mmslib):
 				log.logDebug("MMS supported")
 				return True
-			log.logDebug("MMS not supported, missing file '/usr/lib/gstreamer-*/libgstmms.so'")
+			log.logDebug("MMS not supported, missing file '%s'" % mmslib)
 			return False
 			
 		elif self.type == 'eplayer3':
@@ -126,26 +158,22 @@ class VideoPlayerInfo(object):
 		@return: False not supported
 		"""
 		if self.type == 'gstreamer':
-			rtsplib = os.path.join(GSTREAMER_PATH, 'libgstrtsp.so')
-			rtplib = os.path.join(GSTREAMER_PATH, 'libgstrtp.so')
-			rtpmanager = os.path.join(GSTREAMER_PATH, 'libgstrtpmanager.so')
-			rtsplib2 = os.path.join(GSTREAMER10_PATH, 'libgstrtsp.so')
-			rtplib2 = os.path.join(GSTREAMER10_PATH, 'libgstrtp.so')
-			rtpmanager2 = os.path.join(GSTREAMER10_PATH, 'libgstrtpmanager.so')
-			if ((os.path.isfile(rtsplib) and os.path.isfile(rtplib) and os.path.isfile(rtpmanager)) or
-				(os.path.isfile(rtsplib2) and os.path.isfile(rtplib2) and os.path.isfile(rtpmanager2))):
+			rtsplib = os.path.join(self.gstPath, 'libgstrtsp.so')
+			rtplib = os.path.join(self.gstPath, 'libgstrtp.so')
+			rtpmanager = os.path.join(self.gstPath, 'libgstrtpmanager.so')
+			if os.path.isfile(rtsplib) and os.path.isfile(rtplib) and os.path.isfile(rtpmanager):
 				log.logDebug("RTSP supported for 100%...")
 				return True
 
 			msg = ""
-			if not (os.path.isfile(rtsplib) or os.path.isfile(rtsplib2)):
+			if not os.path.isfile(rtsplib):
 				msg+= "\n'libgstrtsp.so' is missing..."
-			if not (os.path.isfile(rtplib) or os.path.isfile(rtplib2)):
+			if not os.path.isfile(rtplib):
 				msg+= "\n'libgstrtp.so' is missing..."
-			if not (os.path.isfile(rtpmanager2) or os.path.isfile(rtpmanager)):
+			if not os.path.isfile(rtpmanager):
 				msg+= "\n'libgstrtpmanager.so' is missing..."
 
-			log.logDebug("RTSP may be supported (some file missing '/usr/lib/gstreamer-*')...%s"%msg)
+			log.logDebug("RTSP may be supported (some file missing '%s')...%s" % (self.gstPath, msg))
 			return False
 			
 		elif self.type == 'eplayer3':
@@ -163,12 +191,11 @@ class VideoPlayerInfo(object):
 		@return: False not supported
 		"""
 		if self.type == 'gstreamer':
-			httplib = os.path.join(GSTREAMER_PATH, 'libgstsouphttpsrc.so')
-			httplib2 = os.path.join(GSTREAMER10_PATH, 'libgstsouphttpsrc.so')
-			if os.path.isfile(httplib) or os.path.isfile(httplib2):
+			httplib = os.path.join(self.gstPath, 'libgstsouphttpsrc.so' if self.version == '0.10' else 'libgstsoup.so')
+			if os.path.isfile(httplib):
 				log.logDebug("HTTP supported")
 				return True
-			log.logDebug("HTTP not supported, missing file '/usr/lib/gstreamer-*/libgstsouphttpsrc.so'")
+			log.logDebug("HTTP not supported, missing file '%s'" % httplib)
 			return False
 			
 		elif self.type == 'eplayer3':
@@ -186,12 +213,11 @@ class VideoPlayerInfo(object):
 		@return: False not supported
 		"""
 		if self.type == 'gstreamer':
-			fragmentedlib = os.path.join(GSTREAMER_PATH, 'libgstfragmented.so')
-			fragmentedlib2 = os.path.join(GSTREAMER10_PATH, 'libgstfragmented.so')
-			if os.path.isfile(fragmentedlib) or os.path.isfile(fragmentedlib2):
+			hlslib = os.path.join(self.gstPath, 'libgstfragmented.so' if self.version == '0.10' else 'libgsthls.so' )
+			if os.path.isfile(hlslib):
 				log.logDebug("HLS supported")
 				return True
-			log.logDebug("HLS not supported, missing file '/usr/lib/gstreamer-*/libgstfragmented.so'")
+			log.logDebug("HLS not supported, missing file '%s'" % hlslib)
 			return False
 			
 		elif self.type == 'eplayer3':
@@ -213,12 +239,11 @@ class VideoPlayerInfo(object):
 		@return: False not supported
 		"""
 		if self.type == 'gstreamer':
-			asflib = os.path.join(GSTREAMER_PATH, 'libgstasf.so')
-			asflib2 = os.path.join(GSTREAMER10_PATH, 'libgstasf.so')
-			if os.path.isfile(asflib) or os.path.isfile(asflib2):
+			asflib = os.path.join(self.gstPath, 'libgstasf.so')
+			if os.path.isfile(asflib):
 				log.logDebug("ASF supported")
 				return True
-			log.logDebug("ASF not supported, missing file '/usr/lib/gstreamer-*/libgstasf.so'")
+			log.logDebug("ASF not supported, missing file '%s'" % asflib )
 			return False
 			
 		elif self.type == 'eplayer3':
@@ -239,12 +264,11 @@ class VideoPlayerInfo(object):
 		@return: False not supported
 		"""
 		if self.type == 'gstreamer':
-			flvlib = os.path.join(GSTREAMER_PATH, 'libgstflv.so')
-			flvlib2 = os.path.join(GSTREAMER10_PATH, 'libgstflv.so')
-			if os.path.isfile(flvlib) or os.path.isfile(flvlib2):
+			flvlib = os.path.join(self.gstPath, 'libgstflv.so')
+			if os.path.isfile(flvlib):
 				log.logDebug("FLV supported")
 				return True
-			log.logDebug("FLV not supported, missing file '/usr/lib/gstreamer-*/libgstflv.so'")
+			log.logDebug("FLV not supported, missing file '%s'" % flvlib)
 			return False
 			
 		elif self.type == 'eplayer3':
@@ -262,12 +286,11 @@ class VideoPlayerInfo(object):
 		@return: False not supported
 		"""
 		if self.type == 'gstreamer':
-			mkvlib = os.path.join(GSTREAMER_PATH, 'libgstmatroska.so')
-			mkvlib2 = os.path.join(GSTREAMER10_PATH, 'libgstmatroska.so')
-			if os.path.isfile(mkvlib) or os.path.isfile(mkvlib2):
+			mkvlib = os.path.join(self.gstPath, 'libgstmatroska.so')
+			if os.path.isfile(mkvlib):
 				log.logDebug("MKV supported")
 				return True
-			log.logDebug("MKV not supported, missing file '/usr/lib/gstreamer-*/libgstmatroska.so'")
+			log.logDebug("MKV not supported, missing file '%s'" % mkvlib)
 			return False
 			
 		elif self.type == 'eplayer3':
@@ -285,12 +308,11 @@ class VideoPlayerInfo(object):
 		@return: False not supported
 		"""
 		if self.type == 'gstreamer':
-			avilib = os.path.join(GSTREAMER_PATH, 'libgstavi.so')
-			avilib2 = os.path.join(GSTREAMER10_PATH, 'libgstavi.so')
-			if os.path.isfile(avilib) or os.path.isfile(avilib2):
+			avilib = os.path.join(self.gstPath, 'libgstavi.so')
+			if os.path.isfile(avilib):
 				log.logDebug("AVI supported")
 				return True
-			log.logDebug("AVI not supported, missing file '/usr/lib/gstreamer-*/libgstavi.so'")
+			log.logDebug("AVI not supported, missing file '%s'" % avilib)
 			return False
 			
 		elif self.type == 'eplayer3':
@@ -308,12 +330,11 @@ class VideoPlayerInfo(object):
 		@return: False not supported
 		"""
 		if self.type == 'gstreamer':
-			isomp4lib = os.path.join(GSTREAMER_PATH, 'libgstisomp4.so')
-			isomp4lib2 = os.path.join(GSTREAMER10_PATH, 'libgstisomp4.so')
-			if os.path.isfile(isomp4lib) or os.path.isfile(isomp4lib2):
+			isomp4lib = os.path.join(self.gstPath, 'libgstisomp4.so')
+			if os.path.isfile(isomp4lib):
 				log.logDebug("MP4 supported")
 				return True
-			log.logDebug("MP4 not supported, missing file '/usr/lib/gstreamer-*/libgstisomp4.so'")
+			log.logDebug("MP4 not supported, missing file '%s'" % isomp4lib)
 			return False
 			
 		elif self.type == 'eplayer3':
