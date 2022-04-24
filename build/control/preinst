@@ -3,6 +3,6 @@
 # cleanup compiled python files
 find /usr/lib/enigma2/python/Plugins/Extensions/archivCZSK -name '*.pyc' -type f -delete
 find /usr/lib/enigma2/python/Plugins/Extensions/archivCZSK -name '*.pyo' -type f -delete
-find /usr/lib/enigma2/python/Plugins/Extensions/archivCZSK -name __pycache__ -type d -exec rm -rf {} \;
+find /usr/lib/enigma2/python/Plugins/Extensions/archivCZSK -name __pycache__ -type d | xargs rm -rf
 
 exit 0

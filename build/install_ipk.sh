@@ -10,7 +10,7 @@ fi
 E2_HOST=$1
 
 echo "creating ipk..."
-${D}/build_ipk.sh > /dev/null
+${D}/build_ipk.sh test
 IPK_PATH=$(find ${D} -maxdepth 1 -mmin 1 -name "*.ipk")
 IPK_NAME=$(basename $IPK_PATH)
 
