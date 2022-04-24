@@ -9,7 +9,8 @@ import os
 import shutil
 import traceback
 import threading
-from .tools import unzip, util, parser
+from .tools import util, parser
+from .tools.unzip import unzip_to_dir
 
 from Plugins.Extensions.archivCZSK.engine.exceptions.updater import UpdateXMLVersionError
 from Plugins.Extensions.archivCZSK import _, log, toString, settings
@@ -212,11 +213,8 @@ class ArchivUpdater(object):
 				self.removeArchivTree()
 				# maybe zipper replace the file 
 				log.logDebug("ArchivUpdater remove archivCZSK files complete...")
-				# unzip
-				unzipper = unzip.unzip()
-				#.../Plugins/Extensions/
 				log.logDebug("ArchivUpdater extracting to %s" % settings.ENIGMA_PLUGIN_PATH)
-				unzipper.extract(self.updateZipFilePath, settings.ENIGMA_PLUGIN_PATH)
+				unzip_to_dir(self.updateZipFilePath, settings.ENIGMA_PLUGIN_PATH)
 				log.logDebug("ArchivUpdater unzip archivCZSK complete...")
 				self.removeTempFiles()
 
@@ -354,8 +352,7 @@ class Updater(object):
 			if os.path.isdir(local_base):
 				shutil.rmtree(local_base)
 			
-			unzipper = unzip.unzip()
-			unzipper.extract(zip_file, self.local_path)
+			unzip_to_dir(zip_file, self.local_path)
 			
 			log.debug("%s was successfully updated to version %s", addon.name, self.remote_addons_dict[addon.id]['version'])
 			return True
