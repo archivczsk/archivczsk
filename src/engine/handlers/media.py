@@ -147,13 +147,13 @@ class MediaItemHandler(ItemHandler):
 			# fill only available players - if not available player is choosen then default service 4097 will be used
 			if videoPlayerInfo.serviceappAvailable:
 				if videoPlayerInfo.gstplayerAvailable:
-					player_mapping['1'] = 5001, # gstplayer
+					player_mapping['1'] = 5001  # gstplayer
 				if videoPlayerInfo.exteplayer3Available:
-					player_mapping['2'] = 5002, # exteplayer3
+					player_mapping['2'] = 5002  # exteplayer3
 			
 			if DMM_IMAGE:
 				# this is only available on DreamOS
-				player_mapping['3'] = 8193, # DMM player
+				player_mapping['3'] = 8193  # DMM player
 				player_mapping['4'] = 1     # DVB service
 				
 			return player_mapping.get( player, 4097 )
