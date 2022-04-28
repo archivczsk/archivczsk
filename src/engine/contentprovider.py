@@ -596,7 +596,15 @@ class ArchivCZSKContentProvider(ContentProvider):
 	def _get_category_addons(self, category_id, params = None):
 		if category_id in self.default_categories:
 			return self.default_categories[category_id]['call'](params)
-		addons = [PCategoryVideoAddon(self._archivczsk.get_addon(addon_id)) for addon_id in self._categories_io.get_category(category_id)]
+		
+		addons = []
+		for addon_id in self._categories_io.get_category(category_id):
+			try:
+				addons.append( PCategoryVideoAddon(self._archivczsk.get_addon(addon_id)) )
+			except:
+				# there is unknown addon in categories.xml - ignore it
+				pass
+			
 		addons = self._sort_addons(addons)
 		return addons
 
