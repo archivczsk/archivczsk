@@ -1,6 +1,12 @@
+archivCZSK 1.4.7, 28.04.2022
+    - zrušenie rozlišovania video a TV doplnkov
+    - automatická detekcia ServiceApp a dostupných prehrávačov
+    - zmena formátu aktualizácie zo .zip na ipk/deb
+    - oprava zachovávania atribútov súborov pri aktualizácii doplnkov 
+
 archivCZSK 1.4.6, 19.04.2022
-	- oprava mazania formatovacich znakov na dalsich miestach
-	- presun aktualizacie archivu a doplnkov do noveho repozitara
+    - oprava mazania formatovacich znakov na dalsich miestach
+    - presun aktualizacie archivu a doplnkov do noveho repozitara
 	
 archivCZSK 1.4.5, 10.04.2022
     - moznost volby titulkov z menu pre vyber audio stopy
