@@ -202,7 +202,7 @@ cp -p ${DP}/Python-2.7/Lib/stat.py ${P}/tmp/archivczsk/python2.7/stat.py
 
 # exec dpkg-deb to create fresh new deb package and create ipk from it
 dpkg-deb --root-owner-group -Zgzip -b ${P} ${PKG}.deb
-cp ${PKG}.deb ${PKG}.ipk
+mv ${PKG}.deb ${PKG}.ipk
 
 # some cleanup
 rm -rf ${P}
