@@ -54,7 +54,7 @@ def getPlayPositionPts(session):
 def getPlayPositionInSeconds(session):
 	position = getPlayPositionPts(session)
 	if position is not None:
-		position = position / 90000
+		position = position // 90000
 	return position
 
 def getDurationPts(session):
@@ -67,7 +67,7 @@ def getDurationPts(session):
 def getDurationInSeconds(session):
 	duration = getDurationPts(session)
 	if duration is not None:
-		duration = duration / 90000
+		duration = duration // 90000
 	return duration
 
 class ArchivCZSKPlaylist(Screen):
@@ -512,7 +512,7 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		if (self.__resume_time_sec is not None or
 				self.__subtitles_url is not None):
 			if self.__resume_time_sec is not None:
-				Notifications.AddNotificationWithID(self.RESUME_POPUP_ID,
+				AddNotificationWithID(self.RESUME_POPUP_ID,
 						MessageBox, _("Resuming playback"), timeout=0,
 						type=MessageBox.TYPE_INFO, enable_input=False)
 			self.__timer.start(500, True)
