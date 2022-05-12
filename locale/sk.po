@@ -1145,7 +1145,7 @@ msgstr "Zobraziť nefunkčné doplnky"
 
 #: src/settings.py:176
 msgid "Show not supported addons"
-msgstr "Zobraziť nefunkčné doplnky"
+msgstr "Zobraziť nepodporované doplnky"
 
 #: src/settings.py:177
 msgid "Show video source selection"

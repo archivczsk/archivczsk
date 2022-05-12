@@ -955,7 +955,7 @@ msgstr "Cesta"
 
 #: src/gui/menu.py:181
 msgid "Misc"
-msgstr "Rùzné"
+msgstr "Různé"
 
 #: src/gui/menu.py:189
 msgid "Configuration"
@@ -1047,7 +1047,7 @@ msgstr "CSFDLite"
 
 #: src/settings.py:112
 msgid "info"
-msgstr "Info o filmu"
+msgstr "info"
 
 #: src/settings.py:112
 msgid "debug"
@@ -1147,7 +1147,7 @@ msgstr "Zobrazit nefunkční doplňky"
 
 #: src/settings.py:176
 msgid "Show not supported addons"
-msgstr "Zobrazit nefunkční doplňky"
+msgstr "Zobrazit nepodporované doplňky"
 
 #: src/settings.py:177
 msgid "Show video source selection"

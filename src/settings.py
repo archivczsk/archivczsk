@@ -91,7 +91,7 @@ choicelist = []
 #choicelist.append(("%d" % 0, "%d" % 0))
 for i in range(0, 310, 10):
 	choicelist.append(("%d" % i, "%d" % i))
-config.plugins.archivCZSK.posterImageMax = ConfigSelection(default="10", choices=choicelist)
+config.plugins.archivCZSK.posterImageMax = ConfigSelection(default="20", choices=choicelist)
 
 choicelistCsfd = [('1', _("Internal")), ('2', _("CSFD")), ('3', _("CSFDLite"))]
 config.plugins.archivCZSK.csfdMode = ConfigSelection(default='1', choices=choicelistCsfd)

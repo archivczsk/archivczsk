@@ -45,7 +45,7 @@ class ArchivUpdater(object):
 			self.pkgInstallCmd = 'dpkg --install --force-all {update_file} && apt-get -y update && apt-get -f -y install'
 			self.updateMode = 'dpkg'
 		else: #if os.path.isfile( '/usr/bin/opkg' ):
-			self.pkgInstallCmd = 'opkg install --force-overwrite --force-depends --force-downgrade --force-reinstall {update_file}'
+			self.pkgInstallCmd = 'opkg update; opkg install --force-overwrite --force-depends --force-downgrade --force-reinstall {update_file}'
 			self.updateMode = 'opkg'
 	
 	def checkUpdate(self):
