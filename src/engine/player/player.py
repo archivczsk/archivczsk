@@ -109,6 +109,7 @@ class Player(object):
 		self.curr_idx = 0
 		self._play_item = None
 		self.callback = callback
+		self.lastPlayPositionSeconds = None
 
 	def play_item(self, item = None, idx = None):
 		log.info("play_item(%s, %s)"%(item,toString(idx)))
@@ -198,6 +199,7 @@ class Player(object):
 				if exit_player:
 					playpos = getPlayPositionInSeconds(self.session)
 					duration = getDurationInSeconds(self.session)
+					self.lastPlayPositionSeconds = playpos
 					self.video_player.close()
 			elif callback[0] == "playlist":
 				if callback[1] == "show":

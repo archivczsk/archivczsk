@@ -41,7 +41,7 @@ class MediaItemHandler(ItemHandler):
 	#	- play
 	#	- watching /every 10minutes/
 	#	- end
-	def cmdStats(self, item, action, finishCB=None, sendTraktWatchedCmd=False):
+	def cmdStats(self, item, action, finishCB=None, sendTraktWatchedCmd=False, lastPlayPos=None):
 		def open_item_finish(result):
 			log.logDebug("Stats (%s) call finished.\n%s"%(action,result))
 			if paused and not sendTraktWatchedCmd:
@@ -56,6 +56,9 @@ class MediaItemHandler(ItemHandler):
 				self.content_provider.resume()
 			
 			ppp = { 'cp': 'czsklib', 'stats':action, 'item': item.dataItem }
+			if lastPlayPos != None:
+				ppp['lastPlayPos'] = lastPlayPos
+				
 			# content provider must be in running state (not paused)
 			self.content_provider.get_content(self.session, params=ppp, successCB=open_item_finish, errorCB=open_item_finish)
 		except:
@@ -136,7 +139,7 @@ class MediaItemHandler(ItemHandler):
 
 			# na DEBUG
 			#sendTrakt = True
-			self.cmdStats(item, 'end', finishCB=endPlayFinish, sendTraktWatchedCmd=sendTrakt)
+			self.cmdStats(item, 'end', finishCB=endPlayFinish, sendTraktWatchedCmd=sendTrakt, lastPlayPos=self.content_provider.player.lastPlayPositionSeconds)
 
 		def player2stype( player ):
 			# enum: 'Predvolený|gstplayer|exteplayer3|DMM|DVB (OE>=2.5)'
