@@ -2,6 +2,7 @@
 import traceback
 import twisted.internet.defer as defer
 
+from Components.config import config
 from Screens.MessageBox import MessageBox
 from Screens.VirtualKeyBoard import VirtualKeyBoard
 from Screens.ChoiceBox import ChoiceBox
@@ -44,6 +45,8 @@ def decode_string(string):
 
 @callFromThread
 def getVideoFormats(url):
+	if config.plugins.archivCZSK.videoPlayer.ydl.value == 'disable':
+		return []
 	def initCallback(initialized):
 		if (initialized):
 			return ydl.getVideoLinks(url)

@@ -61,6 +61,13 @@ config.plugins.archivCZSK.videoPlayer.autoPlay = ConfigYesNo(default=True)
 config.plugins.archivCZSK.videoPlayer.confirmExit = ConfigYesNo(default=False)
 config.plugins.archivCZSK.videoPlayer.subtitlesInAudioSelection = ConfigYesNo(default=False)
 
+ydl_choicelist = [
+	('preload', _("Preload")),
+	('enable', _("Enable")),
+	('disable', _("Disable")),
+]
+config.plugins.archivCZSK.videoPlayer.ydl = ConfigSelection(default="preload", choices=ydl_choicelist)
+
 choicelist = []
 for i in range(10, 240, 5):
 	choicelist.append(("%d" % i, "%d s" % i))
@@ -135,6 +142,8 @@ def get_player_settings():
 	list.append(getConfigListEntry(_("RTMP Buffer"), config.plugins.archivCZSK.videoPlayer.rtmpBuffer))
 	list.append(getConfigListEntry(_("Confirm exit when closing player"), config.plugins.archivCZSK.videoPlayer.confirmExit))
 	list.append(getConfigListEntry(_("Allow choosing subtitles in audio selection menu"), config.plugins.archivCZSK.videoPlayer.subtitlesInAudioSelection))
+	list.append(getConfigListEntry(_("Support for youtube videos"), config.plugins.archivCZSK.videoPlayer.ydl))
+
 	return list
 
 def get_main_settings():
