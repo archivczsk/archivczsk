@@ -102,7 +102,6 @@ class Repository():
 					self.add_addon(tools)
 		log.debug("%s successfully loaded" , self)
 		
-	 
 	def __repr__(self):
 		return "%s" % self.name
 	
@@ -121,6 +120,6 @@ class Repository():
 		if isinstance(addon, ToolsAddon):
 			return True
 		return False
-		 
+
 	def check_updates(self):
 		return self._updater.check_addons()

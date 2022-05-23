@@ -122,7 +122,6 @@ class XBMCAddonXMLParser(XMLParser):
 						type = 'video'
 						script = info.attrib.get('library')
 					
- 
 			if info.attrib.get('point') == 'xbmc.addon.metadata':
 				if info.findtext('broken'):
 					broken = info.findtext('broken')
@@ -144,8 +143,7 @@ class XBMCAddonXMLParser(XMLParser):
 				"requires":requires,
 				"library":library,
 				"script":script} 
- 
- 
+
 class XBMCMultiAddonXMLParser(XBMCAddonXMLParser):
 	
 	def parse_addons(self):

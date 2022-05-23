@@ -1,5 +1,4 @@
 import os
-import stat
 import shutil
 import threading
 import traceback
@@ -11,14 +10,14 @@ from Components.Console import Console
 from Screens.Console import Console as ConsoleScreen
 from Screens.MessageBox import MessageBox
 from skin import loadSkin
-
+from enigma import eTimer
 from Plugins.Extensions.archivCZSK import _, log, toString, settings, UpdateInfo, create_rotating_log
 from Plugins.Extensions.archivCZSK.engine.addon import VideoAddon, XBMCAddon
 from Plugins.Extensions.archivCZSK.engine.exceptions.updater import UpdateXMLVersionError
 from Plugins.Extensions.archivCZSK.engine.tools.task import Task
 from Plugins.Extensions.archivCZSK.gui.common import showInfoMessage
 from Plugins.Extensions.archivCZSK.gui.content import ArchivCZSKContentScreen
-from Plugins.Extensions.archivCZSK.compat import DMM_IMAGE
+from Plugins.Extensions.archivCZSK.compat import DMM_IMAGE, eConnectCallback
 
 from Plugins.Extensions.archivCZSK.engine.updater import ArchivUpdater
 
@@ -38,20 +37,20 @@ class ArchivCZSK():
 	def load_repositories():
 		start = time.time()
 		from .engine.repository import Repository
-		repo_xml = os.path.join(settings.REPOSITORY_PATH, 'addon.xml')
-		try:
-			repository = Repository(repo_xml)
-		except Exception:
-			traceback.print_exc()
-		ArchivCZSK.add_repository(repository)
+		
+		# list directories in settings.REPOSITORY_PATH and search for directory containing addon.xml file = repository
+		for repo in [f for f in os.listdir(settings.REPOSITORY_PATH) if os.path.isdir(os.path.join(settings.REPOSITORY_PATH, f))]:
+			repo_xml = os.path.join(settings.REPOSITORY_PATH, repo, 'addon.xml')
+			if os.path.isfile( repo_xml ):
+				try:
+					repository = Repository(repo_xml)
+				except Exception:
+					traceback.print_exc()
+				ArchivCZSK.add_repository(repository)
+			
 		ArchivCZSK.__loaded = True
 		diff = time.time() - start
 		log.info("load repositories in {0}".format(diff))
-
-		for repo in ['xbmc_doplnky', 'custom', 'dmd_czech']:
-			repoPath =	os.path.join(settings.PLUGIN_PATH, 'resources', 'repositories', repo)
-			if os.path.isdir(repoPath):
-				shutil.rmtree(repoPath, True)
 
 	@staticmethod
 	def start_ydl():
@@ -138,7 +137,7 @@ class ArchivCZSK():
 			if config.plugins.archivCZSK.archivAutoUpdate.value and self.canCheckUpdate(True):
 				self.checkArchivUpdate()
 			elif config.plugins.archivCZSK.autoUpdate.value and self.canCheckUpdate(False):
-				self.download_commit()
+				self.runAddonsUpdateCheck()
 			else:
 				self.open_archive_screen()
 
@@ -178,34 +177,30 @@ class ArchivCZSK():
 			upd.checkUpdate()
 		except:
 			if config.plugins.archivCZSK.autoUpdate.value and self.canCheckUpdate(False):
-				self.download_commit()
+				self.runAddonsUpdateCheck()
 			else:
 				self.open_archive_screen()
 
-	def download_commit(self):
+	def runAddonsUpdateCheck(self):
 		try:
 			log.logInfo("Checking addons update...")
-			path = os.path.join(os.path.dirname(__file__), 'commit')
-			if os.path.exists(path):
-				os.remove(path)
 			self.__updateDialog = self.session.openWithCallback(self.check_updates_finished, MessageBox, 
-											   _("Checking for updates"), 
+											   _("Checking for addons updates"), 
 											   type=MessageBox.TYPE_INFO, 
 											   enable_input=False)
-			self.__console = Console()
-			self.__console.ePopen('curl -kfo %s https://raw.githubusercontent.com/archivczsk/archivczsk-doplnky/main/commit' % path, self.check_commit_download)
+			
+			# this is needed in order to show __updateDialog
+			self.updateCheckTimer = eTimer()
+			self.updateCheckTimer_conn = eConnectCallback(self.updateCheckTimer.timeout, self.check_addon_updates)
+			self.updateCheckTimer.start(200, True)
 		except:
 			log.logError("Download addons commit failed.")
 			self.open_archive_screen()
 
-	def check_commit_download(self, data, retval, extra_args):
-		if retval == 0 and os.path.exists(os.path.join(os.path.dirname(__file__), 'commit')):
-			self.check_addon_updates()
-		else:
-			log.logError("Download addons commit return failed.")
-			self.open_archive_screen()
-
 	def check_addon_updates(self):
+		del self.updateCheckTimer
+		del self.updateCheckTimer_conn
+		
 		lock = threading.Lock()
 		threads = []
 		def check_repository(repository):

@@ -8,3 +8,6 @@ class UpdaterException(Exception):
 
 class UpdateXMLVersionError(UpdaterException):
 	pass
+
+class UpdateXMLDownloadError(UpdaterException):
+	pass

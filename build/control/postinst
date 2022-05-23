@@ -12,7 +12,6 @@ check_py ()
 	fi
 }
 
-
 install_py ()
 {
 	if [ "$(check_py $2)" == '1' ] ; then
@@ -126,11 +125,18 @@ if [ -d $TMP/skins/ ] ; then
 fi
 
 if [ -d $TMP/addons/ ] ; then
-	echo "Found ADDONS, restoring..."
-	if [ -d $ARCHIVCZSK/resources/repositories/addons ]; then
-		rm -rf $ARCHIVCZSK/resources/repositories/addons
-	fi
+	echo "Found official ADDONS, restoring..."
+	# remove saved addon.xml file, so it can be updated
+	rm -f $TMP/addons/addon.xml
+	
 	cp -R $TMP/addons $ARCHIVCZSK/resources/repositories
+fi
+
+if [ -d $TMP/repositories/ ] ; then
+	find $TMP/repositories -type d -maxdepth 1 -mindepth 1 | while read REPO ; do
+		echo "restoring REPOSITORY `basename $REPO` ..."
+		cp -R $REPO $ARCHIVCZSK/resources/repositories
+	done
 fi
 
 echo "Removing temp folder..."

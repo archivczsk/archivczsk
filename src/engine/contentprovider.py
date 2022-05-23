@@ -197,10 +197,6 @@ class PlayMixin(object):
 		if mode in self.capabilities:
 			if mode == 'play':
 				self.handle_substitles_and_play(item)
-				#try:
-				#	 self.player.play_item(item)
-				#except:
-				#	 traceback.print_exc()
 			elif mode == 'play_and_download':
 				try:
 					self.play_and_download(session, item, "auto", player_callback)
@@ -210,43 +206,19 @@ class PlayMixin(object):
 			log.error('Invalid playing mode - %s', str(mode))
 
 	def handle_substitles_and_play(self, item):
-		def check_download(self, data, retval, extra_args):
-			self.__console = None
-			log.logDebug("Handle subs check download finish... retval=%s, fname=%s"%(retval, fname))
-			if retval == 0 and os.path.exists(fname):
+		subs = ''
+		if not isinstance(item, PPlaylist) and hasattr(item, 'subs'):
+			subs = "%s"%item.subs
+		if subs.startswith('http'):
+			spl = subs.split('/')
+			fname = os.path.join(config.plugins.archivCZSK.tmpPath.getValue(), spl[len(spl)-1])
+			try:
+				download_web_file(subs, fname)
 				item.subs = fname
-			self.player.play_item(item)
+			except:
+				log.logError("Handle substitle file failed.\n%s"%traceback.format_exc())
 
-		try:
-			subs = ''
-			if not isinstance(item, PPlaylist) and hasattr(item, 'subs'):
-				subs = "%s"%item.subs
-			if subs.startswith('http'):
-				spl = subs.split('/')
-				fname = os.path.join(config.plugins.archivCZSK.tmpPath.getValue(), spl[len(spl)-1])
-				try:
-							
-					download_web_file(subs, fname)
-					item.subs = fname
-					self.player.play_item(item)
-				except URLError: #SSL cert problem
-					if subs.startswith('https:\\'): # only for https
-						log.logDebug("Handle substitle file failed (try download by CURL).\n%s"%traceback.format_exc())
-						# download file by CURL
-						self.__console = Console()
-						self.__console.ePopen('curl -kfo %s %s' % (fname, subs), check_download)
-					else:
-						log.logError("Handle substitle file failed.\n%s"%traceback.format_exc())
-						self.player.play_item(item)
-				except:
-					log.logError("Handle substitle file failed.\n%s"%traceback.format_exc())
-					self.player.play_item(item)
-			else:
-				self.player.play_item(item)
-		except:
-			log.logError("Handle substitle file failed.\n%s"%traceback.format_exc())
-			self.player.play_item(item)
-
+		self.player.play_item(item)
 
 
 	def play_and_download(self, session, item, mode, player_callback=None, prefill_buffer=20*1024*1024):

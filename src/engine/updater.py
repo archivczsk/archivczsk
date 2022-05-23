@@ -9,10 +9,13 @@ import os
 import shutil
 import traceback
 import threading
+import requests
 from .tools import util, parser
 from .tools.unzip import unzip_to_dir
+from enigma import eTimer
+from Plugins.Extensions.archivCZSK.compat import eConnectCallback
 
-from Plugins.Extensions.archivCZSK.engine.exceptions.updater import UpdateXMLVersionError
+from Plugins.Extensions.archivCZSK.engine.exceptions.updater import UpdateXMLVersionError, UpdateXMLDownloadError
 from Plugins.Extensions.archivCZSK import _, log, toString, settings
 from Components.Console import Console
 from Components.config import config, ConfigSubsection, ConfigText, ConfigYesNo
@@ -54,6 +57,15 @@ class ArchivUpdater(object):
 								   type=MessageBox.TYPE_INFO, 
 								   enable_input=False)
 
+		# this is needed in order to show __updateDialog
+		self.updateCheckTimer = eTimer()
+		self.updateCheckTimer_conn = eConnectCallback(self.updateCheckTimer.timeout, self.checkUpdateStarted)
+		self.updateCheckTimer.start(200, True)
+
+	def checkUpdateStarted(self):
+		del self.updateCheckTimer
+		del self.updateCheckTimer_conn
+		
 		try:
 			if self.downloadUpdateXml():
 				from Plugins.Extensions.archivCZSK.version import version
@@ -160,7 +172,7 @@ class ArchivUpdater(object):
 
 	def downloadUpdateXml(self):
 		try:
-			util.download_to_file(self.updateXml, self.updateXmlFilePath)
+			util.download_to_file(self.updateXml, self.updateXmlFilePath, timeout=config.plugins.archivCZSK.updateTimeout.value)
 			return True
 		except Exception:
 			log.logError("ArchivUpdater download archiv update xml failed.\n%s" % traceback.format_exc())
@@ -171,7 +183,7 @@ class ArchivUpdater(object):
 			self.updateIpk = self.updateIpk.replace('{version}', self.remote_version).replace('{date}', self.remote_date)
 			self.updateIpkFilePath = self.updateIpkFilePath.replace('{version}', self.remote_version).replace('{date}', self.remote_date)
 			log.logDebug("ArchivUpdater downloading ipk %s to %s" % (self.updateIpk, self.updateIpkFilePath))
-			util.download_to_file(self.updateIpk, self.updateIpkFilePath)
+			util.download_to_file(self.updateIpk, self.updateIpkFilePath, timeout=config.plugins.archivCZSK.updateTimeout.value)
 			return True
 		except Exception:
 			log.logError("ArchivUpdater download update ipk failed.\n%s" % traceback.format_exc())
@@ -185,7 +197,7 @@ class ArchivUpdater(object):
 			
 		if config.plugins.archivCZSK.autoUpdate.value and self.archiv.canCheckUpdate(False):
 			# check plugin updates
-			self.archiv.download_commit()
+			self.archiv.runAddonsUpdateCheck()
 		else:
 			self.archiv.open_archive_screen()
 
@@ -208,7 +220,7 @@ class Updater(object):
 		self.local_path = repository.path
 		self.tmp_path = tmp_path
 		self.update_xml_url = repository.update_xml_url
-		self.update_xml_file = os.path.join(self.tmp_path, 'addons.xml')
+		self.update_xml_file = os.path.join(self.tmp_path, repository.id + 'addons.xml')
 		self.remote_addons_dict = {}
 	
 	def check_addon(self, addon, update_xml=True):
@@ -329,15 +341,11 @@ class Updater(object):
 		local_file = os.path.join(tmp_base, zip_filename)
 		remote_file = remote_base + '/' + zip_filename
 		if remote_file.find('{commit}') != -1:
-			from Plugins.Extensions.archivCZSK.settings import PLUGIN_PATH
-			try:
-				commit = open(os.path.join(PLUGIN_PATH, 'commit')).readline()[:-1]
-			except Exception:
-				commit = '4ff9ac15d461a885f13125125ea501f3b12eb05d'
-			remote_file = remote_file.replace('{commit}', commit)
+			# this update needs commit file - it should be already set by _download_update_xml()
+			remote_file = remote_file.replace('{commit}', self.commit)
 
 		try:
-			util.download_to_file(remote_file, local_file, debugfnc=log.debug)
+			util.download_to_file(remote_file, local_file, debugfnc=log.debug, timeout=config.plugins.archivCZSK.updateTimeout.value)
 		except:
 			shutil.rmtree(tmp_base)
 			return None
@@ -346,20 +354,29 @@ class Updater(object):
 			
 	def _download_update_xml(self):
 		"""downloads update xml of repository"""
-		
-		# hack for https github urls
-		# since some receivers have have problems with https
+
+		# this is only temporary here - support for commit will be removed in next version because it is incompatible with multiple repositories		
 		if self.update_xml_url.find('{commit}') != -1:
+			# this repository needs commit file
 			try:
-				commit = open(os.path.join(settings.PLUGIN_PATH, 'commit')).readline()[:-1]
-			except Exception:
-				commit = '4ff9ac15d461a885f13125125ea501f3b12eb05d'
-			self.update_xml_url = self.update_xml_url.replace('{commit}', commit)
+				response = requests.get('https://raw.githubusercontent.com/archivczsk/archivczsk-doplnky/main/commit', timeout=config.plugins.archivCZSK.updateTimeout.value )
+				
+				if response.status_code != 200:
+					raise UpdateXMLDownloadError( "Wrong response status code: %d" % response.status_code )
+				
+				self.commit = response.text[:-1]
+			except Exception as e:
+				raise UpdateXMLDownloadError("Failed to download commit file: %s" % str(e))
+			
+			self.update_xml_url = self.update_xml_url.replace('{commit}', self.commit)
+
+		log.debug("Checking addons updates from: %s" % self.update_xml_url)
 			
 		try:
-			util.download_to_file(self.update_xml_url, self.update_xml_file)
+			util.download_to_file(self.update_xml_url, self.update_xml_file, timeout=config.plugins.archivCZSK.updateTimeout.value)
 		except Exception:
 			log.error('cannot download %s update xml', self.repository.name)
+			log.logError( traceback.format_exc())
 			raise UpdateXMLVersionError()
 		
 
