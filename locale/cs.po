@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-05-23 19:32+0200\n"
+"POT-Creation-Date: 2022-05-30 13:07+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -280,132 +280,161 @@ msgid "category"
 msgstr "kategorii"
 
 #: src/engine/handlers/folder.py:252 src/engine/handlers/media.py:192
-#: src/engine/handlers/media.py:195
+#: src/engine/handlers/media.py:195 src/engine/handlers/folder.py:257
+#: src/engine/handlers/media.py:203
 msgid "(Trakt) Add to Watchlist"
 msgstr "(Trakt) Přidat do Watchlistu"
 
 #: src/engine/handlers/folder.py:253 src/engine/handlers/media.py:193
-#: src/engine/handlers/media.py:196
+#: src/engine/handlers/media.py:196 src/engine/handlers/folder.py:258
+#: src/engine/handlers/media.py:204
 msgid "(Trakt) Remove from Watchlist"
 msgstr "(Trakt) Vymazat z Watchlist"
 
 #: src/engine/handlers/folder.py:254 src/engine/handlers/media.py:194
-#: src/engine/handlers/media.py:197
+#: src/engine/handlers/media.py:197 src/engine/handlers/folder.py:259
+#: src/engine/handlers/media.py:205
 msgid "(Trakt) Mark as watched"
 msgstr "(Trakt) Označit jako viděno"
 
 #: src/engine/handlers/folder.py:255 src/engine/handlers/media.py:195
-#: src/engine/handlers/media.py:198
+#: src/engine/handlers/media.py:198 src/engine/handlers/folder.py:260
+#: src/engine/handlers/media.py:206
 msgid "(Trakt) Mark as not watched"
 msgstr "(Trakt) Označit jako neviděno"
 
-#: src/engine/handlers/folder.py:257
+#: src/engine/handlers/folder.py:257 src/engine/handlers/folder.py:262
 msgid "Open"
 msgstr "Otevřít položku"
 
 #: src/engine/handlers/folder.py:259 src/engine/handlers/folder.py:261
 #: src/engine/handlers/media.py:230 src/engine/handlers/media.py:234
 #: src/engine/handlers/media.py:233 src/engine/handlers/media.py:237
+#: src/engine/handlers/folder.py:264 src/engine/handlers/folder.py:266
+#: src/engine/handlers/media.py:241 src/engine/handlers/media.py:245
 msgid "Add Shortcut"
 msgstr "Přidat záložku"
 
 #: src/engine/handlers/folder.py:266 src/engine/handlers/media.py:241
-#: src/engine/handlers/media.py:244
+#: src/engine/handlers/media.py:244 src/engine/handlers/folder.py:271
+#: src/engine/handlers/media.py:252
 msgid "Do you want to add"
 msgstr "Chcete přidat"
 
 #: src/engine/handlers/folder.py:266 src/engine/handlers/media.py:241
-#: src/engine/handlers/media.py:244
+#: src/engine/handlers/media.py:244 src/engine/handlers/folder.py:271
+#: src/engine/handlers/media.py:252
 msgid "shortcut?"
 msgstr "záložku?"
 
 #: src/engine/handlers/media.py:198 src/engine/handlers/media.py:201
+#: src/engine/handlers/media.py:209
 msgid "Download"
 msgstr "Stáhnout"
 
 #: src/gui/download.py:298 src/engine/handlers/media.py:200
 #: src/engine/handlers/media.py:420 src/engine/handlers/media.py:203
-#: src/engine/handlers/media.py:423
+#: src/engine/handlers/media.py:423 src/engine/handlers/media.py:211
+#: src/engine/handlers/media.py:431
 msgid "Play"
 msgstr "Přehrát"
 
 #: src/engine/handlers/media.py:208 src/engine/handlers/media.py:211
+#: src/engine/handlers/media.py:219
 msgid "Play and Download"
 msgstr "Přehraj a stahuj"
 
 #: src/engine/handlers/media.py:226 src/engine/handlers/media.py:229
+#: src/engine/handlers/media.py:237
 msgid "Resolve videos"
 msgstr "Načítej videa"
 
 #: src/engine/handlers/media.py:292 src/engine/handlers/media.py:351
 #: src/engine/handlers/media.py:295 src/engine/handlers/media.py:354
+#: src/engine/handlers/media.py:303 src/engine/handlers/media.py:362
 msgid "Please select source"
 msgstr "Prosím zvolte zdroj"
 
 #: src/engine/player/player.py:470 src/engine/handlers/media.py:424
 #: src/engine/player/player.py:472 src/engine/handlers/media.py:427
+#: src/engine/player/player.py:473 src/engine/handlers/media.py:435
 msgid "Show playlist"
 msgstr "Zobrazit playlist"
 
 #: src/engine/player/player.py:195 src/engine/player/player.py:196
+#: src/engine/player/player.py:197
 msgid "Stop playing this movie?"
 msgstr "Ukončit přehrávání videa?"
 
 #: src/engine/player/player.py:274 src/engine/player/player.py:282
 #: src/engine/player/player.py:276 src/engine/player/player.py:284
+#: src/engine/player/player.py:277 src/engine/player/player.py:285
 msgid "Letterbox"
 msgstr "Letterbox"
 
 #: src/engine/player/player.py:275 src/engine/player/player.py:279
 #: src/engine/player/player.py:283 src/engine/player/player.py:277
 #: src/engine/player/player.py:281 src/engine/player/player.py:285
+#: src/engine/player/player.py:278 src/engine/player/player.py:282
+#: src/engine/player/player.py:286
 msgid "Pan&scan"
 msgstr "Pan&scan"
 
 #: src/engine/player/player.py:276 src/engine/player/player.py:280
 #: src/engine/player/player.py:278 src/engine/player/player.py:282
+#: src/engine/player/player.py:279 src/engine/player/player.py:283
 msgid "Nonlinear"
 msgstr "Nonlinear"
 
 #: src/engine/player/player.py:277 src/engine/player/player.py:281
 #: src/engine/player/player.py:284 src/engine/player/player.py:279
 #: src/engine/player/player.py:283 src/engine/player/player.py:286
+#: src/engine/player/player.py:280 src/engine/player/player.py:287
 msgid "Just scale"
 msgstr "Just scale"
 
 #: src/engine/player/player.py:278 src/engine/player/player.py:280
+#: src/engine/player/player.py:281
 msgid "PillarBox"
 msgstr "PillarBox"
 
 #: src/engine/player/player.py:320 src/engine/player/player.py:322
+#: src/engine/player/player.py:323
 msgid "Aspect"
 msgstr "Poměr"
 
 #: src/engine/player/player.py:321 src/engine/player/player.py:323
+#: src/engine/player/player.py:324
 msgid "Policy"
 msgstr "Policy"
 
 #: src/engine/player/player.py:359 src/engine/player/player.py:361
+#: src/engine/player/player.py:362
 msgid "Show subservices"
 msgstr "Zobrazit titulky"
 
 #: src/engine/player/player.py:384 src/engine/player/player.py:386
+#: src/engine/player/player.py:387
 msgid "Please select subservice..."
 msgstr "Prosím zvolte zdroj"
 
 #: src/engine/player/player.py:472 src/engine/player/player.py:474
+#: src/engine/player/player.py:475
 msgid "Play next entry in playlist"
 msgstr "Přehrát nasledujíci záznam v playlistu"
 
 #: src/engine/player/player.py:474 src/engine/player/player.py:476
+#: src/engine/player/player.py:477
 msgid "Play previous entry in playlist"
 msgstr "Přehrát předcházejíci záznam v playlistu"
 
 #: src/engine/player/player.py:476 src/engine/player/player.py:478
+#: src/engine/player/player.py:479
 msgid "Exit player"
 msgstr "Ukončit přehrávač"
 
 #: src/engine/player/player.py:516 src/engine/player/player.py:518
+#: src/engine/player/player.py:519
 msgid "Resuming playback"
 msgstr "Obnovit přehrávání"
 
@@ -1183,10 +1212,12 @@ msgid "Used player"
 msgstr "Používat přehrávač"
 
 #: src/engine/handlers/media.py:203 src/engine/handlers/media.py:206
+#: src/engine/handlers/media.py:214
 msgid "Play using gstplayer"
 msgstr "Přehrát pomocí gstplayer"
 
 #: src/engine/handlers/media.py:206 src/engine/handlers/media.py:209
+#: src/engine/handlers/media.py:217
 msgid "Play using exteplayer3"
 msgstr "Přehrát pomocí exteplayer3"
 
@@ -1230,3 +1261,27 @@ msgstr "Kontrola aktualizací doplňků"
 #: src/settings.py:156
 msgid "Update timeout"
 msgstr "Časový limit kontroly aktualizace"
+
+#: src/engine/handlers/folder.py:256 src/engine/handlers/media.py:202
+msgid "Trakt.tv action"
+msgstr "Trakt.tv akce"
+
+#: src/engine/trakttv.py:12
+msgid "Add to watchlist"
+msgstr "Přidat do Watchlist"
+
+#: src/engine/trakttv.py:13
+msgid "Delete from watchlist"
+msgstr "Vymazat z Watchlist"
+
+#: src/engine/trakttv.py:14
+msgid "Mark as watched"
+msgstr "Označit jako viděno"
+
+#: src/engine/trakttv.py:15
+msgid "Mark as not watched"
+msgstr "Označit jako neviděno"
+
+#: src/engine/trakttv.py:18
+msgid "Choose Trakt.tv action"
+msgstr "Zvolte akci pro Trakt.tv"

@@ -6,6 +6,7 @@ from Plugins.Extensions.archivCZSK import _, log
 from Plugins.Extensions.archivCZSK.gui.exception import AddonExceptionHandler
 from Plugins.Extensions.archivCZSK.engine.items import PExit, PFolder, PSearchItem, PSearch
 from Plugins.Extensions.archivCZSK.gui.common import showInfoMessage, showErrorMessage, showWarningMessage
+from Plugins.Extensions.archivCZSK.engine.trakttv import open_trakt_action_choicebox
 
 from ...py3compat import *
 
@@ -132,28 +133,28 @@ class FolderItemHandler(ItemHandler):
 				#								  })
 
 				if screen_command is not None:
-				   cmd = ("%s"%screen_command).lower()
-				   params = args
-				   if cmd == "trakt_pair":
-					   self.content_screen.stopLoading()
-					   return showInfoMessage(self.session, args['msg']['pair'], -1, pairTrakt_cb)
-				   if cmd == "show_msg":
-					   #dialogStart = datetime.datetime.now()
-					   self.content_screen.stopLoading()
-					   msgType = 'info'
-					   if 'msgType' in args:
-						   msgType = ("%s"%args['msgType']).lower()
-					   msgTimeout = 15
-					   if 'msgTimeout' in args:
-						   msgTimeout = int(args['msgTimeout'])
-					   canClose = True
-					   if 'canClose' in args:
-						   canClose = args['canClose']
-					   if msgType == 'error':
-						   return showErrorMessage(self.session, args['msg'], msgTimeout, continue_cb_normal, enableInput=canClose)
-					   if msgType == 'warning':
-						   return showWarningMessage(self.session, args['msg'], msgTimeout, continue_cb_normal, enableInput=canClose)
-					   return showInfoMessage(self.session, args['msg'], msgTimeout, continue_cb_normal, enableInput=canClose)
+					cmd = ("%s"%screen_command).lower()
+					ams = args
+					if cmd == "trakt_pair":
+						self.content_screen.stopLoading()
+						return showInfoMessage(self.session, args['msg']['pair'], -1, pairTrakt_cb)
+					if cmd == "show_msg":
+						#dialogStart = datetime.datetime.now()
+						self.content_screen.stopLoading()
+						msgType = 'info'
+						if 'msgType' in args:
+							msgType = ("%s"%args['msgType']).lower()
+						msgTimeout = 15
+						if 'msgTimeout' in args:
+							msgTimeout = int(args['msgTimeout'])
+						canClose = True
+						if 'canClose' in args:
+							canClose = args['canClose']
+						if msgType == 'error':
+							return showErrorMessage(self.session, args['msg'], msgTimeout, continue_cb_normal, enableInput=canClose)
+						if msgType == 'warning':
+							return showWarningMessage(self.session, args['msg'], msgTimeout, continue_cb_normal, enableInput=canClose)
+						return showInfoMessage(self.session, args['msg'], msgTimeout, continue_cb_normal, enableInput=canClose)
 			except:
 				log.logError("Execute HACK command failed.\n%s"%traceback.format_exc())
 				screen_command = None
@@ -202,8 +203,8 @@ class FolderItemHandler(ItemHandler):
 
 	def isValidForTrakt(self, item):
 		if hasattr(item, 'dataItem') and item.dataItem is not None:
-		   if 'imdb' in item.dataItem or 'tvdb' in item.dataItem or 'trakt' in item.dataItem:
-			   return True
+			if 'imdb' in item.dataItem or 'tvdb' in item.dataItem or 'trakt' in item.dataItem:
+				return True
 		return False
 
 	# action:
@@ -233,15 +234,18 @@ class FolderItemHandler(ItemHandler):
 
 		paused = self.content_provider.isPaused()
 		try:
-			if paused:
-				self.content_provider.resume()
-			
-			if hasattr(item, 'dataItem'): # do it only on item which have additional data
-				ppp = { 'cp': 'czsklib', 'trakt':action, 'item': item.dataItem }
-				# content provider must be in running state (not paused)
-				self.content_provider.get_content(self.session, params=ppp, successCB=open_item_success_cb, errorCB=open_item_error_cb)
+			if action == 'open_action_choicebox':
+				open_trakt_action_choicebox(self.session, item, self.cmdTrakt)
 			else:
-				log.logDebug("Trakt action not supported for this item %s"%item.name);
+				if paused:
+					self.content_provider.resume()
+				
+				if hasattr(item, 'dataItem'): # do it only on item which have additional data
+					ppp = { 'cp': 'czsklib', 'trakt':action, 'item': item.dataItem }
+					# content provider must be in running state (not paused)
+					self.content_provider.get_content(self.session, params=ppp, successCB=open_item_success_cb, errorCB=open_item_error_cb)
+				else:
+					log.logDebug("Trakt action not supported for this item %s"%item.name);
 		except:
 			log.logError("Trakt call failed.\n%s"%traceback.format_exc())
 			if paused:
@@ -249,10 +253,7 @@ class FolderItemHandler(ItemHandler):
 	def _init_menu(self, item, *args, **kwargs):
 		# TRAKT menu (show only if item got data to handle trakt)
 		if 'trakt' in self.content_provider.capabilities and self.isValidForTrakt(item):
-			item.add_context_menu_item(_("(Trakt) Add to Watchlist"), action=self.cmdTrakt, params={'item':item, 'action':'add'})
-			item.add_context_menu_item(_("(Trakt) Remove from Watchlist"), action=self.cmdTrakt, params={'item':item, 'action':'remove'})
-			item.add_context_menu_item(_("(Trakt) Mark as watched"), action=self.cmdTrakt, params={'item':item, 'action':'watched'})
-			item.add_context_menu_item(_("(Trakt) Mark as not watched"), action=self.cmdTrakt, params={'item':item, 'action':'unwatched'})
+			item.add_context_menu_item(_("Trakt.tv action"), action=self.cmdTrakt, params={'item':item, 'action':'action_selection'})
 
 		item.add_context_menu_item(_("Open"), action=self.open_item, params={'item':item})
 		if not self.is_search(item) and 'favorites' in self.content_provider.capabilities:

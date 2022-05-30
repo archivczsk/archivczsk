@@ -224,3 +224,4 @@ class ArchivCZSKAddonConfigScreen(BaseArchivCZSKConfigScreen):
 
 	def buildMenu(self):
 		self.refreshConfigList()
+		

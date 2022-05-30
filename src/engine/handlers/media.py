@@ -19,6 +19,7 @@ from Plugins.Extensions.archivCZSK.gui.common import showInfoMessage, showErrorM
 from Plugins.Extensions.archivCZSK.colors import ConvertColors, DeleteColors
 from Plugins.Extensions.archivCZSK.engine.player.info import videoPlayerInfo
 from Plugins.Extensions.archivCZSK.compat import DMM_IMAGE
+from Plugins.Extensions.archivCZSK.engine.trakttv import open_trakt_action_choicebox
 
 class MediaItemHandler(ItemHandler):
 	""" Template class - handles Media Item interaction """
@@ -93,12 +94,15 @@ class MediaItemHandler(ItemHandler):
 
 		paused = self.content_provider.isPaused()
 		try:
-			if paused:
-				self.content_provider.resume()
-			
-			ppp = { 'cp': 'czsklib', 'trakt':action, 'item': item.dataItem }
-			# content provider must be in running state (not paused)
-			self.content_provider.get_content(self.session, params=ppp, successCB=open_item_success_cb, errorCB=open_item_error_cb)
+			if action == 'open_action_choicebox':
+				open_trakt_action_choicebox(self.session, item, self.cmdTrakt )
+			else:
+				if paused:
+					self.content_provider.resume()
+				
+				ppp = { 'cp': 'czsklib', 'trakt':action, 'item': item.dataItem }
+				# content provider must be in running state (not paused)
+				self.content_provider.get_content(self.session, params=ppp, successCB=open_item_success_cb, errorCB=open_item_error_cb)
 		except:
 			log.logError("Trakt call failed.\n%s"%traceback.format_exc())
 			if paused:
@@ -128,7 +132,10 @@ class MediaItemHandler(ItemHandler):
 			try:
 				if 'trakt' in self.content_provider.capabilities and self.isValidForTrakt(item):
 					totalSec = (datetime.datetime.now()-playStartAt).total_seconds()
-					durSec = float(item.dataItem['duration'])
+					if self.content_provider.player.duration:
+						durSec = self.content_provider.player.duration
+					else:
+						durSec = float(item.dataItem['duration'])
 					# movie time from start play after 80% then mark as watched
 					if totalSec >= durSec*0.80:
 						sendTrakt = True
@@ -192,10 +199,7 @@ class MediaItemHandler(ItemHandler):
 		provider = self.content_provider
 		# TRAKT menu (show only if item got data to handle trakt)
 		if 'trakt' in provider.capabilities and self.isValidForTrakt(item):
-			item.add_context_menu_item(_("(Trakt) Add to Watchlist"), action=self.cmdTrakt, params={'item':item, 'action':'add'})
-			item.add_context_menu_item(_("(Trakt) Remove from Watchlist"), action=self.cmdTrakt, params={'item':item, 'action':'remove'})
-			item.add_context_menu_item(_("(Trakt) Mark as watched"), action=self.cmdTrakt, params={'item':item, 'action':'watched'})
-			item.add_context_menu_item(_("(Trakt) Mark as not watched"), action=self.cmdTrakt, params={'item':item, 'action':'unwatched'})
+			item.add_context_menu_item(_("Trakt.tv action"), action=self.cmdTrakt, params={'item':item, 'action':'open_action_choicebox'})
 
 		if 'download' in provider.capabilities:
 			item.add_context_menu_item(_("Download"), action=self.download_item, params={'item':item, 'mode':'auto'})
