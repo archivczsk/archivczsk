@@ -289,7 +289,10 @@ class BaseArchivCZSKListSourceScreen(BaseArchivCZSKScreen):
 	def up(self):
 		try:
 			if not self.working:
-				self["menu"].selectPrevious()
+				# after this change self["menu"].selectPrevious() doesn't work in addon anymore, but why???
+				# workaround using lisboxRenderer seems to fix it
+				# https://github.com/openatv/enigma2/commit/9bec113538bbe66c51a15d6d6bbf408de13b68ea
+				self.__listboxRenderer.move(self.__listboxRenderer.instance.moveUp)
 		except:
 			log.logError("Action [up] failed.\n%s"%traceback.format_exc())
 			pass
@@ -297,7 +300,10 @@ class BaseArchivCZSKListSourceScreen(BaseArchivCZSKScreen):
 	def down(self):
 		try:
 			if not self.working:
-				self["menu"].selectNext()
+				# after this change self["menu"].selectNext() doesn't work in addon anymore, but why???
+				# workaround using lisboxRenderer seems to fix it
+				# https://github.com/openatv/enigma2/commit/9bec113538bbe66c51a15d6d6bbf408de13b68ea
+				self.__listboxRenderer.move(self.__listboxRenderer.instance.moveDown)
 		except:
 			log.logError("Action [down] failed.\n%s"%traceback.format_exc())
 			pass
