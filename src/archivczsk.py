@@ -142,7 +142,7 @@ class ArchivCZSK():
 				self.open_archive_screen()
 
 	def canCheckUpdate(self, archivUpdate):
-		limitHour = 2
+		limitHour = 4
 		try:
 			if archivUpdate:
 				if UpdateInfo.CHECK_UPDATE_TIMESTAMP is None:
