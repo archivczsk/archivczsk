@@ -1,7 +1,9 @@
-archivCZSK 1.4.9, xx.xx.2022
+archivCZSK 1.4.9, 31.05.2022
     - možnosť zapnutia/vypnutia podpory pre youtube videa (užitočné pre pomalé prijímače s málo RAM)
     - zjednodušenie aktualizácie doplnkov
     - pridanie podpory pre viac repozitárov
+    - oprava pohybu v menu addonu pre OpenATV 7.0
+    - úpravy pre Trakt.tv
     
 archivCZSK 1.4.8, 13.05.2022
     - oprava pádu pri obnovení prehrávania
