@@ -19,7 +19,7 @@ from Plugins.Extensions.archivCZSK.gui.common import showInfoMessage, showErrorM
 from Plugins.Extensions.archivCZSK.colors import ConvertColors, DeleteColors
 from Plugins.Extensions.archivCZSK.engine.player.info import videoPlayerInfo
 from Plugins.Extensions.archivCZSK.compat import DMM_IMAGE
-from Plugins.Extensions.archivCZSK.engine.trakttv import open_trakt_action_choicebox
+from Plugins.Extensions.archivCZSK.engine.trakttv import trakttv
 
 class MediaItemHandler(ItemHandler):
 	""" Template class - handles Media Item interaction """
@@ -32,8 +32,8 @@ class MediaItemHandler(ItemHandler):
 		self.play_item(item, mode, args, kwargs)
 
 	def isValidForTrakt(self, item):
-		if hasattr(item, 'dataItem') and item.dataItem is not None:
-			if 'imdb' in item.dataItem or 'tvdb' in item.dataItem or 'trakt' in item.dataItem:
+		if hasattr(item, 'traktItem') and item.traktItem is not None:
+			if 'type' in item.traktItem and 'ids' in item.traktItem:
 				return True
 		return False
 
@@ -95,12 +95,15 @@ class MediaItemHandler(ItemHandler):
 		paused = self.content_provider.isPaused()
 		try:
 			if action == 'open_action_choicebox':
-				open_trakt_action_choicebox(self.session, item, self.cmdTrakt )
+				trakttv.open_trakt_action_choicebox(self.session, item, self.cmdTrakt )
+			elif action == 'pair':
+				trakttv.handle_trakt_pairing(self.session, finishCb )
 			else:
 				if paused:
 					self.content_provider.resume()
-				
-				ppp = { 'cp': 'czsklib', 'trakt':action, 'item': item.dataItem }
+
+				result, msg = trakttv.handle_trakt_action( action, item.traktItem )
+				ppp = { 'cp': 'czsklib', 'trakt':action, 'item': item.traktItem, 'result': result, 'msg': msg }
 				# content provider must be in running state (not paused)
 				self.content_provider.get_content(self.session, params=ppp, successCB=open_item_success_cb, errorCB=open_item_error_cb)
 		except:
@@ -132,8 +135,8 @@ class MediaItemHandler(ItemHandler):
 			try:
 				if 'trakt' in self.content_provider.capabilities and self.isValidForTrakt(item):
 					totalSec = (datetime.datetime.now()-playStartAt).total_seconds()
-					if self.content_provider.player.duration:
-						durSec = self.content_provider.player.duration
+					if self.content_provider.player.video_player.duration:
+						durSec = self.content_provider.player.video_player.duration
 					else:
 						durSec = float(item.dataItem['duration'])
 					# movie time from start play after 80% then mark as watched
@@ -199,7 +202,10 @@ class MediaItemHandler(ItemHandler):
 		provider = self.content_provider
 		# TRAKT menu (show only if item got data to handle trakt)
 		if 'trakt' in provider.capabilities and self.isValidForTrakt(item):
-			item.add_context_menu_item(_("Trakt.tv action"), action=self.cmdTrakt, params={'item':item, 'action':'open_action_choicebox'})
+			if trakttv.valid():
+				item.add_context_menu_item(_("Trakt.tv action"), action=self.cmdTrakt, params={'item':item, 'action':'open_action_choicebox'})
+			else:
+				item.add_context_menu_item(_('Pair device with Trakt.tv'), action=self.cmdTrakt, params={'item':item, 'action':'pair'})
 
 		if 'download' in provider.capabilities:
 			item.add_context_menu_item(_("Download"), action=self.download_item, params={'item':item, 'mode':'auto'})

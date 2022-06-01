@@ -11,7 +11,6 @@ from Plugins.Extensions.archivCZSK.gui.search import ArchivCZSKSearchClientScree
 from Plugins.Extensions.archivCZSK.gui.icon import IconD
 from Plugins.Extensions.archivCZSK.engine.downloader import DownloadManager
 
-
 NAME = _("ArchivCZSK")
 DESCRIPTION = _("Playing CZ/SK archives")
 

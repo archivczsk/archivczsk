@@ -143,7 +143,7 @@ def refresh_screen(restoreLastPosition=True):
 		set_command('refreshnow_resetpos')
 
 
-def create_directory_it(name, params={}, image=None, infoLabels={}, menuItems={}, search_folder=False, search_item=False, video_item=False, dataItem=None):
+def create_directory_it(name, params={}, image=None, infoLabels={}, menuItems={}, search_folder=False, search_item=False, video_item=False, dataItem=None, traktItem=None):
 	if search_item: it = PSearchItem()
 	elif search_folder: it = PSearch()
 	elif video_item: it = PVideoNotResolved()
@@ -170,11 +170,15 @@ def create_directory_it(name, params={}, image=None, infoLabels={}, menuItems={}
 
 	if hasattr(it, 'dataItem'):
 		it.dataItem = dataItem
+		
+	if hasattr(it, 'traktItem'):
+		it.traktItem=traktItem
+
 	it.info = infolabel_uni
 	return it
 
 
-def create_video_it(name, url, subs=None, image=None, infoLabels={}, menuItems={}, filename=None, live=False, stream=None, settings=None, dataItem=None):
+def create_video_it(name, url, subs=None, image=None, infoLabels={}, menuItems={}, filename=None, live=False, stream=None, settings=None, dataItem=None, traktItem=None):
 	it = PVideoResolved()
 
 	it.name = toUnicode(name)
@@ -225,11 +229,12 @@ def create_video_it(name, url, subs=None, image=None, infoLabels={}, menuItems={
 	it.resolved = True
 
 	it.dataItem = dataItem
+	it.traktItem = traktItem
 
 	return it
 
 @abortTask
-def add_dir(name, params={}, image=None, infoLabels={}, menuItems={}, search_folder=False, search_item=False, video_item=False, dataItem=None):
+def add_dir(name, params={}, image=None, infoLabels={}, menuItems={}, search_folder=False, search_item=False, video_item=False, dataItem=None, traktItem=None):
 	"""adds directory item to content screen
 
 		@param name : name of the directory
@@ -247,11 +252,12 @@ def add_dir(name, params={}, image=None, infoLabels={}, menuItems={}, search_fol
 							 search_folder=search_folder,
 							 search_item=search_item,
 							 video_item=video_item,
-							 dataItem=dataItem)
+							 dataItem=dataItem,
+							 traktItem=traktItem)
 	GItem_lst[0].append(it)
 
 @abortTask
-def add_video(name, url, subs=None, image=None, infoLabels={}, menuItems={}, filename=None, live=False, stream=None, settings=None, dataItem=None):
+def add_video(name, url, subs=None, image=None, infoLabels={}, menuItems={}, filename=None, live=False, stream=None, settings=None, dataItem=None, traktItem=None):
 
 	"""
 	adds video item to content screen
@@ -273,7 +279,8 @@ def add_video(name, url, subs=None, image=None, infoLabels={}, menuItems={}, fil
 							   live=live,
 							   stream=stream,
 							   settings=settings,
-							   dataItem=dataItem)
+							   dataItem=dataItem,
+							   traktItem=traktItem)
 	if not is_py3 and isinstance(url, unicode ):
 		url = url.encode('utf-8')
 	if not isinstance(url, str):

@@ -1,7 +1,7 @@
 import os
 from Components.Language import language
 from Components.config import config, ConfigSubsection, ConfigSelection, \
-	ConfigDirectory, ConfigYesNo, ConfigNothing, getConfigListEntry, \
+	ConfigDirectory, ConfigYesNo, ConfigText, ConfigNumber, ConfigNothing, getConfigListEntry, \
 	NoSave, ConfigInteger
 from Tools.Directories import SCOPE_PLUGINS, resolveFilename
 
@@ -126,6 +126,12 @@ config.plugins.archivCZSK.convertPNG = ConfigYesNo(default=True)
 config.plugins.archivCZSK.clearMemory = ConfigYesNo(default=False)
 config.plugins.archivCZSK.confirmExit = ConfigYesNo(default=False)
 
+########## TRAKT ##############################
+
+config.plugins.archivCZSK.trakt = ConfigSubsection()
+config.plugins.archivCZSK.trakt.access_token=ConfigText()
+config.plugins.archivCZSK.trakt.refresh_token=ConfigText()
+config.plugins.archivCZSK.trakt.expiration=ConfigNumber()
 
 def changeLogMode(configElement):
 	log.changeMode(int(configElement.value))

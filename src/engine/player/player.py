@@ -468,6 +468,7 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.__timer_conn = eConnectCallback(self.__timer.timeout, self.__pts_available)
 		self.__subtitles_url = None
 		self.__resume_time_sec = None
+		self.duration_sec = None
 		self["actions"] = HelpableActionMap(self, "ArchivCZSKMoviePlayerActions",
 				{"showPlaylist": (boundFunction(self.player_callback, ("playlist", "show",)),
 					_("Show playlist")),
@@ -499,10 +500,10 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 			self.__timer.start(500, True)
 		else:
 			if self.__resume_time_sec is not None:
-				duration_sec = getDurationInSeconds(self.session)
+				self.duration_sec = getDurationInSeconds(self.session)
 				if (self.__resume_time_sec > 0 and 
-						duration_sec and duration_sec > 0 and
-						self.__resume_time_sec < duration_sec):
+						self.duration_sec and self.duration_sec > 0 and
+						self.__resume_time_sec < self.duration_sec):
 					self.doSeek(self.__resume_time_sec * 90000)
 				self.__resume_time_sec = None
 				RemovePopup(self.RESUME_POPUP_ID)

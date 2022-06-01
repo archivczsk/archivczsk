@@ -6,7 +6,7 @@ from Plugins.Extensions.archivCZSK import _, log
 from Plugins.Extensions.archivCZSK.gui.exception import AddonExceptionHandler
 from Plugins.Extensions.archivCZSK.engine.items import PExit, PFolder, PSearchItem, PSearch
 from Plugins.Extensions.archivCZSK.gui.common import showInfoMessage, showErrorMessage, showWarningMessage
-from Plugins.Extensions.archivCZSK.engine.trakttv import open_trakt_action_choicebox
+from Plugins.Extensions.archivCZSK.engine.trakttv import trakttv
 
 from ...py3compat import *
 
@@ -47,47 +47,7 @@ class FolderItemHandler(ItemHandler):
 				self.content_screen.stopLoading()
 				self.content_screen.showList()
 				self.content_screen.workingFinished()
-			def pairTrakt_cb(res):
-				import json
-				try:
-					from urllib2 import urlopen
-					from urllib2 import Request as url_Request
-				except:
-					from urllib.request import urlopen
-					from urllib.request import Request as url_Request
 
-				from Plugins.Extensions.archivCZSK.settings import USER_AGENT
-				def post_json(url,data,headers={}):
-					postdata = json.dumps(data)
-					headers['Content-Type'] = 'application/json'
-					req = url_Request(url,postdata,headers)
-					req.add_header('User-Agent',USER_AGENT)
-					response = urlopen(req)
-					data = response.read()
-					response.close()
-					return data
-				
-				try:
-					data = json.loads(post_json(params['trakt']['url'], 
-												data={'code':params['trakt']['code'],'client_id':params['trakt']['client_id'], 'client_secret':params['trakt']['client_secret']},
-												headers={'Content-Type':'application/json'}))
-					TOKEN = data['access_token']
-					REFRESH_TOKEN = data['refresh_token']
-					expire = data['expires_in'] #seconds
-					created = data['created_at']
-					EXPIRE = expire+created
-
-					log.logDebug("Get token return token=%s, rtoken=%s, exp=%s"%(TOKEN, REFRESH_TOKEN, EXPIRE))
-
-					#update settings
-					self.content_provider.video_addon.set_setting(params['settings']['token'], '%s'%TOKEN)
-					self.content_provider.video_addon.set_setting(params['settings']['refreshToken'], '%s'%REFRESH_TOKEN)
-					self.content_provider.video_addon.set_setting(params['settings']['expire'], '%s'%EXPIRE)
-
-					return showInfoMessage(self.session, params['msg']['success'], 20, continue_cb)
-				except:
-					log.logDebug("Pair trakt failed.\n%s"%traceback.format_exc())
-				return showErrorMessage(self.session, params['msg']['fail'], 20, continue_cb)
 			def continue_cb_normal(res):
 				if not list_items and screen_command is not None:
 					self.content_screen.resolveCommand(screen_command, args)
@@ -118,26 +78,17 @@ class FolderItemHandler(ItemHandler):
 			list_items, screen_command, args = result
 			
 			try:
-				#client.add_operation("TRAKT_PAIR", {'trakt': {'url':self.tapi.API+'/token', 
-				#													   'code':self.code, 
-				#													   'client_id':self.tapi.CLIENT_ID, 
-				#													   'client_secret': self.tapi.CLIENT_SECRET},
-				#									 'msg': {'pair': msg, 'success':succ, 'fail':fail}, 
-				#									 'settings': {'token': 'trakt_token',
-				#												  'refreshToken':'trakt_refresh_token', 
-				#												  'expire':'trakt_token_expire'}})
 				#client.add_operation("SHOW_MSG", {'msg': 'some text'},
 				#								   'msgType': 'info|error|warning',		#optional
 				#								   'msgTimeout': 10,					#optional
 				#								   'canClose': True						#optional
 				#								  })
 
+#				client.add_operation("TRAKT_PAIR_NEW", { 'client_id' : client_id, 'client_secret' : client_secret } )
+
 				if screen_command is not None:
 					cmd = ("%s"%screen_command).lower()
 					ams = args
-					if cmd == "trakt_pair":
-						self.content_screen.stopLoading()
-						return showInfoMessage(self.session, args['msg']['pair'], -1, pairTrakt_cb)
 					if cmd == "show_msg":
 						#dialogStart = datetime.datetime.now()
 						self.content_screen.stopLoading()
@@ -202,8 +153,8 @@ class FolderItemHandler(ItemHandler):
 
 
 	def isValidForTrakt(self, item):
-		if hasattr(item, 'dataItem') and item.dataItem is not None:
-			if 'imdb' in item.dataItem or 'tvdb' in item.dataItem or 'trakt' in item.dataItem:
+		if hasattr(item, 'traktItem') and item.traktItem is not None:
+			if 'ids' in item.traktItem and 'type' in item.traktItem:
 				return True
 		return False
 
@@ -235,13 +186,18 @@ class FolderItemHandler(ItemHandler):
 		paused = self.content_provider.isPaused()
 		try:
 			if action == 'open_action_choicebox':
-				open_trakt_action_choicebox(self.session, item, self.cmdTrakt)
+				trakttv.open_trakt_action_choicebox(self.session, item, self.cmdTrakt)
+			elif action == 'pair':
+				trakttv.handle_trakt_pairing(self.session, finishCb )
 			else:
 				if paused:
 					self.content_provider.resume()
 				
-				if hasattr(item, 'dataItem'): # do it only on item which have additional data
-					ppp = { 'cp': 'czsklib', 'trakt':action, 'item': item.dataItem }
+				if hasattr(item, 'traktItem'): # do it only on item which have trakt data
+					# handle trakt action localy and after that forward it to addon
+					result, msg = trakttv.handle_trakt_action( action, item.traktItem )
+					
+					ppp = { 'cp': 'czsklib', 'trakt':action, 'item': item.traktItem, 'result': result, 'msg': msg }
 					# content provider must be in running state (not paused)
 					self.content_provider.get_content(self.session, params=ppp, successCB=open_item_success_cb, errorCB=open_item_error_cb)
 				else:
@@ -250,10 +206,14 @@ class FolderItemHandler(ItemHandler):
 			log.logError("Trakt call failed.\n%s"%traceback.format_exc())
 			if paused:
 				self.content_provider.pause()
+				
 	def _init_menu(self, item, *args, **kwargs):
 		# TRAKT menu (show only if item got data to handle trakt)
 		if 'trakt' in self.content_provider.capabilities and self.isValidForTrakt(item):
-			item.add_context_menu_item(_("Trakt.tv action"), action=self.cmdTrakt, params={'item':item, 'action':'action_selection'})
+			if trakttv.valid():
+				item.add_context_menu_item(_("Trakt.tv action"), action=self.cmdTrakt, params={'item':item, 'action':'open_action_choicebox'})
+			else:
+				item.add_context_menu_item(_('Pair device with Trakt.tv'), action=self.cmdTrakt, params={'item':item, 'action':'pair'})
 
 		item.add_context_menu_item(_("Open"), action=self.open_item, params={'item':item})
 		if not self.is_search(item) and 'favorites' in self.content_provider.capabilities:
