@@ -11,7 +11,7 @@ GSTREAMER10_PATH = '/usr/lib/gstreamer-1.0'
 LIB_PATH = '/usr/lib'
 EPLAYER2_PATH = '/lib/libeplayer2.so'
 EPLAYER3_PATH = '/lib/libeplayer3.so'
-GSTPLAYER_PATH = '/usr/bin/gstplayer'
+GSTPLAYER_PATHS = ('/usr/bin/gstplayer', '/usr/bin/gstplayer_gst-1.0')
 EXTEPLAYER3_PATH = '/usr/bin/exteplayer3'
 SERVICEAPP_PATH = '/usr/lib/enigma2/python/Plugins/SystemPlugins/ServiceApp/__init__.py'
 
@@ -47,8 +47,10 @@ class VideoPlayerInfo(object):
 			self.serviceappAvailable = False
 			
 		# check if there is gstplayer installed
-		if os.path.isfile( GSTPLAYER_PATH ):
-			self.gstplayerAvailable = True
+		for bin_name in GSTPLAYER_PATHS:
+			if os.path.isfile( bin_name ):
+				self.gstplayerAvailable = True
+				break
 		else:
 			self.gstplayerAvailable = False
 
