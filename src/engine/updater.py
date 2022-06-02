@@ -21,9 +21,6 @@ from Components.Console import Console
 from Components.config import config, ConfigSubsection, ConfigText, ConfigYesNo
 from Screens.MessageBox import MessageBox
 
-# [0] = user, [1] = branch
-github_params=('archivczsk', 'main')
-
 class ArchivUpdater(object):
 	def __init__(self, archivInstance):
 		self.archiv = archivInstance
@@ -39,8 +36,8 @@ class ArchivUpdater(object):
 		self.updateXmlFilePath = os.path.join(self.tmpPath, 'archivczskupdate.xml')
 		self.updateIpkFilePath = os.path.join(self.tmpPath, 'archivczsk_{version}-{date}.ipk')
 		
-		self.updateXml = "https://raw.githubusercontent.com/%s/archivczsk/%s/build/ipk/latest.xml" % github_params
-		self.updateIpk = "https://raw.githubusercontent.com/%s/archivczsk/%s/build/ipk/archivczsk_{version}-{date}.ipk" % github_params
+		self.updateXml = "https://raw.githubusercontent.com/%s/archivczsk/%s/build/ipk/latest.xml" % (config.plugins.archivCZSK.update_repository.value, config.plugins.archivCZSK.update_branch.value)
+		self.updateIpk = "https://raw.githubusercontent.com/%s/archivczsk/%s/build/ipk/archivczsk_{version}-{date}.ipk" % (config.plugins.archivCZSK.update_repository.value, config.plugins.archivCZSK.update_branch.value)
 		
 		self.needUpdate = False
 		
