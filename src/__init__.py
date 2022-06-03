@@ -6,6 +6,7 @@ from Components.config import config
 from Tools.Directories import resolveFilename, SCOPE_PLUGINS, SCOPE_LANGUAGE
 
 from Plugins.Extensions.archivCZSK.engine.tools.logger import log, create_rotating_log, toString
+from .py3compat import *
 
 PluginLanguageDomain = "archivCZSK"
 PluginLanguagePath = "Extensions/archivCZSK/locale"
@@ -30,14 +31,15 @@ def removeDiac(text):
 	searchExp = text
 	try:
 		#log.logDebug("Remove diacritics is '%s'."%type(text))
-		if isinstance(searchExp, str):
+		if is_py3 == False and isinstance(searchExp, str):
 			#log.logDebug("Remove diacritics is str, do nothing return '%s'."%searchExp)
 			return searchExp
 		import unicodedata
 		#searchExp = ''.join((c for c in unicodedata.normalize('NFD', unicode(searchExp, 'utf-8', 'ignore')) 
 		#							   if unicodedata.category(c) != 'Mn')).encode('utf-8')
 		searchExp = ''.join((c for c in unicodedata.normalize('NFD', searchExp) 
-									if unicodedata.category(c) != 'Mn')).encode('utf-8')
+									if unicodedata.category(c) != 'Mn'))
+		searchExp = py2_encode_utf8( searchExp )
 	except:
 		log.logError("Remove diacritics '%s' failed.\n%s"%(text,traceback.format_exc()))
 		

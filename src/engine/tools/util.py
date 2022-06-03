@@ -364,6 +364,9 @@ def encodeFilename(s):
 def sanitize_filename(value):
 	from Plugins.Extensions.archivCZSK import removeDiac
 	tmp = removeDiac(value)
+	tmp = tmp.encode('ascii', 'ignore')
+	if is_py3:
+		tmp = tmp.decode('ascii')
 	tmp = unicode(re.sub(r'(?u)[^\w\s.-]', '', tmp).strip().lower())
 	return re.sub(r'(?u)[-\s]+', '-', tmp)
 	#import unicodedata
