@@ -160,7 +160,7 @@ class ArchivUpdater(object):
 		else:
 			log.logError("ArchivUpdater update archivCZSK from ipk/deb failed. %s ### retval=%s" % (self.update_data, self.update_retval))
 			
-			strMsg = "%s" % _("Update archivCZSK failed. %s returned error\n%s" % (self.updateMode, self.update_data) )
+			strMsg = "%s" % _("Update archivCZSK failed. {cmd} returned error\n{msg}".format(cmd=self.updateMode, msg=self.update_data) )
 			
 			self.archiv.session.openWithCallback(self.updateFailed,
 					MessageBox,
