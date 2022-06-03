@@ -90,30 +90,6 @@ class trakt_tv(object):
 
 	# #################################################################################################
 
-	def getItemTypeXXX(self, item):
-		# 4- season+espisode
-		# 3- season 1,2,3
-		# 2- tvshow
-		# 1- movie
-		sc_id = int(item['id'])
-		url = item['url'].lower()
-		#self.log_function("TRAKT: getItemType url=%s"%url)
-		if url[0]=='/': # item from menu
-			if url == '/play/%s'%sc_id:
-				return 1
-			if url=='/fget/%s'%sc_id:
-				return 2
-			if url.startswith('/fget/%s/'%sc_id):
-				return 3
-			if url.startswith('/play/%s/'%sc_id):
-				return 4
-		else: # playing movie item (only mark as watched, can be only movie or episode)
-			if 'episode' in item:
-				return 4
-			else:
-				return 1
-		raise Exception("Invalid trakt item (TYPE).")
-
 	def getItemType(self, item):
 		# 4- season+espisode
 		# 3- season 1,2,3
@@ -326,9 +302,27 @@ class trakt_tv(object):
 
 	# #################################################################################################
 	
-	def get_watched(self):
+	def get_watched_modifications(self):
+		def iso_to_timestamp( s ):
+			if s:
+				return int(datetime.datetime.strptime( s, '%Y-%m-%dT%H:%M:%S.000Z').strftime("%s"))-time.altzone
+			else:
+				return None
+		
+		mm = None
+		ms = None
+		if self.valid():
+			code, data = self.call_trakt_api('/sync/last_activities')
+			if code == 200:
+				mm = iso_to_timestamp(data.get('movies',{}).get('watched_at'))
+				ms = iso_to_timestamp(data.get('episodes',{}).get('watched_at'))
+				
+		return mm, ms
+		
+	# #################################################################################################
+	
+	def get_watched_movies(self):
 		wm = []
-		ws = []
 
 		if self.valid():
 			code, data = self.call_trakt_api('/sync/watched/movies')
@@ -343,7 +337,14 @@ class trakt_tv(object):
 								
 						wm.append( witem )
 			
-			
+		return wm
+	
+	# #################################################################################################
+	
+	def get_watched_shows(self):
+		ws = []
+		
+		if self.valid():
 			code, data = self.call_trakt_api('/sync/watched/shows')
 			
 			if code == 200:
@@ -362,7 +363,7 @@ class trakt_tv(object):
 							
 						ws.append( witem )
 				
-		return wm, ws
+		return ws
 
 	# #################################################################################################
 	# PAIR
