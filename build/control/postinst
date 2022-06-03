@@ -142,6 +142,8 @@ fi
 echo "Removing temp folder..."
 rm -rf $TMP
 
+touch $ARCHIVCZSK/.first_start
+
 echo "Installation of archivCZSK was successfull"
 
 exit 0

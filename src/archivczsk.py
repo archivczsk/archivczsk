@@ -18,7 +18,6 @@ from Plugins.Extensions.archivCZSK.engine.tools.task import Task
 from Plugins.Extensions.archivCZSK.gui.common import showInfoMessage
 from Plugins.Extensions.archivCZSK.gui.content import ArchivCZSKContentScreen
 from Plugins.Extensions.archivCZSK.compat import DMM_IMAGE, eConnectCallback
-
 from Plugins.Extensions.archivCZSK.engine.updater import ArchivUpdater
 
 class ArchivCZSK():
@@ -291,10 +290,38 @@ class ArchivCZSK():
 		if not ArchivCZSK.__loaded:
 			self.load_repositories()
 
-		# first screen to open when starting plugin,
-		# so we start worker thread where we can run our tasks(ie. loading archives)
-		Task.startWorkerThread()
-		self.session.openWithCallback(self.close_archive_screen, ArchivCZSKContentScreen, self)
+		def first_start_handled(callback=None):
+			# first screen to open when starting plugin,
+			# so we start worker thread where we can run our tasks(ie. loading archives)
+			Task.startWorkerThread()
+			self.session.openWithCallback(self.close_archive_screen, ArchivCZSKContentScreen, self)
+		
+		# check if this is first start after update
+		from Plugins.Extensions.archivCZSK.settings import PLUGIN_PATH
+		first_start_file = os.path.join( PLUGIN_PATH, '.first_start')
+		if os.path.isfile( first_start_file ):
+			os.remove( first_start_file )
+			
+			# check if we have all players installed
+			from Plugins.Extensions.archivCZSK.engine.player.info import videoPlayerInfo
+			
+			if videoPlayerInfo.serviceappAvailable:
+				msg = _("By system chceck there was no system plugin with name ServiceApp detected. This means, that your system only supports video player integrated in enigma2. Some addons doesn't work properly with internal player or don't work at all. If you will have problem with playing some videos, try to install ServiceApp system plugin from feed of your distribution. Then you can change in addon settings used video player to gstplayer or exteplayer3 that can handle some video formats better.")
+			elif not videoPlayerInfo.exteplayer3Available and not videoPlayerInfo.gstplayerAvailable:
+				msg = _("By system chceck there was system plugin with name ServiceApp detected, but you miss exteplayer3 and gstplayer. These video players are needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer and exteplayer3 from feed of your distribution to be able use all available addons.")
+			elif not videoPlayerInfo.exteplayer3Available:
+				msg = _("By system chceck there was system plugin with name ServiceApp detected, but you miss exteplayer3. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install exteplayer3 from feed of your distribution to be able use all available addons.")
+			elif not videoPlayerInfo.gstplayerAvailable:
+				msg = _("By system chceck there was system plugin with name ServiceApp detected, but you miss gstplayer. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer from feed of your distribution to be able use all available addons.")
+			else:
+				msg = None
+			
+			if msg:
+				self.session.openWithCallback(first_start_handled, MessageBox, msg, type=MessageBox.TYPE_INFO, enable_input=True)
+			else:
+				first_start_handled()
+		else:
+			first_start_handled()
 
 	def close_archive_screen(self):
 		if not config.plugins.archivCZSK.preload.getValue():
