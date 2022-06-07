@@ -83,11 +83,12 @@ class MediaItemHandler(ItemHandler):
 		def open_item_success_cb(result):
 			log.logDebug("Trakt (%s) call success. %s"%(action, result))
 			#OK, ERROR
-			list_items, command, args = result
-			if args['isError']:
-				return showErrorMessage(self.session, args['msg'], 10, finishCb)
-			else:
-				return showInfoMessage(self.session, args['msg'], 10, finishCb)
+#			list_items, command, args = result
+#			if args['isError']:
+#				return showErrorMessage(self.session, args['msg'], 10, finishCb)
+#			else:
+#				return showInfoMessage(self.session, args['msg'], 10, finishCb)
+			finishCb(None)
 		def open_item_error_cb(failure):
 			log.logDebug("Trakt (%s) call failed. %s"%(action,failure))
 			return showErrorMessage(self.session, "Operation failed.", 10, finishCb)
@@ -99,10 +100,11 @@ class MediaItemHandler(ItemHandler):
 			elif action == 'pair':
 				trakttv.handle_trakt_pairing(self.session, finishCb )
 			else:
+				result, msg = trakttv.handle_trakt_action( action, item.traktItem )
+
 				if paused:
 					self.content_provider.resume()
 
-				result, msg = trakttv.handle_trakt_action( action, item.traktItem )
 				ppp = { 'cp': 'czsklib', 'trakt':action, 'item': item.traktItem, 'result': result, 'msg': msg }
 				# content provider must be in running state (not paused)
 				self.content_provider.get_content(self.session, params=ppp, successCB=open_item_success_cb, errorCB=open_item_error_cb)
@@ -135,12 +137,20 @@ class MediaItemHandler(ItemHandler):
 			try:
 				if 'trakt' in self.content_provider.capabilities and self.isValidForTrakt(item):
 					totalSec = (datetime.datetime.now()-playStartAt).total_seconds()
-					if self.content_provider.player.video_player.duration:
+					if self.content_provider.player.video_player:
+						# if playback is still running, then get duration from video player
 						durSec = self.content_provider.player.video_player.duration
+					elif self.content_provider.player.duration:
+						# playback has finished - get stored duration
+						durSec = self.content_provider.player.duration
 					else:
-						durSec = float(item.dataItem['duration'])
+						# get stored duration from item
+						durSec = float(item.dataItem.get('duration', 0.0))
+						
+					log.logDebug('Movie duration in sec: %s' % (str(durSec)))
+					
 					# movie time from start play after 80% then mark as watched
-					if totalSec >= durSec*0.80:
+					if durSec and durSec > 0.0 and totalSec >= durSec*0.80:
 						sendTrakt = True
 					else:
 						log.logDebug('Movie not mark as watched ( <80% watch time).')

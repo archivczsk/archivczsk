@@ -81,10 +81,14 @@ class trakt_tv(object):
 		if 'access_token' in self.login_data:
 			headers['Authorization'] = 'Bearer %s' % self.login_data['access_token']
 
+		log.logDebug("Trakt.tv request: %s, data: %s" % (endpoint, json.dumps(data) if data else 'NO_DATA'))
+
 		if data:
 			response = requests.post(BASE + endpoint, headers=headers, json=data)
 		else:
 			response = requests.get(BASE + endpoint, headers=headers)
+		
+		log.logDebug("Trakt.tv response: code: %d, data: %s" % (response.status_code, response.json() if response.status_code < 300 else '') )
 		
 		return response.status_code, response.json() if response.status_code < 300 else None 
 
@@ -172,133 +176,115 @@ class trakt_tv(object):
 	# #################################################################################################
 
 	def add_to_watchlist(self, item):
-		mediatype= self.getItemType(item)
-		postdata = {}
-		if mediatype==1:
-			postdata = {"movies": [{"ids": self.getTraktIds(item)}]}
-		# to watchlist can be added only whole tvseason
-		if mediatype==2 or mediatype==3 or mediatype==4:
-			postdata = {'shows':[{'ids':self.getTraktIds(item)}]}
+		if item['type'] == 'movie' or item['type'] == 'show':
+			item_type = item['type'] + 's'
+		else:
+			raise Exception('Unknown Trakt.tv item type: {item_type}'.format(item_type=item['type']))
+		
+		postdata = { item_type: [{"ids": self.getTraktIds(item)}] }
 			
 		code, data = self.call_trakt_api('/sync/watchlist', postdata )
 		
 		if code > 210:
-			raise Exception('Wrong response from Trakt server: %d' % code )
+			raise Exception('Wrong response from Trakt.tv server: %d' % code )
 		
-		log.logDebug("add_to_watchlist response:\n%s"%data)
-		
-		if mediatype==1:
-			if not (int(data['added']['movies'])==1 or int(data['existing']['movies'])==1):
-				raise Exception('Movie item not added to watchlist.')
+		if not (int(data['added'][item_type])==1 or int(data['existing'][item_type])==1):
+			raise Exception('{item_type} item not added to watchlist.'.format(item_type=item['type']))
 			
-		if mediatype==2 or mediatype==3 or mediatype==4:
-			if not (int(data['added']['shows'])==1 or int(data['existing']['shows'])==1):
-				raise Exception('TvShow item not added to watchlist.')
 
 	# #################################################################################################
 
 	def remove_from_watchlist(self, item):
-		mediatype= self.getItemType(item)
-		postdata = {}
+		if item['type'] == 'movie' or item['type'] == 'show':
+			item_type = item['type'] + 's'
+		else:
+			raise Exception('Unknown Trakt.tv item type: {item_type}'.format(item_type=item['type']))
 		
-		if mediatype==1:
-			postdata = {"movies": [{"ids": self.getTraktIds(item)}]}
-			
-		# to watchlist can be added only whole tvseason
-		if mediatype==2 or mediatype==3 or mediatype==4:
-			postdata = {'shows':[{'ids': self.getTraktIds(item)}]}
+		postdata = { item_type: [{"ids": self.getTraktIds(item)}] }
 			
 		code, data = self.call_trakt_api('/sync/watchlist/remove', postdata )
 		
 		if code > 210:
-			raise Exception('Wrong response from Trakt server: %d' % code )
+			raise Exception('Wrong response from Trakt.tv server: %d' % code )
 
-		log.logDebug("remove_from_watchlist response:\n%s"%data)
-		if mediatype==1:
-			if int(data['deleted']['movies'])!=1:
-				raise Exception('Movie item not removed from watchlist.')
-			
-		if mediatype==2 or mediatype==3 or mediatype==4:
-			if int(data['deleted']['shows'])!=1:
-				raise Exception('TvShow item not removed from watchlist.')
+		if int(data['deleted'][item_type]) != 1:
+			raise Exception('Trakt.tv item of type {item_type} not removed from watchlist.'.format(item_type=item['type']))
 
 	# #################################################################################################
 	
 	def mark_as_watched(self, item):
-		mediatype= self.getItemType(item)
-		postdata = {}
-		if mediatype==1:
+		if item['type'] == 'movie':
 			postdata = {"movies": [{"ids": self.getTraktIds(item)}]}
-		if mediatype==2:
-			postdata = {'shows':[{'ids':self.getTraktIds(item)}]}
-		if mediatype==3:
-			postdata = {'shows':[{'seasons':[{'number':int('%s'%item['info']['season'])}], 'ids':self.getTraktIds(item)}]}
-		if mediatype==4:
-			postdata = {
-				'shows':[
-					{
-						'ids':self.getTraktIds(item),
-						'seasons':[
-							{
-								'episodes':[
-									{
-										'number':int('%s'%item['info']['episode'])
-									}
-								],
-								'number':int('%s'%item['info']['season'])
-							}
-						]
-					}
-				]
-			}
+		elif item['type'] == 'show':
+			if 'episode' in item:
+				# we mark only one episode
+				postdata = { 'shows': [ {'ids': self.getTraktIds(item), 'seasons':[ {'number':int('%s' % item.get('season', 1)), 'episodes':[ {'number':int('%s' % item['episode']) } ] } ] } ]	}
+			elif 'season' in item:
+				# we mark the whole season
+				postdata = {'shows': [ {'ids': self.getTraktIds(item), 'seasons':[{'number':int('%s' % item['season'])}]}]}
+			else:
+				# we mark the whole show (serie)
+				postdata = {'shows': [ {'ids': self.getTraktIds(item)}]}
 
-		log.logDebug("mark_as_watched postdata=%s"%postdata)
+		else:
+			raise Exception('Unknown Trakt.tv item type: {item_type}'.format(item_type=item['type']))
 			
+		
 		code, data = self.call_trakt_api( '/sync/history', postdata )
 		if code > 210:
-			raise Exception('Wrong response from Trakt server: %d' % code )
+			raise Exception('Wrong response from Trakt.tv server: %d' % code )
 
-		log.logDebug("mark_as_watched response:\n%s"%data)
-		if mediatype==1:
-			if int(data['added']['movies'])!=1:
-				raise Exception('Movie item not mark as watched.')
-		if mediatype==2 or mediatype==3:
-			if int(data['added']['episodes'])<1:
-				raise Exception('TvShow (season) not mark as watched.')
-		if mediatype==4:
-			if int(data['added']['episodes'])!=1:
-				raise Exception('TvShow episode not mark as watched.')
+		if item['type'] == 'movie':
+			if int(data['added']['movies']) != 1:
+				raise Exception('Movie item not marked as watched.')
+		else:
+			if 'episode' in item:
+				if int(data['added']['episodes']) != 1:
+					raise Exception('TvShow episode not marked as watched.')
+			elif 'season' in item:
+				if int(data['added']['episodes']) < 1:
+					raise Exception('TvShow season not marked as watched.')
+			else:
+				if int(data['added']['episodes']) < 1:
+					raise Exception('TvShow not marked as watched.')
 
 	# #################################################################################################
 	
 	def mark_as_not_watched(self, item):
-		mediatype= self.getItemType(item)
-		postdata = {}
-		if mediatype==1:
+		if item['type'] == 'movie':
 			postdata = {"movies": [{"ids": self.getTraktIds(item)}]}
-		if mediatype==2:
-			postdata = {'shows':[{'ids':self.getTraktIds(item)}]}
-		if mediatype==3:
-			postdata = {'shows':[{'seasons':[{'number':int('%s'%item['info']['season'])}], 'ids':self.getTraktIds(item)}]}
-		if mediatype==4:
-			postdata = {'shows':[{'seasons':[{'episodes':[{'number':int('%s'%item['info']['episode'])}], 'number':int('%s'%item['info']['season'])}], 'ids':self.getTraktIds(item)}]}
+		elif item['type'] == 'show':
+			if 'episode' in item:
+				# we mark only one episode
+				postdata = { 'shows': [ {'ids': self.getTraktIds(item), 'seasons':[ {'number':int('%s' % item.get('season', 1)), 'episodes':[ {'number':int('%s' % item['episode']) } ] } ] } ]	}
+			elif 'season' in item:
+				# we mark the whole season
+				postdata = {'shows': [ {'ids': self.getTraktIds(item), 'seasons':[{'number':int('%s' % item['season'])}]}]}
+			else:
+				# we mark the whole show (serie)
+				postdata = {'shows': [ {'ids': self.getTraktIds(item)}]}
+
+		else:
+			raise Exception('Unknown Trakt.tv item type: {item_type}'.format(item_type=item['type']))
 			
 		code, data = self.call_trakt_api('/sync/history/remove', postdata)
 		
 		if code > 210:
 			raise Exception('Wrong response from Trakt server: %d' % code )
 
-		log.logDebug("mark_as_not_watched response:\n%s"%data)
-		if mediatype==1:
-			if int(data['deleted']['movies'])!=1:
-				raise Exception('Movie item not mark as not watched.')
-		if mediatype==2 or mediatype==3:
-			if int(data['deleted']['episodes'])<1:
-				raise Exception('TvShow (season) not mark as not watched.')
-		if mediatype==4:
-			if int(data['deleted']['episodes'])!=1:
-				raise Exception('TvShow episode not mark as not watched.')
-		pass
+		if item['type'] == 'movie':
+			if int(data['deleted']['movies']) != 1:
+				raise Exception('Movie item not marked as not watched.')
+		else:
+			if 'episode' in item:
+				if int(data['deleted']['episodes']) != 1:
+					raise Exception('TvShow episode not marked as not watched.')
+			elif 'season' in item:
+				if int(data['deleted']['episodes']) < 1:
+					raise Exception('TvShow season not marked as not watched.')
+			else:
+				if int(data['deleted']['episodes']) < 1:
+					raise Exception('TvShow not marked as not watched.')
 
 	# #################################################################################################
 	
