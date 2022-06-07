@@ -48,7 +48,7 @@ class MediaItemHandler(ItemHandler):
 			if paused and not sendTraktWatchedCmd:
 				self.content_provider.pause()
 			if sendTraktWatchedCmd:
-				return self.cmdTrakt(item, 'watched', finishCB)
+				return self.cmdTrakt(item, 'scrobble', finishCB)
 			elif finishCB is not None:
 				finishCB()
 		paused = self.content_provider.isPaused()
@@ -74,6 +74,7 @@ class MediaItemHandler(ItemHandler):
 	#	- remove
 	#	- watched
 	#	- unwatched
+	#   - scrobble
 	def cmdTrakt(self, item, action, finishedCB=None):
 		def finishCb(result):
 			if paused:
@@ -81,7 +82,7 @@ class MediaItemHandler(ItemHandler):
 			if finishedCB is not None:
 				finishedCB()
 		def open_item_success_cb(result):
-			log.logDebug("Trakt (%s) call success. %s"%(action, result))
+			log.logDebug("Trakt.tv (%s) call success. %s" % (action, result))
 			#OK, ERROR
 #			list_items, command, args = result
 #			if args['isError']:
@@ -90,15 +91,22 @@ class MediaItemHandler(ItemHandler):
 #				return showInfoMessage(self.session, args['msg'], 10, finishCb)
 			finishCb(None)
 		def open_item_error_cb(failure):
-			log.logDebug("Trakt (%s) call failed. %s"%(action,failure))
-			return showErrorMessage(self.session, "Operation failed.", 10, finishCb)
+			log.logDebug("Trakt.tv (%s) call failed. %s" % (action,failure))
+#			return showErrorMessage(self.session, "Operation failed.", 10, finishCb)
+			finishCb(None)
 
+		def eval_trakt_pairing( result ):
+			if result:
+				self.cmdTrakt( item, 'reload', finishedCB )
+			else:
+				finishCb(None)
+				
 		paused = self.content_provider.isPaused()
 		try:
 			if action == 'open_action_choicebox':
 				trakttv.open_trakt_action_choicebox(self.session, item, self.cmdTrakt )
 			elif action == 'pair':
-				trakttv.handle_trakt_pairing(self.session, finishCb )
+				trakttv.handle_trakt_pairing(self.session, eval_trakt_pairing )
 			else:
 				result, msg = trakttv.handle_trakt_action( action, item.traktItem )
 
@@ -109,13 +117,16 @@ class MediaItemHandler(ItemHandler):
 				# content provider must be in running state (not paused)
 				self.content_provider.get_content(self.session, params=ppp, successCB=open_item_success_cb, errorCB=open_item_error_cb)
 		except:
-			log.logError("Trakt call failed.\n%s"%traceback.format_exc())
+			log.logError("Trakt.tv call failed.\n%s" % traceback.format_exc())
 			if paused:
 				self.content_provider.pause()
 			if finishedCB is not None:
 				finishedCB()
 
 	def play_item(self, item, mode='play', *args, **kwargs):
+		# this is needed to allow modifications in inner function
+		scrobbledItem = { 'value': False }
+		
 		def endPlayFinish():
 			self.content_screen.workingFinished()
 			if self.content_provider.isPaused():
@@ -133,33 +144,23 @@ class MediaItemHandler(ItemHandler):
 			except:
 				log.logDebug("Release cmd timer failed.\n%s" % traceback.format_exc())
 			
-			sendTrakt = False
-			try:
-				if 'trakt' in self.content_provider.capabilities and self.isValidForTrakt(item):
-					totalSec = (datetime.datetime.now()-playStartAt).total_seconds()
-					if self.content_provider.player.video_player:
-						# if playback is still running, then get duration from video player
-						durSec = self.content_provider.player.video_player.duration
-					elif self.content_provider.player.duration:
-						# playback has finished - get stored duration
-						durSec = self.content_provider.player.duration
-					else:
-						# get stored duration from item
-						durSec = float(item.dataItem.get('duration', 0.0))
-						
-					log.logDebug('Movie duration in sec: %s' % (str(durSec)))
-					
-					# movie time from start play after 80% then mark as watched
-					if durSec and durSec > 0.0 and totalSec >= durSec*0.80:
-						sendTrakt = True
-					else:
-						log.logDebug('Movie not mark as watched ( <80% watch time).')
-			except:
-				log.logError("Trakt AUTO mark as watched failed.\n%s"%traceback.format_exc())
+			self.cmdStats(item, 'end', finishCB=endPlayFinish, sendTraktWatchedCmd=scrobbledItem['value'], lastPlayPos=self.content_provider.player.lastPlayPositionSeconds)
 
-			# na DEBUG
-			#sendTrakt = True
-			self.cmdStats(item, 'end', finishCB=endPlayFinish, sendTraktWatchedCmd=sendTrakt, lastPlayPos=self.content_provider.player.lastPlayPositionSeconds)
+		def trakt_scrobble( command, position ):
+			if 'trakt' in self.content_provider.capabilities and self.isValidForTrakt(item):
+				log.logInfo("Trakt.tv scrobble command %s received with position %d" % (command, position) )
+				try:
+					if command in ('start', 'seek', 'unpause'):
+						trakttv.scrobble( 'start', item.traktItem, position )
+					elif command == 'pause':
+						trakttv.scrobble( 'pause', item.traktItem, position )
+					elif command == 'stop':
+						ret = trakttv.scrobble( 'stop', item.traktItem, position )
+						if ret == 'scrobble':
+							scrobbledItem['value'] = True
+							
+				except:
+					log.logError("Trakt.tv scrobble command failed.\n%s" % traceback.format_exc())
 
 		def player2stype( player ):
 			# enum: 'Predvolený|gstplayer|exteplayer3|DMM|DVB (OE>=2.5)'
@@ -192,10 +193,9 @@ class MediaItemHandler(ItemHandler):
 
 		self.content_screen.workingStarted()
 		self.content_provider.pause()
-		self.content_provider.play(self.session, item, mode, end_play)
+		self.content_provider.play(self.session, item, mode, end_play, trakt_scrobble)
 
 		# send command
-		playStartAt = datetime.datetime.now()
 		self.cmdStats(item, 'play', finishCB=startWatchingTimer)
 
 	def download_item(self, item, mode="", *args, **kwargs):

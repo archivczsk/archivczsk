@@ -84,9 +84,11 @@ class trakt_tv(object):
 		log.logDebug("Trakt.tv request: %s, data: %s" % (endpoint, json.dumps(data) if data else 'NO_DATA'))
 
 		if data:
-			response = requests.post(BASE + endpoint, headers=headers, json=data)
+			response = requests.post(BASE + endpoint, headers=headers, json=data, timeout=5)
 		else:
-			response = requests.get(BASE + endpoint, headers=headers)
+			response = requests.get(BASE + endpoint, headers=headers, timeout=5)
+		
+		log.logDebug("Trakt.tv response: code: %d, data: %s" % (response.status_code, response.json() if response.status_code < 300 else '') )
 		
 		log.logDebug("Trakt.tv response: code: %d, data: %s" % (response.status_code, response.json() if response.status_code < 300 else '') )
 		
@@ -420,6 +422,28 @@ class trakt_tv(object):
 		return code
 		
 	# #################################################################################################
+	
+	def scrobble(self, action, item, progress ):
+		if item['type'] == 'movie':
+			postdata = {"movie": {"ids": self.getTraktIds(item)}}
+		elif item['type'] == 'show' and 'episode' in item:
+			postdata = { 'show': {'ids': self.getTraktIds(item) }, 'episode': {'season':int('%s' % item.get('season', 1)), 'number':int('%s' % item['episode']) } }
+		else:
+			raise Exception('Not enough data to scrobble {item}'.format(item=str(item)))
+
+		from Plugins.Extensions.archivCZSK.version import version
+		postdata.update( { "progress":progress, "app_version": version, "app_date": "1970-01-01" } )
+		
+		code, data = self.call_trakt_api( '/scrobble/' + action, postdata)
+		
+		if code < 300:
+			ret = data.get('action')
+		else:
+			ret = None
+		
+		return ret
+	
+	# #################################################################################################
 
 	def handle_trakt_action( self, action, item ):
 		try:
@@ -440,6 +464,9 @@ class trakt_tv(object):
 					self.mark_as_watched(item)
 				elif action=='unwatched':
 					self.mark_as_not_watched(item)
+				else:
+					# other commands are silently ignored 
+					pass
 
 				# add result message to show only for trakt
 				result = "success"
@@ -461,12 +488,20 @@ class trakt_tv(object):
 			if selected is not None:
 				cmdTrakt(item, choice_list[selected[0]])
 	
+		watched = item.traktItem.get('watched')
+		
 		choice_list = OrderedDict()
 		choice_list[ _('Add to watchlist') ] = 'add'
 		choice_list[ _('Delete from watchlist') ] = 'remove'
-		choice_list[ _('Mark as watched') ] = 'watched'
-		choice_list[ _("Mark as not watched") ] = 'unwatched'
-	
+		
+		if watched != True:
+			choice_list[ _('Mark as watched') ] = 'watched'
+			
+		if watched != False:
+			choice_list[ _("Mark as not watched") ] = 'unwatched'
+			
+		choice_list[ _("Force data synchronisation") ] = 'reload'
+		
 		newlist = [ (name,) for name in choice_list.keys()]
 		session.openWithCallback(getListInputCB, ChoiceBox, toString( _("Choose Trakt.tv action")), newlist, skin_name="ArchivCZSKChoiceBox")
 	
@@ -475,11 +510,11 @@ class trakt_tv(object):
 	def handle_trakt_pairing( self, session, cbk=None ):
 		def return_error( result ):
 			if cbk:
-				cbk(None)
+				cbk(False)
 	
 		def return_success( result ):
 			if cbk:
-				cbk(None)
+				cbk(True)
 				
 		def check_activation(result):
 			if result == None:

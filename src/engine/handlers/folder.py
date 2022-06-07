@@ -183,12 +183,18 @@ class FolderItemHandler(ItemHandler):
 			log.logDebug("Trakt (%s) call failed. %s"%(action,failure))
 			showErrorMessage(self.session, "Operation failed.", 5, finishCb)
 
+		def eval_trakt_pairing( result ):
+			if result:
+				self.cmdTrakt( item, 'reload' )
+			else:
+				finishCb(None)
+
 		paused = self.content_provider.isPaused()
 		try:
 			if action == 'open_action_choicebox':
 				trakttv.open_trakt_action_choicebox(self.session, item, self.cmdTrakt)
 			elif action == 'pair':
-				trakttv.handle_trakt_pairing(self.session, finishCb )
+				trakttv.handle_trakt_pairing(self.session, eval_trakt_pairing )
 			else:
 				if paused:
 					self.content_provider.resume()

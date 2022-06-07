@@ -17,6 +17,7 @@ from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
 from Tools.BoundFunction import boundFunction
 from Tools.Notifications import AddNotificationWithID, RemovePopup
+from Plugins.Extensions.archivCZSK import _, log
 
 try:
 	from Plugins.Extensions.SubsSupport import (SubsSupport,
@@ -51,8 +52,10 @@ def getPlayPositionPts(session):
 	position = position and not position[0] and position[1] or None
 	return position
 
-def getPlayPositionInSeconds(session):
-	position = getPlayPositionPts(session)
+def getPlayPositionInSeconds(session, position=None):
+	if not position:
+		position = getPlayPositionPts(session)
+		
 	if position is not None:
 		position = position // 90000
 	return position
@@ -64,8 +67,10 @@ def getDurationPts(session):
 	duration = duration and not duration[0] and duration[1] or None
 	return duration
 
-def getDurationInSeconds(session):
-	duration = getDurationPts(session)
+def getDurationInSeconds(session, duration=None):
+	if not duration:
+		duration = getDurationPts(session)
+		
 	if duration is not None:
 		duration = duration // 90000
 	return duration
@@ -99,7 +104,7 @@ class ArchivCZSKPlaylist(Screen):
 
 
 class Player(object):
-	def __init__(self, session, callback=None, content_provider=None):
+	def __init__(self, session, callback=None, content_provider=None, event_callback=None):
 		self.session = session
 		self.old_service = session.nav.getCurrentlyPlayingServiceReference()
 		self.settings = config_archivczsk.videoPlayer
@@ -111,6 +116,7 @@ class Player(object):
 		self.callback = callback
 		self.lastPlayPositionSeconds = None
 		self.duration = None
+		self.event_callback = event_callback
 
 	def play_item(self, item = None, idx = None):
 		log.info("play_item(%s, %s)"%(item,toString(idx)))
@@ -201,6 +207,10 @@ class Player(object):
 					playpos = getPlayPositionInSeconds(self.session)
 					self.duration = getDurationInSeconds(self.session)
 					self.lastPlayPositionSeconds = playpos
+
+					if self.duration is not None and playpos is not None:
+						self.event_callback and self.event_callback( 'stop', (playpos * 100) // self.duration )
+					
 					self.video_player.close()
 			elif callback[0] == "playlist":
 				if callback[1] == "show":
@@ -228,6 +238,9 @@ class Player(object):
 						self.play_item(idx = idx)
 				elif callback[1] == "idx":
 					self.play_item(idx = callback[2])
+			elif callback[0] in ("start", "stop", "pause", "unpause", "seek"):
+				self.event_callback and self.event_callback( callback[0], callback[1] )
+
 
 	def player_exit_callback(self, playpos=None):
 		log.info("player_exit_callback(%s)", playpos)
@@ -466,6 +479,8 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.player_callback = player_callback
 		self.__timer = eTimer()
 		self.__timer_conn = eConnectCallback(self.__timer.timeout, self.__pts_available)
+		self.__timer_seek = eTimer()
+		self.__timer_seek_conn = eConnectCallback(self.__timer_seek.timeout, self.__check_seek_position)
 		self.__subtitles_url = None
 		self.__resume_time_sec = None
 		self.duration_sec = None
@@ -489,22 +504,30 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.__timer.stop()
 		del self.__timer_conn
 		del self.__timer
+		del self.__timer_seek_conn
+		del self.__timer_seek
 		RemovePopup(self.RESUME_POPUP_ID)
 		self.session.deleteDialog(self.status_dialog)
 
 	def __aspect_changed(self):
 		self.status_dialog.set_status(self.getAspectString(), "#00ff00")
 
+	def __check_seek_position(self):
+		position = getPlayPositionInSeconds(self.session)
+		
+		if position is not None and self.duration_sec is not None:
+			self.player_callback( ("seek", (position * 100) // self.duration_sec) )
+
 	def __pts_available(self):
 		if getPlayPositionPts(self.session) is None:
 			self.__timer.start(500, True)
 		else:
+			self.player_callback( ("start", 0) )
+			self.duration_sec = getDurationInSeconds(self.session)
 			if self.__resume_time_sec is not None:
-				self.duration_sec = getDurationInSeconds(self.session)
-				if (self.__resume_time_sec > 0 and 
-						self.duration_sec and self.duration_sec > 0 and
-						self.__resume_time_sec < self.duration_sec):
+				if self.__resume_time_sec > 0 and self.duration_sec and self.duration_sec > 0 and self.__resume_time_sec < self.duration_sec:
 					self.doSeek(self.__resume_time_sec * 90000)
+
 				self.__resume_time_sec = None
 				RemovePopup(self.RESUME_POPUP_ID)
 			if self.__subtitles_url:
@@ -513,13 +536,14 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 	def __service_started(self):
 		self.__timer.stop()
 		self.resetSubs(True)
-		if (self.__resume_time_sec is not None or
-				self.__subtitles_url is not None):
+		if (self.__resume_time_sec is not None or self.__subtitles_url is not None):
 			if self.__resume_time_sec is not None:
 				AddNotificationWithID(self.RESUME_POPUP_ID,
 						MessageBox, _("Resuming playback"), timeout=0,
 						type=MessageBox.TYPE_INFO, enable_input=False)
-			self.__timer.start(500, True)
+				
+		# always run pts detection to get video length (if available) 
+		self.__timer.start(500, True)
 
 	def play_service_ref(self, service_ref, subtitles_url=None, resume_time_sec=None):
 		self.__subtitles_url = subtitles_url
@@ -530,6 +554,11 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 
 	def doEofInternal(self, playing):
 		log.info("doEofInternal(%s)"%playing)
+		position = getPlayPositionInSeconds(self.session)
+
+		if position is not None and self.duration_sec is not None:
+			self.player_callback( ("stop", (position * 100) // self.duration_sec) )
+
 		self.player_callback(("eof", playing))
 
 	def setInfoBarText(self, title):
@@ -539,3 +568,30 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 			log.logError("Set info bar text failed.\n%s"%traceback.format_exc())
 			pass
 
+	def pauseService(self):
+		InfoBarSeek.pauseService(self)
+		position = getPlayPositionInSeconds(self.session)
+		
+		if position is not None and self.duration_sec is not None:
+			self.player_callback( ("pause", (position * 100) // self.duration_sec) )
+		
+	def unPauseService(self):
+		InfoBarSeek.unPauseService(self)
+		position = getPlayPositionInSeconds(self.session)
+		
+		if position is not None and self.duration_sec is not None:
+			self.player_callback( ("unpause", (position * 100) // self.duration_sec) )
+		
+	def doSeek(self, pts ):
+		InfoBarSeek.doSeek(self, pts )
+		if self.__timer_seek.isActive():
+			self.__timer_seek.stop()
+
+		self.__timer_seek.start(5000, True)
+
+	def doSeekRelative(self, pts ):
+		InfoBarSeek.doSeekRelative(self, pts )
+		if self.__timer_seek.isActive():
+			self.__timer_seek.stop()
+
+		self.__timer_seek.start(5000, True)
