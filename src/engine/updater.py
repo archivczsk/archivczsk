@@ -34,10 +34,11 @@ class ArchivUpdater(object):
 		self.remote_version = ""
 		self.remote_date = ""
 		self.updateXmlFilePath = os.path.join(self.tmpPath, 'archivczskupdate.xml')
-		self.updateIpkFilePath = os.path.join(self.tmpPath, 'archivczsk_{version}-{date}.ipk')
+		self.updateIpkFilePathTemplate = os.path.join(self.tmpPath, 'archivczsk_{version}-{date}.ipk')
+		self.updateIpkFilePath = None
 		
-		self.updateXml = "https://raw.githubusercontent.com/%s/archivczsk/%s/build/ipk/latest.xml" % (config.plugins.archivCZSK.update_repository.value, config.plugins.archivCZSK.update_branch.value)
-		self.updateIpk = "https://raw.githubusercontent.com/%s/archivczsk/%s/build/ipk/archivczsk_{version}-{date}.ipk" % (config.plugins.archivCZSK.update_repository.value, config.plugins.archivCZSK.update_branch.value)
+		self.updateXml = "https://raw.githubusercontent.com/{update_repository}/archivczsk/{update_branch}/build/ipk/latest.xml"
+		self.updateIpk = "https://raw.githubusercontent.com/{update_repository}/archivczsk/{update_branch}/build/ipk/archivczsk_{version}-{date}.ipk"
 		
 		self.needUpdate = False
 		
@@ -168,8 +169,11 @@ class ArchivUpdater(object):
 					type=MessageBox.TYPE_INFO)
 
 	def downloadUpdateXml(self):
+		updateXml = self.updateXml.replace('{update_repository}', config.plugins.archivCZSK.update_repository.value ).replace('{update_branch}', config.plugins.archivCZSK.update_branch.value)
+		log.debug("Checking archivCZSK update from: %s" % updateXml)
+		
 		try:
-			util.download_to_file(self.updateXml, self.updateXmlFilePath, timeout=config.plugins.archivCZSK.updateTimeout.value)
+			util.download_to_file(updateXml, self.updateXmlFilePath, timeout=config.plugins.archivCZSK.updateTimeout.value)
 			return True
 		except Exception:
 			log.logError("ArchivUpdater download archiv update xml failed.\n%s" % traceback.format_exc())
@@ -177,10 +181,11 @@ class ArchivUpdater(object):
 		
 	def downloadIpk(self):
 		try:
-			self.updateIpk = self.updateIpk.replace('{version}', self.remote_version).replace('{date}', self.remote_date)
-			self.updateIpkFilePath = self.updateIpkFilePath.replace('{version}', self.remote_version).replace('{date}', self.remote_date)
-			log.logDebug("ArchivUpdater downloading ipk %s to %s" % (self.updateIpk, self.updateIpkFilePath))
-			util.download_to_file(self.updateIpk, self.updateIpkFilePath, timeout=config.plugins.archivCZSK.updateTimeout.value)
+			updateIpk = self.updateIpk.replace('{update_repository}', config.plugins.archivCZSK.update_repository.value ).replace('{update_branch}', config.plugins.archivCZSK.update_branch.value)
+			updateIpk = updateIpk.replace('{version}', self.remote_version).replace('{date}', self.remote_date)
+			self.updateIpkFilePath = self.updateIpkFilePathTemplate.replace('{version}', self.remote_version).replace('{date}', self.remote_date)
+			log.logDebug("ArchivUpdater downloading ipk %s to %s" % (updateIpk, self.updateIpkFilePath))
+			util.download_to_file(updateIpk, self.updateIpkFilePath, timeout=config.plugins.archivCZSK.updateTimeout.value)
 			return True
 		except Exception:
 			log.logError("ArchivUpdater download update ipk failed.\n%s" % traceback.format_exc())
@@ -202,7 +207,7 @@ class ArchivUpdater(object):
 		try:
 			if os.path.isfile(self.updateXmlFilePath):
 				os.remove(self.updateXmlFilePath)
-			if os.path.isfile(self.updateIpkFilePath):
+			if self.updateIpkFilePath and os.path.isfile(self.updateIpkFilePath):
 				os.remove(self.updateIpkFilePath)
 		except:
 			log.logError("ArchivUpdater remove temp files failed.\n%s" % traceback.format_exc())
@@ -337,40 +342,28 @@ class Updater(object):
 		
 		local_file = os.path.join(tmp_base, zip_filename)
 		remote_file = remote_base + '/' + zip_filename
-		if remote_file.find('{commit}') != -1:
-			# this update needs commit file - it should be already set by _download_update_xml()
-			remote_file = remote_file.replace('{commit}', self.commit)
 
+		# if update data path contains variables configurable by user, then set it here
+		remote_file = remote_file.replace('{update_repository}', config.plugins.archivCZSK.update_repository.value ).replace('{update_branch}', config.plugins.archivCZSK.update_branch.value)
+		
 		try:
 			util.download_to_file(remote_file, local_file, debugfnc=log.debug, timeout=config.plugins.archivCZSK.updateTimeout.value)
 		except:
 			shutil.rmtree(tmp_base)
 			return None
-		return local_file	   
-			
-			
+		return local_file
+
+
 	def _download_update_xml(self):
 		"""downloads update xml of repository"""
 
-		# this is only temporary here - support for commit will be removed in next version because it is incompatible with multiple repositories		
-		if self.update_xml_url.find('{commit}') != -1:
-			# this repository needs commit file
-			try:
-				response = requests.get('https://raw.githubusercontent.com/archivczsk/archivczsk-doplnky/main/commit', timeout=config.plugins.archivCZSK.updateTimeout.value )
-				
-				if response.status_code != 200:
-					raise UpdateXMLDownloadError( "Wrong response status code: %d" % response.status_code )
-				
-				self.commit = response.text[:-1]
-			except Exception as e:
-				raise UpdateXMLDownloadError("Failed to download commit file: %s" % str(e))
-			
-			self.update_xml_url = self.update_xml_url.replace('{commit}', self.commit)
+		# if update xml path contains variables configurable by user, then set it here
+		update_xml_url = self.update_xml_url.replace('{update_repository}', config.plugins.archivCZSK.update_repository.value ).replace('{update_branch}', config.plugins.archivCZSK.update_branch.value)
 
-		log.debug("Checking addons updates from: %s" % self.update_xml_url)
+		log.debug("Checking addons updates from: %s" % update_xml_url)
 			
 		try:
-			util.download_to_file(self.update_xml_url, self.update_xml_file, timeout=config.plugins.archivCZSK.updateTimeout.value)
+			util.download_to_file(update_xml_url, self.update_xml_file, debugfnc=log.debug, timeout=config.plugins.archivCZSK.updateTimeout.value)
 		except Exception:
 			log.error('cannot download %s update xml', self.repository.name)
 			log.logError( traceback.format_exc())

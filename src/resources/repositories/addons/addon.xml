@@ -4,9 +4,9 @@
 		<import addon="xbmc.addon" version="0.1"/>
 	</requires>
 	<extension point="xbmc.addon.repository" name="archivCZSK addons repository">
-		<info>https://raw.githubusercontent.com/archivczsk/archivczsk-doplnky/main/addons.xml</info>
-		<checksum>https://raw.githubusercontent.com/archivczsk/archivczsk-doplnky/main/addons.xml.md5</checksum>
-		<datadir>https://raw.githubusercontent.com/archivczsk/archivczsk-doplnky/main/repo</datadir>
+		<info>https://raw.githubusercontent.com/{update_repository}/archivczsk-doplnky/{update_branch}/addons.xml</info>
+		<checksum>https://raw.githubusercontent.com/{update_repository}/archivczsk-doplnky/{update_branch}/addons.xml.md5</checksum>
+		<datadir>https://raw.githubusercontent.com/{update_repository}/archivczsk-doplnky/{update_branch}/repo</datadir>
 	</extension>
 	<extension point="xbmc.addon.metadata">
 		<summary>archivCZSK doplnky</summary>

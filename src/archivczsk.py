@@ -193,7 +193,7 @@ class ArchivCZSK():
 			self.updateCheckTimer_conn = eConnectCallback(self.updateCheckTimer.timeout, self.check_addon_updates)
 			self.updateCheckTimer.start(200, True)
 		except:
-			log.logError("Download addons commit failed.")
+			log.logError("Download addons failed.")
 			self.open_archive_screen()
 
 	def check_addon_updates(self):

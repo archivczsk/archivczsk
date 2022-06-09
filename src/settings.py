@@ -84,8 +84,15 @@ config.plugins.archivCZSK.main_menu = ConfigYesNo(default=True)
 config.plugins.archivCZSK.extensions_menu = ConfigYesNo(default=False)
 config.plugins.archivCZSK.epg_menu = ConfigYesNo(default=True)
 config.plugins.archivCZSK.archivAutoUpdate = ConfigYesNo(default=True)
+config.plugins.archivCZSK.allow_custom_update = ConfigYesNo(default=False)
 config.plugins.archivCZSK.update_repository=ConfigText(default='archivczsk')
-config.plugins.archivCZSK.update_branch=ConfigText(default='main')
+if config.plugins.archivCZSK.allow_custom_update.value:
+	# setting this config option allow you to choose custom update repo/branch
+	config.plugins.archivCZSK.update_branch=ConfigText(default='main')
+else:
+	# only official repo is allowed
+	config.plugins.archivCZSK.update_branch=ConfigSelection(default='main',  choices=[ ('main', _('Stable')), ('testing', _("Testing"))])
+	config.plugins.archivCZSK.update_repository.setValue('archivczsk')
 config.plugins.archivCZSK.autoUpdate = ConfigYesNo(default=True)
 config.plugins.archivCZSK.updateTimeout = ConfigInteger(default=8, limits=(0,30))
 config.plugins.archivCZSK.preload = ConfigYesNo(default=True)
@@ -162,6 +169,9 @@ def get_main_settings():
 	list.append(getConfigListEntry(_("Allow archivCZSK auto update"), config.plugins.archivCZSK.archivAutoUpdate))
 	list.append(getConfigListEntry(_("Allow addons auto update"), config.plugins.archivCZSK.autoUpdate))
 	list.append(getConfigListEntry(_("Update timeout"), config.plugins.archivCZSK.updateTimeout))
+	if config.plugins.archivCZSK.allow_custom_update.value:
+		list.append(getConfigListEntry(_("Update repository"), config.plugins.archivCZSK.update_repository))
+	list.append(getConfigListEntry(_("Update channel"), config.plugins.archivCZSK.update_branch))
 	list.append(MENU_SEPARATOR)
 	list.append(getConfigListEntry(_("Show movie info"), config.plugins.archivCZSK.showVideoInfo))
 	list.append(getConfigListEntry(_("Show movie poster"), config.plugins.archivCZSK.downloadPoster))
