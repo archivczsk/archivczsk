@@ -1,3 +1,10 @@
+archivCZSK 1.5.0, 09.06.2022
+    - oprava detekcie prehrávača gstplayer
+    - pridanie informácie pri štarte o nutnosti inštalácie ServiceApp
+    - oprava konverzie názvov pri sťahovaní video súborov
+    - vylepšenia spôsobu aktualizácie a možnosť prepnutia medzi stabilým a testovacím vydaním
+    - nový engine pre trakt.tv vrátane automatického scrobblingu počas prehrávania (ak doplnok dodá potrebné info)
+
 archivCZSK 1.4.9, 31.05.2022
     - možnosť zapnutia/vypnutia podpory pre youtube videa (užitočné pre pomalé prijímače s málo RAM)
     - zjednodušenie aktualizácie doplnkov
