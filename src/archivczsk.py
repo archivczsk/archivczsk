@@ -305,7 +305,9 @@ class ArchivCZSK():
 			# check if we have all players installed
 			from Plugins.Extensions.archivCZSK.engine.player.info import videoPlayerInfo
 			
-			if not videoPlayerInfo.serviceappAvailable:
+			if DMM_IMAGE:
+				msg = None
+			elif not videoPlayerInfo.serviceappAvailable:
 				msg = _("By system check there was no system plugin with name ServiceApp detected. This means, that your system only supports video player integrated in enigma2. Some addons doesn't work properly with internal player or don't work at all. If you will have problem with playing some videos, try to install ServiceApp system plugin from feed of your distribution. Then you can change in addon settings used video player to gstplayer or exteplayer3 that can handle some video formats better.")
 			elif not videoPlayerInfo.exteplayer3Available and not videoPlayerInfo.gstplayerAvailable:
 				msg = _("By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3 and gstplayer. These video players are needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer and exteplayer3 from feed of your distribution to be able use all available addons.")
