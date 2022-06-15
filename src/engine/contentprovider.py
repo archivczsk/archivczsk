@@ -684,7 +684,7 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 					log.debug("%s archivCZSK version %s>=%s" , self, aczsk.version, version)
 				else:
 					log.debug("%s archivCZSK version %s<=%s" , self, aczsk.version, version)
-					raise AddonError(_("You need to update archivCZSK at least to") + " " + version + " " + _("version"))
+					raise AddonError(_("You need to update archivCZSK at least to version {version}").format(version=version))
 
 			log.info("%s requires %s addon, version %s" , self, addon_id, version)
 			if ArchivCZSK.has_addon(addon_id):
@@ -697,8 +697,7 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 					log.debug("%s version %s<=%s" , self, tools_addon.version, version)
 					if not optional:
 						log.error("%s cannot execute", self)
-						raise AddonError("Cannot execute addon %s, dependency %s version %s needs to be at least version %s"
-										% (self.video_addon, tools_addon.id, tools_addon.version, version))
+						raise AddonError( _("Cannot execute addon {addon_name}. Dependency {dependency_name} version {dependency_version} needs to be at least version {dependency_version_requiered}".format(addon_name=self.video_addon, dependency_name=tools_addon.id, dependency_version=tools_addon.version, dependency_version_requiered=version)))
 					else:
 						log.debug("%s skipping")
 						continue

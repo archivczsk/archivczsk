@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-06-09 09:59+0200\n"
+"POT-Creation-Date: 2022-06-15 10:28+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,6 +17,7 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 
 #: src/archivczsk.py:192 src/engine/updater.py:53 src/engine/updater.py:56
+#: src/engine/updater.py:54
 msgid "Checking for updates"
 msgstr "Kontrolujem aktualizácie"
 
@@ -182,12 +183,10 @@ msgid "Category list"
 msgstr "Zoznam kategórií"
 
 #: src/engine/contentprovider.py:715 src/engine/contentprovider.py:687
-msgid "You need to update archivCZSK at least to"
-msgstr "Musíte aktualizovať ArchivCZSK aspoň na"
-
-#: src/engine/contentprovider.py:715 src/engine/contentprovider.py:687
-msgid "version"
-msgstr "verziu"
+#: src/engine/contentprovider.py:691
+#, python-brace-format
+msgid "You need to update archivCZSK at least to version {version}"
+msgstr "Musíte aktualizovať ArchivCZSK aspoň na verziu {version}"
 
 #: src/gui/download.py:232 src/engine/downloader.py:218
 #: src/engine/downloader.py:246
@@ -278,7 +277,7 @@ msgid "category"
 msgstr "kategóriu"
 
 #: src/engine/handlers/folder.py:257 src/engine/handlers/folder.py:262
-#: src/engine/handlers/folder.py:218
+#: src/engine/handlers/folder.py:218 src/engine/handlers/folder.py:224
 msgid "Open"
 msgstr "Otvoriť položku"
 
@@ -289,7 +288,9 @@ msgstr "Otvoriť položku"
 #: src/engine/handlers/media.py:241 src/engine/handlers/media.py:245
 #: src/engine/handlers/folder.py:220 src/engine/handlers/folder.py:222
 #: src/engine/handlers/media.py:243 src/engine/handlers/media.py:247
-#: src/engine/handlers/media.py:251
+#: src/engine/handlers/media.py:251 src/engine/handlers/folder.py:226
+#: src/engine/handlers/folder.py:228 src/engine/handlers/media.py:253
+#: src/engine/handlers/media.py:257
 msgid "Add Shortcut"
 msgstr "Pridať záložku"
 
@@ -297,6 +298,7 @@ msgstr "Pridať záložku"
 #: src/engine/handlers/media.py:244 src/engine/handlers/folder.py:271
 #: src/engine/handlers/media.py:252 src/engine/handlers/folder.py:227
 #: src/engine/handlers/media.py:254 src/engine/handlers/media.py:258
+#: src/engine/handlers/folder.py:233 src/engine/handlers/media.py:264
 msgid "Do you want to add"
 msgstr "Chcete pridať"
 
@@ -304,12 +306,13 @@ msgstr "Chcete pridať"
 #: src/engine/handlers/media.py:244 src/engine/handlers/folder.py:271
 #: src/engine/handlers/media.py:252 src/engine/handlers/folder.py:227
 #: src/engine/handlers/media.py:254 src/engine/handlers/media.py:258
+#: src/engine/handlers/folder.py:233 src/engine/handlers/media.py:264
 msgid "shortcut?"
 msgstr "záložku?"
 
 #: src/engine/handlers/media.py:198 src/engine/handlers/media.py:201
 #: src/engine/handlers/media.py:209 src/engine/handlers/media.py:211
-#: src/engine/handlers/media.py:215
+#: src/engine/handlers/media.py:215 src/engine/handlers/media.py:221
 msgid "Download"
 msgstr "Stiahnuť"
 
@@ -318,19 +321,20 @@ msgstr "Stiahnuť"
 #: src/engine/handlers/media.py:423 src/engine/handlers/media.py:211
 #: src/engine/handlers/media.py:431 src/engine/handlers/media.py:213
 #: src/engine/handlers/media.py:433 src/engine/handlers/media.py:217
-#: src/engine/handlers/media.py:437
+#: src/engine/handlers/media.py:437 src/engine/handlers/media.py:223
+#: src/engine/handlers/media.py:443
 msgid "Play"
 msgstr "Prehrať"
 
 #: src/engine/handlers/media.py:208 src/engine/handlers/media.py:211
 #: src/engine/handlers/media.py:219 src/engine/handlers/media.py:221
-#: src/engine/handlers/media.py:225
+#: src/engine/handlers/media.py:225 src/engine/handlers/media.py:231
 msgid "Play and Download"
 msgstr "Prehrávaj a sťahuj"
 
 #: src/engine/handlers/media.py:226 src/engine/handlers/media.py:229
 #: src/engine/handlers/media.py:237 src/engine/handlers/media.py:239
-#: src/engine/handlers/media.py:243
+#: src/engine/handlers/media.py:243 src/engine/handlers/media.py:249
 msgid "Resolve videos"
 msgstr "Načítaj videá"
 
@@ -339,6 +343,7 @@ msgstr "Načítaj videá"
 #: src/engine/handlers/media.py:303 src/engine/handlers/media.py:362
 #: src/engine/handlers/media.py:305 src/engine/handlers/media.py:364
 #: src/engine/handlers/media.py:309 src/engine/handlers/media.py:368
+#: src/engine/handlers/media.py:315 src/engine/handlers/media.py:374
 msgid "Please select source"
 msgstr "Prosím zvoľte zdroj"
 
@@ -347,6 +352,7 @@ msgstr "Prosím zvoľte zdroj"
 #: src/engine/player/player.py:473 src/engine/handlers/media.py:435
 #: src/engine/player/player.py:474 src/engine/handlers/media.py:437
 #: src/engine/player/player.py:489 src/engine/handlers/media.py:441
+#: src/engine/handlers/media.py:447
 msgid "Show playlist"
 msgstr "Zobraziť playlist"
 
@@ -437,11 +443,12 @@ msgid "Resuming playback"
 msgstr "Obnoviť prehrávanie"
 
 #: src/engine/updater.py:145 src/engine/updater.py:157
-#: src/engine/updater.py:154
+#: src/engine/updater.py:154 src/engine/updater.py:155
 msgid "Update archivCZSK complete."
 msgstr "Aktualizácia archivCZSK prebehla úspešne."
 
 #: src/engine/updater.py:86 src/engine/updater.py:98 src/engine/updater.py:95
+#: src/engine/updater.py:96
 msgid "Do you want to update archivCZSK to version"
 msgstr "Prajete si aktualizovať archivCZSK na verziu"
 
@@ -1244,13 +1251,13 @@ msgstr "Používať prehrávač"
 
 #: src/engine/handlers/media.py:203 src/engine/handlers/media.py:206
 #: src/engine/handlers/media.py:214 src/engine/handlers/media.py:216
-#: src/engine/handlers/media.py:220
+#: src/engine/handlers/media.py:220 src/engine/handlers/media.py:226
 msgid "Play using gstplayer"
 msgstr "Prehrať pomocou gstplayer"
 
 #: src/engine/handlers/media.py:206 src/engine/handlers/media.py:209
 #: src/engine/handlers/media.py:217 src/engine/handlers/media.py:219
-#: src/engine/handlers/media.py:223
+#: src/engine/handlers/media.py:223 src/engine/handlers/media.py:229
 msgid "Play using exteplayer3"
 msgstr "Prehrať pomocou exteplayer3"
 
@@ -1259,22 +1266,22 @@ msgid "Size:\t "
 msgstr "Veľkosť:\t "
 
 #: src/engine/updater.py:101 src/engine/updater.py:113
-#: src/engine/updater.py:110
+#: src/engine/updater.py:110 src/engine/updater.py:111
 msgid "Downloading update package"
 msgstr "Sťahujem aktualizačný balík"
 
 #: src/engine/updater.py:114 src/engine/updater.py:126
-#: src/engine/updater.py:123
+#: src/engine/updater.py:123 src/engine/updater.py:124
 msgid "Updating archivCZSK using package manager"
 msgstr "Aktualizujem archivCZSK pomocou správcu balíkov"
 
 #: src/engine/updater.py:127 src/engine/updater.py:139
-#: src/engine/updater.py:136
+#: src/engine/updater.py:136 src/engine/updater.py:137
 msgid "Failed to download archivCZSK update package"
 msgstr "Zlyhalo sťahovanie aktualizačného balíka archivCZSK"
 
 #: src/engine/updater.py:154 src/engine/updater.py:166
-#: src/engine/updater.py:163
+#: src/engine/updater.py:163 src/engine/updater.py:164
 #, python-format, python-brace-format
 msgid ""
 "Update archivCZSK failed. {cmd} returned error\n"
@@ -1302,27 +1309,33 @@ msgstr "Časový limit aktualizácie"
 
 #: src/engine/handlers/folder.py:256 src/engine/handlers/media.py:202
 #: src/engine/handlers/folder.py:214 src/engine/handlers/media.py:206
-#: src/engine/handlers/media.py:210
+#: src/engine/handlers/media.py:210 src/engine/handlers/folder.py:220
+#: src/engine/handlers/media.py:216
 msgid "Trakt.tv action"
 msgstr "Trakt.tv akcia"
 
 #: src/engine/trakttv.py:12 src/engine/trakttv.py:478 src/engine/trakttv.py:492
+#: src/engine/trakttv.py:494
 msgid "Add to watchlist"
 msgstr "Pridať do Watchlist"
 
 #: src/engine/trakttv.py:13 src/engine/trakttv.py:479 src/engine/trakttv.py:493
+#: src/engine/trakttv.py:495
 msgid "Delete from watchlist"
 msgstr "Vymazať z Watchlist"
 
 #: src/engine/trakttv.py:14 src/engine/trakttv.py:480 src/engine/trakttv.py:496
+#: src/engine/trakttv.py:498
 msgid "Mark as watched"
 msgstr "Označiť ako videné"
 
 #: src/engine/trakttv.py:15 src/engine/trakttv.py:481 src/engine/trakttv.py:499
+#: src/engine/trakttv.py:501
 msgid "Mark as not watched"
 msgstr "Označiť ako nevidené"
 
 #: src/engine/trakttv.py:18 src/engine/trakttv.py:484 src/engine/trakttv.py:504
+#: src/engine/trakttv.py:506
 msgid "Choose Trakt.tv action"
 msgstr "Zvoľte Trakt.tv akciu"
 
@@ -1343,38 +1356,46 @@ msgid "By system check there was system plugin with name ServiceApp detected, bu
 msgstr "Pri kontrole systému bol zistený systémový plugin s názvom ServiceApp, ale chýba vám prehrávač gstplayer. Tento video prehrávač je potrebný na spracovanie niektorých formátov videa, ktoré integrovaný video prehrávač v enigma2 nedokáže. Odporúča sa nainštalovať gstplayer z feedu vašej distribúcie, aby ste mohli využívať všetky dostupné doplnky."
 
 #: src/engine/handlers/folder.py:216 src/engine/handlers/media.py:208
-#: src/engine/handlers/media.py:212
+#: src/engine/handlers/media.py:212 src/engine/handlers/folder.py:222
+#: src/engine/handlers/media.py:218
 msgid "Pair device with Trakt.tv"
 msgstr "Spárovať zariadenie s Trakt.tv"
 
 #: src/engine/trakttv.py:459 src/engine/trakttv.py:471
+#: src/engine/trakttv.py:473
 #, python-brace-format
 msgid "Trakt.tv operation {action} ended successfuly"
 msgstr "Trakt.tv operácia \"{action}\" skončila úspešne"
 
 #: src/engine/trakttv.py:462 src/engine/trakttv.py:474
+#: src/engine/trakttv.py:476
 msgid "Trakt.tv is not paired with this device."
 msgstr "Trakt.tv nie je spárovaný s týmto zariadením"
 
 #: src/engine/trakttv.py:466 src/engine/trakttv.py:478
+#: src/engine/trakttv.py:480
 #, python-brace-format
 msgid "Trakt.tv operation \"{action}\" failed"
 msgstr "Trakt.tv operácia \"{action}\" zlyhala"
 
 #: src/engine/trakttv.py:499 src/engine/trakttv.py:519
+#: src/engine/trakttv.py:521
 msgid "Pairing timed out!"
 msgstr "Časový limit párovania vypršal"
 
 #: src/engine/trakttv.py:502 src/engine/trakttv.py:515
 #: src/engine/trakttv.py:522 src/engine/trakttv.py:535
+#: src/engine/trakttv.py:524 src/engine/trakttv.py:537
 msgid "Pairing aborted by user"
 msgstr "Párovanie bolo zrušené používateľom"
 
 #: src/engine/trakttv.py:511 src/engine/trakttv.py:531
+#: src/engine/trakttv.py:533
 msgid "Pairing succesed. You can use Trakt.tv functions now"
 msgstr "Párovanie úspešné. Teraz môžete využívať funkcie Trakt.tv"
 
 #: src/engine/trakttv.py:524 src/engine/trakttv.py:544
+#: src/engine/trakttv.py:546
 #, python-brace-format
 msgid ""
 "To pair Trakt.tv with this device go to the activation address and enter pairing code.\n"
@@ -1401,6 +1422,11 @@ msgstr "Aktualizačný repozitár"
 msgid "Update channel"
 msgstr "Aktualizačný kanál"
 
-#: src/engine/trakttv.py:501
+#: src/engine/trakttv.py:501 src/engine/trakttv.py:503
 msgid "Force data synchronisation"
 msgstr "Vynútiť synchronizáciu dát"
+
+#: src/engine/contentprovider.py:704
+#, python-brace-format
+msgid "Cannot execute addon {addon_name}. Dependency {dependency_name} version {dependency_version} needs to be at least version {dependency_version_requiered}"
+msgstr "Spustenie doplnku {addon_name} zlyhalo. Nainštalovaná závislosť {dependency_name} verzia {dependency_version} musí byť aspoň vo verzii {dependency_version_requiered}"
