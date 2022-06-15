@@ -653,7 +653,11 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		VideoAddonContentProvider.__addon_sys.clear_addons()
 		self.video_addon.deinclude()
 		self.release_dependencies()
-		sys.meta_path.remove(self._sys_importer)
+		try:
+			sys.meta_path.remove(self._sys_importer)
+		except:
+			# no _sys_importer found - this can happen when there was error by resolving dependencies
+			pass
 
 	def __pause_resolving_provider(self):
 		self.video_addon.deinclude()
