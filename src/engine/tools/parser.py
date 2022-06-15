@@ -59,7 +59,8 @@ class XBMCAddonXMLParser(XMLParser):
 	addon_types = {
 				   "xbmc.python.pluginsource":"content",
 				   "xbmc.addon.repository":"repository",
-				   "xbmc.python.module":"tools"
+				   "xbmc.python.module":"tools",
+				   "xbmc.service":"service"
 				   }
 	
 	def get_addon_id(self, addon):
@@ -73,8 +74,8 @@ class XBMCAddonXMLParser(XMLParser):
 	
 	def parse_addon(self, addon):
 
-		id = self.get_addon_id(addon)
-		if id is None:
+		addon_id = self.get_addon_id(addon)
+		if addon_id is None:
 			raise Exception("Parse error: Mandatory atrribute 'id' is missing")
 		name = addon.attrib.get('name')
 		if name is None:
@@ -86,7 +87,7 @@ class XBMCAddonXMLParser(XMLParser):
 		if version is None:
 			raise Exception("Parse error: Mandatory atrribute 'version' is missing")
 		
-		type = 'unknown'
+		addon_type = 'unknown'
 		description = {}
 		broken = None
 		repo_datadir_url = u''
@@ -94,6 +95,7 @@ class XBMCAddonXMLParser(XMLParser):
 		requires = []
 		library = 'lib'
 		script = 'default.py'
+		service_lib = None
 		
 		req = addon.find('requires')
 		for imp in req.findall('import'):
@@ -105,12 +107,13 @@ class XBMCAddonXMLParser(XMLParser):
 		for info in addon.findall('extension'):
 			if info.attrib.get('point') in self.addon_types:
 				ad_type = self.addon_types[info.attrib.get('point')]
+				util.log.debug("ad_type: %s" % ad_type )
 				if ad_type == 'repository':
-					type = ad_type
+					addon_type = ad_type
 					repo_datadir_url = info.find('datadir').text
 					repo_addons_url = info.find('info').text
 				elif ad_type == 'tools':
-					type = ad_type
+					addon_type = ad_type
 					library = info.attrib.get('library')
 				elif ad_type == 'content':
 					provides = None
@@ -119,8 +122,10 @@ class XBMCAddonXMLParser(XMLParser):
 					if info.attrib.get('provides'):
 						provides = info.attrib.get('provides')
 					if provides is not None and provides == 'video':
-						type = 'video'
+						addon_type = 'video'
 						script = info.attrib.get('library')
+				elif ad_type == 'service':
+					service_lib = info.attrib.get('library', "service.py")
 					
 			if info.attrib.get('point') == 'xbmc.addon.metadata':
 				if info.findtext('broken'):
@@ -131,10 +136,10 @@ class XBMCAddonXMLParser(XMLParser):
 					else:
 						description[desc.attrib.get('lang')] = desc.text
 						
-		return {"id":id,
+		return {"id":addon_id,
 				"name":name,
 				"author":author,
-				"type":type ,
+				"type":addon_type,
 				"version":version,
 				"description":description,
 				"broken":broken,
@@ -142,7 +147,8 @@ class XBMCAddonXMLParser(XMLParser):
 				"repo_datadir_url":repo_datadir_url,
 				"requires":requires,
 				"library":library,
-				"script":script} 
+				"script":script,
+				"service_lib":service_lib}
 
 class XBMCMultiAddonXMLParser(XBMCAddonXMLParser):
 	

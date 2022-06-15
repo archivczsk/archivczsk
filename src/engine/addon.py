@@ -15,6 +15,7 @@ from Plugins.Extensions.archivCZSK.gui import menu
 from Plugins.Extensions.archivCZSK.gui import info
 from Plugins.Extensions.archivCZSK.gui import shortcuts
 from Plugins.Extensions.archivCZSK.gui import download
+from Plugins.Extensions.archivCZSK.engine.service import AddonService
 from .contentprovider import VideoAddonContentProvider
 from Plugins.Extensions.archivCZSK.compat import DMM_IMAGE
 
@@ -35,6 +36,7 @@ class Addon(object):
 		self.path = info.path
 		self.relative_path = os.path.relpath(self.path, repository.path)
 		self.supported = True
+		self.service = AddonService(info)
 
 		log.info("%s - initializing", self)
 
@@ -120,8 +122,6 @@ class Addon(object):
 		self.loader = None
 		self._updater = None
 		self.repository = None
-
-
 
 class XBMCAddon(object):
 	def __init__(self, addon):
@@ -478,6 +478,7 @@ class AddonInfo(object):
 		self.path = os.path.dirname(info_file)
 		self.library = addon_dict['library']
 		self.script = addon_dict['script']
+		self.service_lib = addon_dict['service_lib']
 		self.tmp_path = config.plugins.archivCZSK.tmpPath.value
 		self.data_path = os.path.join(config.plugins.archivCZSK.dataPath.getValue(), self.id)
 		self.profile = self.data_path

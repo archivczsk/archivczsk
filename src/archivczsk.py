@@ -124,6 +124,10 @@ class ArchivCZSK():
 	def remove_addon(addon):
 		del ArchivCZSK.__addons[addon.id]
 
+	@staticmethod
+	def run_services():
+		for addon in ArchivCZSK.get_addons():
+			addon.service.init()
 
 	def __init__(self, session):
 		self.session = session
