@@ -129,6 +129,14 @@ class ArchivCZSK():
 		for addon in ArchivCZSK.get_addons():
 			addon.service.init()
 
+	@staticmethod
+	def run_autostart():
+		for addon in ArchivCZSK.get_video_addons():
+			try:
+				addon.provider.run_autostart_script()
+			except:
+				log.logError("Autostart failed:\n%s" % traceback.format_exc())
+
 	def __init__(self, session):
 		self.session = session
 		self.to_update_addons = []

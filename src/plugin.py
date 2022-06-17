@@ -92,6 +92,7 @@ if config.plugins.archivCZSK.preload.value and not ArchivCZSK.isLoaded():
 	ArchivCZSK.load_repositories()
 	ArchivCZSK.load_skin()
 	ArchivCZSK.run_services()
+	ArchivCZSK.run_autostart()
 	
 if config.plugins.archivCZSK.videoPlayer.ydl.value == 'preload':
 	ArchivCZSK.start_ydl()

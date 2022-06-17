@@ -57,11 +57,12 @@ class XBMCSettingsXMLParser(XMLParser):
 class XBMCAddonXMLParser(XMLParser):
 		
 	addon_types = {
-				   "xbmc.python.pluginsource":"content",
-				   "xbmc.addon.repository":"repository",
-				   "xbmc.python.module":"tools",
-				   "xbmc.service":"service"
-				   }
+		"xbmc.python.pluginsource":"content",
+		"xbmc.addon.repository":"repository",
+		"xbmc.python.module":"tools",
+		"xbmc.service":"service",
+		"xbmc.autostart":"autostart"
+	}
 	
 	def get_addon_id(self, addon):
 		id_addon = addon.attrib.get('id')#.replace('-', '')
@@ -96,6 +97,7 @@ class XBMCAddonXMLParser(XMLParser):
 		library = 'lib'
 		script = 'default.py'
 		service_lib = None
+		autostart_script = None
 		
 		req = addon.find('requires')
 		for imp in req.findall('import'):
@@ -126,6 +128,8 @@ class XBMCAddonXMLParser(XMLParser):
 						script = info.attrib.get('library')
 				elif ad_type == 'service':
 					service_lib = info.attrib.get('library', "service.py")
+				elif ad_type == 'autostart':
+					autostart_script = info.attrib.get('library', "autostart.py")
 					
 			if info.attrib.get('point') == 'xbmc.addon.metadata':
 				if info.findtext('broken'):
@@ -148,7 +152,9 @@ class XBMCAddonXMLParser(XMLParser):
 				"requires":requires,
 				"library":library,
 				"script":script,
-				"service_lib":service_lib}
+				"service_lib":service_lib,
+				"autostart_script":autostart_script
+				}
 
 class XBMCMultiAddonXMLParser(XBMCAddonXMLParser):
 	

@@ -168,6 +168,7 @@ class VideoAddon(Addon):
 	def __init__(self, info, repository):
 		Addon.__init__(self, info, repository)
 		self.script = info.script
+		self.autostart_script = info.autostart_script
 		self.requires = [require for require in info.requires if require['addon'] not in VideoAddon.ignore_requires]
 		if self.script == '':
 			raise Exception("%s entry point missing in addon.xml" % self)
@@ -479,6 +480,7 @@ class AddonInfo(object):
 		self.library = addon_dict['library']
 		self.script = addon_dict['script']
 		self.service_lib = addon_dict['service_lib']
+		self.autostart_script = addon_dict['autostart_script']
 		self.tmp_path = config.plugins.archivCZSK.tmpPath.value
 		self.data_path = os.path.join(config.plugins.archivCZSK.dataPath.getValue(), self.id)
 		self.profile = self.data_path
