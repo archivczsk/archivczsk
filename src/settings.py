@@ -126,6 +126,10 @@ config.plugins.archivCZSK.logPath.addNotifier(changeLogPath)
 
 ########### Misc #########################
 
+def restartHttpServer(configElement):
+	from Plugins.Extensions.archivCZSK.engine.httpserver import archivCZSKHttpServer
+	archivCZSKHttpServer.start_listening(True)
+
 choicelist = [('1', _("info")), ('2', _("debug"))]
 config.plugins.archivCZSK.debugMode = ConfigSelection(default='1', choices=choicelist)
 config.plugins.archivCZSK.showBrokenAddons = ConfigYesNo(default=True)
@@ -134,6 +138,11 @@ config.plugins.archivCZSK.showVideoSourceSelection = ConfigYesNo(default=True)
 config.plugins.archivCZSK.convertPNG = ConfigYesNo(default=True)
 config.plugins.archivCZSK.clearMemory = ConfigYesNo(default=False)
 config.plugins.archivCZSK.confirmExit = ConfigYesNo(default=False)
+config.plugins.archivCZSK.httpPort = ConfigInteger(default=18888, limits=(1,65535))
+config.plugins.archivCZSK.httpPort.addNotifier(restartHttpServer)
+config.plugins.archivCZSK.httpLocalhost = ConfigYesNo(default=True)
+config.plugins.archivCZSK.httpLocalhost.addNotifier(restartHttpServer)
+
 
 ########## TRAKT ##############################
 
@@ -184,7 +193,6 @@ def get_main_settings():
 	list.append(MENU_SEPARATOR)
 	list.append(getConfigListEntry(_("CSFD plugin"), config.plugins.archivCZSK.csfdMode))
 	
-	
 	return list
 
 def get_path_settings():
@@ -206,4 +214,7 @@ def get_misc_settings():
 	list.append(getConfigListEntry(_("Show video source selection"), config.plugins.archivCZSK.showVideoSourceSelection))
 	list.append(getConfigListEntry(_("Convert captcha images to 8bit"), config.plugins.archivCZSK.convertPNG))
 	list.append(getConfigListEntry(_("Drop caches on exit"), config.plugins.archivCZSK.clearMemory))
+	list.append(getConfigListEntry(_("Internal HTTP server listen port"), config.plugins.archivCZSK.httpPort ))
+	list.append(getConfigListEntry(_("Run HTTP only for internal addons usage"), config.plugins.archivCZSK.httpLocalhost ))
+
 	return list
