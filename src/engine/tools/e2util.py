@@ -1,6 +1,8 @@
+import sys
 from enigma import getDesktop, eConsoleAppContainer, eTimer
 from Plugins.Extensions.archivCZSK.compat import eConnectCallback
-
+from Plugins.Extensions.archivCZSK import log
+import struct
 import json
 
 def get_desktop_width_and_height():
@@ -22,8 +24,8 @@ class PythonProcess(object):
 
 	def recieveMessages(self, data):
 		def getMessage(data):
-			mSize = int(data[:7])
-			mPayload = data[7:mSize]
+			mSize = struct.unpack('!I', data[:4])[0]+4
+			mPayload = data[4:mSize]
 			mPart = mSize > len(data)
 			return mSize, mPayload, mPart
 
@@ -70,7 +72,7 @@ class PythonProcess(object):
 
 	def start(self, callbacks):
 		self.callbacks = callbacks
-		cmd = "python %s" % self.processPath
+		cmd = "%s %s" % ('python3' if sys.version_info[0] == 3 else "python", self.processPath)
 		self.appContainer.execute(cmd)
 
 	def running(self):
@@ -105,8 +107,9 @@ class PythonProcess(object):
 			self.stopTimer.start(2000, False)
 
 	def write(self, data):
-		dump = json.dumps(data)
-		dump = "%07d%s" % (len(dump), dump)
+		dump = json.dumps(data).encode('ascii')
+		data_size = struct.pack('!I', len(dump) )
+		dump = data_size + dump
 		try:
 			self.appContainer.write(dump)
 		# DMM image
@@ -114,6 +117,7 @@ class PythonProcess(object):
 			self.appContainer.write(dump, len(dump))
 
 	def dataErrCB(self, data):
+		log.error("ERROR from service: %s", data)
 		self.error = data
 
 	def dataOutCB(self, data):
@@ -121,3 +125,4 @@ class PythonProcess(object):
 
 	def finishedCB(self, retval):
 		self.callbacks['finishedCB'](retval)
+		
