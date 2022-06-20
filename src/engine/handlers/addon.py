@@ -45,6 +45,17 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 				if command is not None:
 					cmd = ("%s"%command).lower()
 					params = args
+					if cmd == "send_service_command":
+						log.logInfo("Sending command %s with args %s to service" % (args['cmd'], args.get('cmd_args')) )
+						self.content_provider.video_addon.service.sendCommand(args['cmd'], **args.get('cmd_args',{}))
+						
+						if 'msg' in args:
+							# also show message to user, so transfer this to show_msg command
+							cmd = 'show_msg'
+						else:
+							command = None
+							args = {}
+
 					if cmd == "show_msg":
 						#dialogStart = datetime.datetime.now()
 						self.content_screen.stopLoading()
@@ -69,6 +80,7 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 						elif msgType == 'warning':
 							return showWarningMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
 						return showInfoMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
+
 			except:
 				log.logError("Execute HACK command failed (addon handler).\n%s" % traceback.format_exc())
 				command = None

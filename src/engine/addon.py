@@ -36,7 +36,6 @@ class Addon(object):
 		self.path = info.path
 		self.relative_path = os.path.relpath(self.path, repository.path)
 		self.supported = True
-		self.service = AddonService(info)
 
 		log.info("%s - initializing", self)
 
@@ -59,6 +58,7 @@ class Addon(object):
 
 		# loader to handle addon imports
 		self.loader = AddonLoader(self)
+		self.service = AddonService(self)
 
 	def __repr__(self):
 		return "%s(%s-%s)" % (self.__class__.__name__, self.name, self.version)

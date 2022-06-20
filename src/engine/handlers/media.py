@@ -334,7 +334,6 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 
 				if command is not None:
 					cmd = ("%s"%command).lower()
-					params = args
 					if cmd == "show_msg":
 						#dialogStart = datetime.datetime.now()
 						self.content_screen.stopLoading()
@@ -352,6 +351,7 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 						if msgType == 'warning':
 							return showWarningMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
 						return showInfoMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
+
 			except:
 				log.logError("Execute HACK command failed (media handler).\n%s"%traceback.format_exc())
 				command = None

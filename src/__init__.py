@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 import os, gettext, sys, datetime, traceback
 
-from Components.Language import language
-from Components.config import config
-from Tools.Directories import resolveFilename, SCOPE_PLUGINS, SCOPE_LANGUAGE
+if '_enigma' in sys.modules:
+	# this is a hack to be able tu use imports also in addon services where enigma is not available
+	from Components.Language import language
+	from Components.config import config
+	from Tools.Directories import resolveFilename, SCOPE_PLUGINS, SCOPE_LANGUAGE
+else:
+	language = None
+	
 
 from Plugins.Extensions.archivCZSK.engine.tools.logger import log, create_rotating_log, toString
 from .py3compat import *
@@ -24,8 +29,9 @@ def _(txt):
 		t = gettext.gettext(txt)
 	return t
 
-localeInit()
-language.addCallback(localeInit)
+if language:
+	localeInit()
+	language.addCallback(localeInit)
 
 def removeDiac(text):
 	searchExp = text
