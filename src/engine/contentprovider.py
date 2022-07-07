@@ -689,29 +689,29 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 				else:
 					log.debug("%s archivCZSK version %s<=%s" , self, aczsk.version, version)
 					raise AddonError(_("You need to update archivCZSK at least to version {version}").format(version=version))
-
-			log.info("%s requires %s addon, version %s" , self, addon_id, version)
-			if ArchivCZSK.has_addon(addon_id):
-				tools_addon = ArchivCZSK.get_addon(addon_id)
-				log.debug("%s required %s founded" , self, tools_addon)
-				if	not util.check_version(tools_addon.version, version):
-					log.debug("%s version %s>=%s" , self, tools_addon.version, version)
-					self._dependencies.append(tools_addon)
-				else:
-					log.debug("%s version %s<=%s" , self, tools_addon.version, version)
-					if not optional:
-						log.error("%s cannot execute", self)
-						raise AddonError( _("Cannot execute addon {addon_name}. Dependency {dependency_name} version {dependency_version} needs to be at least version {dependency_version_requiered}".format(addon_name=self.video_addon, dependency_name=tools_addon.id, dependency_version=tools_addon.version, dependency_version_requiered=version)))
-					else:
-						log.debug("%s skipping")
-						continue
 			else:
-				log.error("%s required %s addon not founded" ,self, addon_id)
-				if not optional:
-					log.error("%s cannot execute %s addon" ,self, self.video_addon)
-					raise Exception("Cannot execute %s, missing dependency %s" % (self.video_addon, addon_id))
+				log.info("%s requires %s addon, version %s" , self, addon_id, version)
+				if ArchivCZSK.has_addon(addon_id):
+					tools_addon = ArchivCZSK.get_addon(addon_id)
+					log.debug("%s required %s founded" , self, tools_addon)
+					if	not util.check_version(tools_addon.version, version):
+						log.debug("%s version %s>=%s" , self, tools_addon.version, version)
+						self._dependencies.append(tools_addon)
+					else:
+						log.debug("%s version %s<=%s" , self, tools_addon.version, version)
+						if not optional:
+							log.error("%s cannot execute", self)
+							raise AddonError( _("Cannot execute addon {addon_name}. Dependency {dependency_name} version {dependency_version} needs to be at least version {dependency_version_requiered}".format(addon_name=self.video_addon, dependency_name=tools_addon.id, dependency_version=tools_addon.version, dependency_version_requiered=version)))
+						else:
+							log.debug("%s skipping")
+							continue
 				else:
-					log.debug("skipping")
+					log.error("%s required %s addon not founded" ,self, addon_id)
+					if not optional:
+						log.error("%s cannot execute %s addon" ,self, self.video_addon)
+						raise Exception("Cannot execute %s, missing dependency %s" % (self.video_addon, addon_id))
+					else:
+						log.debug("skipping")
 
 	def include_dependencies(self):
 		for addon in self._dependencies:
