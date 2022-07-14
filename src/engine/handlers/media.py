@@ -42,7 +42,7 @@ class MediaItemHandler(ItemHandler):
 	#	- play
 	#	- watching /every 10minutes/
 	#	- end
-	def cmdStats(self, item, action, finishCB=None, sendTraktWatchedCmd=False, lastPlayPos=None):
+	def cmdStats(self, item, action, finishCB=None, sendTraktWatchedCmd=False, lastPlayPos=None, duration=None):
 		def open_item_finish(result):
 			log.logDebug("Stats (%s) call finished.\n%s"%(action,result))
 			if paused and not sendTraktWatchedCmd:
@@ -59,6 +59,9 @@ class MediaItemHandler(ItemHandler):
 			ppp = { 'cp': 'czsklib', 'stats':action, 'item': item.dataItem }
 			if lastPlayPos != None:
 				ppp['lastPlayPos'] = lastPlayPos
+				
+			if duration != None:
+				ppp['duration'] = duration
 				
 			# content provider must be in running state (not paused)
 			self.content_provider.get_content(self.session, params=ppp, successCB=open_item_finish, errorCB=open_item_finish)
@@ -144,7 +147,7 @@ class MediaItemHandler(ItemHandler):
 			except:
 				log.logDebug("Release cmd timer failed.\n%s" % traceback.format_exc())
 			
-			self.cmdStats(item, 'end', finishCB=endPlayFinish, sendTraktWatchedCmd=scrobbledItem['value'], lastPlayPos=self.content_provider.player.lastPlayPositionSeconds)
+			self.cmdStats(item, 'end', finishCB=endPlayFinish, sendTraktWatchedCmd=scrobbledItem['value'], lastPlayPos=self.content_provider.player.lastPlayPositionSeconds, duration=self.content_provider.player.duration)
 
 		def trakt_scrobble( command, position ):
 			if 'trakt' in self.content_provider.capabilities and self.isValidForTrakt(item):
