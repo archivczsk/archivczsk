@@ -1,3 +1,11 @@
+archivCZSK 1.5.1, 17.07.2022
+    - pridanie dĺžky filmu do stats prikazu pre doplnky
+    - pridanie interného HTTP servera pre použitie doplnkami (napr. ako proxy)
+    - pridanie funkcie autostart pre doplnky
+    - pridanie možnosti spustenia služby bežiacej na pozadí pre doplnky
+    - pridanie všeobecného bouquet generátora pre použitie doplnkami
+    - úprava lokalizácii
+
 archivCZSK 1.5.0, 09.06.2022
     - oprava detekcie prehrávača gstplayer
     - pridanie informácie pri štarte o nutnosti inštalácie ServiceApp
