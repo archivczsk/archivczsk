@@ -18,7 +18,7 @@ class AddonService(PythonProcess):
 		
 		PythonProcess.__init__(self, script_path)
 
-		self.name = "%s:%s" % (addon.info.name,  os.path.splitext(addon.info.service_lib)[0])
+		self.name = "%s:%s" % (addon.info.name, os.path.splitext(addon.info.service_lib)[0])
 		self.version = None
 		self.initialized = False
 		self.available = None
@@ -40,6 +40,7 @@ class AddonService(PythonProcess):
 		callbacks = {}
 		callbacks['messageCB'] = self.messageReceived
 		callbacks['finishedCB'] = self.processExited
+		callbacks['exceptionCB'] = self.processException
 		self.start(callbacks)
 
 		self.d = Deferred()
@@ -72,7 +73,7 @@ class AddonService(PythonProcess):
 			self.version = data['version']
 			self.initialized = True
 			self.available = True
-			log.info("Service %s initialised" % self)
+			log.info("Service %s successfuly started" % self)
 			self.d.callback(True)
 		elif data['cmd'] == 'show_exception':
 			log.error("Service[%s]: EXCEPTION: %s" % (self, data.get('msg', 'unknown exception') ))
@@ -114,4 +115,7 @@ class AddonService(PythonProcess):
 
 	def processExited(self, retval):
 		log.info("Service[%s] exited with return code %d" % (self, retval))
-	
+		
+	def processException(self, tb):
+		log.error("Service[%s]: exception by processing data\n%s" % (self, tb))
+		PythonProcess.stop(self)

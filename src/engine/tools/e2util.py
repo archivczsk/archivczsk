@@ -2,7 +2,7 @@ import sys
 from enigma import getDesktop, eConsoleAppContainer, eTimer
 from Plugins.Extensions.archivCZSK.compat import eConnectCallback
 from Plugins.Extensions.archivCZSK import log
-import struct
+import struct, traceback
 import json
 
 def get_desktop_width_and_height():
@@ -15,6 +15,7 @@ class PythonProcess(object):
 		self.toRead = None
 		self.pPayload = None
 		self.data = ""
+		self.data_cached = None
 		self.__stopping = False
 		self.processPath = processPath
 		self.appContainer = eConsoleAppContainer()
@@ -24,6 +25,16 @@ class PythonProcess(object):
 
 	def recieveMessages(self, data):
 		def getMessage(data):
+			if self.data_cached != None:
+				# we have cached data from last run, so use it
+				data = self.data_cached + data
+				self.data_cached = None
+				
+			if len(data) < 4:
+				# not enough data to process - cache it and stop processing
+				self.data_cached = data
+				return None, None, None
+			
 			mSize = struct.unpack('!I', data[:4])[0]+4
 			mPayload = data[4:mSize]
 			mPart = mSize > len(data)
@@ -43,14 +54,15 @@ class PythonProcess(object):
 
 		def readStart(data):
 			mSize, mPayload, mPart = getMessage(data)
-			if not mPart:
-				data = data[mSize:]
-				readMessage(mPayload)
-				if len(data) > 0:
-					readStart(data)
-			else:
-				self.toRead = mSize - len(data)
-				self.pPayload = mPayload
+			if mSize != None:
+				if not mPart:
+					data = data[mSize:]
+					readMessage(mPayload)
+					if len(data) > 0:
+						readStart(data)
+				else:
+					self.toRead = mSize - len(data)
+					self.pPayload = mPayload
 
 		def readContinue(data):
 			nextdata = data[:self.toRead]
@@ -107,21 +119,29 @@ class PythonProcess(object):
 			self.stopTimer.start(2000, False)
 
 	def write(self, data):
-		dump = json.dumps(data).encode('ascii')
-		data_size = struct.pack('!I', len(dump) )
-		dump = data_size + dump
-		try:
-			self.appContainer.write(dump)
-		# DMM image
-		except TypeError:
-			self.appContainer.write(dump, len(dump))
+		if self.appContainer.running():
+			dump = json.dumps(data).encode('ascii')
+			data_size = struct.pack('!I', len(dump) )
+			dump = data_size + dump
+			try:
+				self.appContainer.write(dump)
+			# DMM image
+			except TypeError:
+				self.appContainer.write(dump, len(dump))
 
 	def dataErrCB(self, data):
 		log.error("ERROR from service: %s", data)
 		self.error = data
 
 	def dataOutCB(self, data):
-		self.recieveMessages(data)
+		try:
+			self.recieveMessages(data)
+		except:
+			if 'exceptionCB' in self.callbacks:
+				self.callbacks['exceptionCB'](traceback.format_exc())
+			else:
+				log.error("Failed to process data from service:\n%s", traceback.format_exc())
+				self.stop()
 
 	def finishedCB(self, retval):
 		self.callbacks['finishedCB'](retval)
