@@ -1,3 +1,6 @@
+archivCZSK 1.5.2, 18.07.2022
+    - oprava pádu pri chybe v IPC medzi hlavnou aplikáciou a službami doplnkov
+    
 archivCZSK 1.5.1, 17.07.2022
     - pridanie dĺžky filmu do stats prikazu pre doplnky
     - pridanie interného HTTP servera pre použitie doplnkami (napr. ako proxy)
