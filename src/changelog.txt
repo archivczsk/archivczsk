@@ -1,3 +1,7 @@
+archivCZSK 1.5.3, 22.07.2022
+    - zmena IPC protokolu pre služby na textový kvôli kompatibilite s DreamOS
+    - pridanie podpory pre reload settingov na DreamOS v zabezpečenom režime
+
 archivCZSK 1.5.2, 18.07.2022
     - oprava pádu pri chybe v IPC medzi hlavnou aplikáciou a službami doplnkov
     
