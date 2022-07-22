@@ -269,8 +269,27 @@ class BouquetGeneratorTemplate:
 					pass
 				
 	def reload_bouquets(self):
+		session_id = None
+		
 		try:
-			requests.get("http://127.0.0.1/web/servicelistreload?mode=2")
+			# on DMM there is a security check, so try to get session ID first
+			response = requests.post("http://127.0.0.1/web/session")
+			
+			if response.status_code == 200:
+				data = response.text
+				s1=data.find('<e2sessionid>')
+				s2=data.find('</e2sessionid>')
+				
+				if s1 != -1 and s2 != -1:
+					session_id = data[s1+13:s2]
+		except:
+			pass
+		
+		try:
+			if session_id:
+				requests.post("http://127.0.0.1/web/servicelistreload?mode=2&sessionid=%s" % session_id)
+			else:
+				requests.get("http://127.0.0.1/web/servicelistreload?mode=2")
 		except:
 			pass
 
@@ -293,6 +312,8 @@ class BouquetGeneratorTemplate:
 		os.remove( "/etc/enigma2/" + self.userbouquet_file_name )
 		self.reload_bouquets()
 		return True
+	
+	
 	def userbouquet_md5(self):
 		hash_md5 = md5()
 		
@@ -388,8 +409,6 @@ class BouquetGeneratorTemplate:
 		else:
 			player_id = "4097" # system default
 	
-		file_name = "userbouquet.%s.tv" % self.prefix
-		
 		picons = {}
 		
 		service_ref_uniq = ':%X:%X:%X:0:0:0:' % (self.tid, self.onid, self.namespace)
