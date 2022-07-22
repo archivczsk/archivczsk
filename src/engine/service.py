@@ -118,4 +118,4 @@ class AddonService(PythonProcess):
 		
 	def processException(self, tb):
 		log.error("Service[%s]: exception by processing data\n%s" % (self, tb))
-		PythonProcess.stop(self)
+#		PythonProcess.stop(self)

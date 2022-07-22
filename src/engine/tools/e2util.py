@@ -1,8 +1,8 @@
-import sys
+import sys, os
 from enigma import getDesktop, eConsoleAppContainer, eTimer
 from Plugins.Extensions.archivCZSK.compat import eConnectCallback
 from Plugins.Extensions.archivCZSK import log
-import struct, traceback
+import traceback
 import json
 
 def get_desktop_width_and_height():
@@ -23,68 +23,18 @@ class PythonProcess(object):
 		self.stderrAvail_conn = eConnectCallback(self.appContainer.stderrAvail, self.dataErrCB)
 		self.appContainer_conn = eConnectCallback(self.appContainer.appClosed, self.finishedCB)
 
-	def recieveMessages(self, data):
-		def getMessage(data):
-			if self.data_cached != None:
-				# we have cached data from last run, so use it
-				data = self.data_cached + data
-				self.data_cached = None
-				
-			if len(data) < 4:
-				# not enough data to process - cache it and stop processing
-				self.data_cached = data
-				return None, None, None
-			
-			mSize = struct.unpack('!I', data[:4])[0]+4
-			mPayload = data[4:mSize]
-			mPart = mSize > len(data)
-			return mSize, mPayload, mPart
-
-		def readMessage(payload):
-			try:
-				message = json.loads(payload)
-			except EOFError:
-				pass
-			except Exception:
-				pass
-			else:
-				self.toRead = None
-				self.pPayload = None
-				self.handleMessage(message)
-
-		def readStart(data):
-			mSize, mPayload, mPart = getMessage(data)
-			if mSize != None:
-				if not mPart:
-					data = data[mSize:]
-					readMessage(mPayload)
-					if len(data) > 0:
-						readStart(data)
-				else:
-					self.toRead = mSize - len(data)
-					self.pPayload = mPayload
-
-		def readContinue(data):
-			nextdata = data[:self.toRead]
-			self.pPayload += nextdata
-			data = data[len(nextdata):]
-			self.toRead -= len(nextdata)
-			if self.toRead == 0:
-				readMessage(self.pPayload)
-				if len(data) > 0:
-					readStart(data)
-
-		if self.pPayload is not None:
-			readContinue(data)
-		else:
-			readStart(data)
-
 	def handleMessage(self, data):
 		self.callbacks['messageCB'](data)
 
 	def start(self, callbacks):
 		self.callbacks = callbacks
-		cmd = "%s %s" % ('python3' if sys.version_info[0] == 3 else "python", self.processPath)
+		ext = os.path.splitext( self.processPath )[1]
+		
+		if ext in ('.py', '.pyo', '.pyc'):
+			cmd = "%s %s" % ('python3' if sys.version_info[0] == 3 else "python", self.processPath)
+		else:
+			cmd = "%s" % self.processPath
+			
 		self.appContainer.execute(cmd)
 
 	def running(self):
@@ -120,9 +70,7 @@ class PythonProcess(object):
 
 	def write(self, data):
 		if self.appContainer.running():
-			dump = json.dumps(data).encode('ascii')
-			data_size = struct.pack('!I', len(dump) )
-			dump = data_size + dump
+			dump = json.dumps(data) + '\n'
 			try:
 				self.appContainer.write(dump)
 			# DMM image
@@ -130,18 +78,40 @@ class PythonProcess(object):
 				self.appContainer.write(dump, len(dump))
 
 	def dataErrCB(self, data):
-		log.error("ERROR from service: %s", data)
+		data = data.decode('utf-8')
+		log.error("ERROR from service:\n" + data)
 		self.error = data
 
 	def dataOutCB(self, data):
-		try:
-			self.recieveMessages(data)
-		except:
-			if 'exceptionCB' in self.callbacks:
-				self.callbacks['exceptionCB'](traceback.format_exc())
+		data = data.decode('utf-8')
+
+		if self.data_cached != None:
+			# we have cached data from last run, so use it
+			data = self.data_cached + data
+			self.data_cached = None
+
+		lines = data.split('\n')
+		
+		if len(lines[-1]) != 0:
+			# last line was not terminated by new line - cache it and do not process it
+			self.data_cached = lines[-1]
+			del lines[-1]
+
+		for line in lines:
+
+			if len(line) == 0:
+				# ignore empty lines
+				continue
+			
+			try:
+				message = json.loads(line)
+			except:
+				if 'exceptionCB' in self.callbacks:
+					self.callbacks['exceptionCB'](traceback.format_exc())
+				else:
+					log.error("Failed to process data from service:\n%s", traceback.format_exc())
 			else:
-				log.error("Failed to process data from service:\n%s", traceback.format_exc())
-				self.stop()
+				self.handleMessage(message)
 
 	def finishedCB(self, retval):
 		self.callbacks['finishedCB'](retval)

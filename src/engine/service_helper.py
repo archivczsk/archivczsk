@@ -3,13 +3,14 @@ from twisted.protocols import basic
 import json
 import traceback
 
-class AddonServiceHelper(basic.Int32StringReceiver):
+class AddonServiceHelper(basic.LineReceiver):
 	def __init__(self):
+		self.delimiter=b'\n'
 		self.getSettingsCbk = {}
 		self.getHttpEndpointCbk = {}
 		
 	def sendJson(self, data ):
-		self.sendString(json.dumps( data ).encode('ascii'))
+		self.sendLine(json.dumps( data ).encode('utf-8'))
 	
 	def connectionMade(self):
 		data = {'cmd': 'startup_response', 'version': 1 }
@@ -31,7 +32,7 @@ class AddonServiceHelper(basic.Int32StringReceiver):
 		data = {'cmd': 'show_exception', 'msg': msg}
 		self.sendJson(data)
 		
-	def stringReceived(self, data):
+	def lineReceived(self, data):
 		try:
 			data = json.loads(data)
 	
@@ -65,7 +66,8 @@ class AddonServiceHelper(basic.Int32StringReceiver):
 	
 	def connectionLost(self, reason):
 		# stop the reactor, only because this is meant to be run in Stdio.
-		reactor.stop()
+		if reactor.running:
+			reactor.stop()
 
 	def getSetting(self, name, cbk ):
 		def extractSingleValue( settings ):

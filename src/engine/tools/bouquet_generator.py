@@ -307,7 +307,8 @@ class BouquetGeneratorTemplate:
 				for line in f.readlines():
 					if not line.startswith(ub_service_ref):
 						fw.write(line)
-				os.rename("/etc/enigma2/bouquets.tv.temporary", "/etc/enigma2/bouquets.tv")
+
+		os.rename("/etc/enigma2/bouquets.tv.temporary", "/etc/enigma2/bouquets.tv")
 		
 		os.remove( "/etc/enigma2/" + self.userbouquet_file_name )
 		self.reload_bouquets()

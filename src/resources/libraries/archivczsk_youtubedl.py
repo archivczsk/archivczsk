@@ -3,16 +3,14 @@ import sys
 import os
 
 from sys import stdin, stdout
-import struct
 
 def getRequest():
-	data_size = struct.unpack('!I', stdin.read(4) )[0]
-	data = stdin.read(data_size)
+	data = stdin.readline().rstrip()
 	return json.loads(data)
 
 def sendResponse(response):
-	dump = json.dumps(response).encode('ascii')
-	os.write( stdout.fileno(), struct.pack('!I', len(dump)) + dump )
+	dump = json.dumps(response)
+	stdout.write( dump + '\n' )
 	stdout.flush()
 
 def mainLoop():
