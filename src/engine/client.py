@@ -153,6 +153,9 @@ def create_directory_it(name, params={}, image=None, infoLabels={}, menuItems={}
 	elif video_item: it = PVideoNotResolved()
 	else: it = PFolder()
 
+	if not config.plugins.archivCZSK.colored_items.value:
+		name = DeleteColors(name)
+		
 	it.name = toUnicode(name)
 	it.params = params
 	it.image = toUnicode(image)
@@ -184,6 +187,9 @@ def create_directory_it(name, params={}, image=None, infoLabels={}, menuItems={}
 
 def create_video_it(name, url, subs=None, image=None, infoLabels={}, menuItems={}, filename=None, live=False, stream=None, settings=None, dataItem=None, traktItem=None):
 	it = PVideoResolved()
+
+	if not config.plugins.archivCZSK.colored_items.value:
+		name = DeleteColors(name)
 
 	it.name = toUnicode(name)
 	it.url = toUnicode(url)

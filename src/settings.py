@@ -8,6 +8,7 @@ from Tools.Directories import SCOPE_PLUGINS, resolveFilename
 from Plugins.Extensions.archivCZSK import log, UpdateInfo, _
 from Plugins.Extensions.archivCZSK.engine.player.info import videoPlayerInfo
 from Plugins.Extensions.archivCZSK.engine.tools import stb
+from Plugins.Extensions.archivCZSK.compat import DMM_IMAGE
 
 
 LANGUAGE_SETTINGS_ID = language.getLanguage()[:2]
@@ -102,6 +103,7 @@ config.plugins.archivCZSK.lastIconDShowMessage = ConfigInteger(0)
 skinChoices = [os.path.splitext(fname)[0] for fname in os.listdir(SKIN_PATH) if fname.endswith('.xml') ]
 skinChoices.append('auto')
 config.plugins.archivCZSK.skin = ConfigSelection(default="auto", choices=skinChoices)
+config.plugins.archivCZSK.colored_items = ConfigYesNo(default=False if DMM_IMAGE else True)
 config.plugins.archivCZSK.showVideoInfo = ConfigYesNo(default=True)
 config.plugins.archivCZSK.downloadPoster = ConfigYesNo(default=True)
 choicelist = []
@@ -174,6 +176,7 @@ def get_player_settings():
 def get_main_settings():
 	list = []
 	list.append(getConfigListEntry(_("Skin"), config.plugins.archivCZSK.skin))
+	list.append(getConfigListEntry(_("Enable colored items"), config.plugins.archivCZSK.colored_items))
 	list.append(getConfigListEntry(_("Default category"), config.plugins.archivCZSK.defaultCategory))
 	list.append(getConfigListEntry(_("Allow archivCZSK auto update"), config.plugins.archivCZSK.archivAutoUpdate))
 	list.append(getConfigListEntry(_("Allow addons auto update"), config.plugins.archivCZSK.autoUpdate))
