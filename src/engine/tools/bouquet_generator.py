@@ -250,23 +250,34 @@ class BouquetGeneratorTemplate:
 	
 	@staticmethod
 	def download_picons(picons):
-		if not os.path.exists( '/usr/share/enigma2/picon' ):
-			os.mkdir('/usr/share/enigma2/picon')
-			
-		for ref in picons:
-			if not picons[ref].endswith('.png'):
-				continue
-			
-			fileout = '/usr/share/enigma2/picon/' + ref + '.png'
+		def download_picon(fileout, url):
+			if not url.endswith('.png'):
+				return
 			
 			if not os.path.exists(fileout):
 				try:
-					r = requests.get( picons[ref], timeout=5 )
+					r = requests.get( url, timeout=5 )
 					if r.status_code == 200:
 						with open(fileout, 'wb') as f:
 							f.write( r.content )
 				except:
 					pass
+
+		
+		if not os.path.exists( '/usr/share/enigma2/picon' ):
+			os.mkdir('/usr/share/enigma2/picon')
+			
+		for ref in picons:
+			urls = picons[ref]
+
+			fileout = '/usr/share/enigma2/picon/' + ref + '.png'
+			
+			if isinstance(urls, (type(()), type([]))):
+				for url in urls:
+					download_picon( fileout, url)
+			else:
+				download_picon( fileout, urls)
+			
 				
 	def reload_bouquets(self):
 		session_id = None
