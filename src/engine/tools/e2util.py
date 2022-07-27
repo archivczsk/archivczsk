@@ -109,7 +109,7 @@ class PythonProcess(object):
 				if 'exceptionCB' in self.callbacks:
 					self.callbacks['exceptionCB'](traceback.format_exc())
 				else:
-					log.error("Failed to process data from service:\n%s", traceback.format_exc())
+					log.error("Failed to process data from service (%s):\n%s" % (line, traceback.format_exc()))
 			else:
 				self.handleMessage(message)
 
