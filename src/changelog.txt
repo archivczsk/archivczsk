@@ -1,3 +1,7 @@
+archivCZSK 1.5.5, 20.09.2022
+    - oprava pádu pri pomalom dekódovaní obrázku
+    - pridanie informácie o tom, že DreamBox s originálnym SW je nepodporovaný  
+
 archivCZSK 1.5.4, 28.07.2022
     - pridanie voľby pre vypnutie farbičkovania textov v hlavnej ponuke
     - možnosť nastavenia zoznamu URL pre picony
