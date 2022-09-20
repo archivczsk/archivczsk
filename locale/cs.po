@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2022-07-26 14:03+0200\n"
+"POT-Creation-Date: 2022-09-20 08:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1466,3 +1466,7 @@ msgstr "Port na kterém nasloucha interní HTTP server"
 #: src/settings.py:221
 msgid "Run HTTP only for internal addons usage"
 msgstr "Spustiť HTTP server jen pro interní použití doplňkami"
+
+#: src/archivczsk.py:321
+msgid "Using archivCZSK on DreamBox with original software not supported due missing HW for testing. Due this bugs related to DreamBox will not be fixed. Use at your own risk."
+msgstr "Použití archivCZSK na DreamBoxu s originálním softwarem není podporováno kvůli chybějícímu HW pro testování. Kvůli tomu chyby související s DreamBoxem nebudou opraveny. Používejte na vlastní nebezpečí."

@@ -318,7 +318,7 @@ class ArchivCZSK():
 			from Plugins.Extensions.archivCZSK.engine.player.info import videoPlayerInfo
 			
 			if DMM_IMAGE:
-				msg = None
+				msg = _("Using archivCZSK on DreamBox with original software not supported due missing HW for testing. Due this bugs related to DreamBox will not be fixed. Use at your own risk.")
 			elif not videoPlayerInfo.serviceappAvailable:
 				msg = _("By system check there was no system plugin with name ServiceApp detected. This means, that your system only supports video player integrated in enigma2. Some addons doesn't work properly with internal player or don't work at all. If you will have problem with playing some videos, try to install ServiceApp system plugin from feed of your distribution. Then you can change in addon settings used video player to gstplayer or exteplayer3 that can handle some video formats better.")
 			elif not videoPlayerInfo.exteplayer3Available and not videoPlayerInfo.gstplayerAvailable:
