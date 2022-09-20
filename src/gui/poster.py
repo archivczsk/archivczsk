@@ -142,8 +142,12 @@ class PosterPixmapHandler:
 		picPtr = self.picload.getData()
 		if picPtr is not None:
 			log.debug("PosterImageHandler._got_picture_data, success")
-			self.poster_widget.instance.setPixmap(picPtr)
-			self.last_decoded_url = self._decoding_url
+			try:
+				self.poster_widget.instance.setPixmap(picPtr)
+				self.last_decoded_url = self._decoding_url
+			except Exception as e:
+				log.error("PosterImageHandler._got_picture_data, exception: %s" % str(e))
+				self.last_decoded_url = None
 		else:
 			log.error("PosterImageHandler._got_picture_data, failed")
 			self.last_decoded_url = None
