@@ -22,12 +22,18 @@ from Plugins.Extensions.archivCZSK import _, log
 try:
 	from Plugins.Extensions.SubsSupport import (SubsSupport,
 			SubsSupportStatus, initSubsSettings)
+	
+	SubsSupportAvailable = True
 except ImportError as e:
+	SubsSupportAvailable = False
+	
 	# SubsSupport plugin not available, so create fake one
 	class SubsSupport():
 		def resetSubs(self, rst):
 			pass
 		def loadSubs(self, fl):
+			pass
+		def enableSubtitle(self,subtitle):
 			pass
 
 	class SubsSupportStatus():
@@ -438,7 +444,7 @@ class InfoBarAudioSelectionNoSubtitles(InfoBarAudioSelection):
 	def audioSelection(self):
 		self.session.open(type(self).AudioSelectionNoSubtitles, infobar=self)
 
-if config_archivczsk.videoPlayer.subtitlesInAudioSelection.value:
+if SubsSupportAvailable and config_archivczsk.videoPlayer.subtitlesInAudioSelection.value:
 	archivCZSKInfoBarAudioSelection = InfoBarAudioSelection
 else:
 	archivCZSKInfoBarAudioSelection = InfoBarAudioSelectionNoSubtitles

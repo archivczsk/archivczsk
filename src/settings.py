@@ -168,7 +168,12 @@ def get_player_settings():
 	list.append(getConfigListEntry(_("RTMP Timeout"), config.plugins.archivCZSK.videoPlayer.rtmpTimeout))
 	list.append(getConfigListEntry(_("RTMP Buffer"), config.plugins.archivCZSK.videoPlayer.rtmpBuffer))
 	list.append(getConfigListEntry(_("Confirm exit when closing player"), config.plugins.archivCZSK.videoPlayer.confirmExit))
-	list.append(getConfigListEntry(_("Allow choosing subtitles in audio selection menu"), config.plugins.archivCZSK.videoPlayer.subtitlesInAudioSelection))
+	try:
+		from Plugins.Extensions.SubsSupport import SubsSupport
+		# show this configuration option only when SubsSupport is installed
+		list.append(getConfigListEntry(_("Allow choosing subtitles in audio selection menu"), config.plugins.archivCZSK.videoPlayer.subtitlesInAudioSelection))
+	except:
+		pass
 	list.append(getConfigListEntry(_("Support for youtube videos"), config.plugins.archivCZSK.videoPlayer.ydl))
 
 	return list
