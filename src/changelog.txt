@@ -1,3 +1,6 @@
+archivCZSK 1.5.6, 29.09.2022
+    - oprava možného pádu pri nedostupnosti SubsSupport
+
 archivCZSK 1.5.5, 20.09.2022
     - oprava pádu pri pomalom dekódovaní obrázku
     - pridanie informácie o tom, že DreamBox s originálnym SW je nepodporovaný  
