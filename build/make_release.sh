@@ -48,6 +48,10 @@ ACT_VER=`grep version ${ROOT_DIR}/src/version.py | cut -d \" -f 2`
 echo "Setting version to ${VER} (previous was ${ACT_VER})"
 sed -i "s/version = \".*\"/version = \"${VER}\"/g" ${ROOT_DIR}/src/version.py
 
+echo "Opening changelog"
+/usr/bin/editor ${ROOT_DIR}/src/changelog.txt
+git add ${ROOT_DIR}/src/changelog.txt
+
 echo "Commiting new version to git"
 git add ${ROOT_DIR}/src/version.py
 git commit -m "release version ${VER}"
