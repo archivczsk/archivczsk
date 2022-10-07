@@ -83,7 +83,7 @@ class YoutubeDl(PythonProcess):
 				log.info("YoutubeDL::getResponse: url resolved")
 				self.d.callback(response['result'])
 			else:
-				self.d.errback(response['exception'])
+				self.d.errback(Exception(response['exception']))
 
 	def getVersion(self):
 		return self.version
