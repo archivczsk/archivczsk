@@ -240,6 +240,7 @@ class BouquetGeneratorTemplate:
 		# configuration to make this class little bit reusable also in other addons
 		self.proxy_url = endpoint
 		self.userbouquet_file_name = "userbouquet.%s.tv" % self.prefix
+		self.play_url_pattern = '/playlive/%s'
 		# Child class must define these values 
 #		self.prefix = "o2tv"
 #		self.name = "O2TV"
@@ -432,7 +433,7 @@ class BouquetGeneratorTemplate:
 				continue
 			
 			channel_name = channel['name']
-			url = self.proxy_url + '/playlive/' + base64.b64encode( channel['key'].encode('utf-8') ).decode('utf-8')
+			url = self.proxy_url + (self.play_url_pattern % base64.b64encode( channel['key'].encode('utf-8') ).decode('utf-8'))
 			url = quote( url )
 			
 			service_ref = self.service_ref_get( lamedb, channel_name, player_id, channel['id'] )
