@@ -1,3 +1,6 @@
+archivCZSK 1.5.7, 21.10.2022
+    - drobné opravy a vylepšenia pre doplnky
+
 archivCZSK 1.5.6, 29.09.2022
     - oprava možného pádu pri nedostupnosti SubsSupport
 
