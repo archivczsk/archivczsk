@@ -71,15 +71,8 @@ class ArchivCZSKSearchClientScreen(BaseArchivCZSKListSourceScreen):
 		self.chooseFromEpg()
 
 	def removeDiacritics(self):
-		try:
-			import unicodedata
-		except ImportError:
-			showInfoMessage(self.session, _("Cannot remove diacritics, missing unicodedata.so"))
-		else:
-			self.searchExp = ''.join((c for c in unicodedata.normalize('NFD', unicode(self.searchExp, 'utf-8', 'ignore')) 
-									  if unicodedata.category(c) != 'Mn')).encode('utf-8')
-			self["search"].setText(self.searchExp)
-	
+		self.searchExp = removeDiac( self.searchExp )
+		self["search"].setText(self.searchExp)
 		
 	def changeSearchExp(self):
 		self.session.openWithCallback(self.changeSearchExpCB, VirtualKeyBoard, title=removeDiac(_("Set your search expression")), text = removeDiac(self.searchExp))
