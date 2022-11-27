@@ -33,7 +33,6 @@ S=${TMP_DIR}/ipkg.src.$$
 P=${TMP_DIR}/ipkg.tmp.$$
 DP=${TMP_DIR}/ipkg.deps
 
-P26="https://www.python.org/ftp/python/2.6/Python-2.6.tgz"
 P27="https://www.python.org/ftp/python/2.7.5/Python-2.7.5.tgz"
 
 pushd ${ROOT_DIR} &> /dev/null
@@ -63,13 +62,11 @@ fi
 popd &> /dev/null
 
 # prepare python dependencies - do we need that???
-if [ -d ${DP}/Python-2.6 ] && [ -d ${DP}/Python-2.7 ]; then
+if [ -d ${DP}/Python-2.7 ]; then
 	echo "python packages are already downloaded"
 else
 	echo "downloading neccesary python packages..."
-	curl $P26 -s -o ${DP}/Python-2.6.tgz
 	curl $P27 -s -o ${DP}/Python-2.7.5.tgz
-	tar -C ${DP} -xzf ${DP}/Python-2.6.tgz
 	tar -C ${DP} -xzf ${DP}/Python-2.7.5.tgz
 	mv ${DP}/Python-2.7.5 ${DP}/Python-2.7
 fi
@@ -121,46 +118,6 @@ fi
 # prepare and add dependencies
 mkdir -p ${P}/tmp/archivczsk
 mkdir -p ${P}/tmp/archivczsk/python2.7
-mkdir -p ${P}/tmp/archivczsk/python2.6
-
-cp -p ${DP}/Python-2.6/Lib/encodings/utf_8.py ${P}/tmp/archivczsk/python2.6/utf_8.py
-cp -p ${DP}/Python-2.6/Lib/encodings/cp1251.py ${P}/tmp/archivczsk/python2.6/cp1251.py
-cp -p ${DP}/Python-2.6/Lib/encodings/cp1252.py ${P}/tmp/archivczsk/python2.6/cp1252.py
-cp -p ${DP}/Python-2.6/Lib/encodings/cp1253.py ${P}/tmp/archivczsk/python2.6/cp1253.py
-cp -p ${DP}/Python-2.6/Lib/encodings/cp1254.py ${P}/tmp/archivczsk/python2.6/cp1254.py
-cp -p ${DP}/Python-2.6/Lib/encodings/cp1256.py ${P}/tmp/archivczsk/python2.6/cp1256.py
-cp -p ${DP}/Python-2.6/Lib/encodings/iso8859_6.py ${P}/tmp/archivczsk/python2.6/iso8859_6.py
-cp -p ${DP}/Python-2.6/Lib/encodings/iso8859_7.py ${P}/tmp/archivczsk/python2.6/iso8859_7.py
-cp -p ${DP}/Python-2.6/Lib/encodings/iso8859_9.py ${P}/tmp/archivczsk/python2.6/iso8859_9.py
-cp -p ${DP}/Python-2.6/Lib/encodings/iso8859_15.py ${P}/tmp/archivczsk/python2.6/iso8859_15.py
-
-cp -p ${DP}/Python-2.6/Lib/encodings/hex_codec.py ${P}/tmp/archivczsk/python2.6/hex_codec.py
-cp -p ${DP}/Python-2.6/Lib/encodings/string_escape.py ${P}/tmp/archivczsk/python2.7/string_escape.py
-cp -p ${DP}/Python-2.6/Lib/encodings/latin_1.py ${P}/tmp/archivczsk/python2.6/latin_1.py
-cp -p ${DP}/Python-2.6/Lib/encodings/utf_16.py ${P}/tmp/archivczsk/python2.6/utf_16.py
-cp -p ${DP}/Python-2.6/Lib/encodings/idna.py ${P}/tmp/archivczsk/python2.6/idna.py
-cp -p ${DP}/Python-2.6/Lib/encodings/iso8859_2.py ${P}/tmp/archivczsk/python2.6/iso8859_2.py
-cp -p ${DP}/Python-2.6/Lib/encodings/cp1250.py ${P}/tmp/archivczsk/python2.6/cp1250.py
-cp -p ${DP}/Python-2.6/Lib/decimal.py ${P}/tmp/archivczsk/python2.6/decimal.py
-cp -p ${DP}/Python-2.6/Lib/formatter.py ${P}/tmp/archivczsk/python2.6/formatter.py
-cp -p ${DP}/Python-2.6/Lib/markupbase.py ${P}/tmp/archivczsk/python2.6/markupbase.py
-cp -p ${DP}/Python-2.6/Lib/HTMLParser.py ${P}/tmp/archivczsk/python2.6/HTMLParser.py
-cp -p ${DP}/Python-2.6/Lib/htmlentitydefs.py ${P}/tmp/archivczsk/python2.6/htmlentitydefs.py
-cp -p ${DP}/Python-2.6/Lib/htmllib.py ${P}/tmp/archivczsk/python2.6/htmllib.py
-cp -p ${DP}/Python-2.6/Lib/sgmllib.py ${P}/tmp/archivczsk/python2.6/sgmllib.py
-cp -p ${DP}/Python-2.6/Lib/stringprep.py ${P}/tmp/archivczsk/python2.6/stringprep.py
-cp -p ${DP}/Python-2.6/Lib/numbers.py ${P}/tmp/archivczsk/python2.6/numbers.py
-cp -p ${DP}/Python-2.6/Lib/subprocess.py ${P}/tmp/archivczsk/python2.6/subprocess.py
-cp -p ${DP}/Python-2.6/Lib/_LWPCookieJar.py ${P}/tmp/archivczsk/python2.6/_LWPCookieJar.py
-cp -p ${DP}/Python-2.6/Lib/_MozillaCookieJar.py ${P}/tmp/archivczsk/python2.6/_MozillaCookieJar.py
-cp -p ${DP}/Python-2.6/Lib/cookielib.py ${P}/tmp/archivczsk/python2.6/cookielib.py
-cp -p ${DP}/Python-2.6/Lib/shutil.py ${P}/tmp/archivczsk/python2.6/shutil.py
-cp -p ${DP}/Python-2.6/Lib/fnmatch.py ${P}/tmp/archivczsk/python2.6/fnmatch.py
-cp -p ${DP}/Python-2.6/Lib/threading.py ${P}/tmp/archivczsk/python2.6/threading.py
-cp -p ${DP}/Python-2.6/Lib/zipfile.py ${P}/tmp/archivczsk/python2.6/zipfile.py
-cp -p ${DP}/Python-2.6/Lib/httplib.py ${P}/tmp/archivczsk/python2.6/httplib.py
-cp -p ${DP}/Python-2.6/Lib/stat.py ${P}/tmp/archivczsk/python2.6/stat.py
-
 
 cp -p ${DP}/Python-2.7/Lib/encodings/utf_8.py ${P}/tmp/archivczsk/python2.7/utf_8.py
 cp -p ${DP}/Python-2.7/Lib/encodings/cp1251.py ${P}/tmp/archivczsk/python2.7/cp1251.py
