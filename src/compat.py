@@ -30,7 +30,11 @@ def isDMMImage():
 
 def isVTIImage():
 	import inspect
-	argspec = inspect.getargspec(__parseSize)
+	
+	try:
+		argspec = inspect.getargspec(__parseSize)
+	except:
+		argspec = inspect.getfullargspec(__parseSize)
 	return len(argspec.args) == 2
 
 DMM_IMAGE = isDMMImage()
@@ -98,7 +102,11 @@ class MessageBox(OrigMessageBox):
 		list = None
 		self.dmm_fix = False
 		import inspect
-		argspec = inspect.getargspec(OrigMessageBox.__init__)
+		try:
+			argspec = inspect.getargspec(OrigMessageBox.__init__)
+		except:
+			argspec = inspect.getfullargspec(OrigMessageBox.__init__)
+			
 		if kwargs.get('simple') is not None and not 'simple' in argspec.args:
 			del kwargs['simple']
 		if kwargs.get('list') is not None and not 'list' in argspec.args:
