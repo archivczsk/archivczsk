@@ -1,3 +1,6 @@
+archivCZSK 1.5.9, 28.11.2022
+    - oprava behu pod python 3.11 (OpenATV 7.2)
+
 archivCZSK 1.5.8, 24.10.2022
     - oprava pádu pri volaní vyhľadávania z EPG pre python3
 
