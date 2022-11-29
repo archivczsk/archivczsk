@@ -1,5 +1,4 @@
 import os
-from twisted.internet.defer import Deferred
 
 from Plugins.Extensions.archivCZSK import settings
 from Plugins.Extensions.archivCZSK import log
@@ -32,39 +31,23 @@ class AddonService(PythonProcess):
 		if self.available == False:
 			return
 		
-		if self.initialized:
-			d = Deferred()
-			d.callback(True)
-			return d
-
-		callbacks = {}
-		callbacks['messageCB'] = self.messageReceived
-		callbacks['finishedCB'] = self.processExited
-		callbacks['exceptionCB'] = self.processException
-		self.start(callbacks)
-
-		self.d = Deferred()
-		return self.d
+		if not self.initialized:
+			callbacks = {}
+			callbacks['messageCB'] = self.messageReceived
+			callbacks['finishedCB'] = self.processExited
+			callbacks['exceptionCB'] = self.processException
+			self.start(callbacks)
 
 	def stop(self, ):
 		log.info("Sending stop command to service %s" % self)
 
 		if not self.initialized:
 			log.info("Service %s not initialized...")
-			d = Deferred()
-			d.callback(None)
-			return d
-		
-		self.write({'cmd': 'stop'})
-
-		self.d = Deferred()
-		return self.d
+		else:
+			self.write({'cmd': 'stop'})
 
 	def sendCommand(self, cmd, **kwargs ):
 		self.write({'cmd': cmd, 'cmd_data': kwargs })
-#		d = Deferred()
-#		d.callback(None)
-#		return d
 		
 	def messageReceived(self, data):
 #		log.debug("%s - got data: %s" % (self, data) )
@@ -74,7 +57,6 @@ class AddonService(PythonProcess):
 			self.initialized = True
 			self.available = True
 			log.info("Service %s successfuly started" % self)
-			self.d.callback(True)
 		elif data['cmd'] == 'show_exception':
 			log.error("Service[%s]: EXCEPTION: %s" % (self, data.get('msg', 'unknown exception') ))
 		elif data['cmd'] == 'show_error':
@@ -115,6 +97,8 @@ class AddonService(PythonProcess):
 
 	def processExited(self, retval):
 		log.info("Service[%s] exited with return code %d" % (self, retval))
+		self.initialized = False
+		self.available = None
 		
 	def processException(self, tb):
 		log.error("Service[%s]: exception by processing data\n%s" % (self, tb))

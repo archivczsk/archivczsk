@@ -147,7 +147,7 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 	def _handle_broken_addon(self, addon):
 		def disable_addon(cb):
 			if cb:
-				addon.set_setting('enabled', False)
+				addon.set_enabled(False)
 				self.content_screen.workingStarted()
 				self.content_screen.refreshList()
 				self.content_screen.workingFinished()
@@ -237,11 +237,11 @@ class VideoAddonManagement(ItemHandler):
 	def _init_menu(self, item):
 		addon = item.addon
 		item.add_context_menu_item(_("Enable"),
-								   enabled=not addon.get_setting('enabled'),
+								   enabled=not addon.is_enabled(),
 								   action=self._enable_addon,
 								   params={'addon':addon})
 		item.add_context_menu_item(_("Disable"),
-								   enabled=addon.get_setting(('enabled')),
+								   enabled=addon.is_enabled(),
 								   action=self._disable_addon,
 								   params={'addon':addon})
 		item.add_context_menu_item(_("Settings"),
@@ -259,13 +259,13 @@ class VideoAddonManagement(ItemHandler):
 
 	def _enable_addon(self, addon):
 		self.content_screen.workingStarted()
-		addon.set_setting('enabled', True)
+		addon.set_enabled(True)
 		self.content_screen.refreshList()
 		self.content_screen.workingFinished()
 
 	def _disable_addon(self, addon):
 		self.content_screen.workingStarted()
-		addon.set_setting('enabled', False)
+		addon.set_enabled(False)
 		self.content_screen.refreshList()
 		self.content_screen.workingFinished()
 

@@ -123,6 +123,32 @@ class Addon(object):
 		self._updater = None
 		self.repository = None
 
+	def is_service_enabled(self):
+		return self.get_setting('service_enabled')
+
+	def set_service_enabled(self, enabled):
+		self.set_setting('service_enabled', enabled)
+		
+		if enabled:
+			self.service.init()
+		else:
+			self.service.stop()
+
+	def is_enabled(self):
+		return self.get_setting('enabled')
+
+	def set_enabled(self, enabled):
+		self.set_setting('enabled', enabled)
+		if enabled:
+			if isinstance( self, VideoAddon ):
+				self.provider.run_autostart_script()
+		
+			if self.is_service_enabled():
+				self.service.init()
+		else:
+			self.service.stop()
+		
+	
 class XBMCAddon(object):
 	def __init__(self, addon):
 		self._addon = addon
@@ -314,6 +340,7 @@ class AddonSettings(object):
 		addon_config.add_global_addon_settings(addon, self.main)
 
 		self.main.enabled = ConfigYesNo(default=True)
+		self.main.service_enabled = ConfigYesNo(default=True)
 
 		self.addon = addon
 		self.categories = []

@@ -545,7 +545,7 @@ class ArchivCZSKContentProvider(ContentProvider):
 
 	def _filter_addons(self, addons, params):
 		def filter_enabled_addons(paddon):
-			return paddon.addon.get_setting('enabled')
+			return paddon.addon.is_enabled()
 
 		def filter_supported_addons(paddon):
 			return paddon.addon.supported

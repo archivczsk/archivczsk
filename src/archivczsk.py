@@ -127,13 +127,15 @@ class ArchivCZSK():
 	@staticmethod
 	def run_services():
 		for addon in ArchivCZSK.get_addons():
-			addon.service.init()
+			if addon.is_enabled() and addon.is_service_enabled():
+				addon.service.init()
 
 	@staticmethod
 	def run_autostart():
 		for addon in ArchivCZSK.get_video_addons():
 			try:
-				addon.provider.run_autostart_script()
+				if addon.is_enabled():
+					addon.provider.run_autostart_script()
 			except:
 				log.logError("Autostart failed:\n%s" % traceback.format_exc())
 

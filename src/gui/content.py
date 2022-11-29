@@ -236,7 +236,7 @@ class ArchivCZSKVideoAddonsManagementScreen(BaseContentScreen, TipBar):
 			if addon.get_info('broken'):
 				itemColor = 0xff0000
 				addonState = _("broken")
-			elif not addon.get_setting('enabled'):
+			elif not addon.is_enabled():
 				if addon.supported:
 					itemColor = 0xffff00
 				else:
