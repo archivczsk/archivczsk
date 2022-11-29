@@ -186,19 +186,22 @@ def make_path(p):
 	except OSError:
 		pass
 
-def download_to_file(remote, local, mode='wb', debugfnc=None, timeout=10):
+def download_to_file(remote, local, mode='wb', debugfnc=None, timeout=10, headers={}):
 	f, localFile = None, None
 	try:
 		if debugfnc:
 			debugfnc("downloading %s to %s", remote, local)
 		else:
 			print("downloading %s to %s", (remote, local))
+			
+		req = url_Request(remote, headers=headers)
+		
 		try:
 			import ssl
 			context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
-			f = urlopen(remote, context = context, timeout=timeout)
+			f = urlopen(req, context = context, timeout=timeout)
 		except Exception:
-			f = urlopen(remote, timeout = timeout)
+			f = urlopen(req, timeout = timeout)
 		make_path(os.path.dirname(local))
 		localFile = open(local, mode)
 		localFile.write(f.read())

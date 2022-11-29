@@ -37,6 +37,7 @@ class Repository():
 		self.update_xml_url = repo_dict['repo_addons_url']
 		
 		self.update_datadir_url = repo_dict['repo_datadir_url']
+		self.update_authorization = repo_dict['repo_authorization']
 		
 		self.path = os.path.dirname(config_file)
 		self.addons_path = self.path#os.path.join(self.path, "addons")

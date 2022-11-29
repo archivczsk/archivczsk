@@ -223,6 +223,7 @@ class Updater(object):
 		self.tmp_path = tmp_path
 		self.update_xml_url = repository.update_xml_url
 		self.update_xml_file = os.path.join(self.tmp_path, repository.id + 'addons.xml')
+		self.update_authorization = repository.update_authorization
 		self.remote_addons_dict = {}
 	
 	def check_addon(self, addon, update_xml=True):
@@ -346,8 +347,12 @@ class Updater(object):
 		# if update data path contains variables configurable by user, then set it here
 		remote_file = remote_file.replace('{update_repository}', config.plugins.archivCZSK.update_repository.value ).replace('{update_branch}', config.plugins.archivCZSK.update_branch.value)
 		
+		headers = {}
+		if self.update_authorization:
+			headers['Authorization'] = self.update_authorization
+
 		try:
-			util.download_to_file(remote_file, local_file, debugfnc=log.debug, timeout=config.plugins.archivCZSK.updateTimeout.value)
+			util.download_to_file(remote_file, local_file, debugfnc=log.debug, timeout=config.plugins.archivCZSK.updateTimeout.value, headers=headers)
 		except:
 			shutil.rmtree(tmp_base)
 			return None
@@ -361,9 +366,13 @@ class Updater(object):
 		update_xml_url = self.update_xml_url.replace('{update_repository}', config.plugins.archivCZSK.update_repository.value ).replace('{update_branch}', config.plugins.archivCZSK.update_branch.value)
 
 		log.debug("Checking addons updates from: %s" % update_xml_url)
-			
+		
+		headers = {}
+		if self.update_authorization:
+			headers['Authorization'] = self.update_authorization
+		
 		try:
-			util.download_to_file(update_xml_url, self.update_xml_file, debugfnc=log.debug, timeout=config.plugins.archivCZSK.updateTimeout.value)
+			util.download_to_file(update_xml_url, self.update_xml_file, debugfnc=log.debug, timeout=config.plugins.archivCZSK.updateTimeout.value, headers=headers)
 		except Exception:
 			log.error('cannot download %s update xml', self.repository.name)
 			log.logError( traceback.format_exc())

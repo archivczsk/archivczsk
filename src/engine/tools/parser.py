@@ -93,6 +93,7 @@ class XBMCAddonXMLParser(XMLParser):
 		broken = None
 		repo_datadir_url = u''
 		repo_addons_url = u''
+		repo_authorization = u''
 		requires = []
 		library = 'lib'
 		script = 'default.py'
@@ -114,6 +115,10 @@ class XBMCAddonXMLParser(XMLParser):
 					addon_type = ad_type
 					repo_datadir_url = info.find('datadir').text
 					repo_addons_url = info.find('info').text
+					try:
+						repo_authorization = info.find('authorization').text
+					except:
+						pass
 				elif ad_type == 'tools':
 					addon_type = ad_type
 					library = info.attrib.get('library')
@@ -149,6 +154,7 @@ class XBMCAddonXMLParser(XMLParser):
 				"broken":broken,
 				"repo_addons_url":repo_addons_url,
 				"repo_datadir_url":repo_datadir_url,
+				"repo_authorization":repo_authorization,
 				"requires":requires,
 				"library":library,
 				"script":script,
