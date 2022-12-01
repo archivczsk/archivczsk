@@ -783,7 +783,10 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 			}
 	
 			with open( script_path, "rb") as f:
-				exec( compile(f.read(), script_path, 'exec'), global_vars)
+				try:
+					exec( compile(f.read(), script_path, 'exec'), global_vars)
+				except:
+					log.error( "Autoscript failed with exception:\n%s" % traceback.format_exc())
 
 #			self.stop()
 			
