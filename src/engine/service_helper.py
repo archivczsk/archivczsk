@@ -62,7 +62,7 @@ class AddonServiceHelper(basic.LineReceiver):
 			del self.getSettingsCbk[key]
 	
 	def handle_stop(self):
-		reactor.stop()
+		self.service_stop()
 	
 	def connectionLost(self, reason):
 		# stop the reactor, only because this is meant to be run in Stdio.
@@ -116,7 +116,7 @@ class AddonServiceHelper(basic.LineReceiver):
 		else:
 			for x in cbk:
 				d.addCallback(x)
-				
+		
 		reactor.callLater(delay_seconds, d.callback, *args, **kwargs )
 		return d
 	
@@ -127,6 +127,9 @@ class AddonServiceHelper(basic.LineReceiver):
 	
 	def run(self):
 		reactor.run()
+		
+	def service_stop(self):
+		reactor.stop()
 
 def StartAddonServiceHelper( helper=None, main=None, *args, **kwargs ):
 	if not helper:
