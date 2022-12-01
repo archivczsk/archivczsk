@@ -148,7 +148,9 @@ class Addon(object):
 		else:
 			self.service.stop()
 		
-	
+	def add_setting_change_notifier(self, setting_id, cbk):
+		return self.settings.add_change_notifier(setting_id, cbk)
+		
 class XBMCAddon(object):
 	def __init__(self, addon):
 		self._addon = addon
@@ -487,6 +489,16 @@ class AddonSettings(object):
 
 	def close(self):
 		self.addon = None
+
+	def add_change_notifier(self, setting_id, cbk ):
+		try:
+			setting = getattr(self.main, '%s' % setting_id)
+		except ValueError:
+			log.error('%s cannot retrieve setting %s,  Invalid setting id', self, setting_id)
+			return False
+		else:
+			setting.addNotifier( lambda c: cbk(setting_id, c.value), immediate_feedback=False)
+			return True
 
 
 class AddonInfo(object):
