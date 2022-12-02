@@ -1,3 +1,8 @@
+archivCZSK 1.6.0, 02.12.2022
+    - pridanie možnosti pre nastavenie autorizácie pre repozitár
+    - pri zakázaní doplnku sa automaticky vypne aj služba a autostart skript
+    - doplnky majú možnosť povoliť/zakázať spustenie služby (pre šetrenie prostrietkov)
+
 archivCZSK 1.5.9, 28.11.2022
     - oprava behu pod python 3.11 (OpenATV 7.2)
 
