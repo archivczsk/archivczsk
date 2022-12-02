@@ -1,4 +1,5 @@
 import os
+import traceback
 from Components.Language import language
 from Components.config import config, ConfigSubsection, ConfigSelection, \
 	ConfigDirectory, ConfigYesNo, ConfigText, ConfigNumber, ConfigNothing, getConfigListEntry, \
@@ -67,7 +68,7 @@ ydl_choicelist = [
 	('enable', _("Enable")),
 	('disable', _("Disable")),
 ]
-config.plugins.archivCZSK.videoPlayer.ydl = ConfigSelection(default="preload", choices=ydl_choicelist)
+config.plugins.archivCZSK.videoPlayer.ydl = ConfigSelection(default="enable", choices=ydl_choicelist)
 
 choicelist = []
 for i in range(10, 240, 5):
@@ -130,7 +131,10 @@ config.plugins.archivCZSK.logPath.addNotifier(changeLogPath)
 
 def restartHttpServer(configElement):
 	from Plugins.Extensions.archivCZSK.engine.httpserver import archivCZSKHttpServer
-	archivCZSKHttpServer.start_listening(True)
+	try:
+		archivCZSKHttpServer.start_listening(True)
+	except:
+		log.error( "Failed to restart internal HTTP server\n%s" % traceback.format_exc() )
 
 choicelist = [('1', _("info")), ('2', _("debug"))]
 config.plugins.archivCZSK.debugMode = ConfigSelection(default='1', choices=choicelist)
