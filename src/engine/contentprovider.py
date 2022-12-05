@@ -851,7 +851,7 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 			return res, item
 
 		item_list,__,__ = result
-		video_list = [i for i in item_list if isinstance(i, PVideoResolved) and is_hls_url(i.url)]
+		video_list = [i for i in item_list if isinstance(i, PVideoResolved) and i.settings.get('resolve_hls_master',True) and is_hls_url(i.url)]
 		log.debug("%s _resolve_video_items: found %d resolvable video items"%(self, len(video_list)))
 		d_list = []
 		for item in video_list:
