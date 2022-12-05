@@ -141,25 +141,35 @@ def toUnicode(text):
 	if text == None:
 		return None
 	
-	if isinstance( text, int ):
-		text = str(text)
-	elif isinstance( text, float ):
-		text = str(text)
-		
-	if isinstance(text, basestring):
-		if isinstance(text, unicode):
+	if is_py3:
+		if isinstance(text, bytes):
+			return text.decode('utf-8')
+		elif isinstance(text, str):
 			return text
-		if isinstance(text, str):
-			return unicode(text, 'utf-8', 'ignore')
-	return unicode(text, 'utf-8', 'ignore')
+		else:
+			return str(text)
+	else:
+		if isinstance(text, basestring):
+			if isinstance(text, unicode):
+				return text
+			elif isinstance(text, str):
+				return unicode(text, 'utf-8', 'ignore')
+		return unicode(str(text), 'utf-8', 'ignore')
 
 def toString(text):
 	if text is None:
 		return None
-	if isinstance(text, basestring):
-		if not is_py3 and isinstance(text, unicode):
-			return str(text.encode('utf-8'))
-		return text
+	if is_py3:
+		if isinstance(text, bytes):
+			return text.decode('utf-8')
+		elif isinstance(text, str):
+			return text
+	else:
+		if isinstance(text, basestring):
+			if isinstance(text, unicode):
+				return text.encode('utf-8')
+			return text
+		
 	return str(text)
 
 def check_version(local, remote):
