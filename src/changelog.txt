@@ -1,3 +1,7 @@
+archivCZSK 1.6.1, 05.12.2022
+    - pridanie doplnkom možnosť vypnúť spracovanie hls master playlistu
+    - oprava konverzie reťazcov pre python 3.x
+
 archivCZSK 1.6.0, 02.12.2022
     - pridanie možnosti pre nastavenie autorizácie pre repozitár
     - pri zakázaní doplnku sa automaticky vypne aj služba a autostart skript
