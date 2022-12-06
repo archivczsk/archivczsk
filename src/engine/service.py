@@ -8,8 +8,13 @@ from ..py3compat import *
 
 class AddonService(PythonProcess):
 	def __init__(self, addon ):
+		self.available = None
+		self.initialized = False
+		self.version = None
+		self.addon = addon
+
 		if not addon.info.service_lib:
-			self.initialized = False
+			self.name = "%s:dummy" % addon.info.name
 			self.available = False
 			return
 		
@@ -18,10 +23,6 @@ class AddonService(PythonProcess):
 		PythonProcess.__init__(self, script_path)
 
 		self.name = "%s:%s" % (addon.info.name, os.path.splitext(addon.info.service_lib)[0])
-		self.version = None
-		self.initialized = False
-		self.available = None
-		self.addon = addon
 		log.info("Service %s initialised" % self)
 
 	def __repr__(self):
@@ -39,6 +40,9 @@ class AddonService(PythonProcess):
 			self.start(callbacks)
 
 	def stop(self, ):
+		if self.available == False:
+			return
+
 		log.info("Sending stop command to service %s" % self)
 
 		if not self.initialized:
@@ -47,7 +51,8 @@ class AddonService(PythonProcess):
 			self.write({'cmd': 'stop'})
 
 	def sendCommand(self, cmd, **kwargs ):
-		self.write({'cmd': cmd, 'cmd_data': kwargs })
+		if self.initialized:
+			self.write({'cmd': cmd, 'cmd_data': kwargs })
 		
 	def messageReceived(self, data):
 #		log.debug("%s - got data: %s" % (self, data) )
