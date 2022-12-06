@@ -1,3 +1,6 @@
+archivCZSK 1.6.2, 06.12.2022
+    - oprava pádu pri vypínaní doplnku ktorý nemá podpornú službu
+
 archivCZSK 1.6.1, 05.12.2022
     - pridanie doplnkom možnosť vypnúť spracovanie hls master playlistu
     - oprava konverzie reťazcov pre python 3.x
