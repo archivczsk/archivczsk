@@ -445,7 +445,18 @@ def get_streams_from_manifest(url, manifest_data):
 		for info in re.split(r''',(?=(?:[^'"]|'[^']*'|"[^"]*")*$)''', m.group('info')):
 			key, val = info.split('=', 1)
 			stream_info[key.lower()] = val
-		stream_info['url'] = url[:url.rfind('/') + 1] + m.group('chunk')
+
+		stream_url = m.group('chunk')
+
+		if not stream_url.startswith('http'):
+			if stream_url.startswith('/'):
+				# stream is relative path to base domain
+				stream_url = url[:url[9:].find('/') + 9] + stream_url
+			else:
+				# stream is relative path to last element
+				stream_url = url[:url.rfind('/') + 1] + stream_url
+
+		stream_info['url'] = stream_url
 		yield stream_info
 
 def url_get_data_async(url, callback=None, data=None, headers=None, timeout=60):
