@@ -70,6 +70,10 @@ class log(object):
 			msg = toString(msg)
 
 		except Exception as e:
+			try:
+				print("#####ArchivCZSK#### - problematic message: %s" % msg)
+			except:
+				pass
 			print("#####ArchivCZSK#### - cannot write log message: %s" % str(e))
 			traceback.print_exc()
 			return
