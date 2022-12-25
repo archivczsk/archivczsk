@@ -402,7 +402,7 @@ class BouquetGeneratorTemplate:
 		return player_id + ":0:1:%X:%X:%X:%X:0:0:0:" % (self.sid_start + channel_id, self.tid, self.onid, self.namespace)
 	
 	
-	def generate_bouquet(self, channels, enable_adult=True, enable_xmlepg=False, enable_picons=False, player_name="0"):
+	def generate_bouquet(self, channels, enable_adult=True, enable_xmlepg=False, enable_picons=False, player_name="0", user_agent=None):
 		current_chsum = self.userbouquet_md5()
 		
 		# if epg generator is disabled, then try to create service references based on lamedb
@@ -434,6 +434,10 @@ class BouquetGeneratorTemplate:
 			
 			channel_name = channel['name']
 			url = self.proxy_url + (self.play_url_pattern % base64.b64encode( channel['key'].encode('utf-8') ).decode('utf-8'))
+
+			if user_agent:
+				url += '#User-Agent=%s' % user_agent
+
 			url = quote( url )
 			
 			service_ref = self.service_ref_get( lamedb, channel_name, player_id, channel['id'] )
