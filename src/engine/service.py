@@ -46,7 +46,7 @@ class AddonService(PythonProcess):
 		log.info("Sending stop command to service %s" % self)
 
 		if not self.initialized:
-			log.info("Service %s not initialized...")
+			log.info("Service %s not initialized..."  % self)
 		else:
 			self.write({'cmd': 'stop'})
 
