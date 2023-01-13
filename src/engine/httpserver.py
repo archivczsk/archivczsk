@@ -18,6 +18,7 @@ class AddonHttpRequestHandler(resource.Resource):
 		return name.replace('.', '-')
 	
 	def __init__(self, addon_id):
+		self.NOT_DONE_YET = server.NOT_DONE_YET
 		self.name = AddonHttpRequestHandler.addonIdToEndpoint(addon_id)
 		self.prefix_len = len(self.name)+2
 	
@@ -106,12 +107,19 @@ class ArchivCZSKHttpServer:
 			self.running.stopListening()
 			self.running = None
 		
-	def getAddonEndpoint(self, handler_or_id):
+	def getAddonEndpoint(self, handler_or_id, base_url=None, relative=False):
 		if isinstance( handler_or_id, AddonHttpRequestHandler ):
 			endpoint = handler_or_id.name
 		else:
 			endpoint = AddonHttpRequestHandler.addonIdToEndpoint(handler_or_id)
-		return "http://127.0.0.1:%d/%s" % (self.port, endpoint)
+
+		if relative:
+			return "/%s" % endpoint
+		else:
+			if not base_url:
+				base_url = '127.0.0.1'
+
+			return "http://%s:%d/%s" % (base_url, self.port, endpoint)
 	
 	def registerRequestHandler(self, requestHandler ):
 		self.start_listening()
