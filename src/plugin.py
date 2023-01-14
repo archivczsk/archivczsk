@@ -46,47 +46,22 @@ def eventInfo(session, servicelist, **kwargs):
 	ref = session.nav.getCurrentlyPlayingServiceReference()
 	session.open(ArchivCZSKSearchClientScreen, ref)
 
-def osrefresh(session, servicelist, **kwargs):
-	try:
-		from Plugins.Extensions.archivCZSK.osref import OSRefresh
-		OSRefresh(session).refresh()
-	except:
-		pass
-	try:
-		from Plugins.Extensions.archivCZSK.osrefdsk import OSRefreshDSK
-		OSRefreshDSK(session).refresh()
-	except:
-		pass
-	try:
-		from Plugins.Extensions.archivCZSK.osrefdcz import OSRefreshDCZ
-		OSRefreshDCZ(session).refresh()
-	except:
-		pass
-	try:
-		from Plugins.Extensions.archivCZSK.osrefmg import OSRefreshMG
-		OSRefreshMG(session).refresh()
-	except:
-		pass
-	try:
-		from Plugins.Extensions.archivCZSK.osrefo2 import OSRefreshO2
-		OSRefreshO2(session).refresh()
-	except:
-		pass
-
 def Plugins(path, **kwargs):
-	list = [PluginDescriptor(where=[PluginDescriptor.WHERE_SESSIONSTART], fnc=sessionStart),
+	result = [PluginDescriptor(where=[PluginDescriptor.WHERE_SESSIONSTART], fnc=sessionStart),
 		PluginDescriptor(NAME, description=DESCRIPTION, where=PluginDescriptor.WHERE_PLUGINMENU, fnc=main, icon="czsk.png")]
+	
 	if config.plugins.archivCZSK.extensions_menu.value:
-		#list.append(PluginDescriptor(NAME, where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main))
-		list.append(PluginDescriptor(NAME, description=DESCRIPTION, where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main))
+		#result.append(PluginDescriptor(NAME, where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main))
+		result.append(PluginDescriptor(NAME, description=DESCRIPTION, where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main))
+	
 	if config.plugins.archivCZSK.main_menu.value:
-		#list.append(PluginDescriptor(NAME, where=PluginDescriptor.WHERE_MENU, fnc=menu))
-		list.append(PluginDescriptor(NAME, description=DESCRIPTION, where=PluginDescriptor.WHERE_MENU, fnc=menu))
+		#result.append(PluginDescriptor(NAME, where=PluginDescriptor.WHERE_MENU, fnc=menu))
+		result.append(PluginDescriptor(NAME, description=DESCRIPTION, where=PluginDescriptor.WHERE_MENU, fnc=menu))
+		
 	if config.plugins.archivCZSK.epg_menu.value:
-		list.append(PluginDescriptor(_("Search in ArchivCZSK"), where=PluginDescriptor.WHERE_EVENTINFO, fnc=eventInfo))
+		result.append(PluginDescriptor(_("Search in ArchivCZSK"), where=PluginDescriptor.WHERE_EVENTINFO, fnc=eventInfo))
 
-	list.append(PluginDescriptor("OS_refresh", where=PluginDescriptor.WHERE_EVENTINFO, fnc=osrefresh))
-	return list
+	return result
 
 if config.plugins.archivCZSK.preload.value and not ArchivCZSK.isLoaded():
 	ArchivCZSK.load_repositories()
