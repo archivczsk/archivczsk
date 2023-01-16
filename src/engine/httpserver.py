@@ -15,7 +15,7 @@ class AddonHttpRequestHandler(resource.Resource):
 		elif addon_id.startswith('script.module.'):
 			name = addon_id[14:]
 		
-		return name.replace('.', '-')
+		return name.replace('.', '-').replace('_', '-')
 	
 	def __init__(self, addon_id):
 		self.NOT_DONE_YET = server.NOT_DONE_YET

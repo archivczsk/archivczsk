@@ -8,6 +8,8 @@ import socket
 import sys
 import operator
 import traceback
+import importlib
+
 try:
 	from urllib2 import URLError
 except:
@@ -622,7 +624,8 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		self.on_stop.append(self.__restore_sys_modules)
 		self.on_pause.append(self.__pause_resolving_provider)
 		self.on_resume.append(self.__resume_resolving_provider)
-
+		self.entry_point = None
+		
 	def __repr__(self):
 		return "%s(%s)"%(self.__class__.__name__, self.video_addon)
 
@@ -676,9 +679,23 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		VideoAddonContentProvider.__gui_item_list[1] = None
 		VideoAddonContentProvider.__gui_item_list[2].clear()
 
+	def resolve_entry_point(self):
+		if not self.entry_point and self.video_addon.import_entry_point:
+#			self.entry_point = importlib.import_module( self.video_addon.import_entry_point, self.video_addon.import_name_full)
+			log.debug("Searching entry point in module %s.%s" % (self.video_addon.import_package, self.video_addon.import_name) )
+			try:
+				mod = importlib.import_module('.' + self.video_addon.import_name, self.video_addon.import_package)
+				self.entry_point = getattr(mod, self.video_addon.import_entry_point)
+			except Exception as e:
+				log.error("Entry point %s not found in module %s.%s" % (self.video_addon.import_entry_point, self.video_addon.import_package, self.video_addon.import_name) )
+				raise AddonError( _("Failed to resolve addon entry point: %s" % str(e)) )
+				
+			log.debug("Entry point %s found in module %s.%s: %s" % (self.video_addon.import_entry_point, self.video_addon.import_package, self.video_addon.import_name, self.entry_point) )
+		
 	def resolve_dependencies(self):
-		from Plugins.Extensions.archivCZSK.archivczsk import ArchivCZSK
 		log.info("%s trying to resolve dependencies for %s" , self, self.video_addon)
+		from Plugins.Extensions.archivCZSK.archivczsk import ArchivCZSK
+
 		for dependency in self.video_addon.requires:
 			addon_id, version, optional = dependency['addon'], dependency['version'], dependency['optional']
 
@@ -713,17 +730,29 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 					else:
 						log.debug("skipping")
 
+	def set_sys_path(self):
+		from Plugins.Extensions.archivCZSK.archivczsk import ArchivCZSK
+		for repo in ArchivCZSK.get_repositories():
+			sys.path.append(repo.path)
+		
+	def unset_sys_path(self):
+		from Plugins.Extensions.archivCZSK.archivczsk import ArchivCZSK
+		for repo in ArchivCZSK.get_repositories():
+			sys.path.remove(repo.path)
+			
 	def include_dependencies(self):
+		self.set_sys_path()
 		for addon in self._dependencies:
 			addon.include()
 			self.__addon_sys.add_addon(addon)
-
+			
 	def release_dependencies(self):
 		log.debug("%s trying to release dependencies for %s" ,self , self.video_addon)
+		self.unset_sys_path()
 		for addon in self._dependencies:
 			addon.deinclude()
 		del self._dependencies[:]
-
+		
 	def get_content(self, session, params, successCB, errorCB):
 		f = open("/tmp/archivCZSK.last", "w")
 		f.write('%s - params: %s' % (self, str(params)))
@@ -756,40 +785,50 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		return self.content_deferred
 
 	def run_script(self, session, params):
-		script_path = os.path.join(self.video_addon.path, self.video_addon.script)
+		self.resolve_entry_point()
 		
-		global_vars = {
-			'session':session,
-			'params':params,
-			'__file__':script_path,
-			'sys':self.__addon_sys,
-			'os':os
-		}
-
-		with open( script_path, "rb") as f:
-			exec( compile(f.read(), script_path, 'exec'), global_vars)
-
-	def run_autostart_script(self):
-		if self.video_addon.autostart_script:
-			log.debug("Autostart script found for %s" % self.video_addon )
-#			self.start()
-			script_path = os.path.join(self.video_addon.path, self.video_addon.autostart_script)
+		if self.video_addon.import_entry_point:
+			# direct call
+			self.entry_point(self.video_addon, session, params)
+		else:
+			# legacy call for old addon types
+			script_path = os.path.join(self.video_addon.path, self.video_addon.script)
 			
 			global_vars = {
+				'session':session,
+				'params':params,
 				'__file__':script_path,
-#				'sys':self.__addon_sys,
+				'sys':self.__addon_sys,
+				'os':os
+			}
+			
+			with open( script_path, "rb") as f:
+				exec( compile(f.read(), script_path, 'exec'), global_vars)
+
+	def run_autostart_script(self):
+		if self.video_addon.import_preload:
+			log.debug("Preloading addon %s" % self.video_addon )
+			self.set_sys_path()
+			self.resolve_entry_point()
+			self.unset_sys_path()
+
+		if self.video_addon.autostart_script:
+			log.debug("Autostart script found for %s" % self.video_addon )
+			script_path = os.path.join(self.video_addon.path, self.video_addon.autostart_script)
+	
+			global_vars = {
+				'__file__':script_path,
+#				'sys':self.addon_sys,
 				'sys':sys,
 				'os':os
 			}
-	
+
 			with open( script_path, "rb") as f:
 				try:
 					exec( compile(f.read(), script_path, 'exec'), global_vars)
 				except:
 					log.error( "Autoscript failed with exception:\n%s" % traceback.format_exc())
 
-#			self.stop()
-			
 	def _get_content_cb(self, success, result):
 		log.info('%s get_content_cb - success: %s, items: %d, guicmd: %r - %r' % (
 			self, success, len(self.__gui_item_list[0]), self.__gui_item_list[1], self.__gui_item_list[2]))

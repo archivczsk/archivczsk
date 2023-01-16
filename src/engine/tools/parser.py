@@ -61,7 +61,9 @@ class XBMCAddonXMLParser(XMLParser):
 		"xbmc.addon.repository":"repository",
 		"xbmc.python.module":"tools",
 		"xbmc.service":"service",
-		"xbmc.autostart":"autostart"
+		"xbmc.autostart":"autostart",
+		
+		"archivczsk.addon.video":"content_video",
 	}
 	
 	def get_addon_id(self, addon):
@@ -81,9 +83,7 @@ class XBMCAddonXMLParser(XMLParser):
 		name = addon.attrib.get('name')
 		if name is None:
 			raise Exception("Parse error: Mandatory atrribute 'name' is missing")
-		author = addon.attrib.get('provider-name')
-		if author is None:
-			raise Exception("Parse error: Mandatory atrribute 'author' is missing")
+		author = addon.attrib.get('provider-name', u'')
 		version = addon.attrib.get('version')
 		if version is None:
 			raise Exception("Parse error: Mandatory atrribute 'version' is missing")
@@ -96,9 +96,12 @@ class XBMCAddonXMLParser(XMLParser):
 		repo_authorization = u''
 		requires = []
 		library = 'lib'
-		script = 'default.py'
+		script = None
 		service_lib = None
 		autostart_script = None
+		import_name = None
+		import_entry_point = None
+		import_preload = False
 		
 		req = addon.find('requires')
 		for imp in req.findall('import'):
@@ -130,7 +133,12 @@ class XBMCAddonXMLParser(XMLParser):
 						provides = info.attrib.get('provides')
 					if provides is not None and provides == 'video':
 						addon_type = 'video'
-						script = info.attrib.get('library')
+						script = info.attrib.get('library', 'default.py')
+				elif ad_type == 'content_video':
+					addon_type = 'video'
+					import_name = info.attrib.get('import-name', 'addon')
+					import_entry_point = info.attrib.get('entry-point', 'main')
+					import_preload = info.attrib.get('preload', 'no').lower() == 'yes'
 				elif ad_type == 'service':
 					service_lib = info.attrib.get('library', "service.py")
 				elif ad_type == 'autostart':
@@ -159,7 +167,10 @@ class XBMCAddonXMLParser(XMLParser):
 				"library":library,
 				"script":script,
 				"service_lib":service_lib,
-				"autostart_script":autostart_script
+				"autostart_script":autostart_script,
+				"import_name": import_name,
+				"import_entry_point": import_entry_point,
+				"import_preload": import_preload,
 				}
 
 class XBMCMultiAddonXMLParser(XBMCAddonXMLParser):

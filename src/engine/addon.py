@@ -60,6 +60,9 @@ class Addon(object):
 		self.loader = AddonLoader(self)
 		self.service = AddonService(self)
 
+		# this is the function, that should be called on direct call
+		self.entry_point = None
+		
 	def __repr__(self):
 		return "%s(%s-%s)" % (self.__class__.__name__, self.name, self.version)
 
@@ -195,10 +198,14 @@ class VideoAddon(Addon):
 
 	def __init__(self, info, repository):
 		Addon.__init__(self, info, repository)
+		self.import_name = info.import_name
+		self.import_package = os.path.basename(info.path)
+		self.import_entry_point = info.import_entry_point
+		self.import_preload = info.import_preload
 		self.script = info.script
 		self.autostart_script = info.autostart_script
 		self.requires = [require for require in info.requires if require['addon'] not in VideoAddon.ignore_requires]
-		if self.script == '':
+		if not self.script and not self.import_entry_point:
 			raise Exception("%s entry point missing in addon.xml" % self)
 		# content provider
 		self.downloads_path = self.get_setting('download_path')
@@ -520,6 +527,9 @@ class AddonInfo(object):
 		self.script = addon_dict['script']
 		self.service_lib = addon_dict['service_lib']
 		self.autostart_script = addon_dict['autostart_script']
+		self.import_name = addon_dict['import_name']
+		self.import_entry_point = addon_dict['import_entry_point']
+		self.import_preload = addon_dict['import_preload']
 		self.tmp_path = config.plugins.archivCZSK.tmpPath.value
 		self.data_path = os.path.join(config.plugins.archivCZSK.dataPath.getValue(), self.id)
 		self.profile = self.data_path
