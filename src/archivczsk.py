@@ -93,6 +93,10 @@ class ArchivCZSK():
 		return ArchivCZSK.__repositories[repository_id]
 
 	@staticmethod
+	def get_repositories():
+		return list(ArchivCZSK.__repositories.values())
+
+	@staticmethod
 	def add_repository(repository):
 		ArchivCZSK.__repositories[repository.id] = repository
 
