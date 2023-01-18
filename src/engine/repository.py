@@ -69,6 +69,8 @@ class Repository():
 			try:
 				addon_info = AddonInfo(os.path.join(addon_path, self.addon_xml_relpath))
 			except Exception:
+				log.logError("Failed to get addon info from dir %s\n" % addon_dir )
+				log.logError(traceback.format_exc())
 				continue
 
 			if addon_info.type not in Repository.SUPPORTED_ADDONS:
