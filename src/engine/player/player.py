@@ -110,7 +110,7 @@ class ArchivCZSKPlaylist(Screen):
 
 
 class Player(object):
-	def __init__(self, session, callback=None, content_provider=None, event_callback=None):
+	def __init__(self, session, callback=None, content_provider=None, event_callback=None, stype=4097):
 		self.session = session
 		self.old_service = session.nav.getCurrentlyPlayingServiceReference()
 		self.settings = config_archivczsk.videoPlayer
@@ -123,6 +123,7 @@ class Player(object):
 		self.lastPlayPositionSeconds = None
 		self.duration = None
 		self.event_callback = event_callback
+		self.stype = stype
 
 	def play_item(self, item = None, idx = None):
 		log.info("play_item(%s, %s)"%(item,toString(idx)))
@@ -164,7 +165,7 @@ class Player(object):
 		if headers:
 			play_url += "#" + "&".join("%s=%s"%(k,v) for k,v in headers.items())
 
-		service_ref = eServiceReference(play_settings.get("stype", 4097), 0, toString(play_url))
+		service_ref = eServiceReference(play_settings.get("stype", self.stype), 0, toString(play_url))
 		
 		if self.video_player is None:
 			self.video_player = self.session.openWithCallback(self.player_exit_callback,

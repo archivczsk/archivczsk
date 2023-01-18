@@ -185,10 +185,11 @@ class MediaItemHandler(ItemHandler):
 				
 			return player_mapping.get( player, 4097 )
 		
+		stype = None
 		if 'forced_player' in kwargs:
-			item.settings['stype'] = kwargs['forced_player']
-		elif 'stype' not in item.settings:
-			item.settings['stype'] = player2stype( self.content_provider.video_addon.settings.get_setting('auto_used_player') )
+			stype = kwargs['forced_player']
+		else:
+			stype = player2stype( self.content_provider.video_addon.settings.get_setting('auto_used_player') )
 		
 		timerPeriod = 10*60*1000 #10min
 		self.cmdTimer = eTimer()
@@ -196,7 +197,7 @@ class MediaItemHandler(ItemHandler):
 
 		self.content_screen.workingStarted()
 		self.content_provider.pause()
-		self.content_provider.play(self.session, item, mode, end_play, trakt_scrobble)
+		self.content_provider.play(self.session, item, mode, end_play, trakt_scrobble, stype)
 
 		# send command
 		self.cmdStats(item, 'play', finishCB=startWatchingTimer)

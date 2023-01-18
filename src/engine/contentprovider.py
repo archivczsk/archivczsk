@@ -194,8 +194,8 @@ class PlayMixin(object):
 		if allowed_download:
 			self.capabilities.append('play_and_download')
 
-	def play(self, session, item, mode, player_callback=None, event_callback=None):
-		self.player = Player(session, player_callback, self, event_callback)
+	def play(self, session, item, mode, player_callback=None, event_callback=None, stype=None):
+		self.player = Player(session, player_callback, self, event_callback, stype)
 		if mode in self.capabilities:
 			if mode == 'play':
 				self.handle_substitles_and_play(item)
