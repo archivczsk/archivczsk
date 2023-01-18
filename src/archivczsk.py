@@ -1,4 +1,4 @@
-import os
+import os,sys
 import shutil
 import threading
 import traceback
@@ -46,6 +46,8 @@ class ArchivCZSK():
 				except Exception:
 					traceback.print_exc()
 				ArchivCZSK.add_repository(repository)
+				sys.path.append(repository.path)
+
 			
 		ArchivCZSK.__loaded = True
 		diff = time.time() - start
@@ -141,7 +143,7 @@ class ArchivCZSK():
 				if addon.is_enabled():
 					addon.provider.run_autostart_script()
 			except:
-				log.logError("Autostart failed:\n%s" % traceback.format_exc())
+				log.logError("Autostart of addon %s failed:\n%s" % (addon, traceback.format_exc()))
 
 	def __init__(self, session):
 		self.session = session

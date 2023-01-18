@@ -53,8 +53,6 @@ class AddonExceptionHandler(GUIExceptionHandler):
 	def __call__(self, func):
 		def wrapped(*args, **kwargs):
 			try:
-				f = open("/tmp/archivCZSK.last", "r")
-				params = f.read()
 				try:
 					func(*args, **kwargs)
 				# addon specific exceptions

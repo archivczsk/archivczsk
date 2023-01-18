@@ -488,9 +488,6 @@ class ArchivCZSKContentProvider(ContentProvider):
 		self._categories_io.save()
 
 	def get_content(self, params=None):
-		f = open("/tmp/archivCZSK.last", "w")
-		f.write('%s - params: %s' % (self, str(params)))
-		f.close()
 		log.info('%s get_content - params: %s' % (self, str(params)))
 		if not params or 'categories' in params:
 			return self._get_categories()
@@ -617,13 +614,20 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		FavoritesMixin.__init__(self, shortcuts_path)
 		self._dependencies = []
 		
-		self._sys_importer = CustomSysImporter(self.__addon_sys)
-		self.on_start.append(self.__clean_sys_modules)
-		self.on_start.append(self.__set_resolving_provider)
-		self.on_stop.append(self.__unset_resolving_provider)
-		self.on_stop.append(self.__restore_sys_modules)
-		self.on_pause.append(self.__pause_resolving_provider)
-		self.on_resume.append(self.__resume_resolving_provider)
+		if video_addon.import_entry_point:
+			# needed for direct calling
+			self.on_start.append(self.__set_resolving_provider_light)
+			self.on_stop.append(self.__unset_resolving_provider_light)
+		else:
+			# legacy addon needs all this
+			self._sys_importer = CustomSysImporter(self.__addon_sys)
+			self.on_start.append(self.__clean_sys_modules)
+			self.on_start.append(self.__set_resolving_provider)
+			self.on_stop.append(self.__unset_resolving_provider)
+			self.on_stop.append(self.__restore_sys_modules)
+			self.on_pause.append(self.__pause_resolving_provider)
+			self.on_resume.append(self.__resume_resolving_provider)
+
 		self.entry_point = None
 		
 	def __repr__(self):
@@ -662,6 +666,13 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 			# no _sys_importer found - this can happen when there was error by resolving dependencies
 			pass
 
+	def __set_resolving_provider_light(self):
+		VideoAddonContentProvider.__resolving_provider = self
+		self.resolve_dependencies(True)
+
+	def __unset_resolving_provider_light(self):
+		VideoAddonContentProvider.__resolving_provider = None
+
 	def __pause_resolving_provider(self):
 		self.video_addon.deinclude()
 		for addon in self._dependencies:
@@ -692,7 +703,7 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 				
 			log.debug("Entry point %s found in module %s.%s: %s" % (self.video_addon.import_entry_point, self.video_addon.import_package, self.video_addon.import_name, self.entry_point) )
 		
-	def resolve_dependencies(self):
+	def resolve_dependencies(self, check_only=False):
 		log.info("%s trying to resolve dependencies for %s" , self, self.video_addon)
 		from Plugins.Extensions.archivCZSK.archivczsk import ArchivCZSK
 
@@ -710,10 +721,11 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 				log.info("%s requires %s addon, version %s" , self, addon_id, version)
 				if ArchivCZSK.has_addon(addon_id):
 					tools_addon = ArchivCZSK.get_addon(addon_id)
-					log.debug("%s required %s founded" , self, tools_addon)
+					log.debug("%s required %s found" , self, tools_addon)
 					if	not util.check_version(tools_addon.version, version):
 						log.debug("%s version %s>=%s" , self, tools_addon.version, version)
-						self._dependencies.append(tools_addon)
+						if not check_only:
+							self._dependencies.append(tools_addon)
 					else:
 						log.debug("%s version %s<=%s" , self, tools_addon.version, version)
 						if not optional:
@@ -723,40 +735,25 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 							log.debug("%s skipping")
 							continue
 				else:
-					log.error("%s required %s addon not founded" ,self, addon_id)
+					log.error("%s required %s addon not found" ,self, addon_id)
 					if not optional:
 						log.error("%s cannot execute %s addon" ,self, self.video_addon)
 						raise Exception("Cannot execute %s, missing dependency %s" % (self.video_addon, addon_id))
 					else:
 						log.debug("skipping")
 
-	def set_sys_path(self):
-		from Plugins.Extensions.archivCZSK.archivczsk import ArchivCZSK
-		for repo in ArchivCZSK.get_repositories():
-			sys.path.append(repo.path)
-		
-	def unset_sys_path(self):
-		from Plugins.Extensions.archivCZSK.archivczsk import ArchivCZSK
-		for repo in ArchivCZSK.get_repositories():
-			sys.path.remove(repo.path)
-			
 	def include_dependencies(self):
-		self.set_sys_path()
 		for addon in self._dependencies:
 			addon.include()
 			self.__addon_sys.add_addon(addon)
 			
 	def release_dependencies(self):
 		log.debug("%s trying to release dependencies for %s" ,self , self.video_addon)
-		self.unset_sys_path()
 		for addon in self._dependencies:
 			addon.deinclude()
 		del self._dependencies[:]
 		
 	def get_content(self, session, params, successCB, errorCB):
-		f = open("/tmp/archivCZSK.last", "w")
-		f.write('%s - params: %s' % (self, str(params)))
-		f.close()
 		log.info('%s get_content - params: %s' % (self, str(params)))
 		# add/remove trakt compatibility on every content request
 		if self.video_addon.setting_exist('trakt_enabled'):
@@ -808,9 +805,8 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 	def run_autostart_script(self):
 		if self.video_addon.import_preload:
 			log.debug("Preloading addon %s" % self.video_addon )
-			self.set_sys_path()
+			self.resolve_dependencies(True)
 			self.resolve_entry_point()
-			self.unset_sys_path()
 
 		if self.video_addon.autostart_script:
 			log.debug("Autostart script found for %s" % self.video_addon )
