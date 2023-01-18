@@ -104,10 +104,11 @@ class XBMCAddonXMLParser(XMLParser):
 		import_preload = False
 		
 		req = addon.find('requires')
-		for imp in req.findall('import'):
-			requires.append({'addon':imp.attrib.get('addon'),
-							 'version':imp.attrib.get('version'),
-							 'optional':imp.attrib.get('optional')})
+		if req:
+			for imp in req.findall('import'):
+				requires.append({'addon':imp.attrib.get('addon'),
+								 'version':imp.attrib.get('version'),
+								 'optional':imp.attrib.get('optional')})
 			
 			
 		for info in addon.findall('extension'):
