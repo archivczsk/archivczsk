@@ -162,7 +162,8 @@ def create_directory_it(name, params={}, image=None, infoLabels={}, menuItems={}
 
 	infolabel_uni = {}
 	for key, value in infoLabels.items():
-		infolabel_uni[key] = toUnicode(value)
+		if value != None:
+			infolabel_uni[key] = toUnicode(value)
 
 	for key, value in menuItems.items():
 		item_name = decode_string(key)
@@ -199,7 +200,8 @@ def create_video_it(name, url, subs=None, image=None, infoLabels={}, menuItems={
 
 	infolabel_uni = {}
 	for key, value in infoLabels.items():
-		infolabel_uni[key] = toUnicode(value)
+		if value != None:
+			infolabel_uni[key] = toUnicode(value)
 	if not 'Title' in infolabel_uni:
 		infolabel_uni["Title"] = it.name
 	it.info = infolabel_uni
@@ -241,6 +243,12 @@ def create_video_it(name, url, subs=None, image=None, infoLabels={}, menuItems={
 	it.dataItem = dataItem
 	it.traktItem = traktItem
 
+	# human readable quality description - will be automaticly added to name
+	it.quality = infoLabels.get('quality')
+	
+	# number - used to sort streams from best to worst
+	it.bandwidth = infoLabels.get('bandwidth')
+	
 	return it
 
 @abortTask
@@ -308,8 +316,8 @@ def add_playlist(name, media_list=[]):
 
 @abortTask
 def add_operation_result(msg, isError=False):
-	 GItem_lst[1] = "RESULT_MSG"
-	 GItem_lst[2] = {'msg':msg, 'isError':isError}
+	GItem_lst[1] = "RESULT_MSG"
+	GItem_lst[2] = {'msg':msg, 'isError':isError}
 
 @abortTask
 def add_operation(cmd, params):
