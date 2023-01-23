@@ -201,11 +201,10 @@ class FolderItemHandler(ItemHandler):
 				
 				if hasattr(item, 'traktItem'): # do it only on item which have trakt data
 					# handle trakt action localy and after that forward it to addon
-					result, msg = trakttv.handle_trakt_action( action, item.traktItem )
+					success, msg = trakttv.handle_trakt_action( action, item.traktItem )
 					
-					ppp = { 'cp': 'czsklib', 'trakt':action, 'item': item.traktItem, 'result': result, 'msg': msg }
 					# content provider must be in running state (not paused)
-					self.content_provider.get_content(self.session, params=ppp, successCB=open_item_success_cb, errorCB=open_item_error_cb)
+					self.content_provider.trakt(self.session, item.traktItem, action, { 'success': success, 'msg': msg }, successCB=open_item_success_cb, errorCB=open_item_error_cb)
 				else:
 					log.logDebug("Trakt action not supported for this item %s"%item.name);
 		except:

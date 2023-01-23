@@ -56,15 +56,15 @@ class MediaItemHandler(ItemHandler):
 			if paused:
 				self.content_provider.resume()
 			
-			ppp = { 'cp': 'czsklib', 'stats':action, 'item': item.dataItem }
+			extra_params = {}
 			if lastPlayPos != None:
-				ppp['lastPlayPos'] = lastPlayPos
+				extra_params['lastPlayPos'] = lastPlayPos
 				
 			if duration != None:
-				ppp['duration'] = duration
+				extra_params['duration'] = duration
 				
 			# content provider must be in running state (not paused)
-			self.content_provider.get_content(self.session, params=ppp, successCB=open_item_finish, errorCB=open_item_finish)
+			self.content_provider.stats(self.session, item.dataItem, action, extra_params, successCB=open_item_finish, errorCB=open_item_finish)
 		except:
 			log.logError("Stats call failed.\n%s"%traceback.format_exc())
 			if paused:
@@ -111,14 +111,13 @@ class MediaItemHandler(ItemHandler):
 			elif action == 'pair':
 				trakttv.handle_trakt_pairing(self.session, eval_trakt_pairing )
 			else:
-				result, msg = trakttv.handle_trakt_action( action, item.traktItem )
+				success, msg = trakttv.handle_trakt_action( action, item.traktItem )
 
 				if paused:
 					self.content_provider.resume()
 
-				ppp = { 'cp': 'czsklib', 'trakt':action, 'item': item.traktItem, 'result': result, 'msg': msg }
 				# content provider must be in running state (not paused)
-				self.content_provider.get_content(self.session, params=ppp, successCB=open_item_success_cb, errorCB=open_item_error_cb)
+				self.content_provider.trakt(self.session, item.traktItem, action, { 'success': success, 'msg': msg }, successCB=open_item_success_cb, errorCB=open_item_error_cb)
 		except:
 			log.logError("Trakt.tv call failed.\n%s" % traceback.format_exc())
 			if paused:

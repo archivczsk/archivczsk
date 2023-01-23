@@ -585,6 +585,16 @@ class ArchivCZSKContentProvider(ContentProvider):
 		addons = self._sort_addons(addons)
 		return addons
 
+
+class DummyAddonInterface:
+	def __init__(self, run, trakt=None, stats=None):
+		self.run = run
+		if trakt:
+			self.trakt = trakt
+		if stats:
+			self.stats = stats
+
+
 class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, FavoritesMixin):
 
 	__resolving_provider = None
@@ -628,7 +638,7 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 			self.on_pause.append(self.__pause_resolving_provider)
 			self.on_resume.append(self.__resume_resolving_provider)
 
-		self.entry_point = None
+		self.addon_interface = None
 		
 	def __repr__(self):
 		return "%s(%s)"%(self.__class__.__name__, self.video_addon)
@@ -690,19 +700,38 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		VideoAddonContentProvider.__gui_item_list[1] = None
 		VideoAddonContentProvider.__gui_item_list[2].clear()
 
-	def resolve_entry_point(self):
-		if not self.entry_point and self.video_addon.import_entry_point:
-#			self.entry_point = importlib.import_module( self.video_addon.import_entry_point, self.video_addon.import_name_full)
+	def resolve_addon_interface(self):
+		if not self.addon_interface and self.video_addon.import_entry_point:
+
 			log.debug("Searching entry point in module %s.%s" % (self.video_addon.import_package, self.video_addon.import_name) )
 			try:
 				mod = importlib.import_module('.' + self.video_addon.import_name, self.video_addon.import_package)
-				self.entry_point = getattr(mod, self.video_addon.import_entry_point)
+				entry_point = getattr(mod, self.video_addon.import_entry_point)
 			except Exception as e:
 				log.error("Entry point %s not found in module %s.%s" % (self.video_addon.import_entry_point, self.video_addon.import_package, self.video_addon.import_name) )
+				log.error(traceback.format_exc())
 				raise AddonError( _("Failed to resolve addon entry point: %s" % str(e)) )
-				
-			log.debug("Entry point %s found in module %s.%s: %s" % (self.video_addon.import_entry_point, self.video_addon.import_package, self.video_addon.import_name, self.entry_point) )
-		
+
+			log.debug("Entry point %s found in module %s.%s: %s" % (self.video_addon.import_entry_point, self.video_addon.import_package, self.video_addon.import_name, entry_point) )
+
+			# call addon entry point to get addon interface
+			response = entry_point( self.video_addon )
+
+			if isinstance( response, type({})):
+				# interface returned as dictionary
+				if 'run' not in response:
+					log.error("Addon %s doesn't returned interface to mandatory run method" % (self.video_addon) )
+					raise AddonError( _("Addon doesn't returned interface run method" ))
+
+				self.addon_interface = DummyAddonInterface( run=response['run'], trakt=response.get('trakt'), stats=response.get('stats'))
+			elif callable(response):
+				# only method for get content returned as callable
+				self.addon_interface = DummyAddonInterface(run=response)
+			else:
+				# direct interface class returned
+				self.addon_interface = response
+
+
 	def resolve_dependencies(self, check_only=False):
 		log.info("%s trying to resolve dependencies for %s" , self, self.video_addon)
 		from Plugins.Extensions.archivCZSK.archivczsk import ArchivCZSK
@@ -777,16 +806,16 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 			ssl._create_default_https_context = ssl._create_unverified_context
 		except:
 			pass
-		thread_task = task.Task(self._get_content_cb, self.run_script, session, params)
+		thread_task = task.Task(self._get_content_cb, self.call_addon_run_interface, session, params)
 		thread_task.run()
 		return self.content_deferred
 
-	def run_script(self, session, params):
-		self.resolve_entry_point()
+	def call_addon_run_interface(self, session, params):
+		self.resolve_addon_interface()
 		
 		if self.video_addon.import_entry_point:
 			# direct call
-			self.entry_point(self.video_addon, session, params)
+			self.addon_interface.run(session, params)
 		else:
 			# legacy call for old addon types
 			script_path = os.path.join(self.video_addon.path, self.video_addon.script)
@@ -802,11 +831,37 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 			with open( script_path, "rb") as f:
 				exec( compile(f.read(), script_path, 'exec'), global_vars)
 
+	def trakt(self, session, item, action, result, successCB, errorCB):
+		log.info('%s trakt - action: %s, item %s' % (self, action, str(item)))
+		self.content_deferred = defer.Deferred()
+		self.content_deferred.addCallbacks(successCB, errorCB)
+		thread_task = task.Task(self._get_content_cb, self.call_addon_trakt_interface, session, item, action, result)
+		thread_task.run()
+		return self.content_deferred
+
+	def call_addon_trakt_interface(self, session, item, action, result):
+		if hasattr(self.addon_interface, 'trakt'):
+			self.resolve_addon_interface()
+			self.addon_interface.trakt(session, item=item, action=action, result=result )
+
+	def stats(self, session, item, action, extra_params, successCB, errorCB):
+		log.info('%s stats - action: %s, item: %s' % (self, action, str(item)))
+		self.content_deferred = defer.Deferred()
+		self.content_deferred.addCallbacks(successCB, errorCB)
+		thread_task = task.Task(self._get_content_cb, self.call_addon_stats_interface, session, item, action, extra_params)
+		thread_task.run()
+		return self.content_deferred
+
+	def call_addon_stats_interface(self, session, item, action, extra_params):
+		if hasattr(self.addon_interface, 'stats'):
+			self.resolve_addon_interface()
+			self.addon_interface.stats(session, item=item, action=action, **extra_params )
+
 	def run_autostart_script(self):
 		if self.video_addon.import_preload:
 			log.debug("Preloading addon %s" % self.video_addon )
 			self.resolve_dependencies(True)
-			self.resolve_entry_point()
+			self.resolve_addon_interface()
 
 		if self.video_addon.autostart_script:
 			log.debug("Autostart script found for %s" % self.video_addon )
