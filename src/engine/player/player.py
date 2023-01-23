@@ -87,7 +87,7 @@ class ArchivCZSKPlaylist(Screen):
 		self.index = index
 		Screen.__init__(self, session)
 		self.skinName = ["ArchivCZSKPlaylistScreen"]
-		self["title"] = StaticText(toString(title))
+		self["title"] = StaticText(DeleteColors(toString(title)))
 		self["list"] = List(self.buildPlaylist())
 		self["actions"] = ActionMap(["OkCancelActions"],
 				{
@@ -100,10 +100,10 @@ class ArchivCZSKPlaylist(Screen):
 		self["list"].index = self.index
 
 	def buildPlaylist(self):
-		list = []
+		lst = []
 		for item in self.playlist:
-			list.append((toString(item.name),))
-		return list
+			lst.append((DeleteColors(toString(item.name)),))
+		return lst
 
 	def ok(self):
 		self.close(self["list"].index)
@@ -149,7 +149,7 @@ class Player(object):
 
 	def play_stream(self, play_url, play_settings=None, subtitles_url=None, title=None, wholeItem=None):
 		log.info("play_stream(%s, %s, %s, %s)"%(play_url, play_settings, subtitles_url, title))
-		log.logDebug("play_stream(%s, %s, %s, %s)"%(play_url, play_settings, subtitles_url, title))
+
 		if play_url.startswith("rtmp"):
 			rtmp_timeout = int(self.settings.rtmpTimeout.value)
 			rtmp_buffer = int(self.settings.rtmpBuffer.value)
