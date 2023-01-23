@@ -469,17 +469,17 @@ class trakt_tv(object):
 					pass
 
 				# add result message to show only for trakt
-				result = "success"
+				success = True
 				msg = _("Trakt.tv operation {action} ended successfuly".format(action=action))
 			else:
-				result = "fail"
+				success = False
 				msg = _("Trakt.tv is not paired with this device.")
 		except:
 			log.logError("Trakt action (%s) failed.\n%s" % (action, traceback.format_exc()) )
-			result = "fail"
+			success = False
 			msg = _('Trakt.tv operation "{action}" failed'.format(action=action))
 			
-		return result, msg
+		return success, msg
 	
 	# #################################################################################################
 	
