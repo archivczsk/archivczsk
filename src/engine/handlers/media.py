@@ -32,6 +32,9 @@ class MediaItemHandler(ItemHandler):
 		self.play_item(item, mode, args, kwargs)
 
 	def isValidForTrakt(self, item):
+		if isinstance(item, PPlaylist):
+			item = item.get_current_item()
+
 		if hasattr(item, 'traktItem') and item.traktItem is not None:
 			if 'type' in item.traktItem and 'ids' in item.traktItem:
 				return True
@@ -39,10 +42,16 @@ class MediaItemHandler(ItemHandler):
 
 	
 	# action:
-	#	- play
-	#	- watching /every 10minutes/
-	#	- end
-	def cmdStats(self, item, action, finishCB=None, sendTraktWatchedCmd=False, lastPlayPos=None, duration=None):
+	# 	- play
+	# 	- end
+	# 	- seek
+	# 	- pause
+	# 	- unpause
+	# 	- watching (every 5minutes)
+	def cmdStats(self, item, action, duration=None, position=None, finishCB=None, sendTraktWatchedCmd=False):
+		if isinstance(item, PPlaylist):
+			item = item.get_current_item()
+
 		def open_item_finish(result):
 			log.logDebug("Stats (%s) call finished.\n%s"%(action,result))
 			if paused and not sendTraktWatchedCmd:
@@ -56,12 +65,10 @@ class MediaItemHandler(ItemHandler):
 			if paused:
 				self.content_provider.resume()
 			
-			extra_params = {}
-			if lastPlayPos != None:
-				extra_params['lastPlayPos'] = lastPlayPos
-				
-			if duration != None:
-				extra_params['duration'] = duration
+			extra_params = {
+				'duration': duration,
+				'position': position,
+			}
 				
 			# content provider must be in running state (not paused)
 			self.content_provider.stats(self.session, item.dataItem, action, extra_params, successCB=open_item_finish, errorCB=open_item_finish)
@@ -79,6 +86,9 @@ class MediaItemHandler(ItemHandler):
 	#	- unwatched
 	#   - scrobble
 	def cmdTrakt(self, item, action, finishedCB=None):
+		if isinstance(item, PPlaylist):
+			item = item.get_current_item()
+
 		def finishCb(result):
 			if paused:
 				self.content_provider.pause()
@@ -126,43 +136,69 @@ class MediaItemHandler(ItemHandler):
 				finishedCB()
 
 	def play_item(self, item, mode='play', *args, **kwargs):
-		# this is needed to allow modifications in inner function
-		scrobbledItem = { 'value': False }
+		# This horrible code is needed to sync player end with calling of stats and trakt commands
+		# Without it endPlayFinish() will be called before stats command finishes and this will
+		# end in lock, because content provider will not be running
+		sync_info = {
+			'stats_command_running': False,
+			'endPlayFinish_delayed': False
+		}
 		
 		def endPlayFinish():
-			self.content_screen.workingFinished()
-			if self.content_provider.isPaused():
-				self.content_provider.resume()
-		def startWatchingTimer():
-			self.cmdTimer.start(timerPeriod)
-		def timerEvent():
-			self.cmdStats(item, 'watching')
-		def end_play():
-			# @TODO toto sa tak ci tak zjebe ked sa posiela trakt a stlaca sa exit tak to znova zavola dalsie vlakno a potom je crash
-			try:
-				self.cmdTimer.stop()
-				del self.cmdTimer
-				del self.cmdTimer_conn
-			except:
-				log.logDebug("Release cmd timer failed.\n%s" % traceback.format_exc())
-			
-			self.cmdStats(item, 'end', finishCB=endPlayFinish, sendTraktWatchedCmd=scrobbledItem['value'], lastPlayPos=self.content_provider.player.lastPlayPositionSeconds, duration=self.content_provider.player.duration)
+			if sync_info['stats_command_running']:
+				sync_info['endPlayFinish_delayed'] = True
+			else:
+				self.content_screen.workingFinished()
+				if self.content_provider.isPaused():
+					self.content_provider.resume()
 
-		def trakt_scrobble( command, position ):
-			if 'trakt' in self.content_provider.capabilities and self.isValidForTrakt(item):
-				log.logInfo("Trakt.tv scrobble command %s received with position %d" % (command, position) )
+		def end_play():
+			sync_info['stats_command_running'] = False
+
+			if sync_info['endPlayFinish_delayed']:
+				sync_info['endPlayFinish_delayed'] = False
+				endPlayFinish()
+
+		def handle_trakt_scrobble(command, duration, position):
+			notify_scrobble = False
+
+			if duration != None and position != None:
+				position_percentage = int((position * 100) // duration)
+			else:
+				position_percentage = None
+
+			if position_percentage != None and 'trakt' in self.content_provider.capabilities and self.isValidForTrakt(item):
+				position_percentage = int((position * 100) // duration)
+				log.logInfo("Trakt.tv scrobble command %s received with position %d" % (command, position_percentage))
+
 				try:
 					if command in ('start', 'seek', 'unpause'):
-						trakttv.scrobble( 'start', item.traktItem, position )
+						trakttv.scrobble('start', item.traktItem, position_percentage)
 					elif command == 'pause':
-						trakttv.scrobble( 'pause', item.traktItem, position )
+						trakttv.scrobble('pause', item.traktItem, position_percentage)
 					elif command == 'stop':
-						ret = trakttv.scrobble( 'stop', item.traktItem, position )
+						ret = trakttv.scrobble('stop', item.traktItem, position_percentage)
 						if ret == 'scrobble':
-							scrobbledItem['value'] = True
+							notify_scrobble = True
 							
 				except:
 					log.logError("Trakt.tv scrobble command failed.\n%s" % traceback.format_exc())
+
+			return notify_scrobble
+
+		def player_event_handler(command, duration, position):
+			log.logDebug("Media event callback called: command=%s, duration=%s, position=%s" % (command, str(duration), str(position)))
+			notify_scrobble = handle_trakt_scrobble(command, duration, position)
+
+			sync_info['stats_command_running'] = True
+			if command == 'start':
+				self.cmdStats(item, 'play', duration, position)
+			elif command == 'stop':
+				self.cmdStats(item, 'end', duration, position, finishCB=end_play, sendTraktWatchedCmd=notify_scrobble)
+			elif command in ('seek', 'pause', 'unpause', 'watching'):
+				self.cmdStats(item, command, duration, position)
+			else:
+				sync_info['stats_command_running'] = False
 
 		def player2stype( player ):
 			# enum: 'Predvolený|gstplayer|exteplayer3|DMM|DVB (OE>=2.5)'
@@ -190,16 +226,9 @@ class MediaItemHandler(ItemHandler):
 		else:
 			stype = player2stype( self.content_provider.video_addon.settings.get_setting('auto_used_player') )
 		
-		timerPeriod = 10*60*1000 #10min
-		self.cmdTimer = eTimer()
-		self.cmdTimer_conn = eConnectCallback(self.cmdTimer.timeout, timerEvent)
-
 		self.content_screen.workingStarted()
 		self.content_provider.pause()
-		self.content_provider.play(self.session, item, mode, end_play, trakt_scrobble, stype)
-
-		# send command
-		self.cmdStats(item, 'play', finishCB=startWatchingTimer)
+		self.content_provider.play(self.session, item, mode, endPlayFinish, player_event_handler, stype)
 
 	def download_item(self, item, mode="", *args, **kwargs):
 		@DownloadExceptionHandler(self.session)

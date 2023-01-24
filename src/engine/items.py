@@ -167,7 +167,14 @@ class PPlaylist(PItem):
 	def __init__(self):
 		PItem.__init__(self)
 		self.playlist = []
+		self.current_item = None
 		self.thumb = PNG_PATH + '/playlist.png'
+
+	def set_current_item(self, item):
+		self.current_item = item
+
+	def get_current_item(self):
+		return self.current_item
 
 	def clear(self):
 		del self.playlist[:]
