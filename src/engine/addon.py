@@ -106,7 +106,14 @@ class Addon(object):
 			return atr
 
 	def open_settings(self, session, cb=None):
-		menu.openAddonMenu(session, self, cb)
+		def __settings_closed(*args):
+			saved = args[0] if len(args) > 0  else False
+			self.settings.unpause_change_notifiers(saved)
+			if cb:
+				cb(*args)
+
+		self.settings.pause_change_notifiers()
+		menu.openAddonMenu(session, self, __settings_closed)
 
 	def open_changelog(self, session):
 		info.showChangelog(session, self.name, self.changelog)
@@ -134,8 +141,9 @@ class Addon(object):
 			if isinstance( self, VideoAddon ):
 				self.provider.run_autostart_script()
 		
-	def add_setting_change_notifier(self, setting_id, cbk):
-		return self.settings.add_change_notifier(setting_id, cbk)
+	def add_setting_change_notifier(self, setting_ids, cbk):
+		self.settings.add_change_notifier(setting_ids, cbk)
+
 		
 class XBMCAddon(object):
 	def __init__(self, addon):
@@ -333,6 +341,8 @@ class AddonSettings(object):
 		addon_config.add_global_addon_settings(addon, self.main)
 
 		self.main.enabled = ConfigYesNo(default=True)
+		self.notifiers_enabled = True
+		self.old_settings = {}
 
 		self.addon = addon
 		self.categories = []
@@ -480,15 +490,63 @@ class AddonSettings(object):
 	def close(self):
 		self.addon = None
 
-	def add_change_notifier(self, setting_id, cbk ):
+	def pause_change_notifiers(self):
+		self.notifiers_enabled = False
+		self.delayed_notifiers = {}
+
+	def unpause_change_notifiers(self, fire_delayed=True):
+		if fire_delayed:
+			log.debug("Settings closed - searching notifiers to call")
+			for name in self.delayed_notifiers:
+				cbk, value = self.delayed_notifiers[name]
+
+				if self.old_settings[name] != value:
+					log.debug("Setting %s changed - calling notifier" % name)
+					try:
+						cbk(name, value)
+					except:
+						log.error('Error by calling delayed setting change notification for option "%s"' % name)
+						log.error(traceback.format_exc())
+				self.old_settings[name] = value
+		else:
+			log.debug("Settings closed without save")
+		del self.delayed_notifiers
+		self.notifiers_enabled = True
+
+	def __call_change_notifier(self, cbk, name, value ):
+		if self.old_settings.get(name) == None:
+			# store first value to compare it if it's realy changed
+			self.old_settings[name] = value
+			return
+
+
+		if self.notifiers_enabled:
+			if self.old_settings[name] != value:
+				try:
+					cbk(name, value)
+				except:
+					log.error('Error by calling setting change notification for option "%s"' % name)
+					log.error(traceback.format_exc())
+
+				self.old_settings[name] = value
+		else:
+			# store notification for later
+			self.delayed_notifiers[name] = (cbk, value)
+
+	def __add_change_notifier(self, setting_id, cbk):
 		try:
 			setting = getattr(self.main, '%s' % setting_id)
 		except ValueError:
 			log.error('%s cannot retrieve setting %s,  Invalid setting id', self, setting_id)
-			return False
 		else:
-			setting.addNotifier( lambda c: cbk(setting_id, c.value), immediate_feedback=False)
-			return True
+			setting.addNotifier(lambda c: self.__call_change_notifier(cbk, setting_id, c.value), immediate_feedback=True)
+
+	def add_change_notifier(self, setting_ids, cbk):
+		if isinstance(setting_ids, (type(()), type([]))):
+			for setting_id in setting_ids:
+				self.__add_change_notifier(setting_id, cbk)
+		else:
+			self.__add_change_notifier(setting_ids, cbk)
 
 
 class AddonInfo(object):
