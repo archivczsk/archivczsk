@@ -15,8 +15,8 @@ from Plugins.Extensions.archivCZSK.gui import menu
 from Plugins.Extensions.archivCZSK.gui import info
 from Plugins.Extensions.archivCZSK.gui import shortcuts
 from Plugins.Extensions.archivCZSK.gui import download
-from Plugins.Extensions.archivCZSK.engine.service import AddonService
 from .contentprovider import VideoAddonContentProvider
+from .bgservice import AddonBackgroundService
 from Plugins.Extensions.archivCZSK.compat import DMM_IMAGE
 
 from ..py3compat import *
@@ -58,7 +58,6 @@ class Addon(object):
 
 		# loader to handle addon imports
 		self.loader = AddonLoader(self)
-		self.service = AddonService(self)
 
 		# this is the function, that should be called on direct call
 		self.entry_point = None
@@ -126,17 +125,6 @@ class Addon(object):
 		self._updater = None
 		self.repository = None
 
-	def is_service_enabled(self):
-		return self.get_setting('service_enabled')
-
-	def set_service_enabled(self, enabled):
-		self.set_setting('service_enabled', enabled)
-		
-		if enabled:
-			self.service.init()
-		else:
-			self.service.stop()
-
 	def is_enabled(self):
 		return self.get_setting('enabled')
 
@@ -145,11 +133,6 @@ class Addon(object):
 		if enabled:
 			if isinstance( self, VideoAddon ):
 				self.provider.run_autostart_script()
-		
-			if self.is_service_enabled():
-				self.service.init()
-		else:
-			self.service.stop()
 		
 	def add_setting_change_notifier(self, setting_id, cbk):
 		return self.settings.add_change_notifier(setting_id, cbk)
@@ -211,6 +194,7 @@ class VideoAddon(Addon):
 		self.downloads_path = self.get_setting('download_path')
 		self.shortcuts_path = os.path.join(config.plugins.archivCZSK.dataPath.getValue(), self.id)
 		self.provider = VideoAddonContentProvider(self, self.downloads_path, self.shortcuts_path)
+		self.bgservice = AddonBackgroundService()
 
 	def refresh_provider_paths(self, *args, **kwargs):
 		self.downloads_path = self.get_setting('download_path')
@@ -349,7 +333,6 @@ class AddonSettings(object):
 		addon_config.add_global_addon_settings(addon, self.main)
 
 		self.main.enabled = ConfigYesNo(default=True)
-		self.main.service_enabled = ConfigYesNo(default=True)
 
 		self.addon = addon
 		self.categories = []
@@ -525,7 +508,6 @@ class AddonInfo(object):
 		self.path = os.path.dirname(info_file)
 		self.library = addon_dict['library']
 		self.script = addon_dict['script']
-		self.service_lib = addon_dict['service_lib']
 		self.autostart_script = addon_dict['autostart_script']
 		self.import_name = addon_dict['import_name']
 		self.import_entry_point = addon_dict['import_entry_point']

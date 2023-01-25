@@ -92,10 +92,6 @@ def openSettings(session, addon):
 	addon.open_settings(session, addon, getSettingsCB)
 	return d
 
-@callFromThread
-def sendServiceCommand(addon, cmd, **kwargs):
-	addon.service.sendCommand(cmd, **kwargs)
-
 def showInfo(info, timeout=5):
 	raise AddonInfoError(info)
 

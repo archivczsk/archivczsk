@@ -131,12 +131,6 @@ class ArchivCZSK():
 		del ArchivCZSK.__addons[addon.id]
 
 	@staticmethod
-	def run_services():
-		for addon in ArchivCZSK.get_addons():
-			if addon.is_enabled() and addon.is_service_enabled():
-				addon.service.init()
-
-	@staticmethod
 	def run_autostart():
 		for addon in ArchivCZSK.get_video_addons():
 			try:

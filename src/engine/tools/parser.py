@@ -60,7 +60,6 @@ class XBMCAddonXMLParser(XMLParser):
 		"xbmc.python.pluginsource":"content",
 		"xbmc.addon.repository":"repository",
 		"xbmc.python.module":"tools",
-		"xbmc.service":"service",
 		"xbmc.autostart":"autostart",
 		
 		"archivczsk.addon.video":"content_video",
@@ -97,7 +96,6 @@ class XBMCAddonXMLParser(XMLParser):
 		requires = []
 		library = 'lib'
 		script = None
-		service_lib = None
 		autostart_script = None
 		import_name = None
 		import_entry_point = None
@@ -140,8 +138,6 @@ class XBMCAddonXMLParser(XMLParser):
 					import_name = info.attrib.get('import-name', 'addon')
 					import_entry_point = info.attrib.get('entry-point', 'main')
 					import_preload = info.attrib.get('preload', 'no').lower() == 'yes'
-				elif ad_type == 'service':
-					service_lib = info.attrib.get('library', "service.py")
 				elif ad_type == 'autostart':
 					autostart_script = info.attrib.get('library', "autostart.py")
 					
@@ -167,7 +163,6 @@ class XBMCAddonXMLParser(XMLParser):
 				"requires":requires,
 				"library":library,
 				"script":script,
-				"service_lib":service_lib,
 				"autostart_script":autostart_script,
 				"import_name": import_name,
 				"import_entry_point": import_entry_point,

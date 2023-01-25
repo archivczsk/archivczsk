@@ -4,9 +4,10 @@ Created on 10.9.2012
 @author: marko
 '''
 
+import traceback
 from threading import Thread
 from twisted.internet import defer
-from twisted.python import log, failure
+from twisted.python import failure
 try:
 	from Queue import Queue
 except:
@@ -78,7 +79,7 @@ class WorkerThread(Thread):
 			try:
 				onResult(success, result)
 			except:
-				log.err()
+				log.error(traceback.format_exc())
 			del onResult, result
 			o = fnc_queue.get()
 		log.debug("worker thread stopped")

@@ -5,7 +5,10 @@ class AddonException(Exception):
 
 class AddonThreadException(AddonException):
 	pass
-		
+
+class AddonServiceException(AddonException):
+	pass
+
 class AddonInfoError(AddonException):
 	def __init__(self, value):
 		self.value = value
