@@ -63,6 +63,7 @@ class XBMCAddonXMLParser(XMLParser):
 		"xbmc.autostart":"autostart",
 		
 		"archivczsk.addon.video":"content_video",
+		"archivczsk.addon.tools":"tools_simple",
 	}
 	
 	def get_addon_id(self, addon):
@@ -124,6 +125,9 @@ class XBMCAddonXMLParser(XMLParser):
 				elif ad_type == 'tools':
 					addon_type = ad_type
 					library = info.attrib.get('library')
+				elif ad_type == 'tools_simple':
+					addon_type = 'tools'
+					library = None
 				elif ad_type == 'content':
 					provides = None
 					if info.findtext('provides'):
@@ -141,7 +145,7 @@ class XBMCAddonXMLParser(XMLParser):
 				elif ad_type == 'autostart':
 					autostart_script = info.attrib.get('library', "autostart.py")
 					
-			if info.attrib.get('point') == 'xbmc.addon.metadata':
+			if info.attrib.get('point') == 'xbmc.addon.metadata' or info.attrib.get('point') == 'archivczsk.addon.metadata':
 				if info.findtext('broken'):
 					broken = info.findtext('broken')
 				for desc in info.findall('description'):

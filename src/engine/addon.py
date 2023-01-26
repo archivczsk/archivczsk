@@ -171,14 +171,15 @@ class XBMCAddon(object):
 		return self._addon.set_setting(setting, value)
 
 
-
 class ToolsAddon(Addon):
 	def __init__(self, info, repository):
 		Addon.__init__(self, info, repository)
 		self.library = self.info.library
 
-		lib_path = os.path.join(self.path, self.library)
-		self.loader.add_path(lib_path)
+		if self.library:
+			lib_path = os.path.join(self.path, self.library)
+			self.loader.add_path(lib_path)
+
 
 class VideoAddon(Addon):
 	ignore_requires = [
