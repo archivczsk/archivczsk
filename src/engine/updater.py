@@ -257,13 +257,22 @@ class Updater(object):
 		
 		log.debug("updating %s", addon.name)
 		self._get_server_addon(addon)
-	
-		local_base = os.path.join(self.local_path, addon.id)		
+
+		# real path where addon is installed
+		local_base = os.path.join(self.local_path, addon.relative_path)
+
+		# path created by addon.id - legacy (addon.id and directory where addon is installed can be different)
+		local_base_id = os.path.join(self.local_path, addon.id)
 		zip_file = self._download(addon)
 		
 		if zip_file is not None and os.path.isfile(zip_file):
+			# remove directory based on dir where addon is installed
 			if os.path.isdir(local_base):
 				shutil.rmtree(local_base)
+
+			# remove directory based od addon id
+			if os.path.isdir(local_base_id):
+				shutil.rmtree(local_base_id)
 			
 			unzip_to_dir(zip_file, self.local_path)
 			
