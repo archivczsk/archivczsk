@@ -206,7 +206,7 @@ class AddonBackgroundService(object):
 
 	@classmethod
 	def run_in_loop(cls, seconds_to_loop, fn, *args, **kwargs):
-		cls.__run_task_internal(None, fn, *args, **kwargs)
+		cls.run_task(None, fn, *args, **kwargs)
 
 		t = {}
 		def __run_in_loop():
@@ -216,6 +216,15 @@ class AddonBackgroundService(object):
 		t['timer_conn'] = eConnectCallback(t['timer'].timeout, __run_in_loop)
 		t['timer'].start(seconds_to_loop * 1000)
 		cls.loop_timers.append(t)
+		return t
+
+	@classmethod
+	def run_in_loop_stop(cls, t):
+		if t in cls.loop_timers:
+			cls.loop_timers.remove(t)
+			t['timer'].stop()
+			del t['timer']
+			del t['timer_conn']
 
 	@classmethod
 	def run_delayed(cls, delay_seconds, finish_cbk, cbk, *args, **kwargs):
