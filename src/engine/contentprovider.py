@@ -587,12 +587,14 @@ class ArchivCZSKContentProvider(ContentProvider):
 
 
 class DummyAddonInterface:
-	def __init__(self, run, trakt=None, stats=None):
+	def __init__(self, run, trakt=None, stats=None, search=None):
 		self.run = run
 		if trakt:
 			self.trakt = trakt
 		if stats:
 			self.stats = stats
+		if search:
+			self.search = search
 
 
 class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, FavoritesMixin):
@@ -723,7 +725,7 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 					log.error("Addon %s doesn't returned interface to mandatory run method" % (self.video_addon) )
 					raise AddonError( _("Addon doesn't returned interface run method" ))
 
-				self.addon_interface = DummyAddonInterface( run=response['run'], trakt=response.get('trakt'), stats=response.get('stats'))
+				self.addon_interface = DummyAddonInterface(run=response['run'], trakt=response.get('trakt'), stats=response.get('stats'), search=response.get('search'))
 			elif callable(response):
 				# only method for get content returned as callable
 				self.addon_interface = DummyAddonInterface(run=response)
@@ -840,8 +842,8 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		return self.content_deferred
 
 	def call_addon_trakt_interface(self, session, item, action, result):
+		self.resolve_addon_interface()
 		if hasattr(self.addon_interface, 'trakt'):
-			self.resolve_addon_interface()
 			self.addon_interface.trakt(session, item=item, action=action, result=result )
 
 	def stats(self, session, item, action, extra_params, successCB, errorCB):
@@ -853,9 +855,22 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		return self.content_deferred
 
 	def call_addon_stats_interface(self, session, item, action, extra_params):
+		self.resolve_addon_interface()
 		if hasattr(self.addon_interface, 'stats'):
-			self.resolve_addon_interface()
 			self.addon_interface.stats(session, item=item, action=action, **extra_params )
+
+	def search(self, session, keyword, search_id, successCB, errorCB):
+		log.info('%s search - keyword: %s, search_id: %s' % (self, keyword, search_id))
+		self.content_deferred = defer.Deferred()
+		self.content_deferred.addCallbacks(successCB, errorCB)
+		thread_task = task.Task(self._get_content_cb, self.call_addon_search_interface, session, keyword, search_id)
+		thread_task.run()
+		return self.content_deferred
+
+	def call_addon_search_interface(self, session, keyword, search_id):
+		self.resolve_addon_interface()
+		if hasattr(self.addon_interface, 'search'):
+			self.addon_interface.search(session, keyword=keyword, search_id=search_id)
 
 	def run_autostart_script(self):
 		if self.video_addon.import_preload:

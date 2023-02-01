@@ -20,18 +20,11 @@ def getCapabilities():
 	Vrati zoznam vsetkych moznosti vyhladavania: tuple(nazov_vyhladavania, id_doplnku, mod_vyhladavania)
 	"""
 	list = []
-	#list.append((_('Search in') + ' ' + 'OnlineFiles', 'plugin.video.online-files', 'all'))
 	list.append((_('Search in') + ' ' + 'Stream Cinema Community', 'plugin.video.sc2', 'all'))
 	list.append((_('Search in') + ' ' + 'Stream Cinema', 'plugin.video.stream-cinema', 'all'))
 	list.append((_('Search in') + ' ' + 'Sosac', 'plugin.video.sosac.ph', 'all'))
 	list.append((_('Search in') + ' ' + 'CSFD', 'csfd', 'all'))
-	#list.append((_('Search in') + ' ' + 'Befun.cz', 'plugin.video.befun.cz', 'all'))
-	#list.append((_('Search in') + ' ' + 'Koukni.cz', 'plugin.video.koukni.cz', 'koukni.cz'))
 	list.append((_('Search in') + ' ' + 'Webshare.cz', 'plugin.video.online-files', 'webshare.cz'))
-	list.append((_('Search in') + ' ' + 'Ulozto.cz', 'plugin.video.online-files', 'ulozto.cz'))
-	list.append((_('Search in') + ' ' + 'Bezvadata.cz', 'plugin.video.online-files', 'bezvadata.cz'))
-	list.append((_('Search in') + ' ' + 'Hellspy.cz', 'plugin.video.online-files', 'hellspy.cz'))
-	list.append((_('Search in') + ' ' + 'Fastshare.cz', 'plugin.video.online-files', 'fastshare.cz'))
 	
 	return list
 
@@ -39,7 +32,7 @@ def getCapabilities():
 #	
 #	 search_exp = u'Matrix'
 #	 search(session, search_exp, 'plugin.video.online-files')
- 
+
 def search(session, search_exp, addon_id, mode=None, cb=None):
 	"""
 	Vyhlada v archivCZSK hladany vyraz prostrednictvom addonu s addon_id s modom vyhladavania mode
@@ -182,10 +175,6 @@ class ArchivCZSKSeeker():
 def getSearcher(session, addon_name, archivczsk, succ_cb, err_cb):
 	if addon_name == 'plugin.video.online-files':
 		return OnlineFilesSearch(session, archivczsk, succ_cb, err_cb)
-	elif addon_name == 'plugin.video.befun.cz':
-		return BefunSearch(session, archivczsk, succ_cb, err_cb)
-	elif addon_name == 'plugin.video.koukni.cz':
-		return KoukniSearch(session, archivczsk, succ_cb, err_cb)
 	elif addon_name == 'plugin.video.sosac.ph':
 		return SosacSearch(session, archivczsk, succ_cb, err_cb)
 	elif addon_name == 'plugin.video.stream-cinema':
@@ -220,53 +209,18 @@ class OnlineFilesSearch(Search):
 	addon_id = 'plugin.video.online-files'
 	
 	def search(self, search_exp, mode='all'):
-		if mode == 'all':
-			self.search_all(search_exp)
-		elif mode == 'bezvadata.cz':
-			self.bezvadata_search(search_exp)
-		elif mode == 'ulozto.cz':
-			self.ulozto_search(search_exp)
-		elif mode == 'hellspy.cz':
-			self.hellspy_search(search_exp)
-		elif mode == 'fastshare.cz':
-			self.fastshare_search(search_exp)
-		elif mode == 'webshare.cz':
+		if mode == 'webshare.cz':
 			self.webshare_search(search_exp)
 		else:
 			self.search_all(search_exp)
 	
 	def search_all(self, search_exp):
-		params = {'search':search_exp, 'search-no-history':True}
-		self.provider.get_content(self.session, params, self.succ_cb, self.err_cb)
+		self.provider.search(self.session, search_exp, None, self.succ_cb, self.err_cb)
 
-	def ulozto_search(self, search_exp):
-		params = {'cp':'ulozto.cz', 'search':search_exp, 'search-no-history':True}
-		self.provider.get_content(self.session, params, self.succ_cb, self.err_cb)
-
-	def bezvadata_search(self, search_exp):
-		params = {'cp':'bezvadata.cz', 'search':search_exp, 'search-no-history':True}
-		self.provider.get_content(self.session, params, self.succ_cb, self.err_cb) 
- 
-	def hellspy_search(self, search_exp):
-		params = {'cp':'hellspy.cz', 'search':search_exp, 'search-no-history':True}
-		self.provider.get_content(self.session, params, self.succ_cb, self.err_cb)
-		
-	def fastshare_search(self, search_exp):
-		params = {'cp':'fastshare.cz', 'search':search_exp, 'search-no-history':True}
-		self.provider.get_content(self.session, params, self.succ_cb, self.err_cb)
-		
 	def webshare_search(self, search_exp):
-		params = {'cp':'webshare.cz', 'search':search_exp, 'search-no-history':True}
-		self.provider.get_content(self.session, params, self.succ_cb, self.err_cb)
+		self.provider.search(self.session, search_exp, 'webshare.cz', self.succ_cb, self.err_cb)
 		
 		
-class BefunSearch(Search):
-	addon_id = 'plugin.video.befun.cz'
-	
-	def search(self, search_exp, mode='all'):
-		params = {'search':search_exp, 'search-no-history':True}
-		self.provider.get_content(self.session, params, self.succ_cb, self.err_cb)
-
 class SosacSearch(Search):
 	addon_id = 'plugin.video.sosac.ph'
 	
@@ -274,27 +228,20 @@ class SosacSearch(Search):
 		params = {'search':search_exp, 'search-no-history':True}
 		self.provider.get_content(self.session, params, self.succ_cb, self.err_cb)
 		
-class KoukniSearch(Search):
-	addon_id = 'plugin.video.koukni.cz'
-	
-	def search(self, search_exp, mode='all'):
-		params = {'search':search_exp, 'search-no-history':True}
-		self.provider.get_content(self.session, params, self.succ_cb, self.err_cb)
-		
-		
+
 class StreamCinemaSearch(Search):
 	addon_id = 'plugin.video.stream-cinema'
 	
 	def search(self, search_exp, mode='all'):
-		params = {'search':search_exp, 'search-no-history':True}
-		self.provider.get_content(self.session, params, self.succ_cb, self.err_cb)
+		self.provider.search(self.session, search_exp, None, self.succ_cb, self.err_cb)
+
 
 class StreamCinema20Search(Search):
 	addon_id = 'plugin.video.sc2'
 	
 	def search(self, search_exp, mode='all'):
-		params = {'url': '?action=search&history=0&action_value='+search_exp}
-		self.provider.get_content(self.session, params, self.succ_cb, self.err_cb)
+		self.provider.search(self.session, search_exp, None, self.succ_cb, self.err_cb)
+
 
 class CsfdSearch():
 	def showCSFDInfo(self, session, searchExp):
