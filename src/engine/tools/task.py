@@ -17,6 +17,7 @@ from enigma import ePythonMessagePump
 from Plugins.Extensions.archivCZSK import log
 from Plugins.Extensions.archivCZSK.compat import eConnectCallback
 from Plugins.Extensions.archivCZSK.engine.exceptions.addon import AddonThreadException
+from .util import set_thread_name
 		
 # object for stopping workerThread		  
 WorkerStop = object()
@@ -65,6 +66,7 @@ class WorkerThread(Thread):
 		self.name = "ArchivCZSK-workerThread"
 
 	def run(self):
+		set_thread_name(self.name)
 		o = fnc_queue.get()
 		while o is not WorkerStop:
 			function, args, kwargs, onResult = o

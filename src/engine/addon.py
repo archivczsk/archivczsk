@@ -203,7 +203,7 @@ class VideoAddon(Addon):
 		self.downloads_path = self.get_setting('download_path')
 		self.shortcuts_path = os.path.join(config.plugins.archivCZSK.dataPath.getValue(), self.id)
 		self.provider = VideoAddonContentProvider(self, self.downloads_path, self.shortcuts_path)
-		self.bgservice = AddonBackgroundService()
+		self.bgservice = AddonBackgroundService(self.name)
 
 	def refresh_provider_paths(self, *args, **kwargs):
 		self.downloads_path = self.get_setting('download_path')

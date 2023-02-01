@@ -635,6 +635,14 @@ def convert_png_to_8bit(png_path, pngquant_path='pngquant'):
 	return png_path
 
 
+def set_thread_name(name):
+	try:
+		import ctypes
+		libcap = ctypes.CDLL('libcap.so.2')
+		libcap.prctl(15, name.encode())
+	except:
+		pass
+
 
 class CustomImporter:
 	"""Used to avoid name collisions in sys.modules"""
