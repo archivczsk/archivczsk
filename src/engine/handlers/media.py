@@ -275,6 +275,7 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 	def __init__(self, session, content_screen, content_provider):
 		info_modes = ['item','csfd']
 		MediaItemHandler.__init__(self, session, content_screen, content_provider, ['item','csfd'])
+		self.known_commands = ('show_msg',)
 
 	def _init_menu(self, item):
 		MediaItemHandler._init_menu(self, item)
@@ -316,6 +317,21 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 			self.content_screen.workingFinished()
 		self._resolve_video(item, wrapped)
 
+	def handle_known_command(self, cmd, args, continue_cb):
+		if cmd == "show_msg":
+			#dialogStart = datetime.datetime.now()
+			self.content_screen.stopLoading()
+			msgType = args.get('msgType', 'info').lower()
+			msgTimeout = int(args.get('msgTimeout', 15))
+			canClose = args.get('canClose', True)
+
+			if msgType == 'error':
+				return showErrorMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
+			elif msgType == 'warning':
+				return showWarningMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
+			else:
+				return showInfoMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
+
 	def _filter_by_quality(self, items):
 		pass
 
@@ -356,61 +372,21 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 			self.content_screen.stopLoading()
 			self.content_screen.showList()
 			list_items, command, args = result
-
-			try:
-				#client.add_operation("SHOW_MSG", {'msg': 'some text'},
-				#								   'msgType': 'info|error|warning',		#optional
-				#								   'msgTimeout': 10,					#optional
-				#								   'canClose': True						#optional
-				#								  })
-
-				if command is not None:
-					cmd = ("%s"%command).lower()
-					if cmd == "show_msg":
-						#dialogStart = datetime.datetime.now()
-						self.content_screen.stopLoading()
-						msgType = 'info'
-						if 'msgType' in args:
-							msgType = ("%s"%args['msgType']).lower()
-						msgTimeout = 15
-						if 'msgTimeout' in args:
-							msgTimeout = int(args['msgTimeout'])
-						canClose = True
-						if 'canClose' in args:
-							canClose = args['canClose']
-						if msgType == 'error':
-							return showErrorMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
-						if msgType == 'warning':
-							return showWarningMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
-						return showInfoMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
-
-			except:
-				log.logError("Execute HACK command failed (media handler).\n%s"%traceback.format_exc())
+			
+			command = command.lower() if command else None
+			#client.add_operation("SHOW_MSG", {'msg': 'some text'},
+			#								   'msgType': 'info|error|warning',		#optional
+			#								   'msgTimeout': 10,					#optional
+			#								   'canClose': True						#optional
+			#								  })
+			if command in self.known_commands:
+				return self.handle_known_command(command, args, continue_cb)
+			else:
+				log.logError("Unknown media handler command %s - ignoring" % command)
 				command = None
 				args = {}
 
-			self._filter_by_quality(list_items)
-			if len(list_items) > 1:
-				choices = []
-				for i in list_items:
-					name = i.name
-					# TODO remove workaround of embedding
-					# quality in title in addons
-					if i.quality and i.quality not in i.name:
-						if "[???]" in i.name:
-							name = i.name.replace("[???]","[%s]"%(i.quality))
-						else:
-							name = "[%s] %s"%(i.quality, i.name)
-					choices.append((DeleteColors(toString(name)), i))
-				self.session.openWithCallback(selected_source,
-						ChoiceBox, _("Please select source"),
-						list = choices,
-						skin_name = ["ArchivCZSKVideoSourceSelection"])
-			elif len(list_items) == 1:
-				item = list_items[0]
-				callback(item)
-			else: # no video
-				self.content_screen.workingFinished()
+			continue_cb(None)
 
 		@AddonExceptionHandler(self.session)
 		def open_item_error_cb(failure):
@@ -427,17 +403,23 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 
 	def _resolve_videos(self, item):
 		def open_item_success_cb(result):
-			list_items, screen_command, args = result
-			list_items.insert(0, PExit())
-			if screen_command is not None:
-				self.content_screen.resolveCommand(screen_command, args)
-			else:
+			def continue_cb(res):
 				self.content_screen.save()
 				content = {'parent_it':item, 'lst_items':list_items, 'refresh':False}
 				self.content_screen.stopLoading()
 				self.content_screen.load(content)
 				self.content_screen.showList()
 				self.content_screen.workingFinished()
+
+			list_items, screen_command, args = result
+			list_items.insert(0, PExit())
+			if screen_command is not None:
+				if screen_command.lower() in self.known_commands:
+					return self.handle_known_command(screen_command.lower(), args, continue_cb)
+				else:
+					self.content_screen.resolveCommand(screen_command, args)
+			else:
+				continue_cb(None)
 
 		@AddonExceptionHandler(self.session)
 		def open_item_error_cb(failure):
