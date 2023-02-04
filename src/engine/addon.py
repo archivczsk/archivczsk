@@ -459,34 +459,35 @@ class AddonSettings(object):
 
 		if entry['type'] == 'bool':
 			setattr(setting, entry['id'], ConfigYesNo(default=(entry['default'] == 'true')))
-			entry['setting_id'] = getattr(setting, entry['id'])
 
 		elif entry['type'] == 'text':
 			if entry['option'] == 'true':
 				setattr(setting, entry['id'], ConfigPassword(default=entry['default'], fixed_size=False))
 			else:
 				setattr(setting, entry['id'], ConfigText(default=entry['default'], fixed_size=False))
-			entry['setting_id'] = getattr(setting, entry['id'])
+
+		elif entry['type'] == 'password':
+			setattr(setting, entry['id'], ConfigPassword(default=entry['default'], fixed_size=False))
 
 		elif entry['type'] == 'enum':
 			choicelist = [(str(idx), py2_encode_utf8( self._get_label(e)) ) for idx, e in enumerate(entry['lvalues'].split("|"))]
 			setattr(setting, entry['id'], ConfigSelection(default=entry['default'], choices=choicelist))
-			entry['setting_id'] = getattr(setting, entry['id'])
 
 		elif entry['type'] == 'labelenum':
 			choicelist = [(py2_encode_utf8( self._get_label(e)), py2_encode_utf8( self._get_label(e))) for e in entry['values'].split("|")]
 			setattr(setting, entry['id'], ConfigSelection(default=entry['default'], choices=choicelist))
-			entry['setting_id'] = getattr(setting, entry['id'])
 
 		elif entry['type'] == 'ipaddress':
 			setattr(setting, entry['id'], ConfigIP(default=list(map(int, entry['default'].split('.'))), auto_jump=True))
-			entry['setting_id'] = getattr(setting, entry['id'])
 
 		elif entry['type'] == 'number':
 			setattr(setting, entry['id'], ConfigNumber(default=int(entry['default'])))
-			entry['setting_id'] = getattr(setting, entry['id'])
+
 		else:
 			log.error('%s cannot initialize unknown entry %s', self, entry['type'])
+			return
+
+		entry['setting_id'] = getattr(setting, entry['id'])
 
 	def close(self):
 		self.addon = None
