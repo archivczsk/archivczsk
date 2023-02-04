@@ -139,6 +139,15 @@ class ArchivCZSK():
 			except:
 				log.logError("Autostart of addon %s failed:\n%s" % (addon, traceback.format_exc()))
 
+	@staticmethod
+	def preload_addons():
+		for addon in ArchivCZSK.get_video_addons():
+			try:
+				if addon.is_enabled():
+					addon.provider.preload_addon()
+			except:
+				log.logError("Preload of addon %s failed:\n%s" % (addon, traceback.format_exc()))
+
 	def __init__(self, session):
 		self.session = session
 		self.to_update_addons = []

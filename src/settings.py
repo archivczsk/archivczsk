@@ -198,7 +198,6 @@ def get_main_settings():
 	list.append(getConfigListEntry(_("Show movie poster"), config.plugins.archivCZSK.downloadPoster))
 	list.append(getConfigListEntry(_("Max posters on HDD"), config.plugins.archivCZSK.posterImageMax))
 	list.append(MENU_SEPARATOR)
-	# list.append(getConfigListEntry(_("Preload"), config.plugins.archivCZSK.preload))
 	list.append(getConfigListEntry(_("Add to extensions menu"), config.plugins.archivCZSK.extensions_menu))
 	list.append(getConfigListEntry(_("Add to main menu"), config.plugins.archivCZSK.main_menu))
 	list.append(getConfigListEntry(_("Add search option in epg menu"), config.plugins.archivCZSK.epg_menu))
@@ -220,6 +219,7 @@ def get_path_settings():
 def get_misc_settings():
 	list = []
 	list.append(getConfigListEntry(_("Debug mode"), config.plugins.archivCZSK.debugMode))
+	list.append(getConfigListEntry(_("Allow preloading of addons on start"), config.plugins.archivCZSK.preload))
 	list.append(getConfigListEntry(_("Confirm exit when closing plugin"), config.plugins.archivCZSK.confirmExit))
 	list.append(getConfigListEntry(_("Show broken addons"), config.plugins.archivCZSK.showBrokenAddons))
 	list.append(getConfigListEntry(_("Show not supported addons"), config.plugins.archivCZSK.showNotSupportedAddons))

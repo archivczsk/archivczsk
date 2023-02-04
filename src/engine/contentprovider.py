@@ -871,12 +871,13 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		if hasattr(self.addon_interface, 'search'):
 			self.addon_interface.search(session, keyword=keyword, search_id=search_id)
 
-	def run_autostart_script(self):
+	def preload_addon(self):
 		if self.video_addon.import_preload:
 			log.debug("Preloading addon %s" % self.video_addon )
 			self.resolve_dependencies(True)
 			self.resolve_addon_interface()
 
+	def run_autostart_script(self):
 		if self.video_addon.autostart_script:
 			log.debug("Autostart script found for %s" % self.video_addon )
 			script_path = os.path.join(self.video_addon.path, self.video_addon.autostart_script)
