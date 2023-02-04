@@ -139,7 +139,7 @@ class Addon(object):
 		self.set_setting('enabled', enabled)
 		if enabled:
 			if isinstance( self, VideoAddon ):
-				self.provider.run_autostart_script()
+				self.provider.preload_addon()
 		
 	def add_setting_change_notifier(self, setting_ids, cbk):
 		self.settings.add_change_notifier(setting_ids, cbk)
@@ -195,7 +195,6 @@ class VideoAddon(Addon):
 		self.import_entry_point = info.import_entry_point
 		self.import_preload = info.import_preload
 		self.script = info.script
-		self.autostart_script = info.autostart_script
 		self.requires = [require for require in info.requires if require['addon'] not in VideoAddon.ignore_requires]
 		if not self.script and not self.import_entry_point:
 			raise Exception("%s entry point missing in addon.xml" % self)
@@ -568,7 +567,6 @@ class AddonInfo(object):
 		self.path = os.path.dirname(info_file)
 		self.library = addon_dict['library']
 		self.script = addon_dict['script']
-		self.autostart_script = addon_dict['autostart_script']
 		self.import_name = addon_dict['import_name']
 		self.import_entry_point = addon_dict['import_entry_point']
 		self.import_preload = addon_dict['import_preload']

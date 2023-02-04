@@ -60,7 +60,6 @@ class XBMCAddonXMLParser(XMLParser):
 		"xbmc.python.pluginsource":"content",
 		"xbmc.addon.repository":"repository",
 		"xbmc.python.module":"tools",
-		"xbmc.autostart":"autostart",
 		
 		"archivczsk.addon.video":"content_video",
 		"archivczsk.addon.tools":"tools_simple",
@@ -97,7 +96,6 @@ class XBMCAddonXMLParser(XMLParser):
 		requires = []
 		library = 'lib'
 		script = None
-		autostart_script = None
 		import_name = None
 		import_entry_point = None
 		import_preload = False
@@ -141,9 +139,7 @@ class XBMCAddonXMLParser(XMLParser):
 					addon_type = 'video'
 					import_name = info.attrib.get('import-name', 'addon')
 					import_entry_point = info.attrib.get('entry-point', 'main')
-					import_preload = info.attrib.get('preload', 'no').lower() == 'yes'
-				elif ad_type == 'autostart':
-					autostart_script = info.attrib.get('library', "autostart.py")
+					import_preload = info.attrib.get('preload', 'no').lower() in ('yes', 'true')
 					
 			if info.attrib.get('point') == 'xbmc.addon.metadata' or info.attrib.get('point') == 'archivczsk.addon.metadata':
 				if info.findtext('broken'):
@@ -167,7 +163,6 @@ class XBMCAddonXMLParser(XMLParser):
 				"requires":requires,
 				"library":library,
 				"script":script,
-				"autostart_script":autostart_script,
 				"import_name": import_name,
 				"import_entry_point": import_entry_point,
 				"import_preload": import_preload,

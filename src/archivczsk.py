@@ -131,15 +131,6 @@ class ArchivCZSK():
 		del ArchivCZSK.__addons[addon.id]
 
 	@staticmethod
-	def run_autostart():
-		for addon in ArchivCZSK.get_video_addons():
-			try:
-				if addon.is_enabled():
-					addon.provider.run_autostart_script()
-			except:
-				log.logError("Autostart of addon %s failed:\n%s" % (addon, traceback.format_exc()))
-
-	@staticmethod
 	def preload_addons():
 		for addon in ArchivCZSK.get_video_addons():
 			try:
@@ -349,10 +340,10 @@ class ArchivCZSK():
 			first_start_handled()
 
 	def close_archive_screen(self):
-		if not config.plugins.archivCZSK.preload.getValue():
-			self.__addons.clear()
-			self.__repositories.clear()
-			ArchivCZSK.__loaded = False
+#		if not config.plugins.archivCZSK.preload.getValue():
+#			self.__addons.clear()
+#			self.__repositories.clear()
+#			ArchivCZSK.__loaded = False
 
 		self.__console = None
 		# We dont need worker thread anymore so we stop it

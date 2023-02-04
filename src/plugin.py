@@ -64,12 +64,11 @@ def Plugins(path, **kwargs):
 	return result
 
 
-ArchivCZSK.load_repositories()
 ArchivCZSK.load_skin()
+ArchivCZSK.load_repositories()
 
-if config.plugins.archivCZSK.preload.value and not ArchivCZSK.isLoaded():
+if config.plugins.archivCZSK.preload.value:
 	ArchivCZSK.preload_addons()
-	ArchivCZSK.run_autostart()
 	
 if config.plugins.archivCZSK.videoPlayer.ydl.value == 'preload':
 	ArchivCZSK.start_ydl()

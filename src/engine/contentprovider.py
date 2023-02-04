@@ -877,24 +877,6 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 			self.resolve_dependencies(True)
 			self.resolve_addon_interface()
 
-	def run_autostart_script(self):
-		if self.video_addon.autostart_script:
-			log.debug("Autostart script found for %s" % self.video_addon )
-			script_path = os.path.join(self.video_addon.path, self.video_addon.autostart_script)
-	
-			global_vars = {
-				'__file__':script_path,
-#				'sys':self.addon_sys,
-				'sys':sys,
-				'os':os
-			}
-
-			with open( script_path, "rb") as f:
-				try:
-					exec( compile(f.read(), script_path, 'exec'), global_vars)
-				except:
-					log.error( "Autoscript failed with exception:\n%s" % traceback.format_exc())
-
 	def _get_content_cb(self, success, result):
 		log.info('%s get_content_cb - success: %s, items: %d, guicmd: %r - %r' % (
 			self, success, len(self.__gui_item_list[0]), self.__gui_item_list[1], self.__gui_item_list[2]))
