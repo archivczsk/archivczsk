@@ -78,12 +78,13 @@ class Repository():
 				continue
 			if addon_info.type == 'video':
 				try:
-					if addon_info.import_entry_point:
-						pass
-					else:
-						tmp = os.path.join(addon_path, addon_info.script)
-						if not os.path.isfile(tmp):
-							raise Exception("Invalid addon %s. Script file missing %s" % (addon_info.name, tmp))
+					if not addon_info.deprecated:
+						if addon_info.import_entry_point:
+							pass
+						else:
+							tmp = os.path.join(addon_path, addon_info.script)
+							if not os.path.isfile(tmp):
+								raise Exception("Invalid addon %s. Script file missing %s" % (addon_info.name, tmp))
 
 					addon = VideoAddon(addon_info, self)
 				except Exception:

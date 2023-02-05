@@ -139,7 +139,7 @@ def restartHttpServer(configElement):
 choicelist = [('1', _("info")), ('2', _("debug"))]
 config.plugins.archivCZSK.debugMode = ConfigSelection(default='1', choices=choicelist)
 config.plugins.archivCZSK.showBrokenAddons = ConfigYesNo(default=True)
-config.plugins.archivCZSK.showNotSupportedAddons = ConfigYesNo(default=False)
+config.plugins.archivCZSK.showNotSupportedAddons = ConfigYesNo(default=True)
 config.plugins.archivCZSK.showVideoSourceSelection = ConfigYesNo(default=True)
 config.plugins.archivCZSK.convertPNG = ConfigYesNo(default=True)
 config.plugins.archivCZSK.clearMemory = ConfigYesNo(default=False)

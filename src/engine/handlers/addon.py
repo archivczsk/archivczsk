@@ -103,6 +103,8 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 		addon = item.addon
 		if addon.get_info('broken'):
 			self._handle_broken_addon(addon)
+		elif addon.get_info('deprecated'):
+			self._handle_deprecated_addon(addon)
 		else:
 			params = 'params' in kwargs and kwargs['params'] or {}
 			self.content_screen.workingStarted()
@@ -146,6 +148,41 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 		message += _("Reason") + ' : ' + reason +'\n\n'
 		message += _("Do you want to disable this addon?")
 		self.session.openWithCallback(disable_addon,MessageBox, message, type=MessageBox.TYPE_YESNO)
+
+	def _handle_deprecated_addon(self, addon):
+		def disable_addon(cb):
+			if cb:
+				addon.set_enabled(False)
+				self.content_screen.workingStarted()
+				self.content_screen.refreshList()
+				self.content_screen.workingFinished()
+
+		def remove_addon(cb):
+			if cb:
+				log.info("removing addon: %s" % addon.id)
+				try:
+					shutil.rmtree(addon.path)
+				except Exception as e:
+					log.error("cannot remove addon: %s" % str(e))
+					message = ("Unable to remove addon")
+					self.session.open(MessageBox, message, type=MessageBox.TYPE_WARNING)
+
+				log.info("addon was removed: %s" % addon.id)
+
+				from Plugins.Extensions.archivCZSK.archivczsk import ArchivCZSK
+				ArchivCZSK.remove_addon(addon)
+
+				self.content_screen.workingStarted()
+				self.content_screen.refreshList()
+				self.content_screen.workingFinished()
+
+		message = _("Addon is created for archivCZSK 1.x.x version and will not work anymore in this version. Author of the addon need to adopt it for this version.") + '\n'
+		if addon.supported:
+			message += _("Do you want to disable this addon?")
+			self.session.openWithCallback(disable_addon, MessageBox, message, type=MessageBox.TYPE_YESNO)
+		else:
+			message += _("Do you want to remove this addon?")
+			self.session.openWithCallback(remove_addon, MessageBox, message, type=MessageBox.TYPE_YESNO)
 
 	def resolve_command(self):
 		pass

@@ -302,7 +302,9 @@ class Updater(object):
 				log.debug("dont want new addons skipping %s", remote_addon['id'])
 
 		for addon_id in self.repository._addons:
+			log.debug("Checking if addon %s is supported" % addon_id)
 			if addon_id not in list(self.remote_addons_dict.keys()):
+				log.debug("%s is not supported" % addon_id)
 				local_addon = self.repository.get_addon(addon_id)
 				local_addon.supported = False
 

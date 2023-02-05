@@ -233,22 +233,26 @@ class ArchivCZSKVideoAddonsManagementScreen(BaseContentScreen, TipBar):
 		addonState = _("enabled")
 		for item in self.lst_items:
 			addon = item.addon
+			name = item.name
 			if addon.get_info('broken'):
 				itemColor = 0xff0000
 				addonState = _("broken")
+			elif addon.get_info('deprecated'):
+				itemColor = 0xff0000
+				addonState = _("deprecated")
 			elif not addon.is_enabled():
 				if addon.supported:
 					itemColor = 0xffff00
 				else:
-					itemColor = 0xf5f500
+					itemColor = 0x808000
 				addonState = _("disabled")
 			else:
 				if addon.supported:
 					itemColor = 0x00ff00
 				else:
-					itemColor = 0x00f500
+					itemColor = 0x008000
 				addonState = _("enabled")
-			itemList.append((toString(item.name), addonState, itemColor))
+			itemList.append((toString(name), addonState, itemColor))
 		self["menu"].list = itemList
 		self["menu"].index = index
 
@@ -374,10 +378,15 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 			itemList = []
 			itemColor = 0xffffff
 			for item in self.lst_items:
-				if getattr(item, "addon", False) and item.addon.get_info('broken'):
-					itemColor = 0xff0000
-				else:
-					itemColor = 0xffffff
+				itemColor = 0xffffff
+				if getattr(item, "addon", False):
+					if item.addon.get_info('deprecated'):
+						itemColor = 0xff8000
+					elif item.addon.get_info('broken'):
+						itemColor = 0xff0000
+					elif not item.addon.supported:
+						itemColor = 0xc0c0c0
+
 				itemList.append((toString(item.name), itemColor))
 			self["menu"].list = itemList
 			self["menu"].index = index

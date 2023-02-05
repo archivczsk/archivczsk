@@ -567,6 +567,7 @@ class AddonInfo(object):
 		self.path = os.path.dirname(info_file)
 		self.library = addon_dict['library']
 		self.script = addon_dict['script']
+		self.deprecated = addon_dict['deprecated']
 		self.import_name = addon_dict['import_name']
 		self.import_entry_point = addon_dict['import_entry_point']
 		self.import_preload = addon_dict['import_preload']

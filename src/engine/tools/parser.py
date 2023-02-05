@@ -61,6 +61,7 @@ class XBMCAddonXMLParser(XMLParser):
 		"xbmc.addon.repository":"repository",
 		"xbmc.python.module":"tools",
 		
+		"archivczsk.addon.repository":"repository",
 		"archivczsk.addon.video":"content_video",
 		"archivczsk.addon.tools":"tools_simple",
 	}
@@ -99,6 +100,7 @@ class XBMCAddonXMLParser(XMLParser):
 		import_name = None
 		import_entry_point = None
 		import_preload = False
+		deprecated = False
 		
 		req = addon.find('requires')
 		if req:
@@ -123,6 +125,7 @@ class XBMCAddonXMLParser(XMLParser):
 				elif ad_type == 'tools':
 					addon_type = ad_type
 					library = info.attrib.get('library')
+					deprecated = True
 				elif ad_type == 'tools_simple':
 					addon_type = 'tools'
 					library = None
@@ -135,6 +138,7 @@ class XBMCAddonXMLParser(XMLParser):
 					if provides is not None and provides == 'video':
 						addon_type = 'video'
 						script = info.attrib.get('library', 'default.py')
+					deprecated = True
 				elif ad_type == 'content_video':
 					addon_type = 'video'
 					import_name = info.attrib.get('import-name', 'addon')
@@ -150,23 +154,26 @@ class XBMCAddonXMLParser(XMLParser):
 					else:
 						description[desc.attrib.get('lang')] = desc.text
 						
-		return {"id":addon_id,
-				"name":name,
-				"author":author,
-				"type":addon_type,
-				"version":version,
-				"description":description,
-				"broken":broken,
-				"repo_addons_url":repo_addons_url,
-				"repo_datadir_url":repo_datadir_url,
-				"repo_authorization":repo_authorization,
-				"requires":requires,
-				"library":library,
-				"script":script,
-				"import_name": import_name,
-				"import_entry_point": import_entry_point,
-				"import_preload": import_preload,
-				}
+		return {
+			"id":addon_id,
+			"name":name,
+			"author":author,
+			"type":addon_type,
+			"version":version,
+			"description":description,
+			"broken":broken,
+			"repo_addons_url":repo_addons_url,
+			"repo_datadir_url":repo_datadir_url,
+			"repo_authorization":repo_authorization,
+			"requires":requires,
+			"library":library,
+			"script":script,
+			"import_name": import_name,
+			"import_entry_point": import_entry_point,
+			"import_preload": import_preload,
+			"deprecated": deprecated,
+		}
+
 
 class XBMCMultiAddonXMLParser(XBMCAddonXMLParser):
 	
