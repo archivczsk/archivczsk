@@ -11,3 +11,6 @@ class UpdateXMLVersionError(UpdaterException):
 
 class UpdateXMLDownloadError(UpdaterException):
 	pass
+
+class UpdateXMLNoUpdateUrl(UpdaterException):
+	pass

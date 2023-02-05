@@ -91,9 +91,9 @@ class XBMCAddonXMLParser(XMLParser):
 		addon_type = 'unknown'
 		description = {}
 		broken = None
-		repo_datadir_url = u''
-		repo_addons_url = u''
-		repo_authorization = u''
+		repo_datadir_url = None
+		repo_addons_url = None
+		repo_authorization = None
 		requires = []
 		library = 'lib'
 		script = None
@@ -116,12 +116,9 @@ class XBMCAddonXMLParser(XMLParser):
 				util.log.debug("ad_type: %s" % ad_type )
 				if ad_type == 'repository':
 					addon_type = ad_type
-					repo_datadir_url = info.find('datadir').text
-					repo_addons_url = info.find('info').text
-					try:
-						repo_authorization = info.find('authorization').text
-					except:
-						pass
+					repo_datadir_url = info.findtext('datadir')
+					repo_addons_url = info.findtext('info')
+					repo_authorization = info.findtext('authorization')
 				elif ad_type == 'tools':
 					addon_type = ad_type
 					library = info.attrib.get('library')

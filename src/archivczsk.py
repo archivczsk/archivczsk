@@ -13,7 +13,7 @@ from skin import loadSkin
 from enigma import eTimer
 from Plugins.Extensions.archivCZSK import _, log, toString, settings, UpdateInfo, create_rotating_log
 from Plugins.Extensions.archivCZSK.engine.addon import VideoAddon, XBMCAddon
-from Plugins.Extensions.archivCZSK.engine.exceptions.updater import UpdateXMLVersionError
+from Plugins.Extensions.archivCZSK.engine.exceptions.updater import UpdateXMLVersionError, UpdateXMLNoUpdateUrl
 from Plugins.Extensions.archivCZSK.engine.tools.task import Task
 from Plugins.Extensions.archivCZSK.gui.common import showInfoMessage
 from Plugins.Extensions.archivCZSK.gui.content import ArchivCZSKContentScreen
@@ -223,6 +223,8 @@ class ArchivCZSK():
 					self.to_update_addons += to_update
 			except UpdateXMLVersionError:
 				log.error('cannot retrieve update xml for repository %s', repository)
+			except UpdateXMLNoUpdateUrl:
+				log.info('Repository %s has no update URL set - addons update is for this repository disabled', repository)
 			except Exception:
 				traceback.print_exc()
 				log.error('error when checking updates for repository %s', repository)

@@ -15,7 +15,7 @@ from .tools.unzip import unzip_to_dir
 from enigma import eTimer
 from Plugins.Extensions.archivCZSK.compat import eConnectCallback
 
-from Plugins.Extensions.archivCZSK.engine.exceptions.updater import UpdateXMLVersionError, UpdateXMLDownloadError
+from Plugins.Extensions.archivCZSK.engine.exceptions.updater import UpdateXMLVersionError, UpdateXMLDownloadError, UpdateXMLNoUpdateUrl
 from Plugins.Extensions.archivCZSK import _, log, toString, settings
 from Components.Console import Console
 from Components.config import config, ConfigSubsection, ConfigText, ConfigYesNo
@@ -302,9 +302,8 @@ class Updater(object):
 				log.debug("dont want new addons skipping %s", remote_addon['id'])
 
 		for addon_id in self.repository._addons:
-			log.debug("Checking if addon %s is supported" % addon_id)
 			if addon_id not in list(self.remote_addons_dict.keys()):
-				log.debug("%s is not supported" % addon_id)
+				log.debug("Addon %s not found in remote repository - marking as not supported" % addon_id)
 				local_addon = self.repository.get_addon(addon_id)
 				local_addon.supported = False
 
@@ -372,6 +371,9 @@ class Updater(object):
 
 	def _download_update_xml(self):
 		"""downloads update xml of repository"""
+
+		if not self.update_xml_url:
+			raise UpdateXMLNoUpdateUrl()
 
 		# if update xml path contains variables configurable by user, then set it here
 		update_xml_url = self.update_xml_url.replace('{update_repository}', config.plugins.archivCZSK.update_repository.value ).replace('{update_branch}', config.plugins.archivCZSK.update_branch.value)
