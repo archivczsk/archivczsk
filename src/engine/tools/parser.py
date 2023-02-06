@@ -101,6 +101,7 @@ class XBMCAddonXMLParser(XMLParser):
 		import_entry_point = None
 		import_preload = False
 		deprecated = False
+		seekers = []
 		
 		req = addon.find('requires')
 		if req:
@@ -142,7 +143,7 @@ class XBMCAddonXMLParser(XMLParser):
 					import_entry_point = info.attrib.get('entry-point', 'main')
 					import_preload = info.attrib.get('preload', 'no').lower() in ('yes', 'true')
 					
-			if info.attrib.get('point') == 'xbmc.addon.metadata' or info.attrib.get('point') == 'archivczsk.addon.metadata':
+			elif info.attrib.get('point') == 'xbmc.addon.metadata' or info.attrib.get('point') == 'archivczsk.addon.metadata':
 				if info.findtext('broken'):
 					broken = info.findtext('broken')
 				for desc in info.findall('description'):
@@ -150,7 +151,10 @@ class XBMCAddonXMLParser(XMLParser):
 						description['en'] = desc.text
 					else:
 						description[desc.attrib.get('lang')] = desc.text
-						
+
+			elif info.attrib.get('point') == 'archivczsk.addon.seeker':
+				seekers.append((info.attrib.get('name', name), info.attrib.get('id'),))
+
 		return {
 			"id":addon_id,
 			"name":name,
@@ -169,6 +173,7 @@ class XBMCAddonXMLParser(XMLParser):
 			"import_entry_point": import_entry_point,
 			"import_preload": import_preload,
 			"deprecated": deprecated,
+			"seekers": seekers,
 		}
 
 

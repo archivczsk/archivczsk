@@ -19,14 +19,17 @@ def getCapabilities():
 	"""
 	Vrati zoznam vsetkych moznosti vyhladavania: tuple(nazov_vyhladavania, id_doplnku, mod_vyhladavania)
 	"""
-	list = []
-	list.append((_('Search in') + ' ' + 'Stream Cinema Community', 'plugin.video.sc2', 'all'))
-	list.append((_('Search in') + ' ' + 'Stream Cinema', 'plugin.video.stream-cinema', 'all'))
-	list.append((_('Search in') + ' ' + 'Sosac', 'plugin.video.sosac.ph', 'all'))
-	list.append((_('Search in') + ' ' + 'CSFD', 'csfd', 'all'))
-	list.append((_('Search in') + ' ' + 'Webshare.cz', 'plugin.video.online-files', 'webshare.cz'))
-	
-	return list
+
+	cap_list = []
+	from ..archivczsk import ArchivCZSK
+	for addon in ArchivCZSK.get_video_addons():
+		for seeker in addon.get_info('seekers'):
+			# seeker is touple ("Search name", search_id) - it's defined in addon's xml in archivczsk.addon.seeker point
+			title = _('Search in') + ' ' + seeker[0]
+			cap_list.append((title, addon.id, seeker[1],))
+
+	cap_list.append((_('Search in') + ' CSFD', 'csfd', None))
+	return cap_list
 
 #	 Napriklad:
 #	
@@ -94,7 +97,7 @@ class ArchivCZSKSeeker():
 				print('cannot found archivCZSK')
 				return None
 			except Exception:
-				log.logError("ArchivCZSKSeeker fatala error.\n%s"%traceback.format_exc())
+				log.logError("ArchivCZSKSeeker fatal error.\n%s" % traceback.format_exc())
 				traceback.print_exc()
 				showErrorMessage(session, _('unknown error'), 5, cb=cb)
 				return None
@@ -147,9 +150,6 @@ class ArchivCZSKSeeker():
 		if addon_id.lower() == 'csfd':
 			CsfdSearch().showCSFDInfo(self.session, search_exp)
 			return self.cb()
-		elif addon_id.lower() == 'internalcsfd':
-
-			return self.cb()
 		else:
 			searcher = getSearcher(self.session, addon_id, self.archivCZSK, self._successSearch, self._errorSearch)
 			if searcher is not None:
@@ -172,23 +172,18 @@ class ArchivCZSKSeeker():
 		return True
 		
 		
-def getSearcher(session, addon_name, archivczsk, succ_cb, err_cb):
-	if addon_name == 'plugin.video.online-files':
-		return OnlineFilesSearch(session, archivczsk, succ_cb, err_cb)
-	elif addon_name == 'plugin.video.sosac.ph':
-		return SosacSearch(session, archivczsk, succ_cb, err_cb)
-	elif addon_name == 'plugin.video.stream-cinema':
-		return StreamCinemaSearch(session, archivczsk, succ_cb, err_cb)
-	elif addon_name == 'plugin.video.sc2':
-		return StreamCinema20Search(session, archivczsk, succ_cb, err_cb)
-	else:
+def getSearcher(session, addon_id, archivczsk, succ_cb, err_cb):
+	try:
+		return Search(session, addon_id, archivczsk, succ_cb, err_cb)
+	except:
+		log.logError("ArchivCZSKSeeker: failed to init search\n%s" % traceback.format_exc())
 		return None
 			
 
 class Search(object):
-	def __init__(self, session, archivczsk, succ_cb, err_cb):
+	def __init__(self, session, addon_id, archivczsk, succ_cb, err_cb):
 		self.session = session
-		self.addon = archivczsk.get_addon(self.addon_id)
+		self.addon = archivczsk.get_addon(addon_id)
 		self.provider = self.addon.provider
 		self.succ_cb = succ_cb
 		self.err_cb = err_cb
@@ -197,50 +192,11 @@ class Search(object):
 		self.provider.start()
 		
 	def search(self, search_exp, mode=None):
-		"""search according to search_exp and choosen mode"""
-		pass
+		self.provider.search(self.session, search_exp, mode, self.succ_cb, self.err_cb)
 	
 	def close(self):
 		"""releases resources"""
 		self.provider.stop()
-
-
-class OnlineFilesSearch(Search):
-	addon_id = 'plugin.video.online-files'
-	
-	def search(self, search_exp, mode='all'):
-		if mode == 'webshare.cz':
-			self.webshare_search(search_exp)
-		else:
-			self.search_all(search_exp)
-	
-	def search_all(self, search_exp):
-		self.provider.search(self.session, search_exp, None, self.succ_cb, self.err_cb)
-
-	def webshare_search(self, search_exp):
-		self.provider.search(self.session, search_exp, 'webshare.cz', self.succ_cb, self.err_cb)
-		
-		
-class SosacSearch(Search):
-	addon_id = 'plugin.video.sosac.ph'
-	
-	def search(self, search_exp, mode='all'):
-		params = {'search':search_exp, 'search-no-history':True}
-		self.provider.get_content(self.session, params, self.succ_cb, self.err_cb)
-		
-
-class StreamCinemaSearch(Search):
-	addon_id = 'plugin.video.stream-cinema'
-	
-	def search(self, search_exp, mode='all'):
-		self.provider.search(self.session, search_exp, None, self.succ_cb, self.err_cb)
-
-
-class StreamCinema20Search(Search):
-	addon_id = 'plugin.video.sc2'
-	
-	def search(self, search_exp, mode='all'):
-		self.provider.search(self.session, search_exp, None, self.succ_cb, self.err_cb)
 
 
 class CsfdSearch():

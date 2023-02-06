@@ -571,6 +571,7 @@ class AddonInfo(object):
 		self.import_name = addon_dict['import_name']
 		self.import_entry_point = addon_dict['import_entry_point']
 		self.import_preload = addon_dict['import_preload']
+		self.seekers = addon_dict['seekers']
 		self.tmp_path = config.plugins.archivCZSK.tmpPath.value
 		self.data_path = os.path.join(config.plugins.archivCZSK.dataPath.getValue(), self.id)
 		self.profile = self.data_path

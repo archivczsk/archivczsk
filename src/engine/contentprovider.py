@@ -860,6 +860,7 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 
 	def search(self, session, keyword, search_id, successCB, errorCB):
 		log.info('%s search - keyword: %s, search_id: %s' % (self, keyword, search_id))
+		self.__clear_list()
 		self.content_deferred = defer.Deferred()
 		self.content_deferred.addCallbacks(successCB, errorCB)
 		thread_task = task.Task(self._get_content_cb, self.call_addon_search_interface, session, keyword, search_id)
