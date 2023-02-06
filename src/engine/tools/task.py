@@ -14,9 +14,9 @@ except:
 	from queue import Queue
 
 from enigma import ePythonMessagePump
-from Plugins.Extensions.archivCZSK import log
-from Plugins.Extensions.archivCZSK.compat import eConnectCallback
-from Plugins.Extensions.archivCZSK.engine.exceptions.addon import AddonThreadException
+from ... import log
+from ...compat import eConnectCallback
+from ...engine.exceptions.addon import AddonThreadException
 from .util import set_thread_name
 		
 # object for stopping workerThread		  

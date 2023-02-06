@@ -9,22 +9,21 @@ import traceback
 import re
 
 from twisted.web.client import downloadPage
-from Components.Label import Label, MultiColorLabel
+from Components.Label import Label
 from Components.ActionMap import ActionMap, NumberActionMap
 from Components.ScrollLabel import ScrollLabel
 from Components.Pixmap import Pixmap
-from Screens.MessageBox import MessageBox
 from Screens.Console import Console
 from Components.AVSwitch import AVSwitch
 from Components.config import config
-from enigma import ePicLoad, getDesktop
+from enigma import ePicLoad
 
 from .base import BaseArchivCZSKScreen
-from Plugins.Extensions.archivCZSK import _, log, removeDiac
-from Plugins.Extensions.archivCZSK.compat import eConnectCallback
-from Plugins.Extensions.archivCZSK.settings import ARCH,PLUGIN_PATH
-from Plugins.Extensions.archivCZSK.gui.common import showYesNoDialog, showInfoMessage, PanelColorListEntry, PanelList
-from Plugins.Extensions.archivCZSK.engine.player.info import videoPlayerInfo
+from .. import _, log, removeDiac
+from ..compat import eConnectCallback
+from ..settings import ARCH, PLUGIN_PATH
+from ..gui.common import showYesNoDialog, showInfoMessage, PanelColorListEntry, PanelList
+from ..engine.player.info import videoPlayerInfo
 
 from ..py3compat import *
 
@@ -71,7 +70,7 @@ def showCSFDInfo(session, item):
 		csfdType = int(config.plugins.archivCZSK.csfdMode.getValue())
 
 		if csfdType == 1:
-			from Plugins.Extensions.archivCZSK.gui.archivcsfd import ArchivCSFD
+			from ..gui.archivcsfd import ArchivCSFD
 			session.open(ArchivCSFD, name, year)
 		elif csfdType == 2:
 			from Plugins.Extensions.CSFD.plugin import CSFD
@@ -105,7 +104,7 @@ class ArchivCZSKChangelogScreen(BaseArchivCZSKScreen):
 		self.changelog = ""
 
 		try:
-			from Plugins.Extensions.archivCZSK.engine.tools.util import toString
+			from ..engine.tools.util import toString
 			if text is not None:
 				self.changelog = toString(text)
 			self.title = toString(title) + ' changelog'

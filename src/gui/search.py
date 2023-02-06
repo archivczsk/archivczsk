@@ -12,10 +12,10 @@ from Screens.ChannelSelection import ChannelSelectionBase
 from Screens.EpgSelection import EPGSelection
 from Screens.VirtualKeyBoard import VirtualKeyBoard
 
-from Plugins.Extensions.archivCZSK.client import seeker
-from Plugins.Extensions.archivCZSK.gui.base import BaseArchivCZSKListSourceScreen
-from Plugins.Extensions.archivCZSK.gui.common import showInfoMessage, toString
-from Plugins.Extensions.archivCZSK import _, removeDiac, log
+from ..client import seeker
+from ..gui.base import BaseArchivCZSKListSourceScreen
+from ..gui.common import toString
+from .. import _, removeDiac, log
 
 
 class ArchivCZSKSearchClientScreen(BaseArchivCZSKListSourceScreen):

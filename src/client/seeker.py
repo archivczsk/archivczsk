@@ -7,9 +7,8 @@ Created on 11.1.2013
 
 import traceback
 import re
-from Screens.MessageBox import MessageBox	
-from Plugins.Extensions.archivCZSK import _, log, removeDiac
-from Plugins.Extensions.archivCZSK.gui.common import showInfoMessage, showErrorMessage
+from .. import _, log, removeDiac
+from ..gui.common import showInfoMessage, showErrorMessage
 from Components.config import config
 
 from ..py3compat import *
@@ -73,14 +72,14 @@ def isArchivCZSKRunning(session):
 	return False
 	
 def getArchivCZSK():
-	from Plugins.Extensions.archivCZSK.archivczsk import ArchivCZSK
-	from Plugins.Extensions.archivCZSK.engine.tools.task import Task
+	from ..archivCZSK.archivczsk import ArchivCZSK
+	from ..archivCZSK.engine.tools.task import Task
 
 	if config.plugins.archivCZSK.showVideoInfo.getValue():
-		from Plugins.Extensions.archivCZSK.gui.content import ArchivCZSKAddonContentScreenAdvanced
+		from ..gui.content import ArchivCZSKAddonContentScreenAdvanced
 		return ArchivCZSK, ArchivCZSKAddonContentScreenAdvanced, Task
 	else:
-		from Plugins.Extensions.archivCZSK.gui.content import ArchivCZSKAddonContentScreen
+		from ..gui.content import ArchivCZSKAddonContentScreen
 		return ArchivCZSK, ArchivCZSKAddonContentScreen, Task
 
 class ArchivCZSKSeeker():
@@ -225,7 +224,7 @@ class CsfdSearch():
 			csfdType = int(config.plugins.archivCZSK.csfdMode.getValue())
 
 			if csfdType == 1:
-				from Plugins.Extensions.archivCZSK.gui.archivcsfd import ArchivCSFD
+				from ..gui.archivcsfd import ArchivCSFD
 				session.open(ArchivCSFD, name, year)
 			elif csfdType == 2:
 				from Plugins.Extensions.CSFD.plugin import CSFD
@@ -250,7 +249,6 @@ class CsfdSearch():
 #	 search_exp = u'Matrix'
 #	 search(session, search_exp, 'plugin.video.online-files')
 
- 
 #def Plugins(**kwargs):
 #	 return [PluginDescriptor(name='Test_Plugin', description='', where=PluginDescriptor.WHERE_PLUGINMENU, icon="plugin.png", fnc=main)]
 

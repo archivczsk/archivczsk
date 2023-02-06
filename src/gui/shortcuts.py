@@ -9,9 +9,9 @@ from Components.Label import Label
 from Screens.MessageBox import MessageBox
 from Tools.LoadPixmap import LoadPixmap
 
-from Plugins.Extensions.archivCZSK import _
-from Plugins.Extensions.archivCZSK.gui.common import toString
-from Plugins.Extensions.archivCZSK.gui.base import BaseArchivCZSKListSourceScreen
+from .. import _
+from ..gui.common import toString
+from ..gui.base import BaseArchivCZSKListSourceScreen
 
 
 def openShortcuts(session, addon, cb):

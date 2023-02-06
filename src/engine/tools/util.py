@@ -6,17 +6,19 @@ import sys
 import socket
 import traceback
 
+from enigma import eConsoleAppContainer
+
 try:
 	from urllib2 import urlopen, HTTPError, URLError
 	from urllib2 import Request as url_Request
-	from urlparse import urlsplit, urlparse
+	from urlparse import urlparse
 	from urllib import unquote_plus
 	from httplib import HTTPConnection, HTTPSConnection
 	from htmlentitydefs import name2codepoint as n2cp
 except:
 	from urllib.request import urlopen
 	from urllib.request import Request as url_Request
-	from urllib.parse import urlsplit, urlparse, unquote_plus
+	from urllib.parse import urlparse, unquote_plus
 	from urllib.error import HTTPError, URLError
 	from http.client import HTTPConnection, HTTPSConnection
 	from html.entities import name2codepoint as n2cp
@@ -30,7 +32,7 @@ from twisted.web.client import Agent, BrowserLikeRedirectAgent, readBody
 from twisted.web.http_headers import Headers
 
 try:
-	from Plugins.Extensions.archivCZSK import log, removeDiac
+	from ... import log, removeDiac
 except ImportError:
 	from .logger import log
 
@@ -216,7 +218,7 @@ def download_web_file(remote, local, mode='wb', debugfnc=None, headers={}):
 		else:
 			print("downloading %s to %s", (remote, local))
 		req = url_Request(remote, headers=headers)
-		from Plugins.Extensions.archivCZSK.settings import USER_AGENT
+		from ...settings import USER_AGENT
 		req.add_header('User-Agent', USER_AGENT)
 		f = urlopen(req)
 		make_path(os.path.dirname(local))
@@ -340,7 +342,7 @@ def encodeFilename(s):
 		return s.encode(sys.getfilesystemencoding(), 'ignore')
 
 def sanitize_filename(value):
-	from Plugins.Extensions.archivCZSK import removeDiac
+	from ...archivCZSK import removeDiac
 	tmp = removeDiac(value)
 	tmp = tmp.encode('ascii', 'ignore')
 	if is_py3:

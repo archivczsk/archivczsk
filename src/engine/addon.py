@@ -4,20 +4,16 @@ Created on 21.10.2012
 
 @author: marko
 '''
-import os, traceback, sys
-from Components.config import config, ConfigSubsection, ConfigSelection, ConfigYesNo, ConfigText, ConfigNumber, ConfigIP, ConfigPassword, ConfigDirectory, configfile, getConfigListEntry
+import os, traceback
+from Components.config import config, ConfigSubsection, ConfigSelection, ConfigYesNo, ConfigText, ConfigNumber, ConfigIP, ConfigPassword, getConfigListEntry
 
 from .tools import util, parser
-from Plugins.Extensions.archivCZSK import _, log
-from Plugins.Extensions.archivCZSK import settings
-from Plugins.Extensions.archivCZSK.resources.repositories import config as addon_config
-from Plugins.Extensions.archivCZSK.gui import menu
-from Plugins.Extensions.archivCZSK.gui import info
-from Plugins.Extensions.archivCZSK.gui import shortcuts
-from Plugins.Extensions.archivCZSK.gui import download
+from .. import _, log, settings
+from ..resources.repositories import config as addon_config
+from ..gui import menu, info, shortcuts, download
 from .contentprovider import VideoAddonContentProvider
 from .bgservice import AddonBackgroundService
-from Plugins.Extensions.archivCZSK.compat import DMM_IMAGE
+from ..compat import DMM_IMAGE
 
 from ..py3compat import *
 

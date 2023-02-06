@@ -1,7 +1,6 @@
 # -*- coding: UTF-8 -*-
 import os
 from . import info
-import traceback
 
 from Components.ActionMap import ActionMap
 from Components.ConfigList import ConfigListScreen
@@ -10,9 +9,8 @@ from Components.config import config, ConfigDirectory, ConfigText, ConfigNumber
 from Screens.LocationBox import LocationBox
 from Screens.VirtualKeyBoard import VirtualKeyBoard
 
-from Plugins.Extensions.archivCZSK import _, settings, log, removeDiac
-from Plugins.Extensions.archivCZSK.resources.repositories import \
-	config as addon_config
+from .. import _, settings, log, removeDiac
+from ..resources.repositories import config as addon_config
 from .base import BaseArchivCZSKScreen
 from .common import Tabs
 
@@ -93,7 +91,6 @@ class BaseArchivCZSKConfigScreen(BaseArchivCZSKScreen, ConfigListScreen):
 		self["config"].setList(self.config_list_entries)
 
 	def changeCategory(self):
-		current_category = self.selected_category
 		if self.selected_category == len(self.categories) - 1:
 			self.selected_category = 0
 		else:

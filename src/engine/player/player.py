@@ -17,11 +17,9 @@ from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
 from Tools.BoundFunction import boundFunction
 from Tools.Notifications import AddNotificationWithID, RemovePopup
-from Plugins.Extensions.archivCZSK import _, log
 
 try:
-	from Plugins.Extensions.SubsSupport import (SubsSupport,
-			SubsSupportStatus, initSubsSettings)
+	from Plugins.Extensions.SubsSupport import (SubsSupport, SubsSupportStatus, initSubsSettings)
 	
 	SubsSupportAvailable = True
 except ImportError as e:
@@ -42,12 +40,12 @@ except ImportError as e:
 	def initSubsSettings():
 		pass
 
-from Plugins.Extensions.archivCZSK import _, settings, log
-from Plugins.Extensions.archivCZSK.compat import eConnectCallback
-from Plugins.Extensions.archivCZSK.engine.items import PVideo, PPlaylist
-from Plugins.Extensions.archivCZSK.engine.tools import e2util
-from Plugins.Extensions.archivCZSK.engine.tools.util import toString
-from Plugins.Extensions.archivCZSK.colors import ConvertColors, DeleteColors
+from ... import _, log
+from ...compat import eConnectCallback
+from ...engine.items import PVideo, PPlaylist
+from ...engine.tools import e2util
+from ...engine.tools.util import toString
+from ...colors import DeleteColors
 
 config_archivczsk = config.plugins.archivCZSK
 

@@ -1,20 +1,17 @@
 # -*- coding: UTF-8 -*-
 
 # system imports
-import os
 import traceback
 
 # enigma2 imports
 from Screens.Screen import Screen
 from Screens.MessageBox import MessageBox
-from Components.config import config
-from Components import Label
 from enigma import getDesktop
 from Components.Sources.List import List
 
 # plugin imports
 from .common import PanelList
-from Plugins.Extensions.archivCZSK import _, log
+from .. import log
 
 from ..py3compat import *
 

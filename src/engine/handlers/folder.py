@@ -2,11 +2,11 @@ import traceback
 from Screens.MessageBox import MessageBox
 
 from .item import ItemHandler
-from Plugins.Extensions.archivCZSK import _, log
-from Plugins.Extensions.archivCZSK.gui.exception import AddonExceptionHandler
-from Plugins.Extensions.archivCZSK.engine.items import PExit, PFolder, PSearchItem, PSearch
-from Plugins.Extensions.archivCZSK.gui.common import showInfoMessage, showErrorMessage, showWarningMessage
-from Plugins.Extensions.archivCZSK.engine.trakttv import trakttv
+from ... import _, log
+from ...gui.exception import AddonExceptionHandler
+from ...engine.items import PExit, PFolder, PSearchItem
+from ...gui.common import showInfoMessage, showErrorMessage, showWarningMessage
+from ...engine.trakttv import trakttv
 
 from ...py3compat import *
 
@@ -26,7 +26,6 @@ class FolderItemHandler(ItemHandler):
 		def open_item_success_cb(result):
 			def continue_cb(res):
 				list_items = []
-				args = {}
 				list_items.insert(0, PExit())
 				self.content_screen.startLoading()
 				if not self.content_screen.refreshing:
@@ -88,7 +87,6 @@ class FolderItemHandler(ItemHandler):
 
 				if screen_command is not None:
 					cmd = ("%s"%screen_command).lower()
-					ams = args
 					if cmd == "show_msg":
 						#dialogStart = datetime.datetime.now()
 						self.content_screen.stopLoading()

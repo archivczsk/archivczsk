@@ -7,19 +7,16 @@ Created on 22.4.2012
 import os
 from twisted.web.client import downloadPage
 
-from enigma import ePicLoad, getDesktop
+from enigma import ePicLoad
 from Screens.VirtualKeyBoard import VirtualKeyBoard
-from Components.ActionMap import ActionMap
-from Components.Label import Label
 from Components.AVSwitch import AVSwitch
 from Components.Pixmap import Pixmap
 from Components.config import config
 
-
-from Plugins.Extensions.archivCZSK import _, removeDiac
-from Plugins.Extensions.archivCZSK.compat import eConnectCallback
-from Plugins.Extensions.archivCZSK.engine.tools import util
-from Plugins.Extensions.archivCZSK.gui.base import BaseArchivCZSKScreen
+from .. import _, removeDiac
+from ..compat import eConnectCallback
+from ..engine.tools import util
+from ..gui.base import BaseArchivCZSKScreen
 
 
 class Captcha(object):

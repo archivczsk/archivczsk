@@ -1,7 +1,7 @@
 import sys, os
 from enigma import getDesktop, eConsoleAppContainer, eTimer
-from Plugins.Extensions.archivCZSK.compat import eConnectCallback
-from Plugins.Extensions.archivCZSK import log
+from ...compat import eConnectCallback
+from ... import log
 import traceback
 import json
 

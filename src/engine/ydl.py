@@ -1,8 +1,7 @@
 from twisted.internet.defer import Deferred
 
-from Plugins.Extensions.archivCZSK import settings
-from Plugins.Extensions.archivCZSK import log
-from Plugins.Extensions.archivCZSK.engine.tools.e2util import PythonProcess
+from .. import settings, log
+from ..engine.tools.e2util import PythonProcess
 
 class YoutubeDl(PythonProcess):
 	def __init__(self):

@@ -1,7 +1,6 @@
 from .item import ItemHandler
 from .folder import FolderItemHandler
-from Plugins.Extensions.archivCZSK.gui.exception import AddonExceptionHandler
-from Plugins.Extensions.archivCZSK.engine.items import PContextMenuItem
+from ...engine.items import PContextMenuItem
 
 class ContextMenuItemHandler(ItemHandler):
 	handles = (PContextMenuItem)

@@ -12,9 +12,9 @@ except:
 	from urllib.error import HTTPError, URLError
 
 from .common import showInfoMessage, showWarningMessage, showErrorMessage
-from Plugins.Extensions.archivCZSK.engine.exceptions import addon, download, updater, play
-from Plugins.Extensions.archivCZSK.gsession import GlobalSession
-from Plugins.Extensions.archivCZSK import _, log
+from ..engine.exceptions import addon, download, play
+from ..gsession import GlobalSession
+from .. import _, log
 
 class GUIExceptionHandler(object):
 	errorName = _("Unknown Error")
@@ -37,11 +37,11 @@ class GUIExceptionHandler(object):
 		showWarningMessage(self.session, self.messageFormat % (self.__class__.warningName, text), self.timeout)
 
 	def customMessage(self, messageType, text):
-		if type == 'info':
+		if messageType == 'info':
 			showInfoMessage(self.session, text, self.timeout)
-		elif type == 'warning':
+		elif messageType == 'warning':
 			showWarningMessage(self.session, text, self.timeout)
-		elif type == 'error':
+		elif messageType == 'error':
 			showErrorMessage(self.session, text, self.timeout)
 
 
@@ -138,7 +138,7 @@ class PlayExceptionHandler(GUIExceptionHandler):
 		def wrapped(*args, **kwargs):
 			try:
 				func(*args, **kwargs)
-			except play.UrlNotExistError as e:
+			except play.UrlNotExistError:
 				self.errorMessage((_("Video url doesnt exist")))
 		return wrapped
 

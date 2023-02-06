@@ -3,9 +3,8 @@ import os
 from Screens.Screen import Screen
 from Components.ActionMap import ActionMap
 from Components.Pixmap import Pixmap
-from Tools.LoadPixmap import LoadPixmap
-from Plugins.Extensions.archivCZSK.settings import IMAGE_PATH
-from Plugins.Extensions.archivCZSK.compat import eConnectCallback
+from ..settings import IMAGE_PATH
+from ..compat import eConnectCallback
 from enigma import ePicLoad, getDesktop
 
 class IconD(Screen):

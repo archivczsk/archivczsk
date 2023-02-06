@@ -4,10 +4,10 @@ import traceback
 from threading import Thread
 from twisted.internet import defer
 from twisted.python import failure
-from Plugins.Extensions.archivCZSK.compat import eConnectCallback
+from ..compat import eConnectCallback
 from enigma import eTimer, ePythonMessagePump
-from Plugins.Extensions.archivCZSK import log
-from Plugins.Extensions.archivCZSK.engine.exceptions.addon import AddonServiceException
+from .. import log
+from ..engine.exceptions.addon import AddonServiceException
 from .tools.util import set_thread_name
 
 try:

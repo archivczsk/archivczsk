@@ -1,13 +1,10 @@
 import copy
 import os
-import datetime
 import traceback
-import shutil
 
 from Components.ActionMap import ActionMap
 from Components.Label import Label
-from Components.Pixmap import Pixmap, PixmapConditional
-from Components.Sources.StaticText import StaticText
+from Components.Pixmap import Pixmap
 from Components.config import config
 from Screens.InputBox import InputBox
 from Screens.MessageBox import MessageBox
@@ -15,29 +12,20 @@ from Tools.LoadPixmap import LoadPixmap
 
 from .poster import PosterProcessing, PosterPixmapHandler
 
-from Plugins.Extensions.archivCZSK import _, log, settings
-from Plugins.Extensions.archivCZSK.compat import eConnectCallback
-from Plugins.Extensions.archivCZSK.gui.icon import IconD
-from Plugins.Extensions.archivCZSK.engine.contentprovider import \
-	VideoAddonContentProvider, ArchivCZSKContentProvider
-from Plugins.Extensions.archivCZSK.engine.handlers import \
-	ArchivCZSKContentHandler, VideoAddonContentHandler, \
-	VideoAddonManagementScreenContentHandler
-from Plugins.Extensions.archivCZSK.engine.items import PItem, PFolder, PRoot, \
-	PPlaylist, PExit, PVideo, PContextMenuItem, PSearch, PSearchItem, PDownload, \
-	PVideoAddon, Stream, RtmpStream, PVideoNotResolved
-from Plugins.Extensions.archivCZSK.engine.tools.task import Task
-from Plugins.Extensions.archivCZSK.engine.tools.util import toString, download_web_file, download_to_file_async
+from .. import _, log, settings
+from ..compat import eConnectCallback
+from ..gui.icon import IconD
+from ..engine.contentprovider import ArchivCZSKContentProvider
+from ..engine.handlers import ArchivCZSKContentHandler, VideoAddonContentHandler, VideoAddonManagementScreenContentHandler
+from ..engine.items import PFolder, PRoot, PExit, PSearch, PSearchItem, PVideoNotResolved
+from ..engine.tools.task import Task
+from ..engine.tools.util import toString
 from .base import BaseArchivCZSKListSourceScreen
-from .common import MyConditionalLabel,	PanelColorListEntry2, \
-	LoadingScreen, TipBar, CutLabel
+from .common import LoadingScreen, TipBar, CutLabel
 from .download import DownloadList
-from enigma import eTimer, eLabel, ePicLoad
+from enigma import eTimer
 from .menu import ArchivCZSKConfigScreen
-from skin import parseFont
-from Components.AVSwitch import AVSwitch
-from Plugins.Extensions.archivCZSK.colors import ConvertColors, DeleteColors
-
+from ..colors import DeleteColors
 
 KEY_MENU_IMG = LoadPixmap(cached=True, path=os.path.join(settings.IMAGE_PATH, 'key_menu.png'))
 KEY_INFO_IMG = LoadPixmap(cached=True, path=os.path.join(settings.IMAGE_PATH, 'key_info.png'))
@@ -316,8 +304,8 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 				gotParrent = self.getParent() is not None
 			except:
 				pass
-			if gotParrent and (defaultCategory=='all_addons'):
-				categoryAddons is not None and categoryAddons.insert(0, PExit())
+			if gotParrent and (defaultCategory == 'all_addons') and categoryAddons is not None:
+				categoryAddons.insert(0, PExit())
 		categoryItems = provider.get_content()
 		BaseContentScreen.__init__(self, session, contentHandler, categoryItems)
 		if categoryItem is not None	 and categoryAddons is not None:
@@ -338,7 +326,7 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 		self.onUpdateGUI.append(self.changeAddon)
 		self.onClose.append(self.__onClose)
 
-		from Plugins.Extensions.archivCZSK.version import version
+		from ..version import version
 		self.setTitle("ArchivCZSK ("+toString(version)+")")
 		self["image"] = Pixmap()
 		self["title"] = Label("")

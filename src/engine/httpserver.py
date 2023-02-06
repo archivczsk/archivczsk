@@ -1,8 +1,7 @@
 # -*- coding: UTF-8 -*-
 from twisted.internet import reactor
 from twisted.web import server, http, resource
-from twisted.internet import defer
-from Plugins.Extensions.archivCZSK import _, log
+from .. import log
 from Components.config import config
 from ..py3compat import *
 

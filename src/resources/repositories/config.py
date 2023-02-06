@@ -3,8 +3,8 @@ Created on 11.8.2012
 
 @author: marko
 '''
-from Plugins.Extensions.archivCZSK import _
-from Components.config import config, ConfigSubsection, ConfigSelection, ConfigYesNo, ConfigDirectory, configfile, getConfigListEntry
+from ... import _
+from Components.config import config, ConfigSelection, ConfigDirectory, getConfigListEntry
 
 import os
 

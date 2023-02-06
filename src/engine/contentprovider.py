@@ -5,38 +5,26 @@ Created on 3.10.2012
 '''
 import os
 import socket
-import sys
-import operator
 import traceback
 import importlib
 
-try:
-	from urllib2 import URLError
-except:
-	from urllib.error import URLError
-
-
 from shutil import copyfile
-from twisted.python import failure
 from twisted.internet import defer
-from xml.etree.cElementTree import ElementTree
-
 
 from Screens.LocationBox import LocationBox
 from Screens.VirtualKeyBoard import VirtualKeyBoard
-from Components.Console import Console
 from Components.config import config, ConfigSelection
-from Plugins.Extensions.archivCZSK import _, log, settings, version as aczsk, removeDiac
-from Plugins.Extensions.archivCZSK.compat import eConnectCallback, MessageBox
-from Plugins.Extensions.archivCZSK.engine.downloader import getFilenameAndLength
-from Plugins.Extensions.archivCZSK.gui.download import DownloadManagerMessages
-from Plugins.Extensions.archivCZSK.settings import VIDEO_EXTENSIONS, SUBTITLES_EXTENSIONS
-from Plugins.Extensions.archivCZSK.engine.exceptions.addon import AddonError
-from Plugins.Extensions.archivCZSK.engine.player.player import Player 
-from Plugins.Extensions.archivCZSK.engine.tools.util import toString, download_web_file
+
+from .. import _, log, settings, version as aczsk, removeDiac
+from ..compat import eConnectCallback, MessageBox
+from ..engine.downloader import getFilenameAndLength
+from ..gui.download import DownloadManagerMessages
+from ..settings import VIDEO_EXTENSIONS, SUBTITLES_EXTENSIONS
+from ..engine.exceptions.addon import AddonError
+from ..engine.player.player import Player
+from ..engine.tools.util import toString, download_web_file
 from .downloader import DownloadManager
-from .items import PVideo, PFolder, PPlaylist, PDownload, PCategory, PVideoAddon, \
-	PCategoryVideoAddon, PUserCategory, Stream, RtmpStream, PVideoResolved
+from .items import PVideo, PPlaylist, PDownload, PCategory, PVideoAddon, PCategoryVideoAddon
 from .serialize import CategoriesIO, FavoritesIO
 from .tools import task, util
 
@@ -618,7 +606,7 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 
 	def resolve_dependencies(self):
 		log.info("%s trying to resolve dependencies for %s" , self, self.video_addon)
-		from Plugins.Extensions.archivCZSK.archivczsk import ArchivCZSK
+		from ..archivczsk import ArchivCZSK
 
 		for dependency in self.video_addon.requires:
 			addon_id, version, optional = dependency['addon'], dependency['version'], dependency['optional']

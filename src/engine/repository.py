@@ -6,9 +6,7 @@ Created on 21.10.2012
 import os, traceback
 from Components.config import config
 
-from Plugins.Extensions.archivCZSK import settings
-from Plugins.Extensions.archivCZSK import archivczsk
-from Plugins.Extensions.archivCZSK import log
+from .. import archivczsk, log
 from .addon import AddonInfo, ToolsAddon, VideoAddon
 from .tools import parser
 from . import updater

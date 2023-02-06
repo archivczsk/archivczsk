@@ -4,12 +4,12 @@ import time
 from Components.config import config
 from Plugins.Plugin import PluginDescriptor
 
-from Plugins.Extensions.archivCZSK import _, settings
-from Plugins.Extensions.archivCZSK.archivczsk import ArchivCZSK
-from Plugins.Extensions.archivCZSK.gsession import GlobalSession
-from Plugins.Extensions.archivCZSK.gui.search import ArchivCZSKSearchClientScreen
-from Plugins.Extensions.archivCZSK.gui.icon import IconD
-from Plugins.Extensions.archivCZSK.engine.downloader import DownloadManager
+from . import _
+from .archivczsk import ArchivCZSK
+from .gsession import GlobalSession
+from .gui.search import ArchivCZSKSearchClientScreen
+from .gui.icon import IconD
+from .engine.downloader import DownloadManager
 
 NAME = _("ArchivCZSK")
 DESCRIPTION = _("Playing CZ/SK archives")

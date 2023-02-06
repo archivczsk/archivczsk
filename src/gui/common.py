@@ -9,22 +9,16 @@ import time
 from Components.GUIComponent import GUIComponent
 from Components.Label import Label, LabelConditional, MultiColorLabel
 from Components.MenuList import MenuList
-from Components.MultiContent import MultiContentEntryText, \
-	MultiContentEntryPixmapAlphaTest
+from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixmapAlphaTest
 from Components.Pixmap import Pixmap
 from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
 from Tools.Directories import fileExists
 
-from Plugins.Extensions.archivCZSK import settings, _, log
-from Plugins.Extensions.archivCZSK.compat import eConnectCallback, parseSize, parsePosition
-from Plugins.Extensions.archivCZSK.engine.tools.util import BtoMB, BtoKB, BtoGB, \
-	toString
-from enigma import loadPNG, RT_HALIGN_RIGHT, RT_VALIGN_TOP, eSize, eListbox, \
-	ePoint, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_HALIGN_CENTER, RT_VALIGN_CENTER, RT_WRAP, \
-	eListboxPythonMultiContent, gFont, getDesktop, ePicLoad, eServiceCenter, \
-	iServiceInformation, eServiceReference, iSeekableService, iPlayableService, \
-	iPlayableServicePtr, eTimer
+from .. import settings, _, log
+from ..compat import eConnectCallback, parseSize, parsePosition
+from ..engine.tools.util import BtoMB, BtoKB, BtoGB, toString
+from enigma import loadPNG, RT_VALIGN_TOP, eListbox, ePoint, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_HALIGN_CENTER, RT_VALIGN_CENTER, RT_WRAP, eListboxPythonMultiContent, gFont, getDesktop, eTimer
 from skin import parseColor, parseFont
 import skin
 

@@ -1,5 +1,6 @@
+# -*- coding: UTF-8 -*-
 #### module for addon creators #####
-import traceback
+
 import twisted.internet.defer as defer
 
 from Components.config import config
@@ -7,20 +8,15 @@ from Screens.MessageBox import MessageBox
 from Screens.VirtualKeyBoard import VirtualKeyBoard
 from Screens.ChoiceBox import ChoiceBox
 
-from Plugins.Extensions.archivCZSK import _, log, removeDiac
-from Plugins.Extensions.archivCZSK.engine.contentprovider import \
-	VideoAddonContentProvider
-from Plugins.Extensions.archivCZSK.engine.exceptions.addon import AddonInfoError, \
-	AddonWarningError, AddonError, AddonThreadException
-from Plugins.Extensions.archivCZSK.engine.items import PFolder, PVideo, \
-	PVideoResolved, PVideoNotResolved, PPlaylist, PNotSupportedVideo, PSearch, \
-	PSearchItem, PContextMenuItem, Stream
-from Plugins.Extensions.archivCZSK.engine.ydl import ydl
-from Plugins.Extensions.archivCZSK.engine.tools.task import callFromThread, Task
-from Plugins.Extensions.archivCZSK.engine.tools.util import toString, toUnicode
-from Plugins.Extensions.archivCZSK.gui.captcha import Captcha
-from Plugins.Extensions.archivCZSK.resources.libraries import m3u8
-from Plugins.Extensions.archivCZSK.colors import ConvertColors, DeleteColors
+from .. import _, log, removeDiac
+from ..engine.contentprovider import VideoAddonContentProvider
+from ..engine.exceptions.addon import AddonInfoError, AddonWarningError, AddonError, AddonThreadException
+from ..engine.items import PFolder, PVideoResolved, PVideoNotResolved, PPlaylist, PSearch, PSearchItem, Stream
+from ..engine.ydl import ydl
+from ..engine.tools.task import callFromThread, Task
+from ..engine.tools.util import toString, toUnicode
+from ..gui.captcha import Captcha
+from ..colors import DeleteColors
 from ..py3compat import *
 GItem_lst = VideoAddonContentProvider.get_shared_itemlist()
 
@@ -114,14 +110,14 @@ def getYesNoInput(session, text):
 	return d
 
 @callFromThread
-def getListInput(session, list, title=""):
+def getListInput(session, choices_list, title=""):
 	def getListInputCB(selected=None):
 		if selected is not None:
 			d.callback(newlist.index(selected))
 		else:
 			d.callback(-1)
 	d = defer.Deferred()
-	newlist = [(toString(name), ) for name in list]
+	newlist = [(toString(name),) for name in choices_list]
 	session.openWithCallback(getListInputCB, ChoiceBox, toString(title), newlist, skin_name="ArchivCZSKChoiceBox")
 	return d
 

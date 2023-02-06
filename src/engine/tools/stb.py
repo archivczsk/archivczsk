@@ -103,20 +103,20 @@ def _setBoxtype():
 				manu = "Fortis"
 				model = "HdBox"
 				arch = "sh4"
-	   
+
 		if arch == "mipsel":
 				version = getBoxArch()
 		else:
 				version = "duckbox"
-	   
+
 		gBoxType = (manu, model, arch, version)
 		
 def getBoxArch():
 		ARCH = "unknown"
-	   
+
 		if (sys.version_info < (2, 6, 8) and sys.version_info > (2, 6, 6)):
 				ARCH = "oe16"
-					   
+
 		if (sys.version_info < (2, 7, 4) and sys.version_info > (2, 7, 0)):
 				ARCH = "oe20"
 

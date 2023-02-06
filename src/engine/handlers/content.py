@@ -1,8 +1,9 @@
 from .item import ItemHandler
-from Plugins.Extensions.archivCZSK import log
-from Plugins.Extensions.archivCZSK.gui import context
-from Plugins.Extensions.archivCZSK.engine.items import PExit, PRoot
-from Plugins.Extensions.archivCZSK.colors import ConvertColors, DeleteColors
+from ... import log
+from ...gui import context
+from ...engine.items import PExit, PRoot
+from ...colors import DeleteColors
+
 
 class ContentHandler(ItemHandler):
 	def __init__(self, session, content_screen, content_provider=None, handlers=[]):

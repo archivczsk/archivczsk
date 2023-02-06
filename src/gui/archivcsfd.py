@@ -16,7 +16,7 @@ except:
 
 
 from enigma import ePicLoad
-from random import *
+from random import randint
 from Components.config import config
 from Screens.Screen import Screen
 from Components.ActionMap import ActionMap
@@ -28,9 +28,8 @@ from Components.MenuList import MenuList
 from Components.ProgressBar import ProgressBar
 from Components.Pixmap import Pixmap
 from twisted.web.client import downloadPage
-from Plugins.Extensions.archivCZSK import _, log, settings
-from Plugins.Extensions.archivCZSK.compat import eConnectCallback
-from Plugins.Extensions.archivCZSK.engine.tools.util import toString
+from .. import _, log, settings
+from ..compat import eConnectCallback
 
 from ..py3compat import *
 

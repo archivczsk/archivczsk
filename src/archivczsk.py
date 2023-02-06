@@ -6,19 +6,17 @@ import datetime
 import time
 
 from Components.config import config, configfile
-from Components.Console import Console
-from Screens.Console import Console as ConsoleScreen
 from Screens.MessageBox import MessageBox
 from skin import loadSkin
 from enigma import eTimer
-from Plugins.Extensions.archivCZSK import _, log, toString, settings, UpdateInfo, create_rotating_log
-from Plugins.Extensions.archivCZSK.engine.addon import VideoAddon, XBMCAddon
-from Plugins.Extensions.archivCZSK.engine.exceptions.updater import UpdateXMLVersionError, UpdateXMLNoUpdateUrl
-from Plugins.Extensions.archivCZSK.engine.tools.task import Task
-from Plugins.Extensions.archivCZSK.gui.common import showInfoMessage
-from Plugins.Extensions.archivCZSK.gui.content import ArchivCZSKContentScreen
-from Plugins.Extensions.archivCZSK.compat import DMM_IMAGE, eConnectCallback
-from Plugins.Extensions.archivCZSK.engine.updater import ArchivUpdater
+from . import _, log, toString, settings, UpdateInfo
+from .engine.addon import VideoAddon, XBMCAddon
+from .engine.exceptions.updater import UpdateXMLVersionError, UpdateXMLNoUpdateUrl
+from .engine.tools.task import Task
+from .gui.content import ArchivCZSKContentScreen
+from .compat import DMM_IMAGE, eConnectCallback
+from .engine.updater import ArchivUpdater
+
 
 class ArchivCZSK():
 
@@ -55,7 +53,7 @@ class ArchivCZSK():
 
 	@staticmethod
 	def start_ydl():
-		from Plugins.Extensions.archivCZSK.engine.ydl import ydl
+		from .engine.ydl import ydl
 		ydl.init()
 
 	@staticmethod
@@ -313,13 +311,13 @@ class ArchivCZSK():
 			self.session.openWithCallback(self.close_archive_screen, ArchivCZSKContentScreen, self)
 		
 		# check if this is first start after update
-		from Plugins.Extensions.archivCZSK.settings import PLUGIN_PATH
+		from .settings import PLUGIN_PATH
 		first_start_file = os.path.join( PLUGIN_PATH, '.first_start')
 		if os.path.isfile( first_start_file ):
 			os.remove( first_start_file )
 			
 			# check if we have all players installed
-			from Plugins.Extensions.archivCZSK.engine.player.info import videoPlayerInfo
+			from .engine.player.info import videoPlayerInfo
 			
 			if DMM_IMAGE:
 				msg = _("Using archivCZSK on DreamBox with original software not supported due missing HW for testing. Due this bugs related to DreamBox will not be fixed. Use at your own risk.")

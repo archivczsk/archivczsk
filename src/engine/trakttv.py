@@ -1,6 +1,4 @@
 # -*- coding: UTF-8 -*-
-import sys
-import os
 import json
 import traceback
 import datetime
@@ -9,12 +7,10 @@ import time
 
 from collections import OrderedDict
 from Components.config import config
-from Plugins.Extensions.archivCZSK import _, log
-from Plugins.Extensions.archivCZSK.engine.tools.util import toString
-from Plugins.Extensions.archivCZSK.gui.common import showInfoMessage
 from Screens.ChoiceBox import ChoiceBox
-from enigma import eTimer
-from Plugins.Extensions.archivCZSK.compat import eConnectCallback
+from .. import _, log
+from ..engine.tools.util import toString
+from ..gui.common import showInfoMessage
 
 BASE = 'https://api.trakt.tv'
 
@@ -431,7 +427,7 @@ class trakt_tv(object):
 		else:
 			raise Exception('Not enough data to scrobble {item}'.format(item=str(item)))
 
-		from Plugins.Extensions.archivCZSK.version import version
+		from ..version import version
 		postdata.update( { "progress":progress, "app_version": version, "app_date": "1970-01-01" } )
 		
 		code, data = self.call_trakt_api( '/scrobble/' + action, postdata)

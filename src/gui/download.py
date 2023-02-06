@@ -14,16 +14,15 @@ from Screens.ChoiceBox import ChoiceBox
 from Screens.MessageBox import MessageBox
 from Screens.VirtualKeyBoard import VirtualKeyBoard
 
-from Plugins.Extensions.archivCZSK import _, settings, removeDiac
-from Plugins.Extensions.archivCZSK.compat import eConnectCallback
-from Plugins.Extensions.archivCZSK.engine.downloader import DownloadManager
-from Plugins.Extensions.archivCZSK.engine.tools import util
-from Plugins.Extensions.archivCZSK.engine.items import PVideo
-from Plugins.Extensions.archivCZSK.gsession import GlobalSession
-from Plugins.Extensions.archivCZSK.gui import info
+from .. import _, settings, removeDiac
+from ..compat import eConnectCallback
+from ..engine.downloader import DownloadManager
+from ..engine.tools import util
+from ..engine.items import PVideo
+from ..gsession import GlobalSession
+from ..gui import info
 from .base import BaseArchivCZSKScreen, BaseArchivCZSKMenuListScreen
-from .common import PanelListDownload, PanelListDownloadEntry, \
-	PanelListDownloadListEntry, MultiLabelWidget
+from .common import PanelListDownload, PanelListDownloadEntry, PanelListDownloadListEntry, MultiLabelWidget
 from enigma import eTimer
 
 from ..py3compat import *
@@ -299,7 +298,7 @@ class ArchivCZSKDownloadListScreen(BaseArchivCZSKMenuListScreen):
 		self["key_yellow"] = Button(_("Remove"))
 		self["key_blue"] = Button("")
 
-		from Plugins.Extensions.archivCZSK.engine.player.player import Player
+		from ..engine.player.player import Player
 		self.player = Player(session, self.workingFinished)
 
 		self.lst_items = []
@@ -398,7 +397,7 @@ class ArchivCZSKDownloadsScreen(BaseArchivCZSKMenuListScreen, DownloadList):
 		DownloadList.__init__(self)
 		self.name = name
 		self.content_provider = content_provider
-		from Plugins.Extensions.archivCZSK.engine.player.player import Player
+		from ..engine.player.player import Player
 		self.player = Player(session, self.workingFinished)
 		self.sort_options = [{'id':'az', 'name':_('Sort alphabetically')},
 							 {'id':'date', 'name':_('Sort by date')},

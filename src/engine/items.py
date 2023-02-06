@@ -1,9 +1,9 @@
 # GUI items
 import os
-from Plugins.Extensions.archivCZSK import log
+from .. import log
 
 try:
-	from Plugins.Extensions.archivCZSK import settings, _
+	from .. import settings, _
 	PNG_PATH = settings.IMAGE_PATH
 except ImportError:
 	PNG_PATH = '/tmp/png/'

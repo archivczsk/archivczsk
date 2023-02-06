@@ -7,6 +7,7 @@ Created on 20.3.2012
 import os
 import shutil
 from datetime import datetime
+import time
 
 try:
 	from xml.etree.cElementTree import ElementTree, Element, SubElement
@@ -14,9 +15,9 @@ except ImportError:
 	from xml.etree.ElementTree import ElementTree, Element, SubElement
 
 from .items import PVideoNotResolved, PFolder, PUserCategory
-from Plugins.Extensions.archivCZSK.engine.tools.util import toString, toUnicode
+from ..engine.tools.util import toString, toUnicode
 try:
-	from Plugins.Extensions.archivCZSK import log
+	from .. import log
 except ImportError:
 	class simple_log:
 		@staticmethod
@@ -122,8 +123,6 @@ class Item2XML(BaseXML):
 		log.logDebug("%s create xml item - %s"%(self,item))
 		log.debug("{0} create xml item - {1}".format(self, toString(item)))
 
-		import time
-		from datetime import datetime
 		t = datetime.now()
 		t1 = t.timetuple()
 		uid = int(time.mktime(t1))

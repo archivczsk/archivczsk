@@ -8,17 +8,15 @@ Updated on 28.10.2017 by chaoss
 import os
 import shutil
 import traceback
-import threading
-import requests
 from .tools import util, parser
 from .tools.unzip import unzip_to_dir
 from enigma import eTimer
-from Plugins.Extensions.archivCZSK.compat import eConnectCallback
+from ..compat import eConnectCallback
+from ..engine.exceptions.updater import UpdateXMLVersionError, UpdateXMLNoUpdateUrl
+from .. import _, log, toString
 
-from Plugins.Extensions.archivCZSK.engine.exceptions.updater import UpdateXMLVersionError, UpdateXMLDownloadError, UpdateXMLNoUpdateUrl
-from Plugins.Extensions.archivCZSK import _, log, toString, settings
 from Components.Console import Console
-from Components.config import config, ConfigSubsection, ConfigText, ConfigYesNo
+from Components.config import config
 from Screens.MessageBox import MessageBox
 
 class ArchivUpdater(object):
@@ -66,7 +64,7 @@ class ArchivUpdater(object):
 		
 		try:
 			if self.downloadUpdateXml():
-				from Plugins.Extensions.archivCZSK.version import version
+				from ..version import version
 				local_version = version
 				xmlroot = util.load_xml(self.updateXmlFilePath).getroot()
 				self.remote_version = xmlroot.attrib.get('version')
@@ -394,10 +392,10 @@ class Updater(object):
 
 class DummyAddon(object):
 	"""to add new addon to repository"""
-	def __init__(self, repository, id, name, version):
+	def __init__(self, repository, addon_id, name, version):
 		self.repository = repository
 		self.name = name
-		self.id = id
+		self.id = addon_id
 		self.relative_path = self.id
 		self.version = version
 		self.path = os.path.normpath(os.path.join(repository.path, self.relative_path))

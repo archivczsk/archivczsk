@@ -1,5 +1,5 @@
-from Plugins.Extensions.archivCZSK import log
-from Plugins.Extensions.archivCZSK.gui import info
+from ... import log
+from ...gui import info
 
 INFO_HANDLERS= {
 				"item":info.showItemInfo,

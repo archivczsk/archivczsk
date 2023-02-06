@@ -9,13 +9,13 @@ from .folder import FolderItemHandler
 from .category import CategoryItemHandler, UserCategoryItemHandler
 from .media import VideoResolvedItemHandler, VideoNotResolvedItemHandler, PlaylistItemHandler
 
-from Plugins.Extensions.archivCZSK import _, log
-from Plugins.Extensions.archivCZSK.engine.tools import util
-from Plugins.Extensions.archivCZSK.gui.context import ArchivCZSKSelectCategoryScreen
-from Plugins.Extensions.archivCZSK.engine.contentprovider import VideoAddonContentProvider
-from Plugins.Extensions.archivCZSK.engine.items import PExit, PRoot, PFolder, PVideoAddon, PCategoryVideoAddon
-from Plugins.Extensions.archivCZSK.gui.exception import AddonExceptionHandler
-from Plugins.Extensions.archivCZSK.gui.common import showInfoMessage, showWarningMessage, showErrorMessage
+from ... import _, log
+from ...engine.tools import util
+from ...gui.context import ArchivCZSKSelectCategoryScreen
+from ...engine.contentprovider import VideoAddonContentProvider
+from ...engine.items import PExit, PRoot, PVideoAddon, PCategoryVideoAddon
+from ...gui.exception import AddonExceptionHandler
+from ...gui.common import showInfoMessage, showWarningMessage, showErrorMessage
 from Components.config import config
 
 from ...py3compat import *
@@ -120,10 +120,10 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 			pass
 
 		if config.plugins.archivCZSK.showVideoInfo.getValue() and addonVideoInfoEnabled:
-			from Plugins.Extensions.archivCZSK.gui.content import ArchivCZSKAddonContentScreenAdvanced
+			from ...gui.content import ArchivCZSKAddonContentScreenAdvanced
 			self.session.openWithCallback(self.open_video_addon_cb, ArchivCZSKAddonContentScreenAdvanced, addon, list_items)
 		else:
-			from Plugins.Extensions.archivCZSK.gui.content import ArchivCZSKAddonContentScreen
+			from ...gui.content import ArchivCZSKAddonContentScreen
 			self.session.openWithCallback(self.open_video_addon_cb, ArchivCZSKAddonContentScreen, addon, list_items)
 
 	def open_video_addon_cb(self, content_provider):
@@ -169,7 +169,7 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 
 				log.info("addon was removed: %s" % addon.id)
 
-				from Plugins.Extensions.archivCZSK.archivczsk import ArchivCZSK
+				from ...archivczsk import ArchivCZSK
 				ArchivCZSK.remove_addon(addon)
 
 				self.content_screen.workingStarted()
@@ -309,7 +309,7 @@ class VideoAddonManagement(ItemHandler):
 
 				log.info("addon was removed: %s" % addon.id)
 
-				from Plugins.Extensions.archivCZSK.archivczsk import ArchivCZSK
+				from ...archivczsk import ArchivCZSK
 				ArchivCZSK.remove_addon(addon)
 				self.content_screen.workingStarted()
 				self.content_screen.refreshList()

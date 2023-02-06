@@ -1,6 +1,6 @@
 import os
 import time
-import mimetypes
+
 try:
 	from urlparse import urlparse
 except:
@@ -9,11 +9,11 @@ import traceback
 
 from enigma import eConsoleAppContainer
 
-from Plugins.Extensions.archivCZSK import _, log
-from Plugins.Extensions.archivCZSK.compat import eConnectCallback
-from Plugins.Extensions.archivCZSK.engine.exceptions.download import NotSupportedProtocolError
-from Plugins.Extensions.archivCZSK.engine.player.info import videoPlayerInfo
-from Plugins.Extensions.archivCZSK.engine.tools.util import toString, url_get_file_info, sanitize_filename
+from .. import _, log
+from ..compat import eConnectCallback
+from ..engine.exceptions.download import NotSupportedProtocolError
+from ..engine.player.info import videoPlayerInfo
+from ..engine.tools.util import toString, url_get_file_info, sanitize_filename
 
 from ..py3compat import *
 
@@ -106,7 +106,7 @@ class DownloadManager(object):
 			log.logError("Copy headers for download failed, continute download.\n%s"%traceback.format_exc())
 			headers = {}
 			pass
-		from Plugins.Extensions.archivCZSK.settings import USER_AGENT
+		from ..settings import USER_AGENT
 		headers.setdefault('User-Agent', USER_AGENT)
 		filename, length = getFilenameAndLength(url, headers, filename)
 		log.info("Downloader.createDownload() filename=%s, length=%s", toString(filename), length)

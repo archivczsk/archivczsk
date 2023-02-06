@@ -4,7 +4,7 @@ Created on 22.12.2012
 @author: marko
 '''
 import os
-from Plugins.Extensions.archivCZSK import log
+from ... import log
 
 GSTREAMER_PATH = '/usr/lib/gstreamer-0.10'
 GSTREAMER10_PATH = '/usr/lib/gstreamer-1.0'

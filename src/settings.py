@@ -6,11 +6,10 @@ from Components.config import config, ConfigSubsection, ConfigSelection, \
 	NoSave, ConfigInteger
 from Tools.Directories import SCOPE_PLUGINS, resolveFilename
 
-from Plugins.Extensions.archivCZSK import log, UpdateInfo, _
-from Plugins.Extensions.archivCZSK.engine.player.info import videoPlayerInfo
-from Plugins.Extensions.archivCZSK.engine.tools import stb
-from Plugins.Extensions.archivCZSK.compat import DMM_IMAGE
-
+from . import log, UpdateInfo, _
+from .engine.player.info import videoPlayerInfo
+from .engine.tools import stb
+from .compat import DMM_IMAGE
 
 LANGUAGE_SETTINGS_ID = language.getLanguage()[:2]
 MENU_SEPARATOR = getConfigListEntry("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------", NoSave(ConfigNothing()))
@@ -130,7 +129,7 @@ config.plugins.archivCZSK.logPath.addNotifier(changeLogPath)
 ########### Misc #########################
 
 def restartHttpServer(configElement):
-	from Plugins.Extensions.archivCZSK.engine.httpserver import archivCZSKHttpServer
+	from .engine.httpserver import archivCZSKHttpServer
 	try:
 		archivCZSKHttpServer.start_listening(True)
 	except:

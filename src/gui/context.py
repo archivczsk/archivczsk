@@ -5,8 +5,7 @@ Created on 28.4.2012
 @author: marko
 '''
 
-from enigma import (loadPNG, RT_HALIGN_RIGHT, RT_VALIGN_TOP, RT_HALIGN_LEFT, RT_HALIGN_RIGHT,
-					RT_HALIGN_CENTER, RT_VALIGN_CENTER, eListboxPythonMultiContent, gFont, getDesktop)
+from enigma import (loadPNG, RT_VALIGN_TOP, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_HALIGN_CENTER, RT_VALIGN_CENTER, eListboxPythonMultiContent, gFont, getDesktop)
 
 from Components.ActionMap import ActionMap
 from Components.Label import Label
@@ -16,8 +15,7 @@ from Components.Pixmap import Pixmap
 from Tools.Directories import fileExists
 from Tools.LoadPixmap import LoadPixmap
 
-from Plugins.Extensions.archivCZSK import _
-
+from .. import _
 from ..py3compat import *
 
 RATIO = 1

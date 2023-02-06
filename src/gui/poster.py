@@ -3,10 +3,9 @@ import shutil
 import random
 from datetime import datetime
 
-
-from Plugins.Extensions.archivCZSK import log
-from Plugins.Extensions.archivCZSK.engine.tools import util
-from Plugins.Extensions.archivCZSK.compat import eConnectCallback
+from .. import log
+from ..engine.tools import util
+from ..compat import eConnectCallback
 
 from Components.AVSwitch import AVSwitch
 from Tools.LoadPixmap import LoadPixmap
@@ -75,7 +74,7 @@ class PosterProcessing:
 				print("PosterProcessing.get_image_file: found poster path on position {0}/{1}".format(idx, self.poster_limit))
 				return path
 		
-		from Plugins.Extensions.archivCZSK.settings import USER_AGENT
+		from ..settings import USER_AGENT
 		headers = {"User-Agent": USER_AGENT }
 		util.download_to_file_async(util.toString(poster_url), self._create_poster_path(), self._image_downloaded, headers=headers, timeout=3)
 		return None

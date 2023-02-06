@@ -1,25 +1,21 @@
 # -*- coding: utf-8 -*-
 import traceback
-import datetime
-from twisted.internet import defer
 
 from Components.config import config
 from Screens.MessageBox import MessageBox
 from Screens.ChoiceBox import ChoiceBox
 
 from .item import ItemHandler
-from .folder import FolderItemHandler
-from Plugins.Extensions.archivCZSK import _, log
-from Plugins.Extensions.archivCZSK.gui.exception import AddonExceptionHandler, DownloadExceptionHandler, PlayExceptionHandler
-from Plugins.Extensions.archivCZSK.engine.items import PExit, PVideo, PVideoResolved, PVideoNotResolved, PPlaylist
-from Plugins.Extensions.archivCZSK.engine.tools.util import toString
-from enigma import eTimer
-from Plugins.Extensions.archivCZSK.compat import eConnectCallback
-from Plugins.Extensions.archivCZSK.gui.common import showInfoMessage, showErrorMessage, showWarningMessage
-from Plugins.Extensions.archivCZSK.colors import ConvertColors, DeleteColors
-from Plugins.Extensions.archivCZSK.engine.player.info import videoPlayerInfo
-from Plugins.Extensions.archivCZSK.compat import DMM_IMAGE
-from Plugins.Extensions.archivCZSK.engine.trakttv import trakttv
+from ... import _, log
+from ...gui.exception import AddonExceptionHandler, DownloadExceptionHandler
+from ...engine.items import PExit, PVideoResolved, PVideoNotResolved, PPlaylist
+from ...engine.tools.util import toString
+from ...gui.common import showInfoMessage, showErrorMessage, showWarningMessage
+from ...colors import DeleteColors
+from ...engine.player.info import videoPlayerInfo
+from ...compat import DMM_IMAGE
+from ...engine.trakttv import trakttv
+
 
 class MediaItemHandler(ItemHandler):
 	""" Template class - handles Media Item interaction """
@@ -273,7 +269,6 @@ class VideoResolvedItemHandler(MediaItemHandler):
 class VideoNotResolvedItemHandler(MediaItemHandler):
 	handles = (PVideoNotResolved, )
 	def __init__(self, session, content_screen, content_provider):
-		info_modes = ['item','csfd']
 		MediaItemHandler.__init__(self, session, content_screen, content_provider, ['item','csfd'])
 		self.known_commands = ('show_msg',)
 
@@ -319,7 +314,6 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 
 	def handle_known_command(self, cmd, args, continue_cb):
 		if cmd == "show_msg":
-			#dialogStart = datetime.datetime.now()
 			self.content_screen.stopLoading()
 			msgType = args.get('msgType', 'info').lower()
 			msgTimeout = int(args.get('msgTimeout', 15))

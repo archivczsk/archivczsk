@@ -164,7 +164,7 @@ class XBMCMultiAddonXMLParser(XBMCAddonXMLParser):
 			addons[addon_id] = addon_dict
 		return addons
 	
-	def find_addon(self, id):
+	def find_addon(self, addon_id):
 		for addon in self.xml.findall('addon'):
-			if id == self.get_addon_id(addon):
+			if addon_id == self.get_addon_id(addon):
 				return self.parse_addon(addon) 
