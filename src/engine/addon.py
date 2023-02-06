@@ -56,9 +56,6 @@ class Addon(object):
 		# load settings
 		self.settings = AddonSettings(self, os.path.join(self.path, self.repository.addon_settings_relpath))
 
-		# loader to handle addon imports
-		self.loader = AddonLoader(self)
-
 		# this is the function, that should be called on direct call
 		self.entry_point = None
 		
@@ -119,16 +116,8 @@ class Addon(object):
 		info.showChangelog(session, self.name, self.changelog)
 
 
-	def include(self):
-		self.loader.add_importer()
-
-	def deinclude(self):
-		self.loader.remove_importer()
-
 	def close(self):
-		self.loader.close()
 		self.info = None
-		self.loader = None
 		self._updater = None
 		self.repository = None
 
@@ -174,29 +163,17 @@ class XBMCAddon(object):
 class ToolsAddon(Addon):
 	def __init__(self, info, repository):
 		Addon.__init__(self, info, repository)
-		self.library = self.info.library
-
-		if self.library:
-			lib_path = os.path.join(self.path, self.library)
-			self.loader.add_path(lib_path)
 
 
 class VideoAddon(Addon):
-	ignore_requires = [
-					   "xbmc.python",
-#					   "script.module.simplejson",
-					   "script.usage.tracker"
-					   ]
-
 	def __init__(self, info, repository):
 		Addon.__init__(self, info, repository)
 		self.import_name = info.import_name
 		self.import_package = os.path.basename(info.path)
 		self.import_entry_point = info.import_entry_point
 		self.import_preload = info.import_preload
-		self.script = info.script
-		self.requires = [require for require in info.requires if require['addon'] not in VideoAddon.ignore_requires]
-		if not self.script and not self.import_entry_point:
+		self.requires = info.requires
+		if not self.info.deprecated and not self.import_entry_point:
 			raise Exception("%s entry point missing in addon.xml" % self)
 		# content provider
 		self.downloads_path = self.get_setting('download_path')
@@ -555,8 +532,7 @@ class AddonInfo(object):
 	def __init__(self, info_file):
 		log.info("AddonInfo(%s) initializing.." , '/'.join(info_file.split('/')[-3:]))
 
-		pars = parser.XBMCAddonXMLParser(info_file)
-		addon_dict = pars.parse()
+		addon_dict = parser.XBMCAddonXMLParser(info_file).parse()
 		
 		self.id = addon_dict['id']
 		self.name = addon_dict['name']
@@ -565,8 +541,6 @@ class AddonInfo(object):
 		self.type = addon_dict['type']
 		self.broken = addon_dict['broken']
 		self.path = os.path.dirname(info_file)
-		self.library = addon_dict['library']
-		self.script = addon_dict['script']
 		self.deprecated = addon_dict['deprecated']
 		self.import_name = addon_dict['import_name']
 		self.import_entry_point = addon_dict['import_entry_point']
@@ -627,27 +601,3 @@ class AddonInfo(object):
 	def close(self):
 		self.addon = None
 
-
-class AddonLoader():
-	def __init__(self, addon):
-		self.addon = addon
-		self.__importer = util.CustomImporter(addon.id,log=log.debug)
-
-	def add_path(self, path):
-		self.__importer.add_path(path)
-
-	def add_importer(self):
-		log.debug("%s adding importer" , self.addon)
-		if self.__importer in sys.meta_path:
-			log.debug("%s importer is already in meta_path" % self.addon)
-		else:
-			sys.meta_path.append(self.__importer)
-
-	def remove_importer(self):
-		log.debug("%s removing importer" , self.addon)
-		sys.meta_path.remove(self.__importer)
-
-	def close(self):
-		self.addon = None
-		self.__importer.release_modules()
-		self.__importer = None

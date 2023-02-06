@@ -53,7 +53,6 @@ class Repository():
 		# default language,settings and libraries path of addon
 		self.addon_languages_relpath = self.addon_resources_relpath + '/language'
 		self.addon_settings_relpath = self.addon_resources_relpath + '/settings.xml'
-		self.addon_libraries_relpath = self.addon_resources_relpath + '/lib' 
 
 		self._addons = {}
 		
@@ -78,13 +77,14 @@ class Repository():
 				continue
 			if addon_info.type == 'video':
 				try:
-					if not addon_info.deprecated:
-						if addon_info.import_entry_point:
-							pass
+					if not addon_info.deprecated and not addon_info.broken:
+						# chceck if there exitst a script file described in addon.xml
+						for ext in ('.py', '.pyc', '.pyo'):
+							tmp = os.path.join(addon_path, addon_info.import_name + ext)
+							if os.path.isfile(tmp):
+								break
 						else:
-							tmp = os.path.join(addon_path, addon_info.script)
-							if not os.path.isfile(tmp):
-								raise Exception("Invalid addon %s. Script file missing %s" % (addon_info.name, tmp))
+							raise Exception("Invalid addon %s. No script file '%s.py[oc]' found" % (addon_info.name, addon_info.import_name))
 
 					addon = VideoAddon(addon_info, self)
 				except Exception:

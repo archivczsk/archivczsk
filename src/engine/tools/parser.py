@@ -56,21 +56,10 @@ class XBMCSettingsXMLParser(XMLParser):
 	
 class XBMCAddonXMLParser(XMLParser):
 		
-	addon_types = {
-		"xbmc.python.pluginsource":"content",
-		"xbmc.addon.repository":"repository",
-		"xbmc.python.module":"tools",
-		
-		"archivczsk.addon.repository":"repository",
-		"archivczsk.addon.video":"content_video",
-		"archivczsk.addon.tools":"tools_simple",
-	}
-	
 	def get_addon_id(self, addon):
 		id_addon = addon.attrib.get('id')#.replace('-', '')
 		#id_addon = id_addon.split('.')[-2] if id_addon.split('.')[-1] == 'cz' else id_addon.split('.')[-1]
 		return id_addon
-		
 	
 	def parse(self):
 		return self.parse_addon(self.xml)
@@ -95,8 +84,6 @@ class XBMCAddonXMLParser(XMLParser):
 		repo_addons_url = None
 		repo_authorization = None
 		requires = []
-		library = 'lib'
-		script = None
 		import_name = None
 		import_entry_point = None
 		import_preload = False
@@ -106,53 +93,45 @@ class XBMCAddonXMLParser(XMLParser):
 		req = addon.find('requires')
 		if req:
 			for imp in req.findall('import'):
-				requires.append({'addon':imp.attrib.get('addon'),
-								 'version':imp.attrib.get('version'),
-								 'optional':imp.attrib.get('optional')})
-			
+				requires.append({
+					'addon': imp.attrib.get('addon'),
+					'version':imp.attrib.get('version'),
+					'optional':imp.attrib.get('optional')
+				})
 			
 		for info in addon.findall('extension'):
-			if info.attrib.get('point') in self.addon_types:
-				ad_type = self.addon_types[info.attrib.get('point')]
-				util.log.debug("ad_type: %s" % ad_type )
-				if ad_type == 'repository':
-					addon_type = ad_type
-					repo_datadir_url = info.findtext('datadir')
-					repo_addons_url = info.findtext('info')
-					repo_authorization = info.findtext('authorization')
-				elif ad_type == 'tools':
-					addon_type = ad_type
-					library = info.attrib.get('library')
-					deprecated = True
-				elif ad_type == 'tools_simple':
-					addon_type = 'tools'
-					library = None
-				elif ad_type == 'content':
-					provides = None
-					if info.findtext('provides'):
-						provides = info.findtext('provides')
-					if info.attrib.get('provides'):
-						provides = info.attrib.get('provides')
-					if provides is not None and provides == 'video':
-						addon_type = 'video'
-						script = info.attrib.get('library', 'default.py')
-					deprecated = True
-				elif ad_type == 'content_video':
-					addon_type = 'video'
-					import_name = info.attrib.get('import-name', 'addon')
-					import_entry_point = info.attrib.get('entry-point', 'main')
-					import_preload = info.attrib.get('preload', 'no').lower() in ('yes', 'true')
-					
-			elif info.attrib.get('point') == 'xbmc.addon.metadata' or info.attrib.get('point') == 'archivczsk.addon.metadata':
-				if info.findtext('broken'):
-					broken = info.findtext('broken')
-				for desc in info.findall('description'):
-					if desc.attrib.get('lang') is None:
-						description['en'] = desc.text
-					else:
-						description[desc.attrib.get('lang')] = desc.text
+			point = info.attrib.get('point')
 
-			elif info.attrib.get('point') == 'archivczsk.addon.seeker':
+			if point == 'archivczsk.addon.video':
+				addon_type = 'video'
+				import_name = info.attrib.get('import-name', 'addon')
+				import_entry_point = info.attrib.get('entry-point', 'main')
+				import_preload = info.attrib.get('preload', 'no').lower() in ('yes', 'true')
+
+			elif point == 'archivczsk.addon.tools':
+				addon_type = 'tools'
+
+			elif point == 'xbmc.python.pluginsource':
+				addon_type = 'video'
+				deprecated = True
+
+			elif point == 'xbmc.addon.tools':
+				addon_type = 'tools'
+				deprecated = True
+
+			elif point in ('archivczsk.addon.repository', 'xbmc.addon.repository'):
+				addon_type = 'repository'
+				repo_datadir_url = info.findtext('datadir')
+				repo_addons_url = info.findtext('info')
+				repo_authorization = info.findtext('authorization')
+
+			elif point in ('archivczsk.addon.metadata', 'xbmc.addon.metadata'):
+				broken = info.findtext('broken')
+
+				for desc in info.findall('description'):
+					description[desc.attrib.get('lang', 'en')] = desc.text
+
+			elif point == 'archivczsk.addon.seeker':
 				seekers.append((info.attrib.get('name', name), info.attrib.get('id'),))
 
 		return {
@@ -167,8 +146,6 @@ class XBMCAddonXMLParser(XMLParser):
 			"repo_datadir_url":repo_datadir_url,
 			"repo_authorization":repo_authorization,
 			"requires":requires,
-			"library":library,
-			"script":script,
 			"import_name": import_name,
 			"import_entry_point": import_entry_point,
 			"import_preload": import_preload,

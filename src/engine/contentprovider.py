@@ -33,7 +33,6 @@ from Plugins.Extensions.archivCZSK.gui.download import DownloadManagerMessages
 from Plugins.Extensions.archivCZSK.settings import VIDEO_EXTENSIONS, SUBTITLES_EXTENSIONS
 from Plugins.Extensions.archivCZSK.engine.exceptions.addon import AddonError
 from Plugins.Extensions.archivCZSK.engine.player.player import Player 
-from Plugins.Extensions.archivCZSK.resources.repositories import repo_modules
 from Plugins.Extensions.archivCZSK.engine.tools.util import toString, download_web_file
 from .downloader import DownloadManager
 from .items import PVideo, PFolder, PPlaylist, PDownload, PCategory, PVideoAddon, \
@@ -51,67 +50,6 @@ try:
 	CREATE_DEFAULT_HTTPS_CONTEXT = ssl._create_default_https_context
 except:
 	pass
-
-
-class SysPath(list):
-	"""to append sys path only to addon which belongs to"""
-	def __init__(self, addons):
-		self.addons = addons
-	def append(self, val):
-		log.debug('[AddonSysPath] append %s'%val)
-		for addon in self.addons:
-			if val.find(addon.id) != -1:
-				addon.loader.add_path(val)
-
-class CustomSysImporter(util.CustomImporter):
-	def __init__(self, custom_sys):
-		util.CustomImporter.__init__(self, 'custom_sys',  log=log.debug)
-		self.add_module('sys', custom_sys)
-
-class AddonOutput:
-	def __init__(self):
-		pass
-
-	def write(self, data):
-		log.info(data)
-
-	def flush(self):
-		pass
-
-	def isatty(self):
-		return True
-
-
-class AddonSys():
-	def __init__(self):
-		self.addons = []
-		self.path = SysPath(self.addons)
-		self.output = AddonOutput()
-
-	def __setitem__(self, key, val):
-		if key == 'path':
-			log.error('you cannot replace AddonSysPath!')
-		elif key == 'stdout':
-			pass
-		else:
-			dict.__setitem__(self, key, val)
-
-	def __getattr__(self, attr):
-		if attr=='path':
-			return self.path
-		elif attr=='stdout':
-			return self.output
-		return getattr(sys, attr)
-
-	def add_addon(self, addon):
-		self.addons.append(addon)
-
-	def remove_addon(self, addon):
-		self.addons.remove(addon)
-
-	def clear_addons(self):
-		del self.addons[:]
-
 
 class ContentProvider(object):
 	""" Provides item content which can be shown in GUI
@@ -601,7 +539,6 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 
 	__resolving_provider = None
 	__gui_item_list = [[], None, {}] #[0] for items, [1] for command to GUI [2] arguments for command
-	__addon_sys = AddonSys()
 
 	@classmethod
 	def get_shared_itemlist(cls):
@@ -626,76 +563,20 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		FavoritesMixin.__init__(self, shortcuts_path)
 		self._dependencies = []
 		
-		if video_addon.import_entry_point:
-			# needed for direct calling
-			self.on_start.append(self.__set_resolving_provider_light)
-			self.on_stop.append(self.__unset_resolving_provider_light)
-		else:
-			# legacy addon needs all this
-			self._sys_importer = CustomSysImporter(self.__addon_sys)
-			self.on_start.append(self.__clean_sys_modules)
-			self.on_start.append(self.__set_resolving_provider)
-			self.on_stop.append(self.__unset_resolving_provider)
-			self.on_stop.append(self.__restore_sys_modules)
-			self.on_pause.append(self.__pause_resolving_provider)
-			self.on_resume.append(self.__resume_resolving_provider)
+		self.on_start.append(self.__set_resolving_provider_light)
+		self.on_stop.append(self.__unset_resolving_provider_light)
 
 		self.addon_interface = None
 		
 	def __repr__(self):
 		return "%s(%s)"%(self.__class__.__name__, self.video_addon)
 
-	def __clean_sys_modules(self):
-		self.saved_modules = {}
-		for mod_name in repo_modules:
-			if mod_name in sys.modules:
-				mod = sys.modules[mod_name]
-				del sys.modules[mod_name]
-				self.saved_modules[mod_name] = mod
-		del sys.modules['sys']
-
-	def __restore_sys_modules(self):
-		sys.modules['sys'] = sys
-		sys.modules.update(self.saved_modules)
-		del self.saved_modules
-
-	def __set_resolving_provider(self):
-		VideoAddonContentProvider.__resolving_provider = self
-		VideoAddonContentProvider.__addon_sys.add_addon(self.video_addon)
-		self.video_addon.include()
-		self.resolve_dependencies()
-		self.include_dependencies()
-		sys.meta_path.insert(0, self._sys_importer)
-
-	def __unset_resolving_provider(self):
-		VideoAddonContentProvider.__resolving_provider = None
-		VideoAddonContentProvider.__addon_sys.clear_addons()
-		self.video_addon.deinclude()
-		self.release_dependencies()
-		try:
-			sys.meta_path.remove(self._sys_importer)
-		except:
-			# no _sys_importer found - this can happen when there was error by resolving dependencies
-			pass
-
 	def __set_resolving_provider_light(self):
 		VideoAddonContentProvider.__resolving_provider = self
-		self.resolve_dependencies(True)
+		self.resolve_dependencies()
 
 	def __unset_resolving_provider_light(self):
 		VideoAddonContentProvider.__resolving_provider = None
-
-	def __pause_resolving_provider(self):
-		self.video_addon.deinclude()
-		for addon in self._dependencies:
-			addon.deinclude()
-		sys.meta_path.remove(self._sys_importer)
-
-	def __resume_resolving_provider(self):
-		self.video_addon.include()
-		for addon in self._dependencies:
-			addon.include()
-		sys.meta_path.insert(0, self._sys_importer)
 
 	def __clear_list(self):
 		del VideoAddonContentProvider.__gui_item_list[0][:]
@@ -703,38 +584,39 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		VideoAddonContentProvider.__gui_item_list[2].clear()
 
 	def resolve_addon_interface(self):
-		if not self.addon_interface and self.video_addon.import_entry_point:
+		if self.addon_interface:
+			# interface already resolved
+			return
 
-			log.debug("Searching entry point in module %s.%s" % (self.video_addon.import_package, self.video_addon.import_name) )
-			try:
-				mod = importlib.import_module('.' + self.video_addon.import_name, self.video_addon.import_package)
-				entry_point = getattr(mod, self.video_addon.import_entry_point)
-			except Exception as e:
-				log.error("Entry point %s not found in module %s.%s" % (self.video_addon.import_entry_point, self.video_addon.import_package, self.video_addon.import_name) )
-				log.error(traceback.format_exc())
-				raise AddonError( _("Failed to resolve addon entry point: %s" % str(e)) )
+		log.debug("Searching entry point in module %s.%s" % (self.video_addon.import_package, self.video_addon.import_name))
+		try:
+			mod = importlib.import_module('.' + self.video_addon.import_name, self.video_addon.import_package)
+			entry_point = getattr(mod, self.video_addon.import_entry_point)
+		except Exception as e:
+			log.error("Entry point %s not found in module %s.%s" % (self.video_addon.import_entry_point, self.video_addon.import_package, self.video_addon.import_name))
+			log.error(traceback.format_exc())
+			raise AddonError(_("Failed to resolve addon entry point: %s" % str(e)))
 
-			log.debug("Entry point %s found in module %s.%s: %s" % (self.video_addon.import_entry_point, self.video_addon.import_package, self.video_addon.import_name, entry_point) )
+		log.debug("Entry point %s found in module %s.%s: %s" % (self.video_addon.import_entry_point, self.video_addon.import_package, self.video_addon.import_name, entry_point))
 
-			# call addon entry point to get addon interface
-			response = entry_point( self.video_addon )
+		# call addon entry point to get addon interface
+		response = entry_point(self.video_addon)
 
-			if isinstance( response, type({})):
-				# interface returned as dictionary
-				if 'run' not in response:
-					log.error("Addon %s doesn't returned interface to mandatory run method" % (self.video_addon) )
-					raise AddonError( _("Addon doesn't returned interface run method" ))
+		if isinstance(response, type({})):
+			# interface returned as dictionary
+			if 'run' not in response:
+				log.error("Addon %s doesn't returned interface to mandatory run method" % (self.video_addon))
+				raise AddonError(_("Addon doesn't returned interface run method"))
 
-				self.addon_interface = DummyAddonInterface(run=response['run'], trakt=response.get('trakt'), stats=response.get('stats'), search=response.get('search'))
-			elif callable(response):
-				# only method for get content returned as callable
-				self.addon_interface = DummyAddonInterface(run=response)
-			else:
-				# direct interface class returned
-				self.addon_interface = response
+			self.addon_interface = DummyAddonInterface(run=response['run'], trakt=response.get('trakt'), stats=response.get('stats'), search=response.get('search'))
+		elif callable(response):
+			# only method for get content returned as callable
+			self.addon_interface = DummyAddonInterface(run=response)
+		else:
+			# direct interface class returned
+			self.addon_interface = response
 
-
-	def resolve_dependencies(self, check_only=False):
+	def resolve_dependencies(self):
 		log.info("%s trying to resolve dependencies for %s" , self, self.video_addon)
 		from Plugins.Extensions.archivCZSK.archivczsk import ArchivCZSK
 
@@ -755,8 +637,6 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 					log.debug("%s required %s found" , self, tools_addon)
 					if	not util.check_version(tools_addon.version, version):
 						log.debug("%s version %s>=%s" , self, tools_addon.version, version)
-						if not check_only:
-							self._dependencies.append(tools_addon)
 					else:
 						log.debug("%s version %s<=%s" , self, tools_addon.version, version)
 						if not optional:
@@ -773,17 +653,6 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 					else:
 						log.debug("skipping")
 
-	def include_dependencies(self):
-		for addon in self._dependencies:
-			addon.include()
-			self.__addon_sys.add_addon(addon)
-			
-	def release_dependencies(self):
-		log.debug("%s trying to release dependencies for %s" ,self , self.video_addon)
-		for addon in self._dependencies:
-			addon.deinclude()
-		del self._dependencies[:]
-		
 	def get_content(self, session, params, successCB, errorCB):
 		log.info('%s get_content - params: %s' % (self, str(params)))
 		# add/remove trakt compatibility on every content request
@@ -813,24 +682,7 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 
 	def call_addon_run_interface(self, session, params):
 		self.resolve_addon_interface()
-		
-		if self.video_addon.import_entry_point:
-			# direct call
-			self.addon_interface.run(session, params)
-		else:
-			# legacy call for old addon types
-			script_path = os.path.join(self.video_addon.path, self.video_addon.script)
-			
-			global_vars = {
-				'session':session,
-				'params':params,
-				'__file__':script_path,
-				'sys':self.__addon_sys,
-				'os':os
-			}
-			
-			with open( script_path, "rb") as f:
-				exec( compile(f.read(), script_path, 'exec'), global_vars)
+		self.addon_interface.run(session, params)
 
 	def trakt(self, session, item, action, result, successCB, errorCB):
 		log.info('%s trakt - action: %s, item %s' % (self, action, str(item)))
@@ -875,7 +727,7 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 	def preload_addon(self):
 		if self.video_addon.import_preload:
 			log.debug("Preloading addon %s" % self.video_addon )
-			self.resolve_dependencies(True)
+			self.resolve_dependencies()
 			self.resolve_addon_interface()
 
 	def _get_content_cb(self, success, result):
