@@ -8,15 +8,12 @@ from Tools.Directories import SCOPE_PLUGINS, resolveFilename
 
 from . import log, UpdateInfo, _
 from .engine.player.info import videoPlayerInfo
-from .engine.tools import stb
 from .compat import DMM_IMAGE
 
 LANGUAGE_SETTINGS_ID = language.getLanguage()[:2]
 MENU_SEPARATOR = getConfigListEntry("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------", NoSave(ConfigNothing()))
 
 ############ STB Info ###############
-
-(MANUFACTURER, MODEL, ARCH, VERSION) = stb.getBoxtype()
 
 ######### Plugin Paths ##############
 ENIGMA_PLUGIN_PATH = os.path.join(resolveFilename(SCOPE_PLUGINS), 'Extensions')

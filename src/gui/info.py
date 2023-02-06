@@ -13,7 +13,6 @@ from Components.Label import Label
 from Components.ActionMap import ActionMap, NumberActionMap
 from Components.ScrollLabel import ScrollLabel
 from Components.Pixmap import Pixmap
-from Screens.Console import Console
 from Components.AVSwitch import AVSwitch
 from Components.config import config
 from enigma import ePicLoad
@@ -21,8 +20,7 @@ from enigma import ePicLoad
 from .base import BaseArchivCZSKScreen
 from .. import _, log, removeDiac
 from ..compat import eConnectCallback
-from ..settings import ARCH, PLUGIN_PATH
-from ..gui.common import showYesNoDialog, showInfoMessage, PanelColorListEntry, PanelList
+from ..gui.common import showInfoMessage, PanelColorListEntry, PanelList
 from ..engine.player.info import videoPlayerInfo
 
 from ..py3compat import *
@@ -233,29 +231,14 @@ class ArchivCZSKItemInfoScreen(BaseArchivCZSKScreen):
 
 
 class ArchivCZSKVideoPlayerInfoScreen(BaseArchivCZSKScreen):
-	GST_INSTALL = 0
-	GST_REINSTALL = 1
-	GST_INSTALL_RTMP = 2
-
-	GST_SCRIPT_PATH = os.path.join(PLUGIN_PATH, 'script','gst-plugins-archivczsk.sh')
-	RTMP_SCRIPT_PATH = os.path.join(PLUGIN_PATH, 'script','rtmp-plugin.sh')
-	
 	def __init__(self, session):
 		BaseArchivCZSKScreen.__init__(self, session)
 		self.__settings = config.plugins.archivCZSK.videoPlayer
-		self.selectedInstallType = self.GST_INSTALL
-		self.restartNeeded = False
 		
-		if ARCH == 'mipsel':
-			self["key_red"] = Label(_("Install GStreamer plugins"))
-			self["key_green"] = Label(_("Install RTMP plugins"))
-			self["key_yellow"] = Label(_("Re-Install GStreamer plugins"))
-			self["key_blue"] = Label(_("Refresh"))
-		else:
-			self["key_red"] = Label("")
-			self["key_green"] = Label("")
-			self["key_yellow"] = Label("")
-			self["key_blue"] = Label("")   
+		self["key_red"] = Label("")
+		self["key_green"] = Label("")
+		self["key_yellow"] = Label("")
+		self["key_blue"] = Label(_("Refresh"))
 		self["detected player"] = Label(_("Detected player:"))
 		self["detected player_val"] = Label("")
 		self["protocol"] = Label(_("Supported protocols:"))
@@ -272,9 +255,6 @@ class ArchivCZSKVideoPlayerInfoScreen(BaseArchivCZSKScreen):
 			"left": self.pageUp,
 			"cancel":self.cancel,
 			"blue": self.updateGUI,
-			"yellow": self.askReinstallGstPlugins,
-			"red": self.askInstallGstPlugins,
-			"green": self.askInstallRtmpPlugin,
 		}, -2)
 		
 		self.onShown.append(self.setWindowTitle)
@@ -301,13 +281,9 @@ class ArchivCZSKVideoPlayerInfoScreen(BaseArchivCZSKScreen):
 		
 	def setInfo(self):
 		infoText=''
-		if ARCH == 'mipsel':
-			infoText += _("* If some of the tests FAIL you should")
-			infoText += " " + _("try to install Gstreamer plugins in following order:")
-			infoText += "\n	  " + _("1. Press Red, If it doesnt help go to point 2")
-			infoText += "\n	  " + _("2. Press Green, If it doesnt help go to point 3")
-			infoText += "\n	  " + _("3. Press Yellow")
-			infoText += "\n\n"
+		infoText += _("These informations are valid only for internal enigma2 player based on gstreamer") + "."
+		infoText += _("If you use other player like exteplayer3, then this check is not valid to you.")
+		infoText += "\n\n"
 		infoText += _("* Status UNKNOWN means, that I dont know how to get info,")
 		infoText += " " + _("it doesnt mean that protocol or container isn't supported") + "."
 		infoText += "\n\n"
@@ -355,71 +331,5 @@ class ArchivCZSKVideoPlayerInfoScreen(BaseArchivCZSKScreen):
 		self["info_scrolllabel"].pageDown()
 		
 		
-	def askInstallGstPlugins(self):
-		if ARCH == 'mipsel' :
-			self.selectedInstallType = self.GST_INSTALL
-			message = _("Do you want to install gstreamer plugins?")
-			showYesNoDialog(self.session, message, self.installGstPlugins)
-		
-	
-	def askReinstallGstPlugins(self):
-		if ARCH == 'mipsel':
-			self.selectedInstallType = self.GST_REINSTALL
-			message = _("Do you want to re-install gstreamer plugins?")
-			showYesNoDialog(self.session, message, self.installGstPlugins)
-	
-	
-	def askInstallRtmpPlugin(self):
-		if ARCH == 'mipsel':
-			self.selectedInstallType = self.GST_INSTALL_RTMP
-			warnMessage = _("ATTENTION: Installation of this plugin can cause")
-			warnMessage += '\n' + _("crash of Enigma2.")
-			if videoPlayerInfo.isRTMPSupported():
-				message = warnMessage
-				message += '\n'
-				message += '\n' + _("It looks like RTMP plugin is already installed")
-				message += '\n' + _("Do you want to reinstall it?")
-			else:
-				message = warnMessage
-				message += '\n\n' + _("Do you want to continue?")
-			showYesNoDialog(self.session, message, self.installGstPlugins)
-	
-		
-	def installGstPlugins(self, callback=None):
-		if callback:
-			cmdList = []
-			if self.selectedInstallType == self.GST_INSTALL_RTMP:
-				cmdList = [self.RTMP_SCRIPT_PATH]
-			elif self.selectedInstallType == self.GST_INSTALL:
-				params = " N"
-				cmdList = [self.GST_SCRIPT_PATH + params]
-			elif self.selectedInstallType == self.GST_REINSTALL:
-				params = " A"
-				cmdList = [self.GST_SCRIPT_PATH + params]
-			self.session.openWithCallback(self.installGstPluginsCB, Console, cmdlist=cmdList)
-		
-	def installGstPluginsCB(self, callback=None):
-		self.updateGUI()
-		self.updatePlayerSettings()
-		self.restartNeeded = True
-		
-	def updatePlayerSettings(self):
-		pass
-			
-	def askRestartE2(self):
-		message = _("Its highly recommended to restart Enigma2")
-		message += " " + _("after installation of gstreamer plugins")
-		message += "\n"
-		message += "\n" + _("Do you want to restart Enigma2 now?")
-		showYesNoDialog(self.session, message, self.restartE2)
-		
-	def restartE2(self, callback=None):
-		if callback:
-			from Screens.Standby import TryQuitMainloop
-			self.session.open(TryQuitMainloop, 3)
-		else: self.close()
-		
 	def cancel(self):
-		if self.restartNeeded:
-			self.askRestartE2()
-		else: self.close()
+		self.close()
