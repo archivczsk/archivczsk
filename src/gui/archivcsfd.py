@@ -28,7 +28,7 @@ from Components.MenuList import MenuList
 from Components.ProgressBar import ProgressBar
 from Components.Pixmap import Pixmap
 from twisted.web.client import downloadPage
-from .. import _, log, settings
+from .. import _, log, settings, removeDiac
 from ..compat import eConnectCallback
 
 from ..py3compat import *
@@ -111,17 +111,8 @@ class ArchivCSFD(Screen):
 			return 0
 
 	def removeDiacritics(self, text):
-		searchExp = text
-		try:
-			import unicodedata
-			tmp = unicode(searchExp, "utf-8")
-			
-			tmp = ''.join((c for c in unicodedata.normalize('NFD', tmp) 
-										if unicodedata.category(c) != 'Mn')).encode('utf-8')
-			return tmp
-		except:
-			log.logError("ArchivCSFD remove diacritics failed.\n%s"%traceback.format_exc())
-			return searchExp
+		return removeDiac(text)
+
 	def odstraneniTagu(self, upravovanytext):
 		self.htmltags = re.compile('<.*?>')
 		upravovanytext = self.htmltags.sub('', upravovanytext)
@@ -439,10 +430,13 @@ class ArchivCSFD(Screen):
 			if hodnoceni != "":
 				Ratingtext = hodnoceni
 				if "%" in hodnoceni:
-					self.ratingstars = int(hodnoceni.replace("%",""))
-					self["stars"].show()
-					self["stars"].setValue(self.ratingstars)
-					self["starsbg"].show()
+					try:
+						self.ratingstars = int(hodnoceni.replace("%", ""))
+						self["stars"].show()
+						self["stars"].setValue(self.ratingstars)
+						self["starsbg"].show()
+					except:
+						pass
 			self["ratinglabel"].setText(Ratingtext)
 
 			posterurl = ""

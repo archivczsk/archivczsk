@@ -22,7 +22,7 @@ from .. import _, log, removeDiac
 from ..compat import eConnectCallback
 from ..gui.common import showInfoMessage, PanelColorListEntry, PanelList
 from ..engine.player.info import videoPlayerInfo
-
+from ..colors import DeleteColors
 from ..py3compat import *
 
 def showChangelog(session, changelog_title, changelog_text):
@@ -45,7 +45,7 @@ def showItemInfo(session, item):
 def showCSFDInfo(session, item):
 	try:
 		#name = removeDiacriticsCsfd(item.name)
-		name = removeDiac(item.name)
+		name = DeleteColors(removeDiac(item.name))
 		name = name.replace('.', ' ').replace('_', ' ').replace('*','')
 		
 		# remove languages ... "Mother - CZ, EN, KO (2017)"
