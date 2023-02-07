@@ -94,7 +94,7 @@ class ArchivCZSKSearchClientScreen(BaseArchivCZSKListSourceScreen):
 		log.logDebug("Seeker start exp='%s', addon='%s', mode='%s'"%(self.searchExp, addon, mode))
 		seeker.search(self.session, self.searchExp, addon, mode, cb=self.searchCB)
 		
-	def searchCB(self):
+	def searchCB(self, *args):
 		self.working = False
 
 		
