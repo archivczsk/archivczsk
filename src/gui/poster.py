@@ -96,6 +96,7 @@ class PosterPixmapHandler:
 		self.retry_timer_conn = eConnectCallback(self.retry_timer.timeout, self._decode_current_image)
 		self._max_retry_times = 3
 		self._retry_times = 0
+		self.last_picPtr = None
 
 	def __del__(self):
 		log.debug("PosterImageHandler.__del__")
@@ -104,6 +105,7 @@ class PosterPixmapHandler:
 		del self.retry_timer
 		del self.picload_conn
 		del self.picload
+		del self.last_picPtr
 
 	def _got_image_data(self, url, path):
 		self._start_decode_image(url, path)
@@ -144,9 +146,11 @@ class PosterPixmapHandler:
 			try:
 				self.poster_widget.instance.setPixmap(picPtr)
 				self.last_decoded_url = self._decoding_url
+				self.last_picPtr = picPtr
 			except Exception as e:
 				log.error("PosterImageHandler._got_picture_data, exception: %s" % str(e))
 				self.last_decoded_url = None
+				self.last_picPtr = None
 		else:
 			log.error("PosterImageHandler._got_picture_data, failed")
 			self.last_decoded_url = None
@@ -160,8 +164,9 @@ class PosterPixmapHandler:
 				return
 		self.last_selected_url = url
 		if self.last_decoded_url:
-			if self.last_decoded_url == url:
+			if self.last_decoded_url == url and self.last_picPtr != None:
 				log.debug("PosterImageHandler.set_image: same decoded url as before")
+				self.poster_widget.instance.setPixmap(self.last_picPtr)
 				return
 
 		self.retry_timer.stop()
