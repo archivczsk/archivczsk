@@ -655,8 +655,7 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 
 			if isinstance(item, PVideoNotResolved) or isinstance(item, PFolder):
 				if self.showImageEnabled:
-					if not isinstance(item, (PSearch, PSearchItem)):
-						self.poster.set_image(item.image)
+					self.poster.set_image(item.image)
 				try:
 					if 'rating' in item.info:
 						if float(item.info['rating']) > 0:
