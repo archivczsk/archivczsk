@@ -42,9 +42,9 @@ except ImportError as e:
 
 from ... import _, log
 from ...compat import eConnectCallback
-from ...engine.items import PVideo, PPlaylist
-from ...engine.tools import e2util
-from ...engine.tools.util import toString
+from ..items import PVideo, PPlaylist
+from ..tools import e2util
+from ..tools.util import toString
 from ...colors import DeleteColors
 
 config_archivczsk = config.plugins.archivCZSK

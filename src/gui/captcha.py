@@ -16,7 +16,7 @@ from Components.config import config
 from .. import _, removeDiac
 from ..compat import eConnectCallback
 from ..engine.tools import util
-from ..gui.base import BaseArchivCZSKScreen
+from .base import BaseArchivCZSKScreen
 
 
 class Captcha(object):

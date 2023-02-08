@@ -11,9 +11,9 @@ from enigma import eConsoleAppContainer
 
 from .. import _, log
 from ..compat import eConnectCallback
-from ..engine.exceptions.download import NotSupportedProtocolError
-from ..engine.player.info import videoPlayerInfo
-from ..engine.tools.util import toString, url_get_file_info, sanitize_filename
+from .exceptions.download import NotSupportedProtocolError
+from .player.info import videoPlayerInfo
+from .tools.util import toString, url_get_file_info, sanitize_filename
 
 from ..py3compat import *
 

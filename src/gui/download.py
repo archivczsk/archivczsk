@@ -20,7 +20,7 @@ from ..engine.downloader import DownloadManager
 from ..engine.tools import util
 from ..engine.items import PVideo
 from ..gsession import GlobalSession
-from ..gui import info
+from . import info
 from .base import BaseArchivCZSKScreen, BaseArchivCZSKMenuListScreen
 from .common import PanelListDownload, PanelListDownloadEntry, PanelListDownloadListEntry, MultiLabelWidget
 from enigma import eTimer

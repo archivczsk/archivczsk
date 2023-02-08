@@ -13,8 +13,8 @@ from Screens.EpgSelection import EPGSelection
 from Screens.VirtualKeyBoard import VirtualKeyBoard
 
 from ..client import seeker
-from ..gui.base import BaseArchivCZSKListSourceScreen
-from ..gui.common import toString
+from .base import BaseArchivCZSKListSourceScreen
+from .common import toString
 from .. import _, removeDiac, log
 
 

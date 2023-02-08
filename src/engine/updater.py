@@ -12,7 +12,7 @@ from .tools import util, parser
 from .tools.unzip import unzip_to_dir
 from enigma import eTimer
 from ..compat import eConnectCallback
-from ..engine.exceptions.updater import UpdateXMLVersionError, UpdateXMLNoUpdateUrl
+from .exceptions.updater import UpdateXMLVersionError, UpdateXMLNoUpdateUrl
 from .. import _, log, toString
 
 from Components.Console import Console

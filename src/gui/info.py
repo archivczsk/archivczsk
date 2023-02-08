@@ -20,7 +20,7 @@ from enigma import ePicLoad
 from .base import BaseArchivCZSKScreen
 from .. import _, log, removeDiac
 from ..compat import eConnectCallback
-from ..gui.common import showInfoMessage, PanelColorListEntry, PanelList
+from .common import showInfoMessage, PanelColorListEntry, PanelList
 from ..engine.player.info import videoPlayerInfo
 from ..colors import DeleteColors
 from ..py3compat import *

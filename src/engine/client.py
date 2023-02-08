@@ -9,12 +9,12 @@ from Screens.VirtualKeyBoard import VirtualKeyBoard
 from Screens.ChoiceBox import ChoiceBox
 
 from .. import _, log, removeDiac
-from ..engine.contentprovider import VideoAddonContentProvider
-from ..engine.exceptions.addon import AddonInfoError, AddonWarningError, AddonError, AddonThreadException
-from ..engine.items import PFolder, PVideoResolved, PVideoNotResolved, PPlaylist, PSearch, PSearchItem, Stream
-from ..engine.ydl import ydl
-from ..engine.tools.task import callFromThread, Task
-from ..engine.tools.util import toString, toUnicode
+from .contentprovider import VideoAddonContentProvider
+from .exceptions.addon import AddonInfoError, AddonWarningError, AddonError, AddonThreadException
+from .items import PFolder, PVideoResolved, PVideoNotResolved, PPlaylist, PSearch, PSearchItem, Stream
+from .ydl import ydl
+from .tools.task import callFromThread, Task
+from .tools.util import toString, toUnicode
 from ..gui.captcha import Captcha
 from ..colors import DeleteColors
 from ..py3compat import *

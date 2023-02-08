@@ -15,7 +15,7 @@ except ImportError:
 	from xml.etree.ElementTree import ElementTree, Element, SubElement
 
 from .items import PVideoNotResolved, PFolder, PUserCategory
-from ..engine.tools.util import toString, toUnicode
+from .tools.util import toString, toUnicode
 try:
 	from .. import log
 except ImportError:

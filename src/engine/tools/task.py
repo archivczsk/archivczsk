@@ -16,7 +16,7 @@ except:
 from enigma import ePythonMessagePump
 from ... import log
 from ...compat import eConnectCallback
-from ...engine.exceptions.addon import AddonThreadException
+from ..exceptions.addon import AddonThreadException
 from .util import set_thread_name
 		
 # object for stopping workerThread		  

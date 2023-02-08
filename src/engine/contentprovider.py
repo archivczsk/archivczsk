@@ -17,13 +17,12 @@ from Components.config import config, ConfigSelection
 
 from .. import _, log, settings, version as aczsk, removeDiac
 from ..compat import eConnectCallback, MessageBox
-from ..engine.downloader import getFilenameAndLength
+from .downloader import getFilenameAndLength, DownloadManager
 from ..gui.download import DownloadManagerMessages
 from ..settings import VIDEO_EXTENSIONS, SUBTITLES_EXTENSIONS
-from ..engine.exceptions.addon import AddonError
-from ..engine.player.player import Player
-from ..engine.tools.util import toString, download_web_file
-from .downloader import DownloadManager
+from .exceptions.addon import AddonError
+from .player.player import Player
+from .tools.util import toString, download_web_file
 from .items import PVideo, PPlaylist, PDownload, PCategory, PVideoAddon, PCategoryVideoAddon
 from .serialize import CategoriesIO, FavoritesIO
 from .tools import task, util

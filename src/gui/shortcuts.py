@@ -10,8 +10,8 @@ from Screens.MessageBox import MessageBox
 from Tools.LoadPixmap import LoadPixmap
 
 from .. import _
-from ..gui.common import toString
-from ..gui.base import BaseArchivCZSKListSourceScreen
+from .common import toString
+from .base import BaseArchivCZSKListSourceScreen
 
 
 def openShortcuts(session, addon, cb):

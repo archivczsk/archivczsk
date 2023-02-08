@@ -9,7 +9,7 @@ from collections import OrderedDict
 from Components.config import config
 from Screens.ChoiceBox import ChoiceBox
 from .. import _, log
-from ..engine.tools.util import toString
+from .tools.util import toString
 from ..gui.common import showInfoMessage
 
 BASE = 'https://api.trakt.tv'

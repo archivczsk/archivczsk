@@ -14,7 +14,7 @@ from .poster import PosterProcessing, PosterPixmapHandler
 
 from .. import _, log, settings
 from ..compat import eConnectCallback
-from ..gui.icon import IconD
+from .icon import IconD
 from ..engine.contentprovider import ArchivCZSKContentProvider
 from ..engine.handlers import ArchivCZSKContentHandler, VideoAddonContentHandler, VideoAddonManagementScreenContentHandler
 from ..engine.items import PFolder, PRoot, PExit, PSearch, PSearchItem, PVideoNotResolved
