@@ -193,9 +193,11 @@ def create_video_it(name, url, subs=None, image=None, infoLabels={}, menuItems={
 	infolabel_uni = {}
 	for key, value in infoLabels.items():
 		if value != None:
-			infolabel_uni[key] = toUnicode(value)
-	if not 'Title' in infolabel_uni:
-		infolabel_uni["Title"] = it.name
+			infolabel_uni[key.lower()] = toUnicode(value)
+
+	if not 'title' in infolabel_uni:
+		infolabel_uni["title"] = DeleteColors(it.name)
+
 	it.info = infolabel_uni
 
 	for key, value in menuItems.items():

@@ -18,9 +18,10 @@ from Components.config import config
 from enigma import ePicLoad
 
 from .base import BaseArchivCZSKScreen
-from .. import _, log, removeDiac
+from .. import _, log, removeDiac, settings
 from ..compat import eConnectCallback
 from .common import showInfoMessage, PanelColorListEntry, PanelList
+from .poster import PosterProcessing, PosterPixmapHandler
 from ..engine.player.info import videoPlayerInfo
 from ..colors import DeleteColors
 from ..py3compat import *
@@ -45,7 +46,8 @@ def showItemInfo(session, item):
 def showCSFDInfo(session, item):
 	try:
 		#name = removeDiacriticsCsfd(item.name)
-		name = DeleteColors(removeDiac(item.name))
+		name = item.info.get('title', DeleteColors(item.name))
+		name = removeDiac(name)
 		name = name.replace('.', ' ').replace('_', ' ').replace('*','')
 		
 		# remove languages ... "Mother - CZ, EN, KO (2017)"
@@ -179,16 +181,22 @@ class ArchivCZSKItemInfoScreen(BaseArchivCZSKScreen):
 		self.genre = ''
 		self.rating = ''
 		self.year = ''
+
+		self.title = py2_encode_utf8(DeleteColors(self.it.name))
 		
 		for key, value in it.info.items():		
-			if key == 'Plot' or key == 'plot':
+			if key == 'plot':
 				self.plot = py2_encode_utf8( value )
-			if key == 'Genre' or key == 'genre':
+			elif key == 'genre':
 				self.genre = py2_encode_utf8( value )
-			if key == 'Rating' or key == 'rating':
+			elif key == 'rating':
 				self.rating = py2_encode_utf8( value )
-			if key == 'Year' or key == 'year':
+			elif key == 'year':
 				self.year = py2_encode_utf8( value )
+			elif key == 'title':
+				self.title = py2_encode_utf8(value)
+			elif key == 'img':
+				self.image_link = py2_encode_utf8(value)
 			
 		self["img"] = Pixmap()
 		self["genre"] = Label(_("Genre: ") + self.genre)
@@ -201,13 +209,15 @@ class ArchivCZSKItemInfoScreen(BaseArchivCZSKScreen):
 			"cancel": self.close,
 			"up": self.pageUp,
 			"down": self.pageDown,
+			"info": self.openCsfd,
 		}, -2)	
-		self.title = py2_encode_utf8( self.it.name )
+#		self.title = py2_encode_utf8(DeleteColors(self.it.name))
 		self.Scale = AVSwitch().getFramebufferScale()
-		self.picLoad = ePicLoad()
-		self.picLoad_conn = eConnectCallback(self.picLoad.PictureData, self.decodePicture)
 		self.onLayoutFinish.append(self.showPicture)
 		self.onClose.append(self.__onClose)
+
+		poster_processing = PosterProcessing(1, os.path.join(config.plugins.archivCZSK.posterPath.getValue(), 'archivczsk_poster2'))
+		self.poster = PosterPixmapHandler(self["img"], poster_processing, os.path.join(settings.PLUGIN_PATH, 'gui', 'icon', 'no_movie_image.png'))
 
 	def pageUp(self):
 		self["plot"].pageUp()
@@ -215,19 +225,15 @@ class ArchivCZSKItemInfoScreen(BaseArchivCZSKScreen):
 	def pageDown(self):
 		self["plot"].pageDown()
 
-	def showPicture(self):
-		if self.image_dest is not None:
-			self.picLoad.setPara([self["img"].instance.size().width(), self["img"].instance.size().height(), self.Scale[0], self.Scale[1], 0, 1, "#002C2C39"])
-			self.picLoad.startDecode(self.image_dest)
+	def openCsfd(self):
+		showCSFDInfo(self.session, self.it)
 
-	def decodePicture(self, PicInfo=""):
-		ptr = self.picLoad.getData()
-		self["img"].instance.setPixmap(ptr)
+	def showPicture(self):
+		if self.image_link is not None:
+			self.poster.set_image(self.image_link)
 
 	def __onClose(self):
-		del self.picLoad_conn
-		del self.picLoad
-
+		del self.poster
 
 
 class ArchivCZSKVideoPlayerInfoScreen(BaseArchivCZSKScreen):
