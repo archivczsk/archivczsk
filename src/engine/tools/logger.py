@@ -50,7 +50,7 @@ class log(object):
 
 	@staticmethod
 	def info(text, *args):
-		log.logInfo(text, args)
+		log.logInfo(text, *args)
 
 	@staticmethod
 	def logError(msg, *args):
