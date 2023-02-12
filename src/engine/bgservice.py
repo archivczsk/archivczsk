@@ -121,18 +121,19 @@ class BGServiceTask(object):
 
 	@staticmethod
 	def stopServiceThread():
-		log.debug("[BGServiceTask] stopping workerThread")
-		BGServiceTask.worker_thread.stop()
-		BGServiceTask.worker_thread.join()
-		BGServiceTask.worker_thread = None
-		global m_pump_conn
-		if m_pump_conn is not None:
-			del m_pump_conn
-		m_pump_conn = None
-		global m_pump
-		if m_pump is not None:
-			m_pump.stop()
-		m_pump = None
+		if BGServiceTask.worker_thread:
+			log.debug("[BGServiceTask] stopping workerThread")
+			BGServiceTask.worker_thread.stop()
+			BGServiceTask.worker_thread.join()
+			BGServiceTask.worker_thread = None
+			global m_pump_conn
+			if m_pump_conn is not None:
+				del m_pump_conn
+			m_pump_conn = None
+			global m_pump
+			if m_pump is not None:
+				m_pump.stop()
+			m_pump = None
 
 	@staticmethod
 	def setPollingInterval(self, interval):

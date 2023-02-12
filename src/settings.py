@@ -144,7 +144,7 @@ config.plugins.archivCZSK.httpPort = ConfigInteger(default=18888, limits=(1,6553
 config.plugins.archivCZSK.httpPort.addNotifier(restartHttpServer)
 config.plugins.archivCZSK.httpLocalhost = ConfigYesNo(default=True)
 config.plugins.archivCZSK.httpLocalhost.addNotifier(restartHttpServer)
-
+config.plugins.archivCZSK.send_usage_stats = ConfigYesNo(default=True)
 
 ########## TRAKT ##############################
 
@@ -224,5 +224,9 @@ def get_misc_settings():
 	list.append(getConfigListEntry(_("Drop caches on exit"), config.plugins.archivCZSK.clearMemory))
 	list.append(getConfigListEntry(_("Internal HTTP server listen port"), config.plugins.archivCZSK.httpPort ))
 	list.append(getConfigListEntry(_("Run HTTP only for internal addons usage"), config.plugins.archivCZSK.httpLocalhost ))
+	if config.plugins.archivCZSK.update_branch.value == 'testing':
+		config.plugins.archivCZSK.send_usage_stats.setValue(True)
+	else:
+		list.append(getConfigListEntry(_("Allow sending anonymous usage statistics"), config.plugins.archivCZSK.send_usage_stats))
 
 	return list

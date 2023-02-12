@@ -16,7 +16,8 @@ from .engine.tools.task import Task
 from .gui.content import ArchivCZSKContentScreen
 from .compat import DMM_IMAGE, eConnectCallback
 from .engine.updater import ArchivUpdater
-
+from .engine.bgservice import BGServiceTask
+from .engine.usage import usage_stats
 
 class ArchivCZSK():
 
@@ -136,6 +137,12 @@ class ArchivCZSK():
 					addon.provider.preload_addon()
 			except:
 				log.logError("Preload of addon %s failed:\n%s" % (addon, traceback.format_exc()))
+
+	@staticmethod
+	def stop():
+		usage_stats.save()
+		BGServiceTask.stopServiceThread()
+		return
 
 	def __init__(self, session):
 		self.session = session

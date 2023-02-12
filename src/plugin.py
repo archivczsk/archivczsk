@@ -46,10 +46,20 @@ def eventInfo(session, servicelist, **kwargs):
 	ref = session.nav.getCurrentlyPlayingServiceReference()
 	session.open(ArchivCZSKSearchClientScreen, ref)
 
+def autostart(reason, *args, **kwargs):
+	print('autostart called with reason: %s' % (str(reason)))
+	if reason == 1:
+		# stop command
+		ArchivCZSK.stop()
+
+
 def Plugins(path, **kwargs):
-	result = [PluginDescriptor(where=[PluginDescriptor.WHERE_SESSIONSTART], fnc=sessionStart),
-		PluginDescriptor(NAME, description=DESCRIPTION, where=PluginDescriptor.WHERE_PLUGINMENU, fnc=main, icon="czsk.png")]
-	
+	result = [
+		PluginDescriptor(where=[PluginDescriptor.WHERE_SESSIONSTART], fnc=sessionStart),
+		PluginDescriptor(where=[PluginDescriptor.WHERE_AUTOSTART], fnc=autostart),
+		PluginDescriptor(NAME, description=DESCRIPTION, where=PluginDescriptor.WHERE_PLUGINMENU, fnc=main, icon="czsk.png")
+	]
+
 	if config.plugins.archivCZSK.extensions_menu.value:
 		#result.append(PluginDescriptor(NAME, where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main))
 		result.append(PluginDescriptor(NAME, description=DESCRIPTION, where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main))

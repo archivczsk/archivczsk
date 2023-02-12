@@ -4,6 +4,7 @@ from twisted.web import server, http, resource
 from .. import log
 from Components.config import config
 from ..py3compat import *
+from .usage import usage_stats
 
 class AddonHttpRequestHandler(resource.Resource):
 	isLeaf = True
@@ -17,9 +18,10 @@ class AddonHttpRequestHandler(resource.Resource):
 		
 		return name.replace('.', '-').replace('_', '-')
 	
-	def __init__(self, addon_id):
+	def __init__(self, addon):
 		self.NOT_DONE_YET = server.NOT_DONE_YET
-		self.name = AddonHttpRequestHandler.addonIdToEndpoint(addon_id)
+		self.name = AddonHttpRequestHandler.addonIdToEndpoint(addon.id)
+		self.addon = addon
 		self.prefix_len = len(self.name)+2
 
 	def __to_bytes(self, data):
@@ -68,6 +70,7 @@ class AddonHttpRequestHandler(resource.Resource):
 		return request.path.decode('utf-8')[self.prefix_len:]
 		
 	def render(self, request):
+		usage_stats.addon_http_call(self.addon)
 		# if addon wants to handle requests more flexible, then it can override this function
 		
 		# function for endpoint needs to be named P_endpoint and supports only GET requests (inspired by openwebif)

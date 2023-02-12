@@ -26,6 +26,7 @@ from .tools.util import toString, download_web_file
 from .items import PVideo, PPlaylist, PDownload, PCategory, PVideoAddon, PCategoryVideoAddon
 from .serialize import CategoriesIO, FavoritesIO
 from .tools import task, util
+from .usage import usage_stats
 
 from ..py3compat import *
 from enigma import eTimer
@@ -551,6 +552,8 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		self._dependencies = []
 		
 		self.on_start.append(self.__set_resolving_provider_light)
+		self.on_start.append(self.__stats_start)
+		self.on_stop.append(self.__stats_stop)
 		self.on_stop.append(self.__unset_resolving_provider_light)
 
 		self.addon_interface = None
@@ -558,6 +561,12 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 	def __repr__(self):
 		return "%s(%s)"%(self.__class__.__name__, self.video_addon)
 
+	def __stats_start(self):
+		usage_stats.addon_start(self.video_addon)
+		
+	def __stats_stop(self):
+		usage_stats.addon_stop(self.video_addon)
+		
 	def __set_resolving_provider_light(self):
 		VideoAddonContentProvider.__resolving_provider = self
 		self.resolve_dependencies()
