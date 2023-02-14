@@ -243,12 +243,6 @@ def create_video_it(name, url, subs=None, image=None, infoLabels={}, menuItems={
 
 	it.dataItem = dataItem
 	it.traktItem = traktItem
-
-	# human readable quality description - will be automaticly added to name
-	it.quality = infoLabels.get('quality')
-	
-	# number - used to sort streams from best to worst
-	it.bandwidth = infoLabels.get('bandwidth')
 	
 	return it
 

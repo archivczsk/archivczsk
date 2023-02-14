@@ -357,17 +357,8 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 
 				self._filter_by_quality(list_items)
 				if len(list_items) > 1:
-					choices = []
-					for i in list_items:
-						name = i.name
-						# TODO remove workaround of embedding
-						# quality in title in addons
-						if i.quality and i.quality not in i.name:
-							if "[???]" in i.name:
-								name = i.name.replace("[???]", "[%s]" % (i.quality))
-							else:
-								name = "[%s] %s" % (i.quality, i.name)
-						choices.append((DeleteColors(toString(name)), i))
+					choices = [ (DeleteColors(toString(i.name)), i) for i in list_items ]
+
 					self.session.openWithCallback(selected_source,
 							ChoiceBox, _("Please select source"),
 							list=choices,

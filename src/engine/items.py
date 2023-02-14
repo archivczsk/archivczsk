@@ -133,7 +133,6 @@ class PVideo(PItem):
 		self.filename = None
 		self.subs = None
 		self.picon = None
-		self.quality = None
 		# stream object, can be stream/rtmp stream
 		self.stream = None
 		# download object, provides additional info for downloading
