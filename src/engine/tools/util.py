@@ -342,7 +342,7 @@ def encodeFilename(s):
 		return s.encode(sys.getfilesystemencoding(), 'ignore')
 
 def sanitize_filename(value):
-	from ...archivCZSK import removeDiac
+	from ... import removeDiac
 	tmp = removeDiac(value)
 	tmp = tmp.encode('ascii', 'ignore')
 	if is_py3:

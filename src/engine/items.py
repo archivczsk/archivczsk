@@ -129,6 +129,7 @@ class PVideo(PItem):
 		self.url = ""
 		self.thumb = PNG_PATH + '/movie.png'
 		self.live = False
+		self.download = True
 		self.filename = None
 		self.subs = None
 		self.picon = None

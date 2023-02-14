@@ -245,7 +245,9 @@ class MediaItemHandler(ItemHandler):
 			else:
 				item.add_context_menu_item(_('Pair device with Trakt.tv'), action=self.cmdTrakt, params={'item':item, 'action':'pair'})
 
-		if 'download' in provider.capabilities:
+		download_enabled = item.download if hasattr(item, 'download') else False
+
+		if 'download' in provider.capabilities and download_enabled:
 			item.add_context_menu_item(_("Download"), action=self.download_item, params={'item':item, 'mode':'auto'})
 		if 'play' in provider.capabilities:
 			item.add_context_menu_item(_("Play"), action=self.play_item, params={'item':item, 'mode':'play'})
@@ -255,7 +257,7 @@ class MediaItemHandler(ItemHandler):
 				
 				if videoPlayerInfo.exteplayer3Available:
 					item.add_context_menu_item(_("Play using exteplayer3"), action=self.play_item, params={'item':item, 'mode':'play', 'forced_player':5002})
-		if 'play_and_download' in provider.capabilities:
+		if 'play_and_download' in provider.capabilities and download_enabled:
 			item.add_context_menu_item(_("Play and Download"), action=self.play_item, params={'item':item, 'mode':'play_and_download'})
 
 class VideoResolvedItemHandler(MediaItemHandler):
@@ -301,8 +303,11 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 		def video_selected_callback(res_item):
 			MediaItemHandler.play_item(self, res_item, mode, *args, **kwargs)
 
-		if config.plugins.archivCZSK.showVideoSourceSelection.value:
-			self._resolve_video(item, video_selected_callback)
+		if mode != 'play' or config.plugins.archivCZSK.showVideoSourceSelection.value:
+			# if mode == 'play' then result is redirected to player which suppports playlists
+			# in other modes (like play_and_download) playlists are not supported and result
+			# can be exactly one PVideoResolved item
+			self._resolve_video(item, video_selected_callback, keep_playlists=(mode == 'play'))
 		else:
 			self._resolve_videos(item)
 
@@ -310,7 +315,8 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 		def wrapped(res_item):
 			MediaItemHandler.download_item(self, res_item, mode)
 			self.content_screen.workingFinished()
-		self._resolve_video(item, wrapped)
+
+		self._resolve_video(item, wrapped, keep_playlists=False)
 
 	def handle_known_command(self, cmd, args, continue_cb):
 		if cmd == "show_msg":
@@ -329,7 +335,13 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 	def _filter_by_quality(self, items):
 		pass
 
-	def _resolve_video(self, item, callback):
+	def unpack_playlist(self, items):
+		for item in list(items):
+			if isinstance(item, PPlaylist):
+				items.remove(item)
+				items.extend(item.playlist)
+
+	def _resolve_video(self, item, callback, keep_playlists=True):
 
 		def selected_source(answer):
 			if answer is not None:
@@ -340,6 +352,9 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 
 		def open_item_success_cb(result):
 			def continue_cb(res):
+				if not keep_playlists:
+					self.unpack_playlist(list_items)
+
 				self._filter_by_quality(list_items)
 				if len(list_items) > 1:
 					choices = []
@@ -349,14 +364,14 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 						# quality in title in addons
 						if i.quality and i.quality not in i.name:
 							if "[???]" in i.name:
-								name = i.name.replace("[???]","[%s]"%(i.quality))
+								name = i.name.replace("[???]", "[%s]" % (i.quality))
 							else:
-								name = "[%s] %s"%(i.quality, i.name)
+								name = "[%s] %s" % (i.quality, i.name)
 						choices.append((DeleteColors(toString(name)), i))
 					self.session.openWithCallback(selected_source,
 							ChoiceBox, _("Please select source"),
-							list = choices,
-							skin_name = ["ArchivCZSKVideoSourceSelection"])
+							list=choices,
+							skin_name=["ArchivCZSKVideoSourceSelection"])
 				elif len(list_items) == 1:
 					item = list_items[0]
 					callback(item)
@@ -375,7 +390,7 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 			#								  })
 			if command in self.known_commands:
 				return self.handle_known_command(command, args, continue_cb)
-			else:
+			elif command:
 				log.logError("Unknown media handler command %s - ignoring" % command)
 				command = None
 				args = {}

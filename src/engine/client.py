@@ -139,11 +139,15 @@ def refresh_screen(restoreLastPosition=True):
 		set_command('refreshnow_resetpos')
 
 
-def create_directory_it(name, params={}, image=None, infoLabels={}, menuItems={}, search_folder=False, search_item=False, video_item=False, dataItem=None, traktItem=None):
-	if search_item: it = PSearchItem()
-	elif search_folder: it = PSearch()
-	elif video_item: it = PVideoNotResolved()
-	else: it = PFolder()
+def create_directory_it(name, params={}, image=None, infoLabels={}, menuItems={}, search_folder=False, search_item=False, video_item=False, dataItem=None, traktItem=None, download=True):
+	if search_item:
+		it = PSearchItem()
+	elif search_folder:
+		it = PSearch()
+	elif video_item:
+		it = PVideoNotResolved()
+	else:
+		it = PFolder()
 
 	if not config.plugins.archivCZSK.colored_items.value:
 		name = DeleteColors(name)
@@ -173,6 +177,9 @@ def create_directory_it(name, params={}, image=None, infoLabels={}, menuItems={}
 		
 	if hasattr(it, 'traktItem'):
 		it.traktItem=traktItem
+
+	if hasattr(it, 'download'):
+		it.download = download
 
 	it.info = infolabel_uni
 	return it
@@ -246,7 +253,7 @@ def create_video_it(name, url, subs=None, image=None, infoLabels={}, menuItems={
 	return it
 
 @abortTask
-def add_dir(name, params={}, image=None, infoLabels={}, menuItems={}, search_folder=False, search_item=False, video_item=False, dataItem=None, traktItem=None):
+def add_dir(name, params={}, image=None, infoLabels={}, menuItems={}, search_folder=False, search_item=False, video_item=False, dataItem=None, traktItem=None, download=True):
 	"""adds directory item to content screen
 
 		@param name : name of the directory
@@ -265,7 +272,8 @@ def add_dir(name, params={}, image=None, infoLabels={}, menuItems={}, search_fol
 							 search_item=search_item,
 							 video_item=video_item,
 							 dataItem=dataItem,
-							 traktItem=traktItem)
+							 traktItem=traktItem,
+							 download=download)
 	GItem_lst[0].append(it)
 
 @abortTask
