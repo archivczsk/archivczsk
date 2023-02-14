@@ -12,6 +12,7 @@ from Tools.LoadPixmap import LoadPixmap
 from .. import _
 from .common import toString
 from .base import BaseArchivCZSKListSourceScreen
+from ..colors import DeleteColors
 
 
 def openShortcuts(session, addon, cb):
@@ -42,7 +43,7 @@ class ArchivCZSKShortcutsScreen(BaseArchivCZSKListSourceScreen):
 	def askRemoveShortcut(self):
 		item = self.getSelectedItem()
 		if item:
-			message = '%s %s?'% (_('Do you want to delete'), toString(item.name))
+			message = '%s %s?' % (_('Do you want to delete'), toString(DeleteColors(item.name)))
 			self.session.openWithCallback(self.removeShortcut, 
 								MessageBox, message, type=MessageBox.TYPE_YESNO)
 
@@ -53,7 +54,7 @@ class ArchivCZSKShortcutsScreen(BaseArchivCZSKListSourceScreen):
 			self.updateMenuList()
 	
 	def updateMenuList(self, index=0):
-		self["menu"].list = [(LoadPixmap(toString(item.thumb)), toString(item.name)) 
+		self["menu"].list = [(LoadPixmap(toString(item.thumb)), toString(DeleteColors(item.name)))
 						for item in self.lst_items]
 		self["menu"].index = index
 

@@ -1,6 +1,6 @@
 from .item import ItemHandler
 from .folder import FolderItemHandler
-from ...engine.items import PContextMenuItem
+from ..items import PContextMenuItem
 
 class ContextMenuItemHandler(ItemHandler):
 	handles = (PContextMenuItem)

@@ -10,10 +10,10 @@ from .category import CategoryItemHandler, UserCategoryItemHandler
 from .media import VideoResolvedItemHandler, VideoNotResolvedItemHandler, PlaylistItemHandler
 
 from ... import _, log
-from ...engine.tools import util
+from ..tools import util
 from ...gui.context import ArchivCZSKSelectCategoryScreen
-from ...engine.contentprovider import VideoAddonContentProvider
-from ...engine.items import PExit, PRoot, PVideoAddon, PCategoryVideoAddon
+from ..contentprovider import VideoAddonContentProvider
+from ..items import PExit, PRoot, PVideoAddon, PCategoryVideoAddon
 from ...gui.exception import AddonExceptionHandler
 from ...gui.common import showInfoMessage, showWarningMessage, showErrorMessage
 from Components.config import config

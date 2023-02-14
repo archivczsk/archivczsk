@@ -1,7 +1,7 @@
 from .item import ItemHandler
 from ... import log
 from ...gui import context
-from ...engine.items import PExit, PRoot
+from ..items import PExit, PRoot
 from ...colors import DeleteColors
 
 

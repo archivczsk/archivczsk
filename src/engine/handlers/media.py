@@ -8,13 +8,14 @@ from Screens.ChoiceBox import ChoiceBox
 from .item import ItemHandler
 from ... import _, log
 from ...gui.exception import AddonExceptionHandler, DownloadExceptionHandler
-from ...engine.items import PExit, PVideoResolved, PVideoNotResolved, PPlaylist
-from ...engine.tools.util import toString
+from ..items import PExit, PVideoResolved, PVideoNotResolved, PPlaylist
+from ..tools.util import toString
 from ...gui.common import showInfoMessage, showErrorMessage, showWarningMessage
 from ...colors import DeleteColors
-from ...engine.player.info import videoPlayerInfo
+from ..player.info import videoPlayerInfo
 from ...compat import DMM_IMAGE
-from ...engine.trakttv import trakttv
+from ..trakttv import trakttv
+from ..serialize import is_serializable
 
 
 class MediaItemHandler(ItemHandler):
@@ -266,8 +267,6 @@ class VideoResolvedItemHandler(MediaItemHandler):
 		info_handlers = ['csfd','item']
 		MediaItemHandler.__init__(self, session, content_screen, content_provider, info_handlers)
 
-
-
 class VideoNotResolvedItemHandler(MediaItemHandler):
 	handles = (PVideoNotResolved, )
 	def __init__(self, session, content_screen, content_provider):
@@ -279,7 +278,7 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 		item.add_context_menu_item(_("Resolve videos"),
 									   action=self._resolve_videos,
 									   params={'item':item})
-		if 'favorites' in self.content_provider.capabilities:
+		if 'favorites' in self.content_provider.capabilities and is_serializable(item.params):
 			item.add_context_menu_item(_("Add Shortcut"), 
 					action=self.ask_add_shortcut, 
 					params={'item':item})
@@ -291,7 +290,7 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 	def ask_add_shortcut(self, item):
 		self.item = item
 		self.session.openWithCallback(self.add_shortcut_cb, MessageBox,
-				text="%s %s %s"%(_("Do you want to add"), toString(item.name),	_("shortcut?")),
+				text="%s %s %s" % (_("Do you want to add"), toString(DeleteColors(item.name)), 	_("shortcut?")),
 				type=MessageBox.TYPE_YESNO)
 
 	def add_shortcut_cb(self, cb):

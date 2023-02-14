@@ -4,11 +4,13 @@ from Screens.MessageBox import MessageBox
 from .item import ItemHandler
 from ... import _, log
 from ...gui.exception import AddonExceptionHandler
-from ...engine.items import PExit, PFolder, PSearchItem
+from ..items import PExit, PFolder, PSearchItem
 from ...gui.common import showInfoMessage, showErrorMessage, showWarningMessage
-from ...engine.trakttv import trakttv
-
+from ..trakttv import trakttv
+from ..serialize import is_serializable
 from ...py3compat import *
+from ...colors import DeleteColors
+
 
 class FolderItemHandler(ItemHandler):
 	handles = (PFolder,)
@@ -219,7 +221,7 @@ class FolderItemHandler(ItemHandler):
 				item.add_context_menu_item(_('Pair device with Trakt.tv'), action=self.cmdTrakt, params={'item':item, 'action':'pair'})
 
 		item.add_context_menu_item(_("Open"), action=self.open_item, params={'item':item})
-		if not self.is_search(item) and 'favorites' in self.content_provider.capabilities:
+		if not self.is_search(item) and 'favorites' in self.content_provider.capabilities and is_serializable(item.params):
 			item.add_context_menu_item(_("Add Shortcut"), action=self.ask_add_shortcut, params={'item':item})
 		else:
 			item.remove_context_menu_item(_("Add Shortcut"), action=self.ask_add_shortcut, params={'item':item})
@@ -227,7 +229,7 @@ class FolderItemHandler(ItemHandler):
 	def ask_add_shortcut(self, item):
 		self.item = item
 		self.session.openWithCallback(self.add_shortcut_cb, MessageBox,
-									  text=_("Do you want to add") + " " + py2_encode_utf8( item.name ) + " " + _("shortcut?"),
+									  text=_("Do you want to add") + " " + py2_encode_utf8(DeleteColors(item.name)) + " " + _("shortcut?"),
 									  type=MessageBox.TYPE_YESNO)
 
 	def add_shortcut_cb(self, cb):

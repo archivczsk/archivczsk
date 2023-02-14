@@ -2,7 +2,7 @@ from Screens.MessageBox import MessageBox
 from Screens.InputBox import InputBox
 
 from .item import ItemHandler
-from ...engine.items import PUserCategory, PCategory, PExit
+from ..items import PUserCategory, PCategory, PExit
 
 from ...py3compat import *
 

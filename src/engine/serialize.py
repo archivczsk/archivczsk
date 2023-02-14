@@ -8,6 +8,7 @@ import os
 import shutil
 from datetime import datetime
 import time
+import json
 
 try:
 	from xml.etree.cElementTree import ElementTree, Element, SubElement
@@ -30,6 +31,14 @@ except ImportError:
 		def error(text):
 			print(text)
 	log = simple_log
+
+
+def is_serializable(data):
+	try:
+		json.dumps(data)
+		return True
+	except:
+		return False
 
 
 class BaseXML(object):
