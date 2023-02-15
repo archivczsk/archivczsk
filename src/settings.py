@@ -96,10 +96,14 @@ config.plugins.archivCZSK.updateTimeout = ConfigInteger(default=8, limits=(0,30)
 config.plugins.archivCZSK.preload = ConfigYesNo(default=True)
 config.plugins.archivCZSK.lastIconDShowMessage = ConfigInteger(0)
 
+def skin_changed(configElement):
+	from .archivczsk import ArchivCZSK
+	ArchivCZSK.force_skin_reload = True
 
 skinChoices = [os.path.splitext(fname)[0] for fname in os.listdir(SKIN_PATH) if fname.endswith('.xml') ]
 skinChoices.append('auto')
 config.plugins.archivCZSK.skin = ConfigSelection(default="auto", choices=skinChoices)
+config.plugins.archivCZSK.skin.addNotifier(skin_changed, initial_call=False)
 config.plugins.archivCZSK.colored_items = ConfigYesNo(default=False if DMM_IMAGE else True)
 config.plugins.archivCZSK.showVideoInfo = ConfigYesNo(default=True)
 config.plugins.archivCZSK.downloadPoster = ConfigYesNo(default=True)
@@ -141,9 +145,9 @@ config.plugins.archivCZSK.convertPNG = ConfigYesNo(default=True)
 config.plugins.archivCZSK.clearMemory = ConfigYesNo(default=False)
 config.plugins.archivCZSK.confirmExit = ConfigYesNo(default=False)
 config.plugins.archivCZSK.httpPort = ConfigInteger(default=18888, limits=(1,65535))
-config.plugins.archivCZSK.httpPort.addNotifier(restartHttpServer)
+config.plugins.archivCZSK.httpPort.addNotifier(restartHttpServer, initial_call=False)
 config.plugins.archivCZSK.httpLocalhost = ConfigYesNo(default=True)
-config.plugins.archivCZSK.httpLocalhost.addNotifier(restartHttpServer)
+config.plugins.archivCZSK.httpLocalhost.addNotifier(restartHttpServer, initial_call=False)
 config.plugins.archivCZSK.send_usage_stats = ConfigYesNo(default=True)
 
 ########## TRAKT ##############################

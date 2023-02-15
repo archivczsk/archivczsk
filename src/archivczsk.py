@@ -23,6 +23,7 @@ class ArchivCZSK():
 
 	__loaded = False
 	__need_restart = False
+	force_skin_reload = False
 
 	__repositories = {}
 	__addons = {}
@@ -62,32 +63,36 @@ class ArchivCZSK():
 		try:
 			from enigma import getDesktop
 			desktop_width = getDesktop(0).size().width()
-			log.logDebug("Screen width %s px"%desktop_width)
+			log.logDebug("Screen width %s px" % desktop_width)
+			
 			if	desktop_width >= 1280:
 				if DMM_IMAGE:
 					if desktop_width == 1920:
-						skin_default_path = os.path.join(settings.SKIN_PATH, "default_dmm_fhd.xml")
+						default_skin_name = "default_dmm_fhd"
 					elif desktop_width == 3840:
-						skin_default_path = os.path.join(settings.SKIN_PATH, "default_dmm_uhd.xml")
+						default_skin_name = "default_dmm_uhd"
 					else:
-						skin_default_path = os.path.join(settings.SKIN_PATH, "default_dmm_hd.xml")
+						default_skin_name = "default_dmm_hd"
 				else:
 					if desktop_width == 1920:
-						skin_default_path = os.path.join(settings.SKIN_PATH, "default_fhd.xml")
+						default_skin_name = "default_fhd"
 					elif desktop_width == 3840:
-						skin_default_path = os.path.join(settings.SKIN_PATH, "default_uhd.xml")
+						default_skin_name = "default_uhd"
 					else:
-						skin_default_path = os.path.join(settings.SKIN_PATH, "default_hd.xml")
+						default_skin_name = "default_hd"
 			else:
-				skin_default_path = os.path.join(settings.SKIN_PATH, "default_sd.xml")
+				default_skin_name = "default_sd"
+
 			skin_name = config.plugins.archivCZSK.skin.value
 			skin_path = os.path.join(settings.SKIN_PATH, skin_name + ".xml")
+
 			if skin_name == 'auto' or not os.path.isfile(skin_path):
-				skin_path = skin_default_path
-			log.info("loading skin %s" % skin_path)
+				skin_path = os.path.join(settings.SKIN_PATH, default_skin_name + ".xml")
+
+			log.info("Loading skin %s" % skin_path)
 			loadSkin(skin_path)
 		except:
-			log.logError("Load plugin skin failed.\n%s"%traceback.format_exc())
+			log.logError("Load plugin skin failed.\n%s" % traceback.format_exc())
 
 	@staticmethod
 	def get_repository(repository_id):
@@ -152,6 +157,10 @@ class ArchivCZSK():
 		if ArchivCZSK.__need_restart:
 			self.ask_restart_e2()
 		else:
+			if ArchivCZSK.force_skin_reload:
+				ArchivCZSK.load_skin()
+				ArchivCZSK.force_skin_reload = False
+
 			if config.plugins.archivCZSK.archivAutoUpdate.value and self.canCheckUpdate(True):
 				self.checkArchivUpdate()
 			elif config.plugins.archivCZSK.autoUpdate.value and self.canCheckUpdate(False):
