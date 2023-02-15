@@ -185,7 +185,7 @@ def create_directory_it(name, params={}, image=None, infoLabels={}, menuItems={}
 	return it
 
 
-def create_video_it(name, url, subs=None, image=None, infoLabels={}, menuItems={}, filename=None, live=False, stream=None, settings=None, dataItem=None, traktItem=None):
+def create_video_it(name, url, subs=None, image=None, infoLabels={}, menuItems={}, filename=None, live=False, stream=None, settings=None, dataItem=None, traktItem=None, download=True):
 	it = PVideoResolved()
 
 	if not config.plugins.archivCZSK.colored_items.value:
@@ -243,6 +243,7 @@ def create_video_it(name, url, subs=None, image=None, infoLabels={}, menuItems={
 
 	it.dataItem = dataItem
 	it.traktItem = traktItem
+	it.download = download
 	
 	return it
 
@@ -271,7 +272,7 @@ def add_dir(name, params={}, image=None, infoLabels={}, menuItems={}, search_fol
 	GItem_lst[0].append(it)
 
 @abortTask
-def add_video(name, url, subs=None, image=None, infoLabels={}, menuItems={}, filename=None, live=False, stream=None, settings=None, dataItem=None, traktItem=None):
+def add_video(name, url, subs=None, image=None, infoLabels={}, menuItems={}, filename=None, live=False, stream=None, settings=None, dataItem=None, traktItem=None, download=True):
 
 	"""
 	adds video item to content screen
@@ -294,7 +295,8 @@ def add_video(name, url, subs=None, image=None, infoLabels={}, menuItems={}, fil
 							   stream=stream,
 							   settings=settings,
 							   dataItem=dataItem,
-							   traktItem=traktItem)
+							   traktItem=traktItem,
+							   download=download)
 	if not is_py3 and isinstance(url, unicode ):
 		url = url.encode('utf-8')
 	if not isinstance(url, str):

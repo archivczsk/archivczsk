@@ -46,7 +46,10 @@ def getFilenameAndLength(url=None, headers=None, filename=None):
 		filename = sanitize_filename(filename)
 		filename_tmp, extension = os.path.splitext(filename)
 		if extension not in VIDEO_EXTENSIONS + AUDIO_EXTENSIONS:
-			filename = filename_tmp + ".mp4"
+			if info_dict['is_hls']:
+				filename = filename_tmp + ".ts"
+			else:
+				filename = filename_tmp + ".mp4"
 	return filename, length
 
 class DownloadManager(object):

@@ -500,6 +500,7 @@ def url_get_file_info(url, headers=None, timeout=3):
 	purl = urlparse(url)
 	filename = purl.path.split('/')[-1]
 	length = None
+	is_hls = False
 	if url.startswith('rtmp'):
 		url_split = url.split()
 		if len(url_split) > 1:
@@ -508,7 +509,10 @@ def url_get_file_info(url, headers=None, timeout=3):
 					filename = urlparse(i[len('playpath='):]).path.split('/')[-1]
 
 	elif url.startswith('http') and purl.path.endswith('.m3u8'):
-			filename = purl.path.split('/')[-2]
+		is_hls = True
+		filename = purl.path.split('/')[-2]
+		if not filename:
+			filename = purl.path.split('/')[-1]
 
 	elif url.startswith('http'):
 		if headers is None:
@@ -529,7 +533,7 @@ def url_get_file_info(url, headers=None, timeout=3):
 				if extension is not None:
 					if not os.path.splitext(filename)[1]:
 						filename += extension
-	return {'filename':sanitize_filename(filename), 'length':length}
+	return {'filename':sanitize_filename(filename), 'length':length, 'is_hls': True}
 
 def download_to_file_async(url, dest, callback=None, data=None, headers=None, timeout=60):
 	def got_data(data):

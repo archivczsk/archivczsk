@@ -372,7 +372,7 @@ class DownloadsMixin(object):
 
 		headers = item.settings['extra-headers']
 		destination = [self.downloads_path]
-		filename = [item.filename or item.name]
+		filename = [item.filename or item.info.get('title') or item.name]
 		filename[0] = removeDiac(filename[0])
 		ask_if_download()
 
