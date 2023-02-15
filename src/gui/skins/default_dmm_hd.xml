@@ -252,9 +252,9 @@
   </screen>
 
 
-  <screen name="ArchivCZSKChoiceBox" position="center,center" size="605,343">
-    <widget name="text" position="8,8" size="598,21" foregroundColor="#e5b243" font="Regular; 20" />
-    <widget name="list" position="5,52" size="595,272" scrollbarMode="showOnDemand" />
+  <screen name="ArchivCZSKChoiceBox" position="center,center" size="768,432">
+    <widget name="text" position="8,8" size="758,21" foregroundColor="#e5b243" font="Regular; 20" />
+    <widget name="list" position="5,52" size="758,361" scrollbarMode="showOnDemand" />
   </screen>
 
 
