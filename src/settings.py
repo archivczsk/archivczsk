@@ -57,7 +57,7 @@ choicelist = [('standard', _('standard player')),
 config.plugins.archivCZSK.videoPlayer.type = ConfigSelection(default="custom", choices=choicelist)
 config.plugins.archivCZSK.videoPlayer.autoPlay = ConfigYesNo(default=True)
 config.plugins.archivCZSK.videoPlayer.confirmExit = ConfigYesNo(default=False)
-config.plugins.archivCZSK.videoPlayer.subtitlesInAudioSelection = ConfigYesNo(default=False)
+config.plugins.archivCZSK.videoPlayer.subtitlesInAudioSelection = ConfigYesNo(default=True)
 
 ydl_choicelist = [
 	('preload', _("Preload")),
