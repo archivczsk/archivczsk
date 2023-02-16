@@ -144,8 +144,8 @@ class UsageStats(object):
 		#requests.post('http://archivczsk.eu/usagestats.php', json=data)
 
 		# just dummy debug dump for now
-		with open('/tmp/%d_stats_to_send.json' % data['week'], 'w') as f:
-			json.dump(data, f)
+#		with open('/tmp/%d_stats_to_send.json' % data['week'], 'w') as f:
+#			json.dump(data, f)
 		return
 
 
