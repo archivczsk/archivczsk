@@ -449,6 +449,10 @@ class AddonSettings(object):
 			choicelist = [(py2_encode_utf8( self._get_label(e)), py2_encode_utf8( self._get_label(e))) for e in entry['values'].split("|")]
 			setattr(setting, entry['id'], ConfigSelection(default=entry['default'], choices=choicelist))
 
+		elif entry['type'] == 'keyenum':
+			choicelist = [(py2_encode_utf8(e.split(';')[0]), py2_encode_utf8(self._get_label(e.split(';')[1]))) for e in entry['values'].split("|")]
+			setattr(setting, entry['id'], ConfigSelection(default=entry['default'], choices=choicelist))
+
 		elif entry['type'] == 'ipaddress':
 			setattr(setting, entry['id'], ConfigIP(default=list(map(int, entry['default'].split('.'))), auto_jump=True))
 

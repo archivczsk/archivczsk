@@ -51,6 +51,8 @@ class XBMCSettingsXMLParser(XMLParser):
 			entry['lvalues'] = setting.attrib.get('lvalues')
 		elif entry['type'] == 'labelenum':
 			entry['values'] = setting.attrib.get('values')
+		elif entry['type'] == 'keyenum':
+			entry['values'] = setting.attrib.get('values')
 		return entry
 
 	
