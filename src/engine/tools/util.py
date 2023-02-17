@@ -60,10 +60,10 @@ def load_xml(xml_file):
 		if 'encoding' not in xml.readline():
 			xml.seek(0)
 			xml_string = xml.read()
-			xml_string = xml_string.decode('utf-8')
+			xml_string = py2_decode_utf8(xml_string)
 			xml.seek(0)
 			xml.write('<?xml version="1.0" encoding="UTF-8" standalone="yes"?>\n')
-			xml.write(xml_string.encode('utf-8'))
+			xml.write(py2_encode_utf8(xml_string))
 			xml.flush()
 	except IOError as e:
 		print("I/O error(%d): %s" % (e.errno, e.strerror))

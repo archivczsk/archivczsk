@@ -44,10 +44,10 @@ class ArchivCZSK():
 				try:
 					repository = Repository(repo_xml)
 				except Exception:
-					traceback.print_exc()
-				ArchivCZSK.add_repository(repository)
-				sys.path.append(repository.path)
-
+					log.error("Failed to load repository: %s\n%s" % (repo, traceback.format_exc()))
+				else:
+					ArchivCZSK.add_repository(repository)
+					sys.path.append(repository.path)
 			
 		ArchivCZSK.__loaded = True
 		diff = time.time() - start
