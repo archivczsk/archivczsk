@@ -1,3 +1,13 @@
+archivCZSK 2.0.0, 16.02.2023
+    - zmena formátu API doplnkov - kompletne prerobný spôsob komunikácie s doplnkami
+    - odstránenie podpory pre služby doplnkov a nahradenie za úlohy bežiace na pozadí
+    - opravený vyhľadávač a možnosť pre doplnky automaticky pridať vyhľadávanie
+    - oprava interného CSFD prehliadača
+    - vylepšený spôsob správania u pokazených a zastaralých doplnkov
+    - oprava a vylepšenie sťahovania súborov
+    - drobné vylepšenia skinov
+    - veľké prečistenie kódu a množstvo opráv naprieč celým pluginom
+
 archivCZSK 1.6.3, 25.12.2022
     - automatické zoradenie doplnkov podľa názvu
     - oprava parsovania url z m3u8 master playlistu
