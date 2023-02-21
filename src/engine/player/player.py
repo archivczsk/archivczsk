@@ -584,12 +584,18 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 			pass
 
 	def pauseService(self):
+		seekstate = self.seekstate
 		InfoBarSeek.pauseService(self)
-		self.player_callback(("pause",))
+		if seekstate != self.seekstate and self.seekstate == self.SEEK_STATE_PAUSE:
+			# call player callback only if seekstate changed and current one is set to pause
+			self.player_callback(("pause",))
 
 	def unPauseService(self):
+		seekstate = self.seekstate
 		InfoBarSeek.unPauseService(self)
-		self.player_callback(("unpause",))
+		if seekstate != self.seekstate and self.seekstate == self.SEEK_STATE_PLAY:
+			# call player callback only if seekstate changed and current one is set to play
+			self.player_callback(("unpause",))
 		
 	def doSeek(self, pts ):
 		InfoBarSeek.doSeek(self, pts )
