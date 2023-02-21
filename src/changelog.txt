@@ -1,3 +1,10 @@
+archivCZSK 2.0.1, 21.02.2023
+    - opravený pád pri rýchlom stlačení play/pause za sebou
+    - zapnutá podpora pre záložky pre všetky položky
+    - opravené závislosti balíka pre VTi
+    - voľba titulkov v audio menu je zapnutá len pre OpenPLi a OpenATV
+    - pridanie možnosti zmeniť prehrávač klávesou 0
+    
 archivCZSK 2.0.0, 16.02.2023
     - zmena formátu API doplnkov - kompletne prerobný spôsob komunikácie s doplnkami
     - odstránenie podpory pre služby doplnkov a nahradenie za úlohy bežiace na pozadí
