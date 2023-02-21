@@ -3,7 +3,7 @@ Version: x.x.x
 Architecture: all
 Section: extra
 Priority: optional
-Recommends: python-html | python3-html, python-threading | python3-threading, python-json | python3-json, python-zlib | python3-core, python-compression | python3-compression, python-requests | python3-requests, python-codecs | python3-codecs, python-email | python3-email, python-pycrypto | python-pycryptodome | python3-pycryptodome, python-beautifulsoup4 | python3-beautifulsoup4, curl, rtmpdump
+Recommends: python-importlib, python-pickle | python3-pickle, python-html | python3-html, python-threading | python3-threading, python-json | python3-json, python-zlib | python3-core, python-compression | python3-compression, python-requests | python3-requests, python-codecs | python3-codecs, python-email | python3-email, python-pycrypto | python-pycryptodome | python3-pycryptodome, python-beautifulsoup4 | python3-beautifulsoup4, curl, rtmpdump
 Maintainer: archivczsk@seznam.cz
 Homepage: https://github.com/archivczsk/archivczsk/releases
 Description: prehravanie CZ/SK archivov
