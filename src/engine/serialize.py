@@ -34,8 +34,11 @@ except ImportError:
 
 
 def is_serializable(data):
+	'''
+	Used to check if it's possible to create shortcut from data
+	'''
 	try:
-		json.dumps(data)
+#		json.dumps(data) # disable check - tools.archivczsk can handle method names as strings
 		return True
 	except:
 		return False
