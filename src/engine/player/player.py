@@ -46,6 +46,7 @@ from ..items import PVideo, PPlaylist
 from ..tools import e2util
 from ..tools.util import toString
 from ...colors import DeleteColors
+from .info import videoPlayerInfo
 
 config_archivczsk = config.plugins.archivCZSK
 
@@ -122,7 +123,30 @@ class Player(object):
 		self.duration = None
 		self.event_callback = event_callback
 		self.stype = stype
+		self.available_players = None
+		self.current_stype = None
 
+	def player_switch(self):
+		if not self._play_item:
+			return
+
+		if not self.available_players:
+			self.available_players = videoPlayerInfo.getAvailablePlayersRefs()
+
+		self.available_players.remove(self.current_stype)
+		self.available_players.append(self.current_stype)
+		stype = self.available_players[0]
+
+		log.info("Switching player to %d" % stype)
+
+		play_item = self._play_item
+		settings = play_item.settings.copy()
+		settings['stype'] = stype
+		settings['resume_time_sec'] = getPlayPositionInSeconds(self.session)
+
+		play_item.settings = settings
+		self.play_stream(play_item.url, play_item.settings, play_item.subs, play_item.name, play_item)
+		
 	def play_item(self, item = None, idx = None):
 		log.info("play_item(%s, %s)"%(item,toString(idx)))
 		play_item = None
@@ -168,7 +192,8 @@ class Player(object):
 		if headers:
 			play_url += "#" + "&".join("%s=%s"%(k,v) for k,v in headers.items())
 
-		service_ref = eServiceReference(play_settings.get("stype", self.stype), 0, toString(play_url))
+		self.current_stype = play_settings.get("stype", self.stype)
+		service_ref = eServiceReference(self.current_stype, 0, toString(play_url))
 		
 		if self.video_player is None:
 			self.video_player = self.session.openWithCallback(self.player_exit_callback,
@@ -249,6 +274,8 @@ class Player(object):
 				elif callback[1] == "idx":
 					self.player_callback(('stop',))
 					self.play_item(idx = callback[2])
+			elif callback[0] == "player_switch":
+				self.player_switch()
 			elif callback[0] in ("start", "stop", "pause", "unpause", "seek", "watching"):
 				self.event_callback and self.event_callback(callback[0], getDurationInSeconds(self.session), getPlayPositionInSeconds(self.session))
 
@@ -262,6 +289,8 @@ class Player(object):
 		self.playlist = []
 		self.curr_idx = 0
 		self.playlist_item = None
+		self.available_players = None
+		self.current_stype = None
 
 		self.session.nav.playService(self.old_service)
 		self.old_service = None
@@ -498,16 +527,13 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.__subtitles_url = None
 		self.__resume_time_sec = None
 		self.duration_sec = None
-		self["actions"] = HelpableActionMap(self, "ArchivCZSKMoviePlayerActions",
-				{"showPlaylist": (boundFunction(self.player_callback, ("playlist", "show",)),
-					_("Show playlist")),
-					"nextEntry":(boundFunction(self.player_callback, ("playlist", "next",)),
-						_("Play next entry in playlist")),
-					"prevEntry":(boundFunction(self.player_callback, ("playlist", "prev",)),
-						_("Play previous entry in playlist")),
-					"cancel":(boundFunction(self.player_callback, ("exit",)),
-						_("Exit player")),
-				}, -2)
+		self["actions"] = HelpableActionMap(self, "ArchivCZSKMoviePlayerActions", {
+			"showPlaylist": (boundFunction(self.player_callback, ("playlist", "show",)), _("Show playlist")),
+			"nextEntry": (boundFunction(self.player_callback, ("playlist", "next",)), _("Play next entry in playlist")),
+			"prevEntry": (boundFunction(self.player_callback, ("playlist", "prev",)), _("Play previous entry in playlist")),
+			"cancel": (boundFunction(self.player_callback, ("exit",)), _("Exit player")),
+			"switchPlayer": (boundFunction(self.player_callback, ("player_switch",)), _("Switch player type")),
+		}, -2)
 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap=
 		{
 			iPlayableService.evStart: self.__service_started,

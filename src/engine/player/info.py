@@ -83,6 +83,18 @@ class VideoPlayerInfo(object):
 		if asString:
 			return ', '.join(ret)
 		return ret
+
+	def getAvailablePlayersRefs(self):
+		ret = [ 4097 ]
+
+		if self.serviceappAvailable:
+			if self.gstplayerAvailable:
+				ret.append(5001)
+
+			if self.exteplayer3Available:
+				ret.append(5002)
+
+		return ret
 			
 ######################### Supported protocols ##################################
 
