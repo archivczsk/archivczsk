@@ -7,7 +7,7 @@ import os
 import socket
 import traceback
 import importlib
-
+from collections import deque
 from shutil import copyfile
 from twisted.internet import defer
 
@@ -557,6 +557,7 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		self.on_stop.append(self.__unset_resolving_provider_light)
 
 		self.addon_interface = None
+		self.content_deferred = deque()
 		
 	def __repr__(self):
 		return "%s(%s)"%(self.__class__.__name__, self.video_addon)
@@ -661,8 +662,10 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 					self.capabilities.remove('trakt')
 
 		self.__clear_list()
-		self.content_deferred = defer.Deferred()
-		self.content_deferred.addCallbacks(successCB, errorCB)
+		content_deferred = defer.Deferred()
+		content_deferred.addCallbacks(successCB, errorCB)
+		self.content_deferred.append(content_deferred)
+		
 		# setting timeout for resolving content
 		loading_timeout = int(self.video_addon.get_setting('loading_timeout'))
 		if loading_timeout > 0:
@@ -674,7 +677,7 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 			pass
 		thread_task = task.Task(self._get_content_cb, self.call_addon_run_interface, session, params)
 		thread_task.run()
-		return self.content_deferred
+		return content_deferred
 
 	def call_addon_run_interface(self, session, params):
 		self.resolve_addon_interface()
@@ -682,11 +685,12 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 
 	def trakt(self, session, item, action, result, successCB, errorCB):
 		log.info('%s trakt - action: %s, item %s' % (self, action, str(item)))
-		self.content_deferred = defer.Deferred()
-		self.content_deferred.addCallbacks(successCB, errorCB)
+		content_deferred = defer.Deferred()
+		content_deferred.addCallbacks(successCB, errorCB)
+		self.content_deferred.append(content_deferred)
 		thread_task = task.Task(self._get_content_cb, self.call_addon_trakt_interface, session, item, action, result)
 		thread_task.run()
-		return self.content_deferred
+		return content_deferred
 
 	def call_addon_trakt_interface(self, session, item, action, result):
 		self.resolve_addon_interface()
@@ -695,11 +699,12 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 
 	def stats(self, session, item, action, extra_params, successCB, errorCB):
 		log.info('%s stats - action: %s, item: %s' % (self, action, str(item)))
-		self.content_deferred = defer.Deferred()
-		self.content_deferred.addCallbacks(successCB, errorCB)
+		content_deferred = defer.Deferred()
+		content_deferred.addCallbacks(successCB, errorCB)
+		self.content_deferred.append(content_deferred)
 		thread_task = task.Task(self._get_content_cb, self.call_addon_stats_interface, session, item, action, extra_params)
 		thread_task.run()
-		return self.content_deferred
+		return content_deferred
 
 	def call_addon_stats_interface(self, session, item, action, extra_params):
 		self.resolve_addon_interface()
@@ -709,11 +714,12 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 	def search(self, session, keyword, search_id, successCB, errorCB):
 		log.info('%s search - keyword: %s, search_id: %s' % (self, keyword, search_id))
 		self.__clear_list()
-		self.content_deferred = defer.Deferred()
-		self.content_deferred.addCallbacks(successCB, errorCB)
+		content_deferred = defer.Deferred()
+		content_deferred.addCallbacks(successCB, errorCB)
+		self.content_deferred.append(content_deferred)
 		thread_task = task.Task(self._get_content_cb, self.call_addon_search_interface, session, keyword, search_id)
 		thread_task.run()
-		return self.content_deferred
+		return content_deferred
 
 	def call_addon_search_interface(self, session, keyword, search_id):
 		self.resolve_addon_interface()
@@ -737,14 +743,17 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 			ssl._create_default_https_context = CREATE_DEFAULT_HTTPS_CONTEXT
 		except:
 			pass
+
+		content_deferred = self.content_deferred.popleft()
+
 		if success:
 			lst_itemscp = [[], None, {}]
 			lst_itemscp[0] = self.__gui_item_list[0][:]
 			lst_itemscp[1] = self.__gui_item_list[1]
 			lst_itemscp[2] = self.__gui_item_list[2].copy()
-			self.content_deferred.callback(lst_itemscp)
+			content_deferred.callback(lst_itemscp)
 		else:
-			self.content_deferred.errback(result)
+			content_deferred.errback(result)
 
 	def close(self):
 		self.video_addon = None
