@@ -10,6 +10,19 @@ from . import log, UpdateInfo, _
 from .engine.player.info import videoPlayerInfo
 from .compat import DMM_IMAGE
 
+
+def image_is_openpli():
+	try:
+		with open('/etc/issue', 'r') as f:
+			data = f.read().lower()
+			if 'openpli' in data or 'openatv' in data:
+				return True
+	except:
+		pass
+
+	return False
+
+
 LANGUAGE_SETTINGS_ID = language.getLanguage()[:2]
 MENU_SEPARATOR = getConfigListEntry("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------", NoSave(ConfigNothing()))
 
@@ -57,7 +70,7 @@ choicelist = [('standard', _('standard player')),
 config.plugins.archivCZSK.videoPlayer.type = ConfigSelection(default="custom", choices=choicelist)
 config.plugins.archivCZSK.videoPlayer.autoPlay = ConfigYesNo(default=True)
 config.plugins.archivCZSK.videoPlayer.confirmExit = ConfigYesNo(default=False)
-config.plugins.archivCZSK.videoPlayer.subtitlesInAudioSelection = ConfigYesNo(default=True)
+config.plugins.archivCZSK.videoPlayer.subtitlesInAudioSelection = ConfigYesNo(default=True if image_is_openpli() else False)
 
 ydl_choicelist = [
 	('preload', _("Preload")),
