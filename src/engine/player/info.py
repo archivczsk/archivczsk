@@ -5,6 +5,7 @@ Created on 22.12.2012
 '''
 import os
 from ... import log
+from ...compat import DMM_IMAGE
 
 GSTREAMER_PATH = '/usr/lib/gstreamer-0.10'
 GSTREAMER10_PATH = '/usr/lib/gstreamer-1.0'
@@ -80,6 +81,10 @@ class VideoPlayerInfo(object):
 			if self.exteplayer3Available:
 				ret.append('ExtEplayer3')
 		
+		if DMM_IMAGE:
+			ret.append('DMM')
+			ret.append('DVB')
+
 		if asString:
 			return ', '.join(ret)
 		return ret
@@ -94,7 +99,20 @@ class VideoPlayerInfo(object):
 			if self.exteplayer3Available:
 				ret.append(5002)
 
+		if DMM_IMAGE:
+			ret.append(8193)
+			ret.append(1)
+
 		return ret
+
+	def getPlayerNameByStype(self, stype):
+		return {
+			4097: 'Enigma2 default',
+			5001: 'GstPlayer',
+			5002: 'Exteplayer3',
+			8193: 'DMM Player',
+			1: 'DVB',
+		}.get(stype, str(stype))
 			
 ######################### Supported protocols ##################################
 

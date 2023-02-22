@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk \n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-02-21 20:23+0100\n"
+"POT-Creation-Date: 2023-02-22 09:38+0100\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -434,12 +434,14 @@ msgstr "Prosím zvolte zdroj"
 #: src/engine/handlers/media.py:447 src/engine/handlers/media.py:450
 #: src/engine/player/player.py:503 src/engine/handlers/media.py:455
 #: src/engine/handlers/media.py:460 src/engine/player/player.py:531
+#: src/engine/player/player.py:534
 msgid "Show playlist"
 msgstr "Zobrazit playlist"
 
 #: src/engine/player/player.py:195 src/engine/player/player.py:196
 #: src/engine/player/player.py:197 src/engine/player/player.py:203
 #: src/engine/player/player.py:214 src/engine/player/player.py:239
+#: src/engine/player/player.py:241
 msgid "Stop playing this movie?"
 msgstr "Ukončit přehrávání videa?"
 
@@ -449,6 +451,7 @@ msgstr "Ukončit přehrávání videa?"
 #: src/engine/player/player.py:290 src/engine/player/player.py:298
 #: src/engine/player/player.py:302 src/engine/player/player.py:310
 #: src/engine/player/player.py:331 src/engine/player/player.py:339
+#: src/engine/player/player.py:333 src/engine/player/player.py:341
 msgid "Letterbox"
 msgstr "Letterbox"
 
@@ -461,6 +464,8 @@ msgstr "Letterbox"
 #: src/engine/player/player.py:303 src/engine/player/player.py:307
 #: src/engine/player/player.py:311 src/engine/player/player.py:332
 #: src/engine/player/player.py:336 src/engine/player/player.py:340
+#: src/engine/player/player.py:334 src/engine/player/player.py:338
+#: src/engine/player/player.py:342
 msgid "Pan&scan"
 msgstr "Pan&scan"
 
@@ -470,6 +475,7 @@ msgstr "Pan&scan"
 #: src/engine/player/player.py:292 src/engine/player/player.py:296
 #: src/engine/player/player.py:304 src/engine/player/player.py:308
 #: src/engine/player/player.py:333 src/engine/player/player.py:337
+#: src/engine/player/player.py:335 src/engine/player/player.py:339
 msgid "Nonlinear"
 msgstr "Nonlinear"
 
@@ -481,67 +487,73 @@ msgstr "Nonlinear"
 #: src/engine/player/player.py:300 src/engine/player/player.py:305
 #: src/engine/player/player.py:309 src/engine/player/player.py:312
 #: src/engine/player/player.py:334 src/engine/player/player.py:338
-#: src/engine/player/player.py:341
+#: src/engine/player/player.py:341 src/engine/player/player.py:336
+#: src/engine/player/player.py:340 src/engine/player/player.py:343
 msgid "Just scale"
 msgstr "Just scale"
 
 #: src/engine/player/player.py:278 src/engine/player/player.py:280
 #: src/engine/player/player.py:281 src/engine/player/player.py:294
 #: src/engine/player/player.py:306 src/engine/player/player.py:335
+#: src/engine/player/player.py:337
 msgid "PillarBox"
 msgstr "PillarBox"
 
 #: src/engine/player/player.py:320 src/engine/player/player.py:322
 #: src/engine/player/player.py:323 src/engine/player/player.py:336
 #: src/engine/player/player.py:348 src/engine/player/player.py:377
+#: src/engine/player/player.py:379
 msgid "Aspect"
 msgstr "Poměr"
 
 #: src/engine/player/player.py:321 src/engine/player/player.py:323
 #: src/engine/player/player.py:324 src/engine/player/player.py:337
 #: src/engine/player/player.py:349 src/engine/player/player.py:378
+#: src/engine/player/player.py:380
 msgid "Policy"
 msgstr "Policy"
 
 #: src/engine/player/player.py:359 src/engine/player/player.py:361
 #: src/engine/player/player.py:362 src/engine/player/player.py:375
 #: src/engine/player/player.py:387 src/engine/player/player.py:416
+#: src/engine/player/player.py:418
 msgid "Show subservices"
 msgstr "Zobrazit titulky"
 
 #: src/engine/player/player.py:384 src/engine/player/player.py:386
 #: src/engine/player/player.py:387 src/engine/player/player.py:400
 #: src/engine/player/player.py:412 src/engine/player/player.py:441
+#: src/engine/player/player.py:443
 msgid "Please select subservice..."
 msgstr "Prosím zvolte zdroj"
 
 #: src/engine/player/player.py:472 src/engine/player/player.py:474
 #: src/engine/player/player.py:475 src/engine/player/player.py:476
 #: src/engine/player/player.py:491 src/engine/player/player.py:505
-#: src/engine/player/player.py:532
+#: src/engine/player/player.py:532 src/engine/player/player.py:535
 msgid "Play next entry in playlist"
 msgstr "Přehrát nasledujíci záznam v playlistu"
 
 #: src/engine/player/player.py:474 src/engine/player/player.py:476
 #: src/engine/player/player.py:477 src/engine/player/player.py:478
 #: src/engine/player/player.py:493 src/engine/player/player.py:507
-#: src/engine/player/player.py:533
+#: src/engine/player/player.py:533 src/engine/player/player.py:536
 msgid "Play previous entry in playlist"
 msgstr "Přehrát předcházejíci záznam v playlistu"
 
 #: src/engine/player/player.py:476 src/engine/player/player.py:478
 #: src/engine/player/player.py:479 src/engine/player/player.py:480
 #: src/engine/player/player.py:495 src/engine/player/player.py:509
-#: src/engine/player/player.py:534
+#: src/engine/player/player.py:534 src/engine/player/player.py:537
 msgid "Exit player"
 msgstr "Ukončit přehrávač"
 
 #: src/engine/player/player.py:516 src/engine/player/player.py:518
 #: src/engine/player/player.py:519 src/engine/player/player.py:520
 #: src/engine/player/player.py:542 src/engine/player/player.py:560
-#: src/engine/player/player.py:586
+#: src/engine/player/player.py:586 src/engine/player/player.py:589
 msgid "Resuming playback"
-msgstr "Obnovit přehrávání"
+msgstr "Obnovuju přehrávání"
 
 #: src/engine/updater.py:145 src/engine/updater.py:157
 #: src/engine/updater.py:154 src/engine/updater.py:155
@@ -1585,6 +1597,11 @@ msgstr "Doplňek je vytvořen pro verzi archivCZSK 1.x.x a v této verzi už nen
 msgid "Do you want to remove this addon?"
 msgstr "Chcete vymazat tento doplňek?"
 
-#: src/engine/player/player.py:535
+#: src/engine/player/player.py:535 src/engine/player/player.py:538
 msgid "Switch player type"
 msgstr "Změnit typ přehrávače"
+
+#: src/engine/player/player.py:148
+#, python-brace-format
+msgid "Player switched to {player}"
+msgstr "Přehrávač změnený na {player}"

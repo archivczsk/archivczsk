@@ -143,9 +143,11 @@ class Player(object):
 		settings = play_item.settings.copy()
 		settings['stype'] = stype
 		settings['resume_time_sec'] = getPlayPositionInSeconds(self.session)
-
+		settings['resume_popup'] = False
 		play_item.settings = settings
-		self.play_stream(play_item.url, play_item.settings, play_item.subs, play_item.name, play_item)
+
+		status_msg = _("Player switched to {player}").format(player=videoPlayerInfo.getPlayerNameByStype(stype))
+		self.play_stream(play_item.url, play_item.settings, play_item.subs, play_item.name, play_item, status_msg)
 		
 	def play_item(self, item = None, idx = None):
 		log.info("play_item(%s, %s)"%(item,toString(idx)))
@@ -174,7 +176,7 @@ class Player(object):
 
 			self.play_stream(play_item.url, play_item.settings, play_item.subs, play_item.name, play_item)
 
-	def play_stream(self, play_url, play_settings=None, subtitles_url=None, title=None, wholeItem=None):
+	def play_stream(self, play_url, play_settings=None, subtitles_url=None, title=None, wholeItem=None, status_msg=None):
 		log.info("play_stream(%s, %s, %s, %s)"%(play_url, play_settings, subtitles_url, title))
 
 		if play_url.startswith("rtmp"):
@@ -217,7 +219,7 @@ class Player(object):
 			self.video_player.setInfoBarText(sref_title)
 		
 		self.video_player.play_service_ref(service_ref, 
-				self._play_item.subs, play_settings.get("resume_time_sec"))
+				self._play_item.subs, play_settings.get("resume_time_sec"), play_settings.get("resume_popup", True), status_msg)
 
 	def player_callback(self, callback):
 		log.info("player_callback(%r)" % (callback,))
@@ -526,6 +528,7 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.__timer_watching_conn = eConnectCallback(self.__timer_watching.timeout, self.__watching)
 		self.__subtitles_url = None
 		self.__resume_time_sec = None
+		self.__resume_popup = True
 		self.duration_sec = None
 		self["actions"] = HelpableActionMap(self, "ArchivCZSKMoviePlayerActions", {
 			"showPlaylist": (boundFunction(self.player_callback, ("playlist", "show",)), _("Show playlist")),
@@ -572,7 +575,8 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 					self.doSeek(self.__resume_time_sec * 90000)
 
 				self.__resume_time_sec = None
-				RemovePopup(self.RESUME_POPUP_ID)
+				if self.__resume_popup:
+					RemovePopup(self.RESUME_POPUP_ID)
 			if self.__subtitles_url:
 				self.loadSubs(toString(self.__subtitles_url))
 
@@ -580,23 +584,26 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.__timer.stop()
 		self.__timer_watching.stop()
 		self.resetSubs(True)
-		if (self.__resume_time_sec is not None or self.__subtitles_url is not None):
-			if self.__resume_time_sec is not None:
-				AddNotificationWithID(self.RESUME_POPUP_ID,
-						MessageBox, _("Resuming playback"), timeout=0,
-						type=MessageBox.TYPE_INFO, enable_input=False)
+		if self.__resume_time_sec is not None and self.__resume_popup:
+			AddNotificationWithID(self.RESUME_POPUP_ID,
+					MessageBox, _("Resuming playback"), timeout=0,
+					type=MessageBox.TYPE_INFO, enable_input=False)
 				
 		# always run pts detection to get video length (if available) 
 		self.__timer.start(500, True)
 		self.__timer_watching.start(5 * 60 * 1000) # 5 min.
 
-	def play_service_ref(self, service_ref, subtitles_url=None, resume_time_sec=None):
+	def play_service_ref(self, service_ref, subtitles_url=None, resume_time_sec=None, resume_popup=True, status_msg=None):
 		self.duration_sec = None
 		self.__subtitles_url = subtitles_url
 		self.__resume_time_sec = resume_time_sec
+		self.__resume_popup = resume_popup
 
 		self.session.nav.stopService()
 		self.session.nav.playService(service_ref)
+
+		if status_msg:
+			self.status_dialog.set_status(status_msg)
 
 	def doEofInternal(self, playing):
 		log.info("doEofInternal(%s)"%playing)
