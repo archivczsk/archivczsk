@@ -396,7 +396,7 @@ class GstDownload(DownloadProcessMixin, Download):
 			if "Cookie" in self.headers:
 				cmd += " cookie='%s'"% self.headers.pop("Cookie")
 			if self.headers:
-				cmd += " extra-headers='" + ','.join("%s=%s" % (k, v) for k, v in self.headers.items())
+				cmd += " extra-headers='test," + ','.join("%s=%s" % (k, v.replace(' ', '\\ ')) for k, v in self.headers.items())
 				cmd += "'"
 			if isHLSUrl(self.url):
 				cmd += " ! hlsdemux"
