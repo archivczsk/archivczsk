@@ -1048,7 +1048,7 @@ msgstr "Uložiť"
 
 #: src/gui/menu.py:47 src/gui/menu.py:45
 msgid "Next"
-msgstr "Ďaľšia strana"
+msgstr "Ďalšia strana"
 
 #: src/gui/menu.py:178 src/gui/menu.py:175
 msgid "Main"
