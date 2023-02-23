@@ -1,3 +1,8 @@
+archivCZSK 2.0.2, 23.02.2023
+    - oprava možného zaseknutia pri zmene prehrávača cez tlačídlo 0
+    - oprava nastavovania extra hlavičiek pre gst sťahovač
+    - malé opravy v generovaní názvov súborov pri sťahovaní
+
 archivCZSK 2.0.1, 21.02.2023
     - opravený pád pri rýchlom stlačení play/pause za sebou
     - zapnutá podpora pre záložky pre všetky položky
