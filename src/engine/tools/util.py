@@ -533,7 +533,7 @@ def url_get_file_info(url, headers=None, timeout=3):
 				if extension is not None:
 					if not os.path.splitext(filename)[1]:
 						filename += extension
-	return {'filename':sanitize_filename(filename), 'length':length, 'is_hls': True}
+	return {'filename':sanitize_filename(filename), 'length':length, 'is_hls': is_hls}
 
 def download_to_file_async(url, dest, callback=None, data=None, headers=None, timeout=60):
 	def got_data(data):

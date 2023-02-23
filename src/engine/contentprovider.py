@@ -27,6 +27,7 @@ from .items import PVideo, PPlaylist, PDownload, PCategory, PVideoAddon, PCatego
 from .serialize import CategoriesIO, FavoritesIO
 from .tools import task, util
 from .usage import usage_stats
+from ..colors import DeleteColors
 
 from ..py3compat import *
 from enigma import eTimer
@@ -361,7 +362,7 @@ class DownloadsMixin(object):
 
 			message = "%s:\n\n%s:\n%s - %sMB\n\n%s:\n%s - %sMB %s\n\n%s:\n%s"%(
 					_("Do you want to download"),
-					_("Source"), toString(item.name), str(size_mbytes),
+					_("Source"), toString(DeleteColors(item.name)), str(size_mbytes),
 					_("Destination"), toString(destination[0]), str(free_mbytes), _("free"),
 					_("Filename"), toString(filename[0]))
 			choices = [ (_("yes"), "yes"), (_("no"), "no"), 
@@ -372,8 +373,12 @@ class DownloadsMixin(object):
 
 		headers = item.settings['extra-headers']
 		destination = [self.downloads_path]
-		filename = [item.filename or item.info.get('title') or item.name]
-		filename[0] = removeDiac(filename[0])
+		if item.filename:
+			filename = [item.filename]
+		else:
+			f = item.info.get('title') or item.name
+			filename = [removeDiac(DeleteColors(f.replace('.', ' ')))]
+
 		ask_if_download()
 
 	def remove_download(self, item):
