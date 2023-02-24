@@ -485,6 +485,8 @@ class AddonSettings(object):
 					except:
 						log.error('Error by calling delayed setting change notification for option "%s"' % name)
 						log.error(traceback.format_exc())
+				else:
+					log.debug("Value of setting %s not changed - not calling notifier" % name)
 				self.old_settings[name] = value
 		else:
 			log.debug("Settings closed without save")
@@ -494,6 +496,7 @@ class AddonSettings(object):
 	def __call_change_notifier(self, cbk, name, value ):
 		if self.old_settings.get(name) == None:
 			# store first value to compare it if it's realy changed
+			log.debug("First value for setting %s succesfuly stored" % name)
 			self.old_settings[name] = value
 			return
 
