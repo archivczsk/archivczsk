@@ -1,3 +1,8 @@
+archivCZSK 2.0.3, 24.02.2023
+    - oprava zobrazovania správ z doplnkov
+    - vylepšený spôsob lokalizácie doplnkov
+    - drobné vylepšenia vzhľadu
+
 archivCZSK 2.0.2, 23.02.2023
     - oprava možného zaseknutia pri zmene prehrávača cez tlačídlo 0
     - oprava nastavovania extra hlavičiek pre gst sťahovač
