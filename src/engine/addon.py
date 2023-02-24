@@ -252,9 +252,8 @@ class AddonLanguage(object):
 			language = {}
 			strings = el.getroot()
 			for string in strings.findall('string'):
-				string_id = int(string.attrib.get('id'))
-				text = string.text
-				language[string_id] = text
+				string_id = string.attrib.get('id')
+				language[string_id] = string.text
 			self.languages[language_id] = language
 			log.debug("%s language %s was successfully loaded", (self, language_id))
 
@@ -273,11 +272,12 @@ class AddonLanguage(object):
 			return None
 
 	def get_localized_string(self, string_id):
+		string_id = str(string_id)
 		if string_id in self.current_language:
 			return self.current_language[string_id]
 		else:
-			log.error("%s cannot find language id %s in %s language, returning id of language", self, string_id, self.current_language_id)
-			return str(string_id)
+#			log.error("%s cannot find language id %s in %s language, returning id of language", self, string_id, self.current_language_id)
+			return string_id
 
 	def has_language(self, language_id):
 		return language_id in self.languages
@@ -411,19 +411,7 @@ class AddonSettings(object):
 			return True
 
 	def _get_label(self, label):
-		log.debug('%s resolving label: %s', self, label)
-		try:
-			string_id = int(label)
-		except ValueError:
-			if isinstance(label, unicode):
-				return label
-			else:
-				label = util.decode_string(label)
-				return label
-		else:
-			label = self.addon.get_localized_string(string_id)
-			return label
-
+		return self.addon.get_localized_string(label)
 
 	def initialize_entry(self, setting, entry):
 		# fix dotted id
