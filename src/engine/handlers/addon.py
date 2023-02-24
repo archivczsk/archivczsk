@@ -63,7 +63,9 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 							canClose = args['canClose']
 						else:
 							canClose = True
-							
+
+						command = None
+
 						if msgType == 'error':
 							return showErrorMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
 						elif msgType == 'warning':

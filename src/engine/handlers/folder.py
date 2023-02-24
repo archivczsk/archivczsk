@@ -90,6 +90,7 @@ class FolderItemHandler(ItemHandler):
 				if screen_command is not None:
 					cmd = ("%s"%screen_command).lower()
 					if cmd == "show_msg":
+						screen_command = None
 						#dialogStart = datetime.datetime.now()
 						self.content_screen.stopLoading()
 						msgType = 'info'
