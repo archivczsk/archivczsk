@@ -156,7 +156,7 @@ class PosterPixmapHandler:
 			self.last_decoded_url = None
 		self._decoding_url = None
 
-	def set_image(self, url):
+	def set_image(self, url, no_image_path=None):
 		log.debug("PosterImageHandler.set_image: {0}".format(url))
 		if self.last_selected_url:
 			if self.last_selected_url == url:
@@ -172,7 +172,7 @@ class PosterPixmapHandler:
 		self.retry_timer.stop()
 
 		if url is None or len(url) == 0:
-			imgPtr = LoadPixmap(path=self.no_image_path, cached=True)
+			imgPtr = LoadPixmap(path=no_image_path if no_image_path else self.no_image_path, cached=True)
 			if imgPtr:
 				self.poster_widget.instance.setPixmap(imgPtr)
 		else:

@@ -256,7 +256,7 @@ class ArchivCZSKVideoAddonsManagementScreen(BaseContentScreen, TipBar):
 					try:
 						image = LoadPixmap(path=imagePath, cached=False)
 					except Exception as e:
-						print('[ArchivCZSKContent] error when loading image: %s' % str(e))
+						log.error('[ArchivCZSKContent] error when loading image %s: %s' % (image, str(e)))
 				try:  # addon
 					author = item.author and toString(item.author) or ""
 					version = item.version and toString(item.version) or ""
@@ -428,7 +428,7 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 					try:
 						image = LoadPixmap(path=imagePath, cached=False)
 					except Exception as e:
-						print('[ArchivCZSKContent] error when loading image: %s' % str(e))
+						log.error('[ArchivCZSKContent] error when loading image %s: %s' % (image, str(e)))
 				try:  # addon
 					author = item.author and toString(item.author) or ""
 					version = item.version and toString(item.version) or ""
@@ -653,9 +653,9 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 			irat = ""
 			iplot = ""
 
-			if isinstance(item, PVideoNotResolved) or isinstance(item, PFolder):
-				if self.showImageEnabled:
-					self.poster.set_image(item.image)
+			if isinstance(item, PExit):
+				self.poster.set_image(item.image)
+			elif isinstance(item, PVideoNotResolved) or isinstance(item, PFolder):
 				try:
 					if 'rating' in item.info:
 						if float(item.info['rating']) > 0:
@@ -685,6 +685,13 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 						iplot = toString(item.info['plot'])[0:800]
 				except:
 					log.logError("Plot parse failed..\n%s"%traceback.format_exc())
+
+				if self.showImageEnabled:
+					if idur or irat or iplot:
+						no_image_path = os.path.join(settings.IMAGE_PATH, 'no_movie_image.png')
+					else:
+						no_image_path = os.path.join(settings.IMAGE_PATH, 'empty.png')
+					self.poster.set_image(item.image, no_image_path)
 
 			self["movie_duration"].setText(idur)
 			self["movie_rating"].setText(irat)

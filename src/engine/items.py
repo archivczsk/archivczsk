@@ -202,6 +202,7 @@ class PExit(PItem):
 	def __init__(self):
 		PItem.__init__(self)
 		self.thumb = PNG_PATH + '/up.png'
+		self.image = PNG_PATH + '/prev.png'
 		self.name = u'..'
 
 class PSearch(PFolder):
