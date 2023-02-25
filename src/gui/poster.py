@@ -132,12 +132,17 @@ class PosterPixmapHandler:
 			self.retry_timer.start(200)
 
 	def _decode_image(self, path):
-		wsize = self.poster_widget.instance.size()
-		sc = AVSwitch().getFramebufferScale()
-		self.picload.setPara((wsize.width(), wsize.height(),
-							  sc[0], sc[1], False, 1, "#ff000000"))
-		self.last_decoded_url = None
-		return 0 == self.picload.startDecode(util.toString(path))
+		try:
+			wsize = self.poster_widget.instance.size()
+			sc = AVSwitch().getFramebufferScale()
+			self.picload.setPara((wsize.width(), wsize.height(),
+								  sc[0], sc[1], False, 1, "#ff000000"))
+			self.last_decoded_url = None
+			return 0 == self.picload.startDecode(util.toString(path))
+		except Exception as e:
+			log.error("PosterImageHandler._decode_image, exception: %s" % str(e))
+			# do not try to decode again ...
+			return True
 
 	def _got_picture_data(self, picInfo=None):
 		picPtr = self.picload.getData()
