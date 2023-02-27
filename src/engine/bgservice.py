@@ -23,10 +23,10 @@ WorkerStop = object()
 fnc_queue = Queue()
 
 # input queue to send results from reactor thread to running function in workerThread
-fnc_in_queue = Queue(1)
+fnc_in_queue = Queue()
 
 #output queue to send function decorated by callFromThread from workerThread to reactor thread and run it there
-fnc_out_queue = Queue(1)
+fnc_out_queue = Queue()
 
 
 def run_in_main_thread(val):
@@ -65,22 +65,30 @@ class BGServiceThread(Thread):
 	def __init__(self):
 		Thread.__init__(self)
 		self.name = "ArchivCZSK-serviceThread"
+		self.stop_flag = False
 
 	def run(self):
 		set_thread_name(self.name)
 		o = fnc_queue.get()
 		while o is not WorkerStop:
 			function, args, kwargs, onResult, service_name, task_name = o
-			log.debug('[BGServiceThread] [%s] running task: %s' % (service_name, task_name))
 			del o
-			try:
-				result = function(*args, **kwargs)
-				success = True
-			except:
-				log.error(traceback.format_exc())
+
+			if not self.stop_flag:
+				log.debug('[BGServiceThread] [%s] running task: %s' % (service_name, task_name))
+				try:
+					result = function(*args, **kwargs)
+					success = True
+				except:
+					log.error(traceback.format_exc())
+					success = False
+					result = failure.Failure()
+				log.debug('[BGServiceThread] [%s] task %s completed' % (service_name, task_name))
+			else:
+				log.debug('[BGServiceThread] [%s] not running task %s because of stop flag' % (service_name, task_name))
 				success = False
-				result = failure.Failure()
-			log.debug('[BGServiceThread] [%s] task %s completed' % (service_name, task_name))
+				result = None
+
 			del function, args, kwargs
 			try:
 				onResult(success, result)
@@ -92,6 +100,7 @@ class BGServiceThread(Thread):
 
 	def stop(self):
 		log.debug("Stopping BGService working thread")
+		self.stop_flag = True
 		fnc_queue.put(WorkerStop)
 
 
@@ -125,7 +134,7 @@ class BGServiceTask(object):
 			log.debug("[BGServiceTask] stopping workerThread")
 			BGServiceTask.worker_thread.stop()
 			BGServiceTask.worker_thread.join()
-			BGServiceTask.worker_thread = None
+			BGServiceTask.worker_thread = False
 			global m_pump_conn
 			if m_pump_conn is not None:
 				del m_pump_conn
@@ -154,6 +163,13 @@ class BGServiceTask(object):
 		# init work thread if needed
 		if BGServiceTask.worker_thread == None:
 			BGServiceTask.startServiceThread()
+
+		if BGServiceTask.worker_thread == False:
+			log.debug('[BGServiceTask] [%s] not running task %s - worker thread was stopped' % (self.service_name, self.task_name))
+			BGServiceTask.instance = None
+			if self.callback:
+				self.callback(False, None)
+				return
 
 		log.debug('[BGServiceTask] [%s] adding task to queue: %s' % (self.service_name, self.task_name))
 		self._running = True
