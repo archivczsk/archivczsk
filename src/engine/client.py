@@ -4,9 +4,11 @@
 import twisted.internet.defer as defer
 
 from Components.config import config
+from Components.Input import Input
 from Screens.MessageBox import MessageBox
 from Screens.VirtualKeyBoard import VirtualKeyBoard
 from Screens.ChoiceBox import ChoiceBox
+from Screens.InputBox import InputBox
 
 from .. import _, log, removeDiac
 from .contentprovider import VideoAddonContentProvider
@@ -65,6 +67,20 @@ def getTextInput(session, title, text=""):
 	#session.openWithCallback(getTextInputCB, VirtualKeyBoard, title=toString(title), text=text)
 	session.openWithCallback(getTextInputCB, VirtualKeyBoard, title=DeleteColors(removeDiac(title)), text=removeDiac(text))
 	return d
+
+
+@callFromThread
+def getNumericInput(session, title, text="", showChars=True):
+	def getNumericInputCB(word):
+		if word is None:
+			d.callback(None)
+		else:
+			d.callback(word)
+
+	d = defer.Deferred()
+	session.openWithCallback(getNumericInputCB, InputBox, title=title, text=text, type=Input.NUMBER if showChars else Input.PIN)
+	return d
+
 
 def getSearch(session):
 	return getTextInput(session, _("Please set your search expression"))
