@@ -269,7 +269,7 @@ class ArchivCZSK():
 		self.session.openWithCallback(
 				self.update_addons,
 				MessageBox,
-				"%s %s? (%s)\n\n%s" %(_("Do you want to update"), _("addons"), len(self.to_update_addons), toString(update_string)),
+				"%s %s? (%s)\n\n%s" % (_("Do you want to update"), _("addons"), len(self.to_update_addons), toString(update_string)),
 				type = MessageBox.TYPE_YESNO)
 
 	def update_addons(self, callback=None, verbose=True):
@@ -279,7 +279,7 @@ class ArchivCZSK():
 			updated_string = self._update_addons()
 			self.session.openWithCallback(self.ask_restart_e2,
 					MessageBox,
-					"%s (%s/%s):\n\n%s"%(_("Following addons were updated"), len(self.updated_addons), len(self.to_update_addons), toString(updated_string)),
+					"%s: (%s/%s):\n\n%s" % (_("Following addons were updated"), len(self.updated_addons), len(self.to_update_addons), toString(updated_string)),
 					type=MessageBox.TYPE_INFO)
 
 	def _update_addons(self):

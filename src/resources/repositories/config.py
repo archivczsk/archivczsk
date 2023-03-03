@@ -16,18 +16,24 @@ choicelist_timeout.append(("0", _("infinite")))
 
 #define settings which will apply for every addon
 global_addon_settings = [
-						   {'label':_('download'),
-							 'subentries':[
-										{'label':_("download path"), 'id':'download_path'},
-										]
-							},
-							{'label':_('loading'),
-								'subentries':[
-										{'label':_("timeout"), 'id':'loading_timeout', 'entry':ConfigSelection(default="15", choices=choicelist_timeout)},
-										]
-							}
-
-						   ]
+	{
+		'label':_('Download'), 'subentries': [
+			{
+				'label': _("Download path"),
+				'id':'download_path'
+			},
+		]
+	},
+	{
+		'label':_('Loading'), 'subentries': [
+			{
+				'label': _("Timeout"),
+				'id':'loading_timeout',
+				'entry':ConfigSelection(default="15", choices=choicelist_timeout)
+			},
+		]
+	}
+]
 
 
 def add_global_addon_specific_setting(addon, addon_config, setting):

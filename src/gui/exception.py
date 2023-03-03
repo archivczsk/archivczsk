@@ -80,7 +80,7 @@ class AddonExceptionHandler(GUIExceptionHandler):
 				# we handle all possible exceptions since we dont want plugin to crash because of addon error...
 				except Exception as e:
 					log.logError("Addon error.\n%s"%traceback.format_exc())
-					self.errorMessage(_("Author of this addon needs to update it"))
+					self.errorMessage(_("An unhandled error occurred while calling the addon. Please report a bug so it can be fixed."))
 					traceback.print_exc()
 			except:
 				log.logError("Addon (LOG) error.\n%s"%traceback.format_exc())

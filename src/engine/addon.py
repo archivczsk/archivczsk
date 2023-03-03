@@ -363,7 +363,7 @@ class AddonSettings(object):
 				if len(entry['subentries']) == 0 :
 					continue
 				else:
-					category = {'label':_('general'), 'subentries':[]}
+					category = {'label':_('General'), 'subentries':[]}
 			else:
 				category = {'label':self._get_label(entry['label']), 'subentries':[]}
 

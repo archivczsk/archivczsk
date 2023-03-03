@@ -98,7 +98,7 @@ class ArchivCZSKSeeker():
 			except Exception:
 				log.logError("ArchivCZSKSeeker fatal error.\n%s" % traceback.format_exc())
 				traceback.print_exc()
-				showErrorMessage(session, _('unknown error'), 5, cb=cb)
+				showErrorMessage(session, _('Unknown error'), 5, cb=cb)
 				return None
 		return ArchivCZSKSeeker.instance
 	

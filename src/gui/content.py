@@ -59,7 +59,7 @@ class BaseContentScreen(BaseArchivCZSKListSourceScreen):
 
 	def startLoading(self):
 		self.loadingScreen.start()
-		self["status_label"].setText(_("Loading"))
+		self["status_label"].setText(_("Loading..."))
 
 	def stopLoading(self):
 		self.loadingScreen.stop()

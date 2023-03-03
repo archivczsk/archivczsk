@@ -27,9 +27,9 @@ class ArchivCZSKSearchClientScreen(BaseArchivCZSKListSourceScreen):
 		event = EventInfo(session.nav, EventInfo.NOW).getEvent()
 		self.searchExp = event and event.getEventName() or ''
 		self.searchExp = removeDiac(self.searchExp)
-		self['red_label'] = StaticText(_("change search expression"))
-		self['green_label'] = StaticText(_("remove diacritic"))
-		self['blue_label'] = StaticText(_("choose from EPG"))
+		self['red_label'] = StaticText(_("Change search expression"))
+		self['green_label'] = StaticText(_("Remove diacritic"))
+		self['blue_label'] = StaticText(_("Choose from EPG"))
 		self['search'] = Label(self.searchExp)
 		
 		self["actions"] = ActionMap(["archivCZSKActions"],

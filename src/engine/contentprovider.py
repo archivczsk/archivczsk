@@ -594,21 +594,21 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		try:
 			mod = importlib.import_module('.' + self.video_addon.import_name, self.video_addon.import_package)
 			entry_point = getattr(mod, self.video_addon.import_entry_point)
+
+			log.debug("Entry point %s found in module %s.%s: %s" % (self.video_addon.import_entry_point, self.video_addon.import_package, self.video_addon.import_name, entry_point))
+
+			# call addon entry point to get addon interface
+			response = entry_point(self.video_addon)
 		except Exception as e:
 			log.error("Entry point %s not found in module %s.%s" % (self.video_addon.import_entry_point, self.video_addon.import_package, self.video_addon.import_name))
 			log.error(traceback.format_exc())
-			raise AddonError(_("Failed to resolve addon entry point: %s" % str(e)))
-
-		log.debug("Entry point %s found in module %s.%s: %s" % (self.video_addon.import_entry_point, self.video_addon.import_package, self.video_addon.import_name, entry_point))
-
-		# call addon entry point to get addon interface
-		response = entry_point(self.video_addon)
+			raise AddonError(_("Loading of addon failed") + ": %s" % str(e))
 
 		if isinstance(response, type({})):
 			# interface returned as dictionary
 			if 'run' not in response:
 				log.error("Addon %s doesn't returned interface to mandatory run method" % (self.video_addon))
-				raise AddonError(_("Addon doesn't returned interface run method"))
+				raise AddonError(_("Addon returned not supported communication interface"))
 
 			self.addon_interface = DummyAddonInterface(run=response['run'], trakt=response.get('trakt'), stats=response.get('stats'), search=response.get('search'))
 		elif callable(response):
