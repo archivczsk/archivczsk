@@ -5,6 +5,7 @@ Created on 21.10.2012
 @author: marko
 '''
 import os, traceback
+import gettext
 from Components.config import config, ConfigSubsection, ConfigSelection, ConfigYesNo, ConfigText, ConfigNumber, ConfigIP, ConfigPassword, getConfigListEntry
 
 from .tools import util, parser
@@ -205,10 +206,10 @@ class VideoAddon(Addon):
 class AddonLanguage(object):
 	"""Loading xml language file"""
 	language_map = {
-					'en':'English',
-					'sk':'Slovak',
-					'cs':'Czech',
-					}
+		'en':'English',
+		'sk':'Slovak',
+		'cs':'Czech',
+	}
 
 	def __init__(self, addon, languages_dir):
 
@@ -219,6 +220,7 @@ class AddonLanguage(object):
 		self.default_language_id = 'en'
 		self.current_language_id = 'en'
 		self.languages = {}
+		self.use_gettext = False
 		log.debug("initializing %s - languages", addon)
 
 		if not os.path.isdir(languages_dir):
@@ -226,22 +228,33 @@ class AddonLanguage(object):
 			return
 
 		for language_dir in os.listdir(languages_dir):
-			language_id = self.get_language_id(language_dir)
-			if language_id is None:
-				log.error("%s unknown language %s, you need to update Language map to use it, skipping..", self, language_dir)
-				continue
-			language_dir_path = os.path.join(languages_dir, language_dir)
-			language_file_path = os.path.join(language_dir_path, self._language_filename)
-			if os.path.isfile(language_file_path):
-				self.languages[language_id] = None
+			if language_dir in self.language_map and os.path.isdir( os.path.join(languages_dir, language_dir, 'LC_MESSAGES') ):
+				# directory for gettext localisation exists
+				self.use_gettext = True
+				self.languages[language_dir] = None
 			else:
-				log.error("%s cannot find language file %s, skipping %s language..", self, language_file_path, language_dir)
+				language_id = self.get_language_id(language_dir)
+				if language_id is None:
+					log.error("%s unknown language %s, you need to update Language map to use it, skipping..", self, language_dir)
+					continue
+				language_dir_path = os.path.join(languages_dir, language_dir)
+				language_file_path = os.path.join(language_dir_path, self._language_filename)
+				if os.path.isfile(language_file_path):
+					self.languages[language_id] = None
+				else:
+					log.error("%s cannot find language file %s, skipping %s language..", self, language_file_path, language_dir)
+
 
 	def __repr__(self):
 		return "%s[language]" % self.addon
 
 
 	def load_language(self, language_id):
+		if self.use_gettext:
+			self.languages[language_id] = gettext.translation(self.addon.id, self._languages_dir, [language_id])
+			log.debug("%s gettext language %s was successfully loaded", (self, language_id))
+			return
+
 		language_dir_path = os.path.join(self._languages_dir, self.get_language_name(language_id))
 		language_file_path = os.path.join(language_dir_path, self._language_filename)
 		try:
@@ -273,6 +286,8 @@ class AddonLanguage(object):
 
 	def get_localized_string(self, string_id):
 		string_id = str(string_id)
+		if self.use_gettext:
+			return self.current_language.gettext(string_id)
 		if string_id in self.current_language:
 			return self.current_language[string_id]
 		else:
@@ -434,7 +449,7 @@ class AddonSettings(object):
 			setattr(setting, entry['id'], ConfigSelection(default=entry['default'], choices=choicelist))
 
 		elif entry['type'] == 'labelenum':
-			choicelist = [(py2_encode_utf8( self._get_label(e)), py2_encode_utf8( self._get_label(e))) for e in entry['values'].split("|")]
+			choicelist = [(py2_encode_utf8(e), py2_encode_utf8(self._get_label(e))) for e in entry['values'].split("|")]
 			setattr(setting, entry['id'], ConfigSelection(default=entry['default'], choices=choicelist))
 
 		elif entry['type'] == 'keyenum':
