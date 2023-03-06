@@ -69,15 +69,11 @@ class ArchivCZSK():
 				if DMM_IMAGE:
 					if desktop_width == 1920:
 						default_skin_name = "default_dmm_fhd"
-					elif desktop_width == 3840:
-						default_skin_name = "default_dmm_uhd"
 					else:
 						default_skin_name = "default_dmm_hd"
 				else:
 					if desktop_width == 1920:
 						default_skin_name = "default_fhd"
-					elif desktop_width == 3840:
-						default_skin_name = "default_uhd"
 					else:
 						default_skin_name = "default_hd"
 			else:
