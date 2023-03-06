@@ -481,6 +481,10 @@ class InfoBarAudioSelectionNoSubtitles(InfoBarAudioSelection):
 	def audioSelection(self):
 		self.session.open(type(self).AudioSelectionNoSubtitles, infobar=self)
 
+	def getCurrentServiceSubtitle(self):
+		# workaround for DMM which needs access to this method
+		return None
+
 if SubsSupportAvailable and config_archivczsk.videoPlayer.subtitlesInAudioSelection.value:
 	archivCZSKInfoBarAudioSelection = InfoBarAudioSelection
 else:
