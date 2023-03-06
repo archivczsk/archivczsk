@@ -137,7 +137,8 @@ class UsageStats(object):
 						'http_calls': stats_data.get('http_calls', 0),
 					})
 
-			self.bgservice.run_task("SendStats", None, self.__send_data, data)
+#			self.bgservice.run_task("SendStats", None, self.__send_data, data)
+			self.__send_data(data)
 		self.reset()
 
 	def __send_data(self, data):
