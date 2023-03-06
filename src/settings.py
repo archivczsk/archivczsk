@@ -6,6 +6,11 @@ from Components.config import config, ConfigSubsection, ConfigSelection, \
 	NoSave, ConfigInteger
 from Tools.Directories import SCOPE_PLUGINS, resolveFilename
 
+try:
+	from Components.Converter.ACZSKKodiToE2List import colorFixNeeded
+except:
+	colorFixNeeded = None
+
 from . import log, UpdateInfo, _
 from .engine.player.info import videoPlayerInfo
 from .compat import DMM_IMAGE
@@ -117,7 +122,7 @@ skinChoices = [os.path.splitext(fname)[0] for fname in os.listdir(SKIN_PATH) if 
 skinChoices.append('auto')
 config.plugins.archivCZSK.skin = ConfigSelection(default="auto", choices=skinChoices)
 config.plugins.archivCZSK.skin.addNotifier(skin_changed, initial_call=False)
-config.plugins.archivCZSK.colored_items = ConfigYesNo(default=False if DMM_IMAGE else True)
+config.plugins.archivCZSK.colored_items = ConfigYesNo(default=False if colorFixNeeded == None else True)
 config.plugins.archivCZSK.showVideoInfo = ConfigYesNo(default=True)
 config.plugins.archivCZSK.downloadPoster = ConfigYesNo(default=True)
 choicelist = []

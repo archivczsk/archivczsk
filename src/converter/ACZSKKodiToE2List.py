@@ -2,26 +2,43 @@ import re
 from Components.Converter.Converter import Converter
 from Components.Element import cached
 
-colorFixNeeded = True # old behaviour as default
+def isDMMImage():
+	try:
+		from enigma import eTimer
+		eTimer().timeout.connect
+	except:
+		return False
+	return True
 
-try:
-	from Tools.Hex2strColor import Hex2strColor
-	if Hex2strColor(0xffffffff) == "\c????????":
-		colorFixNeeded = True
-	else:
-		colorFixNeeded = False
-except:
-	pass
+if isDMMImage():
+	# DMM doesn't need color fix
+	colorFixNeeded = False
+
+	# 0xff is for DMM not transparent - oposite of other images (a then make software portable ...)
+	alphaPrefix = "FF"
+else:
+	alphaPrefix = "00"
+	try:
+		# if there is Hex2strColor, then chceck the output ...
+		from Tools.Hex2strColor import Hex2strColor
+		if Hex2strColor(0xffffffff) == "\c????????":
+			colorFixNeeded = True # old behaviour
+		else:
+			colorFixNeeded = False
+	except:
+		# hmm, what now - how to know, if there we need to fix colors ...
+		# None will be handled the same way as True
+		colorFixNeeded = None
 
 
 def getEscapeColorFromHexString(color):
 	if color.startswith('#'):
 		color = color[1:]
 	if len(color) == 6:
-		color = "00"+ color
+		color = alphaPrefix + color
 	if len(color) != 8:
 		print('invalid color %s' % color)
-		return getEscapeColorFromHexString("00ffffff")
+		return getEscapeColorFromHexString("ffffff")
 	if colorFixNeeded == False:
 		return color
 	colorsarray = []
@@ -68,6 +85,8 @@ class ACZSKKodiToE2List(Converter):
 		self.boldColor = getEscapeColorFromHexString("FFFFFF")
 		self.defaultColor = getEscapeColorFromHexString("FFFFFF")
 		self.indexes = []
+		self.buildfunc = None # needed for DMM image
+		self.selection_enabled = True # needed for DMM image
 		arguments = arguments.split(',')
 		for arg in arguments:
 			if arg.startswith("Index"):
