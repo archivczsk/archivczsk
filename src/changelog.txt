@@ -1,3 +1,9 @@
+archivCZSK 2.0.4, 06.03.2023
+    - oprava pádu pri neskorom dekódovaní obrázka
+    - oprava deadlocku pri viacerých úlohách v pracovnom threade
+    - vylepšenie ukončovania pracovného threadu
+    - oprava nekonečného pádu pri generovaní štatistík pre DMM
+
 archivCZSK 2.0.3, 24.02.2023
     - oprava zobrazovania správ z doplnkov
     - vylepšený spôsob lokalizácie doplnkov
