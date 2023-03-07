@@ -469,21 +469,19 @@ class Tabs(GUIComponent):
 		space_width = self.params['spaceWidth']
 		space_height = self.params['spaceHeight']
 
-		entries_per_col = size[1] / (tabsize[1] + space_height)
+		entries_per_col = int(size[1] / (tabsize[1] + space_height))
 		if (entries_per_col + 1) * (tabsize[1] + space_height) - space_height <= size[1]:
 			entries_per_col += 1
 		assert entries_per_col > 0
 
-		entries_per_row = size[0] / (tabsize[0] + space_width)
+		entries_per_row = int(size[0] / (tabsize[0] + space_width))
 		if (entries_per_row + 1) * (tabsize[0] + space_width) - space_width <= size[0]:
 			entries_per_row += 1
-		num_rows = len(self.tabs) / entries_per_row + 1
-		num_pages = num_rows / entries_per_col + 1
 
-		print("entries_per_row = %d, rows = %d, num_pages = %d" % (entries_per_row, num_rows, num_pages))
 		self.entries_per_row = int(entries_per_row)
 		self.entries_per_page = int(entries_per_col * entries_per_row)
 		self.pages = [self.tabs[i:i+self.entries_per_page] for i in range(0, len(self.tabs), self.entries_per_page)]
+#		print("entries_per_col = %.2f, entries_per_row = %.2f, tabs = %d, entrie_per_page = %d, pages = %d" % (entries_per_col, entries_per_row, len(self.tabs), self.entries_per_page, len(self.pages)))
 
 		scale = ((1,1),(1,1))
 		self.l.setFont(0, parseFont(self.tab_params['fontActive'], scale))
