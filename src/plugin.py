@@ -10,6 +10,7 @@ from .gsession import GlobalSession
 from .gui.search import ArchivCZSKSearchClientScreen
 from .gui.icon import IconD
 from .engine.downloader import DownloadManager
+from .engine.httpserver import archivCZSKHttpServer
 
 NAME = _("ArchivCZSK")
 DESCRIPTION = _("Playing CZ/SK archives")
@@ -76,6 +77,7 @@ def Plugins(path, **kwargs):
 
 ArchivCZSK.load_skin()
 ArchivCZSK.load_repositories()
+archivCZSKHttpServer.start_listening()
 
 if config.plugins.archivCZSK.preload.value:
 	ArchivCZSK.preload_addons()
