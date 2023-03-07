@@ -343,11 +343,6 @@ class AddonSettings(object):
 			self.category_entries = settings_parser.parse()
 			#hard code addon order for each addon
 			try:
-				#list.append(getConfigListEntry(_("Show movie info"), config.plugins.archivCZSK.showVideoInfo))
-				labelInfo = _("Show movie info")
-				obj = {'option': 'false', 'default': 'true', 'label': labelInfo, 'visible': 'true', 'type': 'bool', 'id': 'auto_show_video_info'}
-				self.category_entries[0]['subentries'].append(obj)
-
 				#todo check if exist already
 				labelorder = _("Addon order")
 				obj = {'option': 'false', 'default': '99999', 'label': labelorder, 'visible': 'true', 'type': 'text', 'id': 'auto_addon_order'}

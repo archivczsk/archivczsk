@@ -74,13 +74,9 @@ def isArchivCZSKRunning(session):
 def getArchivCZSK():
 	from ..archivczsk import ArchivCZSK
 	from ..engine.tools.task import Task
+	from ..gui.content import ArchivCZSKAddonContentScreenAdvanced
+	return ArchivCZSK, ArchivCZSKAddonContentScreenAdvanced, Task
 
-	if config.plugins.archivCZSK.showVideoInfo.getValue():
-		from ..gui.content import ArchivCZSKAddonContentScreenAdvanced
-		return ArchivCZSK, ArchivCZSKAddonContentScreenAdvanced, Task
-	else:
-		from ..gui.content import ArchivCZSKAddonContentScreen
-		return ArchivCZSK, ArchivCZSKAddonContentScreen, Task
 
 class ArchivCZSKSeeker():
 	instance = None

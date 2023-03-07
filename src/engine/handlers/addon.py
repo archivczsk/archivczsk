@@ -114,19 +114,8 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 			get_content(addon, params)
 
 	def open_video_addon(self, addon, list_items):
-
-		addonVideoInfoEnabled = True
-		try:
-			addonVideoInfoEnabled = addon.get_setting('auto_show_video_info')
-		except:
-			pass
-
-		if config.plugins.archivCZSK.showVideoInfo.getValue() and addonVideoInfoEnabled:
-			from ...gui.content import ArchivCZSKAddonContentScreenAdvanced
-			self.session.openWithCallback(self.open_video_addon_cb, ArchivCZSKAddonContentScreenAdvanced, addon, list_items)
-		else:
-			from ...gui.content import ArchivCZSKAddonContentScreen
-			self.session.openWithCallback(self.open_video_addon_cb, ArchivCZSKAddonContentScreen, addon, list_items)
+		from ...gui.content import ArchivCZSKAddonContentScreenAdvanced
+		self.session.openWithCallback(self.open_video_addon_cb, ArchivCZSKAddonContentScreenAdvanced, addon, list_items)
 
 	def open_video_addon_cb(self, content_provider):
 		if isinstance(content_provider, VideoAddonContentProvider):
