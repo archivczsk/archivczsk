@@ -14,6 +14,7 @@ from ..resources.repositories import config as addon_config
 from .base import BaseArchivCZSKScreen
 from .common import Tabs
 
+from ..compat import DMM_IMAGE
 from ..py3compat import *
 
 def openArchivCZSKMenu(session):
@@ -36,8 +37,6 @@ class BaseArchivCZSKConfigScreen(BaseArchivCZSKScreen, ConfigListScreen):
 		self.categories = categories
 		self.selected_category = 0
 		self.config_list_entries = []
-
-		self.initializeSkin()
 
 		self["key_yellow"] = Label(_("Changelog"))
 		self["key_green"] = Label(_("Save"))
@@ -62,18 +61,6 @@ class BaseArchivCZSKConfigScreen(BaseArchivCZSKScreen, ConfigListScreen):
 	def changedEntry(self):
 		for x in self.onChangedEntry:
 			x()
-
-	def initializeSkin(self):
-		self.skin = """
-		<screen position="center,center" size="610,435" >
-			<widget name="key_red" position="10,5" zPosition="1" size="140,45" font="Regular;20" halign="center" valign="center" backgroundColor="#9f1313" shadowOffset="-2,-2" shadowColor="black" />
-			<widget name="key_green" position="160,5" zPosition="1" size="140,45" font="Regular;20" halign="center" valign="center" backgroundColor="#1f771f" shadowOffset="-2,-2" shadowColor="black" />
-			<widget name="key_yellow" position="310,5" zPosition="1" size="140,45" font="Regular;20" halign="center" valign="center" backgroundColor="#a08500" shadowOffset="-2,-2" shadowColor="black" />
-			<widget name="key_blue" position="460,5" zPosition="1" size="140,45" font="Regular;20" halign="center" valign="center" backgroundColor="#18188b" shadowOffset="-2,-2" shadowColor="black" />
-			<eLabel position="5,57" size="600,1" backgroundColor="#ffffff" />
-			<widget name="categories" position="10,60" size="590,40" tab_size="140,30" tab_fontInactive="Regular;18" tab_fontActive="Regular;21" tab_backgroundColorActive="#000000" tab_backgroundColorInactive="#000000" />
-			<widget name="config" position="10,105" size="590,320" scrollbarMode="showOnDemand" />
-		</screen>"""
 
 	def nextCategory(self):
 		if len(self.categories) > 0:
@@ -172,13 +159,18 @@ class ArchivCZSKConfigScreen(BaseArchivCZSKConfigScreen):
 	def __init__(self, session):
 
 		categories = [
-					  {'label':_("Main"), 'subentries':settings.get_main_settings},
-					  {'label':_("Player"), 'subentries':settings.get_player_settings},
-					  {'label':_("Path"), 'subentries':settings.get_path_settings},
-					  {'label':_("Misc"), 'subentries':settings.get_misc_settings}
-					 ]
+			{ 'label':_("Main"), 'subentries': settings.get_main_settings },
+			{ 'label':_("Player"), 'subentries': settings.get_player_settings },
+			{ 'label':_("Path"), 'subentries': settings.get_path_settings },
+			{ 'label':_("Misc"), 'subentries': settings.get_misc_settings }
+		]
 
 		BaseArchivCZSKConfigScreen.__init__(self, session, categories=categories)
+
+		if DMM_IMAGE:
+			# DMM needs specific skin for config screen
+			self.skinName = ["ArchivCZSKConfigScreenDMM", "ArchivCZSKConfigScreen"]
+
 		self.onLayoutFinish.append(self.layoutFinished)
 		self.onShown.append(self.buildMenu)
 
@@ -206,8 +198,11 @@ class ArchivCZSKAddonConfigScreen(BaseArchivCZSKConfigScreen):
 		categories = addon_config.getArchiveConfigList(addon)
 
 		BaseArchivCZSKConfigScreen.__init__(self, session, categories=categories)
-		self.skinName = ["ArchivCZSKAddonConfigScreen", "ArchivCZSKConfigScreen"]
 
+		if DMM_IMAGE:
+			self.skinName = ["ArchivCZSKConfigScreenDMM", "ArchivCZSKConfigScreen"]
+		else:
+			self.skinName = "ArchivCZSKConfigScreen"
 
 		self.onShown.append(self.buildMenu)
 		self.onLayoutFinish.append(self.layoutFinished)
