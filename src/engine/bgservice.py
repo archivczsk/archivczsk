@@ -116,8 +116,8 @@ class BGServiceTask(object):
 		return BGServiceTask.instance
 
 	@staticmethod
-	def startServiceThread():
-		log.debug("[BGServiceTask] starting workerThread")
+	def startMessagePump():
+		log.debug("[BGServiceTask] starting service -> reactor message pump")
 		global m_pump_conn
 		if m_pump_conn is not None:
 			del m_pump_conn
@@ -125,6 +125,10 @@ class BGServiceTask(object):
 		if m_pump is None:
 			m_pump = ePythonMessagePump()
 		m_pump_conn = eConnectCallback(m_pump.recv_msg, run_in_main_thread)
+
+	@staticmethod
+	def startServiceThread():
+		log.debug("[BGServiceTask] starting workerThread")
 		BGServiceTask.worker_thread = BGServiceThread()
 		BGServiceTask.worker_thread.start()
 
@@ -135,13 +139,18 @@ class BGServiceTask(object):
 			BGServiceTask.worker_thread.stop()
 			BGServiceTask.worker_thread.join()
 			BGServiceTask.worker_thread = False
-			global m_pump_conn
-			if m_pump_conn is not None:
-				del m_pump_conn
+
+	@staticmethod
+	def stopMessagePump():
+		log.debug("[BGServiceTask] stopping service -> reactor message pump")
+		global m_pump_conn
+		if m_pump_conn is not None:
+			del m_pump_conn
 			m_pump_conn = None
-			global m_pump
-			if m_pump is not None:
-				m_pump.stop()
+
+		global m_pump
+		if m_pump is not None:
+			m_pump.stop()
 			m_pump = None
 
 	@staticmethod
@@ -213,6 +222,10 @@ class BGServiceTask(object):
 		m_pump.send(0)
 
 
+# message pump must run all the time
+BGServiceTask.startMessagePump()
+
+
 class AddonBackgroundService(object):
 	def __init__(self, name):
 		self.loop_timers = []
@@ -232,18 +245,28 @@ class AddonBackgroundService(object):
 		def __run_in_loop():
 			self.__run_task_internal(name, None, fn, *args, **kwargs)
 
-		t['timer'] = eTimer()
-		t['timer_conn'] = eConnectCallback(t['timer'].timeout, __run_in_loop)
-		t['timer'].start(seconds_to_loop * 1000)
-		self.loop_timers.append(t)
+		def __init_timer():
+			t['timer'] = eTimer()
+			t['timer_conn'] = eConnectCallback(t['timer'].timeout, __run_in_loop)
+			t['timer'].start(seconds_to_loop * 1000)
+			self.loop_timers.append(t)
+
+		# on DMM initialisation of eTimer must be done in main reactor thread
+		fnc_out_queue.put(__init_timer)
+		m_pump.send(0)
 		return t
 
 	def run_in_loop_stop(self, t):
 		if t in self.loop_timers:
 			self.loop_timers.remove(t)
-			t['timer'].stop()
-			del t['timer']
-			del t['timer_conn']
+
+			def __stop_timer():
+				t['timer'].stop()
+				del t['timer']
+				del t['timer_conn']
+
+			fnc_out_queue.put(__stop_timer)
+			m_pump.send(0)
 
 	def run_delayed(self, name, delay_seconds, finish_cbk, cbk, *args, **kwargs):
 		t = {}
@@ -261,10 +284,15 @@ class AddonBackgroundService(object):
 		def __run_delayed():
 			self.__run_task_internal(name, __cleanup, cbk, *args, **kwargs)
 
-		t['timer'] = eTimer()
-		t['timer_conn'] = eConnectCallback(t['timer'].timeout, __run_delayed)
-		t['timer'].start(delay_seconds * 1000, True)
-		self.one_shot_timers.append(t)
+		def __init_timer():
+			t['timer'] = eTimer()
+			t['timer_conn'] = eConnectCallback(t['timer'].timeout, __run_delayed)
+			t['timer'].start(delay_seconds * 1000, True)
+			self.one_shot_timers.append(t)
+
+		# on DMM initialisation of eTimer must be done in main reactor thread
+		fnc_out_queue.put(__init_timer)
+		m_pump.send(0)
 
 	def __run_task_delayed(self, delay_ms, cbk, *args, **kwargs):
 		t = {}
@@ -275,10 +303,15 @@ class AddonBackgroundService(object):
 			del t['timer_conn']
 			self.one_shot_timers.remove(t)
 
-		t['timer'] = eTimer()
-		t['timer_conn'] = eConnectCallback(t['timer'].timeout, __run_delayed)
-		t['timer'].start(delay_ms, True)
-		self.one_shot_timers.append(t)
+		def __init_timer():
+			t['timer'] = eTimer()
+			t['timer_conn'] = eConnectCallback(t['timer'].timeout, __run_delayed)
+			t['timer'].start(delay_ms, True)
+			self.one_shot_timers.append(t)
+
+		# on DMM initialisation of eTimer must be done in main reactor thread
+		fnc_out_queue.put(__init_timer)
+		m_pump.send(0)
 
 	def __run_task_internal(self, name, finish_cbk, fn, *args, **kwargs):
 		BGServiceTask(self.name, name, finish_cbk, fn, *args, **kwargs).run()
