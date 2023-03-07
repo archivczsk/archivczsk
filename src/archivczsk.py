@@ -65,19 +65,10 @@ class ArchivCZSK():
 			desktop_width = getDesktop(0).size().width()
 			log.logDebug("Screen width %s px" % desktop_width)
 			
-			if	desktop_width >= 1280:
-				if DMM_IMAGE:
-					if desktop_width == 1920:
-						default_skin_name = "default_dmm_fhd"
-					else:
-						default_skin_name = "default_dmm_hd"
-				else:
-					if desktop_width == 1920:
-						default_skin_name = "default_fhd"
-					else:
-						default_skin_name = "default_hd"
+			if desktop_width >= 1920:
+				default_skin_name = "default_uni_fhd"
 			else:
-				default_skin_name = "default_sd"
+				default_skin_name = "default_uni_hd"
 
 			skin_name = config.plugins.archivCZSK.skin.value
 			skin_path = os.path.join(settings.SKIN_PATH, skin_name + ".xml")
