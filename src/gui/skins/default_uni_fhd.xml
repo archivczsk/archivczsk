@@ -263,15 +263,31 @@
     <widget backgroundColor="aczsk_key_green_BG" font="Regular;30" halign="center" name="key_green" position="377,6" shadowColor="black" shadowOffset="-2,-2" size="357,57" valign="center" zPosition="1"/>
     <widget backgroundColor="aczsk_key_yellow_BG" font="Regular;30" halign="center" name="key_yellow" position="744,6" shadowColor="black" shadowOffset="-2,-2" size="357,57" valign="center" zPosition="1"/>
     <widget backgroundColor="aczsk_key_blue_BG" font="Regular;30" halign="center" name="key_blue" position="1111,6" shadowColor="black" shadowOffset="-2,-2" size="357,57" valign="center" zPosition="1"/>
-    <widget name="starsbg" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/csfd_starsbar_empty.png" position="80,530" size="210,41" transparent="1" alphatest="on"/>
-    <widget name="stars" position="80,540" size="210,41" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/csfd_starsbar_filled.png" transparent="1"/>
-    <widget name="ratinglabel" position="135,580" zPosition="10" size="90,45" halign="center" font="Regular;38" foregroundColor="#00f0b400"/>
-    <widget name="poster" position="10,75" size="340,440" alphatest="on" borderWidth="1" borderColor="yellow"/>
+    <widget name="starsbg" position="70,530" size="240,41" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/csfd_starsbar_empty.png" transparent="1" alphatest="on"/>
+    <widget name="stars" position="70,530" size="240,41" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/csfd_starsbar_filled.png" transparent="1"/>
+    <widget name="ratinglabel" position="135,580" zPosition="10" size="90,45" halign="center" font="Regular;38" foregroundColor="#00f0b400" transparent="1"/>
+    <widget name="poster" position="10,75" size="340,440" alphatest="on" borderWidth="1" borderColor="yellow" transparent="1"/>
+    <widget name="menu" position="10,75" size="1458,725" font="Regular;28" itemHeight="40" scrollbarMode="showOnDemand" transparent="1"/>
+    <widget name="extralabel" position="10,75" size="1458,735" font="Regular;29" transparent="1"/>
+    <widget name="baseFilmInfo" position="360,75" size="1110,250" font="Regular;24" foregroundColor="#00f23d21" transparent="1"/>
+    <widget name="detailslabel" position="360,335" size="1110,467" font="Regular;29" transparent="1"/>
+    <widget name="statusbar" position="10,810" size="880,30" font="Regular;24" foregroundColor="#007a7a52" transparent="1"/>
+  </screen>
+
+  <screen name="ArchivCSFDDMM" position="center,center" size="1478,840" backgroundColor="aczsk_screen_BG" title="Archiv CSFD">
+    <widget backgroundColor="aczsk_key_red_BG" font="Regular;30" halign="center" name="key_red" position="10,6" shadowColor="black" shadowOffset="-2,-2" size="357,57" valign="center" zPosition="1"/>
+    <widget backgroundColor="aczsk_key_green_BG" font="Regular;30" halign="center" name="key_green" position="377,6" shadowColor="black" shadowOffset="-2,-2" size="357,57" valign="center" zPosition="1"/>
+    <widget backgroundColor="aczsk_key_yellow_BG" font="Regular;30" halign="center" name="key_yellow" position="744,6" shadowColor="black" shadowOffset="-2,-2" size="357,57" valign="center" zPosition="1"/>
+    <widget backgroundColor="aczsk_key_blue_BG" font="Regular;30" halign="center" name="key_blue" position="1111,6" shadowColor="black" shadowOffset="-2,-2" size="357,57" valign="center" zPosition="1"/>
+    <widget name="starsbg" position="70,530" size="240,41" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/csfd_starsbar_empty.png" transparent="1" alphatest="on"/>
+    <widget name="stars" position="71,540" size="240,41" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/csfd_starsbar_filled.png" transparent="1" />
+    <widget name="ratinglabel" position="135,580" zPosition="1" size="90,45" halign="center" font="Regular;38" foregroundColor="#00f0b400" transparent="1"/>
+    <widget name="poster" position="10,75" size="340,440" alphatest="on" borderWidth="1" borderColor="yellow" transparent="1"/>
     <widget name="menu" position="10,75" size="1458,725" itemHeight="40" scrollbarMode="showOnDemand" transparent="1"/>
     <widget name="extralabel" position="10,75" size="1458,735" font="Regular;29" transparent="1"/>
     <widget name="baseFilmInfo" position="360,75" size="1110,250" font="Regular;24" foregroundColor="#00f23d21" transparent="1"/>
     <widget name="detailslabel" position="360,335" size="1110,467" font="Regular;29" transparent="1"/>
-    <widget name="statusbar" position="10,810" size="880,30" font="Regular;24" foregroundColor="#007a7a52"/>
+    <widget name="statusbar" position="10,810" size="880,30" font="Regular;24" foregroundColor="#007a7a52" transparent="1"/>
   </screen>
   
   <screen id="1" name="ArchivCSFDLCDScreen" position="0,0" size="132,64" title="Archiv CSFD">

@@ -14,7 +14,6 @@ except:
 	from urllib.request import build_opener, HTTPRedirectHandler
 	from urllib.request import quote
 
-
 from enigma import ePicLoad
 from random import randint
 from Components.config import config
@@ -29,7 +28,7 @@ from Components.ProgressBar import ProgressBar
 from Components.Pixmap import Pixmap
 from twisted.web.client import downloadPage
 from .. import _, log, settings, removeDiac
-from ..compat import eConnectCallback
+from ..compat import eConnectCallback, DMM_IMAGE
 
 from ..py3compat import *
 
@@ -37,6 +36,11 @@ class ArchivCSFD(Screen):
 	def __init__(self, session, eventName, year, args = None):
 		try:
 			Screen.__init__(self, session)
+
+			if DMM_IMAGE:
+				# DMM needs specific skin for this
+				self.skinName = ["ArchivCSFDDMM", "ArchivCSFD"]
+
 			self.eventName = eventName
 			self["poster"] = Pixmap()
 			self.picload = ePicLoad()
