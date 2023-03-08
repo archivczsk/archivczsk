@@ -23,7 +23,7 @@ from ..engine.tools.util import toString
 from .base import BaseArchivCZSKListSourceScreen
 from .common import LoadingScreen, TipBar, CutLabel
 from .download import DownloadList
-from enigma import eTimer
+from enigma import eTimer, gPixmapPtr
 from .menu import ArchivCZSKConfigScreen
 from ..colors import DeleteColors
 
@@ -246,7 +246,7 @@ class ArchivCZSKVideoAddonsManagementScreen(BaseContentScreen, TipBar):
 
 	def updateAddonGUI(self):
 		try:
-			image = None
+			image = gPixmapPtr()
 			title = author = version = description = ""
 			item = self.getSelectedItem()
 			if item is not None:
@@ -418,7 +418,7 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 
 	def updateAddonGUI(self):
 		try:
-			image = None
+			image = gPixmapPtr()
 			title = author = version = description = ""
 			item = self.getSelectedItem()
 			if item is not None:

@@ -18,7 +18,7 @@ from Tools.Directories import fileExists
 from .. import settings, _, log
 from ..compat import eConnectCallback, parseSize, parsePosition
 from ..engine.tools.util import BtoMB, BtoKB, BtoGB, toString
-from enigma import loadPNG, RT_VALIGN_TOP, eListbox, ePoint, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_HALIGN_CENTER, RT_VALIGN_CENTER, RT_WRAP, eListboxPythonMultiContent, gFont, getDesktop, eTimer
+from enigma import loadPNG, RT_VALIGN_TOP, eListbox, ePoint, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_HALIGN_CENTER, RT_VALIGN_CENTER, RT_WRAP, eListboxPythonMultiContent, gFont, getDesktop, eTimer, gPixmapPtr
 from skin import parseColor, parseFont
 import skin
 
@@ -257,7 +257,7 @@ class TipBar():
 			self["tip_pixmap"].instance.setPixmap(self.tip_list[self.tip_selection][0])
 			self["tip_label"].setText(self.tip_list[self.tip_selection][1])
 		else:
-			self["tip_pixmap"].instance.setPixmap(None)
+			self["tip_pixmap"].instance.setPixmap(gPixmapPtr())
 			self["tip_label"].setText("")
 
 

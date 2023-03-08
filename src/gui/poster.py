@@ -10,7 +10,7 @@ from ..compat import eConnectCallback
 from Components.AVSwitch import AVSwitch
 from Tools.LoadPixmap import LoadPixmap
 
-from enigma import eTimer, ePicLoad
+from enigma import eTimer, ePicLoad, gPixmapPtr
 
 class PosterProcessing:
 	def __init__(self, poster_limit, poster_dir):
@@ -183,7 +183,7 @@ class PosterPixmapHandler:
 		else:
 			path = self.poster_processing.get_image_file(url)
 			log.debug("PosterImageHandler.set_image: path={0}".format(path))
-			self.poster_widget.instance.setPixmap(None)
+			self.poster_widget.instance.setPixmap(gPixmapPtr())
 			self.last_decoded_url = None
 			# sync 
 			if path is not None:

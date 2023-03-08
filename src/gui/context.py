@@ -5,7 +5,7 @@ Created on 28.4.2012
 @author: marko
 '''
 
-from enigma import (loadPNG, RT_VALIGN_TOP, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_HALIGN_CENTER, RT_VALIGN_CENTER, eListboxPythonMultiContent, gFont, getDesktop)
+from enigma import (loadPNG, RT_VALIGN_TOP, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_HALIGN_CENTER, RT_VALIGN_CENTER, eListboxPythonMultiContent, gFont, getDesktop, gPixmapPtr)
 
 from Components.ActionMap import ActionMap
 from Components.Label import Label
@@ -75,7 +75,7 @@ class ArchivCZSKContextMenuScreen(BaseArchivCZSKScreen):
 		name = is_py3 == False and isinstance(name, unicode) and str(name.encode('utf-8')) or name
 		img = img and img.endswith(('.jpg', '.png')) and img
 		img = img and LoadPixmap(cached=True, path=img)
-		self.img = img or None
+		self.img = img or gPixmapPtr()
 		self.itemListDisabled = not (items and len(items) > 0)
 		self.globalListDisabled = not (globalItems and len(globalItems) > 0)
 		self.useSeparator = not	 self.globalListDisabled
