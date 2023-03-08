@@ -22,51 +22,8 @@ install_py ()
 
 chmod 755 $ARCHIVCZSK/script/*.sh 2>/dev/null
 
-echo 'Installing neccessary Python libraries'
-if [ -d /usr/lib/python2.6 ] ; then
-	echo "Found Python 2.6"
-	cd  $TMP/python2.6
-	install_py ./utf_8.py /usr/lib/python2.6/encodings/utf_8.py
-	install_py ./cp1251.py /usr/lib/python2.6/encodings/cp1251.py
-	install_py ./cp1252.py /usr/lib/python2.6/encodings/cp1252.py
-	install_py ./cp1253.py /usr/lib/python2.6/encodings/cp1253.py
-	install_py ./cp1254.py /usr/lib/python2.6/encodings/cp1254.py
-	install_py ./cp1256.py /usr/lib/python2.6/encodings/cp1256.py
-	install_py ./iso8859_6.py /usr/lib/python2.6/encodings/iso8859_6.py
-	install_py ./iso8859_7.py /usr/lib/python2.6/encodings/iso8859_7.py
-	install_py ./iso8859_9.py /usr/lib/python2.6/encodings/iso8859_9.py
-	install_py ./iso8859_15.py /usr/lib/python2.6/encodings/iso8859_15.py
-	install_py ./hex_codec.py /usr/lib/python2.6/encodings/hex_codec.py
-	install_py ./latin_1.py /usr/lib/python2.6/encodings/latin_1.py
-	install_py ./utf_16.py /usr/lib/python2.6/encodings/utf_16.py
-	install_py ./string_escape.py /usr/lib/python2.6/encodings/string_escape.py
-	install_py ./idna.py /usr/lib/python2.6/encodings/idna.py
-	install_py ./iso8859_2.py /usr/lib/python2.6/encodings/iso8859_2.py
-	install_py ./cp1250.py /usr/lib/python2.6/encodings/cp1250.py
-	install_py ./decimal.py /usr/lib/python2.6/decimal.py
-	install_py ./formatter.py /usr/lib/python2.6/formatter.py
-	install_py ./htmlentitydefs.py /usr/lib/python2.6/htmlentitydefs.py
-	install_py ./markupbase.py /usr/lib/python2.6/markupbase.py
-	install_py ./htmlentitydefs.py /usr/lib/python2.6/htmlentitydefs.py
-	install_py ./htmllib.py /usr/lib/python2.6/htmllib.py
-	install_py ./markupbase.py /usr/lib/python2.6/markupbase.py
-	install_py ./sgmllib.py /usr/lib/python2.6/sgmllib.py
-	install_py ./stringprep.py /usr/lib/python2.6/stringprep.py
-	install_py ./subprocess.py /usr/lib/python2.6/subprocess.py
-	install_py ./numbers.py /usr/lib/python2.6/numbers.py
-	install_py ./_LWPCookieJar.py /usr/lib/python2.6/_LWPCookieJar.py
-	install_py ./_MozillaCookieJar.py /usr/lib/python2.6/_MozillaCookieJar.py
-	install_py ./cookielib.py /usr/lib/python2.6/cookielib.py
-	install_py ./shutil.py /usr/lib/python2.6/shutil.py
-	install_py ./fnmatch.py /usr/lib/python2.6/fnmatch.py
-	install_py ./threading.py /usr/lib/python2.6/threading.py
-	install_py ./zipfile.py /usr/lib/python2.6/zipfile.py
-	install_py ./stat.py /usr/lib/python2.6/stat.py
-	install_py ./httplib.py /usr/lib/python2.6/httplib.py
-fi
-
 if [ -d /usr/lib/python2.7 ] ; then
-	echo "Found Python 2.7"
+	echo "Found Python 2.7 - checking neccessary python libraries'"
 	cd $TMP/python2.7
 	install_py ./utf_8.py /usr/lib/python2.7/encodings/utf_8.py
 	install_py ./cp1251.py /usr/lib/python2.7/encodings/cp1251.py
@@ -144,6 +101,8 @@ rm -rf $TMP
 
 touch $ARCHIVCZSK/.first_start
 
-echo "Installation of archivCZSK was successfull"
+echo "Installation of archivCZSK was successfull, starting script to install dependencies in background ..."
+
+[ -f $ARCHIVCZSK/script/install_dependencies.sh ] && (cd $ARCHIVCZSK/script/ && ./install_dependencies.sh) &
 
 exit 0

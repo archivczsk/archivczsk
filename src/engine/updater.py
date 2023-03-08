@@ -41,10 +41,10 @@ class ArchivUpdater(object):
 		self.needUpdate = False
 		
 		if os.path.isfile( '/usr/bin/dpkg' ):
-			self.pkgInstallCmd = 'dpkg --install --force-all {update_file} && apt-get -y update && apt-get -f -y install'
+			self.pkgInstallCmd = 'dpkg --install --force-all {update_file}'
 			self.updateMode = 'dpkg'
 		else: #if os.path.isfile( '/usr/bin/opkg' ):
-			self.pkgInstallCmd = 'opkg update; opkg install --force-overwrite --force-depends --force-downgrade --force-reinstall {update_file}'
+			self.pkgInstallCmd = 'opkg install --force-overwrite --force-depends --force-downgrade --force-reinstall {update_file}'
 			self.updateMode = 'opkg'
 	
 	def checkUpdate(self):
