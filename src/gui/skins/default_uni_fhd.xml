@@ -9,7 +9,11 @@
     <color name="aczsk_key_yellow_BG" value="#00a08500"/>
     <color name="aczsk_key_blue_BG" value="#0018188b"/>
   </colors>
-  
+
+  <screen name="ArchivCZSKLoadingScreen" position="center,center" size="48,48" flags="wfNoBorder" backgroundColor="aczsk_screen_BG" >
+    <widget name="spinner" position="0,0" zPosition="2" size="48,48" alphatest="on" transparent="1" />
+  </screen>
+
   <screen name="ArchivCZSKContentScreen" position="center,center" size="1478,840" backgroundColor="aczsk_screen_BG" title="ArchivCZSK">
     <widget backgroundColor="aczsk_key_red_BG" font="Regular;30" halign="center" name="key_red" position="10,6" shadowColor="black" shadowOffset="-2,-2" size="357,57" valign="center" zPosition="1"/>
     <widget backgroundColor="aczsk_key_green_BG" font="Regular;30" halign="center" name="key_green" position="377,6" shadowColor="black" shadowOffset="-2,-2" size="357,57" valign="center" zPosition="1"/>

@@ -18,6 +18,7 @@ from .ydl import ydl
 from .tools.task import callFromThread, Task
 from .tools.util import toString, toUnicode
 from ..gui.captcha import Captcha
+from ..gui.common import LoadingScreen
 from ..colors import DeleteColors
 from ..py3compat import *
 GItem_lst = VideoAddonContentProvider.get_shared_itemlist()
@@ -59,10 +60,15 @@ def getVideoFormats(url):
 @callFromThread
 def getTextInput(session, title, text=""):
 	def getTextInputCB(word):
+		loading and loading.start()
 		if word is None:
 			d.callback('')
 		else:
 			d.callback(word)
+
+	loading = LoadingScreen.get_running_instance()
+	loading and loading.stop()
+
 	d = defer.Deferred()
 	#session.openWithCallback(getTextInputCB, VirtualKeyBoard, title=toString(title), text=text)
 	session.openWithCallback(getTextInputCB, VirtualKeyBoard, title=DeleteColors(removeDiac(title)), text=removeDiac(text))
@@ -72,10 +78,14 @@ def getTextInput(session, title, text=""):
 @callFromThread
 def getNumericInput(session, title, text="", showChars=True):
 	def getNumericInputCB(word):
+		loading and loading.start()
 		if word is None:
 			d.callback(None)
 		else:
 			d.callback(word)
+
+	loading = LoadingScreen.get_running_instance()
+	loading and loading.stop()
 
 	d = defer.Deferred()
 	session.openWithCallback(getNumericInputCB, InputBox, title=title, text=text, type=Input.NUMBER if showChars else Input.PIN)
@@ -88,10 +98,14 @@ def getSearch(session):
 @callFromThread
 def getCaptcha(session, image):
 	def getCaptchaCB(word):
+		loading and loading.start()
 		if word is None:
 			d.callback('')
 		else:
 			d.callback(word)
+
+	loading = LoadingScreen.get_running_instance()
+	loading and loading.stop()
 	d = defer.Deferred()
 	Captcha(session, image, getCaptchaCB)
 	return d
@@ -99,7 +113,11 @@ def getCaptcha(session, image):
 @callFromThread
 def openSettings(session, addon):
 	def getSettingsCB(word):
+		loading and loading.start()
 		d.callback(word)
+
+	loading = LoadingScreen.get_running_instance()
+	loading and loading.stop()
 	d = defer.Deferred()
 	addon.open_settings(session, addon, getSettingsCB)
 	return d
@@ -117,10 +135,14 @@ def showWarning(warning, timeout=5):
 @callFromThread
 def getYesNoInput(session, text):
 	def getYesNoInputCB(callback=None):
+		loading and loading.start()
 		if callback:
 			d.callback(True)
 		else:
 			d.callback(False)
+
+	loading = LoadingScreen.get_running_instance()
+	loading and loading.stop()
 	d = defer.Deferred()
 	session.openWithCallback(getYesNoInputCB, MessageBox, text=toString(text), type=MessageBox.TYPE_YESNO)
 	return d
@@ -128,10 +150,15 @@ def getYesNoInput(session, text):
 @callFromThread
 def getListInput(session, choices_list, title=""):
 	def getListInputCB(selected=None):
+		loading and loading.start()
 		if selected is not None:
 			d.callback(newlist.index(selected))
 		else:
 			d.callback(-1)
+
+	loading = LoadingScreen.get_running_instance()
+	loading and loading.stop()
+
 	d = defer.Deferred()
 	newlist = [(toString(name),) for name in choices_list]
 	session.openWithCallback(getListInputCB, ChoiceBox, toString(title), newlist, skin_name="ArchivCZSKChoiceBox")

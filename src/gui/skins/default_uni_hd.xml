@@ -10,6 +10,10 @@
     <color name="aczsk_key_blue_BG" value="#0018188b"/>
   </colors>
   
+  <screen name="ArchivCZSKLoadingScreen" position="center,center" size="48,48" flags="wfNoBorder" backgroundColor="aczsk_screen_BG" >
+    <widget name="spinner" position="0,0" zPosition="2" size="48,48" alphatest="on" transparent="1" />
+  </screen>
+
   <screen name="ArchivCZSKContentScreen" position="center,center" size="983,560" title="ArchivCZSK" backgroundColor="aczsk_screen_BG">
     <widget backgroundColor="aczsk_key_red_BG" font="Regular;20" halign="center" name="key_red" position="7,4" shadowColor="black" shadowOffset="-2,-2" size="237,38" valign="center" zPosition="1"/>
     <widget backgroundColor="aczsk_key_green_BG" font="Regular;20" halign="center" name="key_green" position="251,4" shadowColor="black" shadowOffset="-2,-2" size="237,38" valign="center" zPosition="1"/>

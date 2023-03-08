@@ -284,15 +284,20 @@ class TipBar():
 
 
 class LoadingScreen(Screen):
-	skin = """
-		<screen position="center,center" size="76,76" flags="wfNoBorder" backgroundColor="background" >
-		<eLabel position="2,2" zPosition="1" size="72,72" font="Regular;18" backgroundColor="background"/>
-		<widget name="spinner" position="14,14" zPosition="2" size="48,48" alphatest="on" transparent="1" />
-		</screen>"""
+	__running_instance = None
+
+	@classmethod
+	def set_running_instance(cls, ins):
+		cls.__running_instance = ins
+
+	@classmethod
+	def get_running_instance(cls):
+		return cls.__running_instance
 
 	def __init__(self, session):
 		self.session = session
 		Screen.__init__(self, session)
+		self.skinName = "ArchivCZSKLoadingScreen"
 
 		self["spinner"] = Pixmap()
 		self.curr = 0
@@ -311,11 +316,14 @@ class LoadingScreen(Screen):
 		self.__shown = True
 		self.show()
 		self.timer.start(130, True)
+		self.set_running_instance(self)
 
 	def stop(self):
-		self.hide()
-		self.timer.stop()
-		self.__shown = False
+		if self.isShown():
+			self.hide()
+			self.timer.stop()
+			self.__shown = False
+			self.set_running_instance(None)
 
 	def isShown(self):
 		return self.__shown
