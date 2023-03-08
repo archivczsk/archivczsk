@@ -41,7 +41,7 @@ except ImportError as e:
 		pass
 
 from ... import _, log
-from ...compat import eConnectCallback
+from ...compat import eConnectCallback, DMM_IMAGE
 from ..items import PVideo, PPlaylist
 from ..tools import e2util
 from ..tools.util import toString
@@ -534,18 +534,40 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.__resume_time_sec = None
 		self.__resume_popup = True
 		self.duration_sec = None
-		self["actions"] = HelpableActionMap(self, "ArchivCZSKMoviePlayerActions", {
-			"showPlaylist": (boundFunction(self.player_callback, ("playlist", "show",)), _("Show playlist")),
-			"nextEntry": (boundFunction(self.player_callback, ("playlist", "next",)), _("Play next entry in playlist")),
-			"prevEntry": (boundFunction(self.player_callback, ("playlist", "prev",)), _("Play previous entry in playlist")),
-			"cancel": (boundFunction(self.player_callback, ("exit",)), _("Exit player")),
-			"switchPlayer": (boundFunction(self.player_callback, ("player_switch",)), _("Switch player type")),
-		}, -2)
+
+		if DMM_IMAGE:
+			# on DMM there is need to add toggleShow action, because without that toggling infobar don't work.
+			# But this breaks for example OpenATV where infobar flashes :-( On OpenPLi it works with booth settings.
+			# Happy portability ...
+			self["actions"] = HelpableActionMap(self, "ArchivCZSKMoviePlayerActions", {
+				"showPlaylist": (boundFunction(self.player_callback, ("playlist", "show",)), _("Show playlist")),
+				"nextEntry": (boundFunction(self.player_callback, ("playlist", "next",)), _("Play next entry in playlist")),
+				"prevEntry": (boundFunction(self.player_callback, ("playlist", "prev",)), _("Play previous entry in playlist")),
+				"cancel": (boundFunction(self.player_callback, ("exit",)), _("Exit player")),
+				"toggleShow": (boundFunction(self.__my_toggleShow,), _("Show/hide infobar")),
+				"switchPlayer": (boundFunction(self.player_callback, ("player_switch",)), _("Switch player type")),
+			}, -2)
+		else:
+			self["actions"] = HelpableActionMap(self, "ArchivCZSKMoviePlayerActions", {
+				"showPlaylist": (boundFunction(self.player_callback, ("playlist", "show",)), _("Show playlist")),
+				"nextEntry": (boundFunction(self.player_callback, ("playlist", "next",)), _("Play next entry in playlist")),
+				"prevEntry": (boundFunction(self.player_callback, ("playlist", "prev",)), _("Play previous entry in playlist")),
+				"cancel": (boundFunction(self.player_callback, ("exit",)), _("Exit player")),
+				"switchPlayer": (boundFunction(self.player_callback, ("player_switch",)), _("Switch player type")),
+			}, -2)
+
 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap=
 		{
 			iPlayableService.evStart: self.__service_started,
 		})
 		self.onClose.append(self.__on_close)
+
+	def __my_toggleShow(self):
+		try:
+			# tries to call infobar's toggleShow() - this should be implemented in InfoBarShowHide, but nobody knows ...
+			self.toggleShow()
+		except:
+			pass
 
 	def __on_close(self):
 		self.__timer.stop()
