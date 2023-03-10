@@ -74,7 +74,6 @@ class XBMCAddonXMLParser(XMLParser):
 		name = addon.attrib.get('name')
 		if name is None:
 			raise Exception("Parse error: Mandatory atrribute 'name' is missing")
-		author = addon.attrib.get('provider-name', u'')
 		version = addon.attrib.get('version')
 		if version is None:
 			raise Exception("Parse error: Mandatory atrribute 'version' is missing")
@@ -139,7 +138,6 @@ class XBMCAddonXMLParser(XMLParser):
 		return {
 			"id":addon_id,
 			"name":name,
-			"author":author,
 			"type":addon_type,
 			"version":version,
 			"description":description,

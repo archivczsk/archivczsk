@@ -92,7 +92,6 @@ class PVideoAddon(PItem):
 		self.addon = addon
 		self.addon_id = self.addon.get_info('id')
 		self.name = self.addon.get_info('name')
-		self.author = self.addon.get_info('author')
 		self.description = self.addon.get_info('description')
 		self.version = self.addon.get_info('version')
 		self.image = self.addon.get_info('image')

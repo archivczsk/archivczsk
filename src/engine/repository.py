@@ -28,7 +28,6 @@ class Repository():
 		
 		self.id = repo_dict['id']
 		self.name = repo_dict['name']
-		self.author = repo_dict['author']
 		self.version = repo_dict['version']
 		self.description = repo_dict['description']
 		# every repository should have its update xml, to check versions and update/download addons

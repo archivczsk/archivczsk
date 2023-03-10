@@ -194,7 +194,6 @@ class ArchivCZSKVideoAddonsManagementScreen(BaseContentScreen, TipBar):
 		self.onClose.append(self.__onClose)
 		self["image"] = Pixmap()
 		self["title"] = Label("")
-		self["author"] = Label("")
 		self["version"] = Label("")
 		self["about"] = Label("")
 		self["key_red"] = Label("")
@@ -247,7 +246,7 @@ class ArchivCZSKVideoAddonsManagementScreen(BaseContentScreen, TipBar):
 	def updateAddonGUI(self):
 		try:
 			image = gPixmapPtr()
-			title = author = version = description = ""
+			title = version = description = ""
 			item = self.getSelectedItem()
 			if item is not None:
 				title = item.name and toString(item.name) or ""
@@ -258,16 +257,11 @@ class ArchivCZSKVideoAddonsManagementScreen(BaseContentScreen, TipBar):
 					except Exception as e:
 						log.error('[ArchivCZSKContent] error when loading image %s: %s' % (image, str(e)))
 				try:  # addon
-					author = item.author and toString(item.author) or ""
 					version = item.version and toString(item.version) or ""
 					description = item.description and toString(item.description) or ""
 				except AttributeError:	# category
 					pass
 			self["title"].setText(title.strip())
-			if author:
-				self["author"].setText(_("Author: ") + author.strip())
-			else:
-				self["author"].setText("")
 			if version:
 				self["version"].setText(_("Version: ") + version.strip())
 			else:
@@ -330,7 +324,6 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 		self.setTitle("ArchivCZSK ("+toString(version)+")")
 		self["image"] = Pixmap()
 		self["title"] = Label("")
-		self["author"] = Label("")
 		self["version"] = Label("")
 		self["about"] = Label("")
 
@@ -419,7 +412,7 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 	def updateAddonGUI(self):
 		try:
 			image = gPixmapPtr()
-			title = author = version = description = ""
+			title = version = description = ""
 			item = self.getSelectedItem()
 			if item is not None:
 				title = item.name and toString(item.name) or ""
@@ -430,16 +423,11 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 					except Exception as e:
 						log.error('[ArchivCZSKContent] error when loading image %s: %s' % (image, str(e)))
 				try:  # addon
-					author = item.author and toString(item.author) or ""
 					version = item.version and toString(item.version) or ""
 					description = item.description and toString(item.description) or ""
 				except AttributeError:	# category
 					pass
 			self["title"].setText(title.strip())
-			if author:
-				self["author"].setText(_("Author: ") + author.strip())
-			else:
-				self["author"].setText("")
 			if version:
 				self["version"].setText(_("Version: ") + version.strip())
 			else:

@@ -27,7 +27,6 @@ class Addon(object):
 		self.id = info.id
 		self.name = info.name
 		self.version = info.version
-		self.author = info.author
 		self.description = info.description
 		self.changelog = info.changelog
 		self.path = info.path
@@ -538,7 +537,6 @@ class AddonInfo(object):
 		self.id = addon_dict['id']
 		self.name = addon_dict['name']
 		self.version = addon_dict['version']
-		self.author = addon_dict['author']
 		self.type = addon_dict['type']
 		self.broken = addon_dict['broken']
 		self.path = os.path.dirname(info_file)
