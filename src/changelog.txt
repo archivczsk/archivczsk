@@ -1,3 +1,21 @@
+archivCZSK 2.1.0, 10.03.2023
+    - revízia a oprava cz/sk prekladov
+    - pridaná možnosť lokalizácie doplnkov cez gettext
+    - oprava zobrazovania tabov pre python3
+    - prepracovanie inštalačného balíka tak, aby sám inštaloval potrebné zavislosti pre ipk aj pre deb
+    - kompletné prepracovanie skinov:
+      - odstránenie UHD skinov
+      - zrušenie rozdelenia skinov na DMM a ostatné
+      - vytvorenie univerzálnych HD a FHD skinov
+      - opravy v rôznych častiach GUI (spinner, interné csfd, ...)
+    - množstvo opráv pre DreamBoxy:
+      - oprava pádu pri vstupe do menu titulkov
+      - oprava farbičkovania textu pre doplnky a jeho povolenie
+      - oprava korektného načítavania skinov
+      - oprava plánovača úloh pre doplnky
+      - oprava pádu pokiaľ bolo vypnuté prednačítavanie doplnkov
+      - oprava zobrazenia infobaru pri prehrávaní
+
 archivCZSK 2.0.4, 06.03.2023
     - oprava pádu pri neskorom dekódovaní obrázka
     - oprava deadlocku pri viacerých úlohách v pracovnom threade
