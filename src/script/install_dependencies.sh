@@ -2,7 +2,7 @@
 
 log_file="/tmp/archivCZSK_install_dep.txt"
 
-DEP_PY2="rtmpdump python-importlib python-pickle python-html python-threading python-json python-zlib python-compression python-requests python-codecs python-email python-pycryptodome python-beautifulsoup4"
+DEP_PY2="rtmpdump python-importlib python-pickle python-html python-threading python-json python-zlib python-compression python-requests python-codecs python-email python-pycrypto python-pycryptodome python-beautifulsoup4"
 DEP_PY3="rtmpdump python3-pickle python3-html python3-threading python3-json python3-compression python3-requests python3-codecs python3-email python3-pycryptodome python3-beautifulsoup4"
 
 run()
@@ -21,10 +21,16 @@ run()
 		echo "Detected deb based system"
 		LOCK_FILE="/var/lib/dpkg/lock"
 		PKG_SYSTEM="apt-get"
+		UPDATE_CMD="apt-get -y update"
+		INSTALL_CMD="apt-get -y -f install"
+		GET_PKGS="apt-cache --generate pkgnames"
 	else
 		echo "Detected ipk based system"
 		LOCK_FILE="/run/opkg.lock"
 		PKG_SYSTEM="opkg"
+		UPDATE_CMD="opkg update"
+		INSTALL_CMD="opkg install"
+		GET_PKGS="opkg list"
 	fi
 	
 	for i in `seq 60`; do
@@ -56,22 +62,21 @@ run()
 	# but we don't want to wait here forever ...
 
 	echo "Running $PKG_SYSTEM update"
+	$UPDATE_CMD
 
-	echo "Installing packages ..."
 	echo "Required packages: $PKGS"
 
 	# get only available packages, because otherwise installation will fail
-	if [ "$PKG_SYSTEM" = "opkg" ] ; then
-		opkg update
-		TO_INSTALL=$(opkg list | cut -d ' ' -f1 | grep -x -F `for p in $PKGS ; do echo -n "-e $p " ; done` | xargs echo)
-		echo "Trying to install: $TO_INSTALL"
-		opkg install $TO_INSTALL
-	else
-		apt-get -y update
-		TO_INSTALL=$(apt-cache --generate pkgnames | grep -x -F `for p in $PKGS ; do echo -n "-e $p " ; done` | xargs echo)
-		echo "Trying to install: $TO_INSTALL"
-		apt-get -y -f install $TO_INSTALL
+	TO_INSTALL=$($GET_PKGS | cut -d ' ' -f1 | grep -x -F `for p in $PKGS ; do echo -n "-e $p " ; done` | xargs echo)
+
+	# check, because python-pycrypto and python-pycryptodome can't be installed at the same time
+	if [ ! -z `echo $TO_INSTALL | grep -o -w 'python-pycryptodome'` ] ; then
+		# if pycryptodome is available, then don't try to install pycrypto
+		TO_INSTALL=$(for p in ${TO_INSTALL} ; do if [ $p != python-pycrypto ] ; then echo -n "$p " ; fi ; done | xargs echo)
 	fi
+
+	echo "Trying to install: $TO_INSTALL"
+	$INSTALL_CMD $TO_INSTALL
 
 	echo "$PKG_SYSTEM finished"
 }
