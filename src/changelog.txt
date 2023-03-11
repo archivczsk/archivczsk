@@ -1,3 +1,8 @@
+archivCZSK 2.1.1, 11.03.2023
+    - oprava skinov pre VTi a iné zastaralé image
+    - pridanie pycrypto do závislosti a kontrola na konfilikt s pycryptodome (kvôli chybe vo VTi)
+    - oprava načítavania doplnkov používajúciche gettext lokalizácie pri EN jazyku
+
 archivCZSK 2.1.0, 10.03.2023
     - revízia a oprava cz/sk prekladov
     - pridaná možnosť lokalizácie doplnkov cez gettext
