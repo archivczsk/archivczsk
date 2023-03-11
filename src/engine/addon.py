@@ -201,6 +201,13 @@ class VideoAddon(Addon):
 		self.provider = None
 
 
+class DummyGettext(object):
+	def __init__(self):
+		pass
+
+	def gettext(self, s):
+		return s
+
 
 class AddonLanguage(object):
 	"""Loading xml language file"""
@@ -215,6 +222,7 @@ class AddonLanguage(object):
 		self.addon = addon
 		self._languages_dir = languages_dir
 		self._language_filename = 'strings.xml'
+		self.dummy_gettext = DummyGettext()
 		self.current_language = {}
 		self.default_language_id = 'en'
 		self.current_language_id = 'en'
@@ -243,6 +251,10 @@ class AddonLanguage(object):
 				else:
 					log.error("%s cannot find language file %s, skipping %s language..", self, language_file_path, language_dir)
 
+		if self.use_gettext:
+			# always init EN lang if using gettext localisation
+			self.languages['en'] = None
+			self.current_language = self.dummy_gettext
 
 	def __repr__(self):
 		return "%s[language]" % self.addon
@@ -250,8 +262,12 @@ class AddonLanguage(object):
 
 	def load_language(self, language_id):
 		if self.use_gettext:
-			self.languages[language_id] = gettext.translation(self.addon.id, self._languages_dir, [language_id])
-			log.debug("%s gettext language %s was successfully loaded", (self, language_id))
+			if os.path.isdir( os.path.join(self._languages_dir, language_id, 'LC_MESSAGES') ):
+				self.languages[language_id] = gettext.translation(self.addon.id, self._languages_dir, [language_id])
+				log.debug("%s gettext language %s was successfully loaded", (self, language_id))
+			else:
+				log.debug("%s gettext language %s not found - using dummy EN as backup", (self, language_id))
+				self.languages[language_id] = self.dummy_gettext
 			return
 
 		language_dir_path = os.path.join(self._languages_dir, self.get_language_name(language_id))
