@@ -78,11 +78,6 @@ class ArchivCZSK():
 
 			log.info("Loading skin %s" % skin_path)
 			loadSkin(skin_path)
-
-			if DMM_IMAGE:
-				# on DMM this is not called automatically - without this names for fonts, colors, ... won't work
-				from skin import loadSkinData
-				loadSkinData(getDesktop(0))
 		except:
 			log.logError("Load plugin skin failed.\n%s" % traceback.format_exc())
 
