@@ -132,8 +132,12 @@ class ArchivCZSK():
 
 	@staticmethod
 	def stop():
-		usage_stats.save()
-		BGServiceTask.stopServiceThread()
+		try:
+			usage_stats.save()
+			BGServiceTask.stopServiceThread()
+			BGServiceTask.stopMessagePump()
+		except:
+			log.error(traceback.format_exc())
 		return
 
 	def __init__(self, session):
