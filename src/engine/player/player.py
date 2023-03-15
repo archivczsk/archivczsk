@@ -42,7 +42,7 @@ except ImportError as e:
 
 from ... import _, log
 from ...compat import eConnectCallback, DMM_IMAGE
-from ..items import PVideo, PPlaylist
+from ..items import PVideo, PVideoResolved, PVideoNotResolved, PPlaylist
 from ..tools import e2util
 from ..tools.util import toString
 from ...colors import DeleteColors
@@ -109,10 +109,12 @@ class ArchivCZSKPlaylist(Screen):
 
 
 class Player(object):
-	def __init__(self, session, callback=None, content_provider=None, event_callback=None, stype=4097):
+
+	def __init__(self, session, callback=None, event_callback=None, stype=4097, resolve_cbk=None):
 		self.session = session
 		self.old_service = session.nav.getCurrentlyPlayingServiceReference()
 		self.settings = config_archivczsk.videoPlayer
+		self.resolve_cbk = resolve_cbk
 		self.video_player = None
 		self.playlist_dialog = None
 		self.playlist = []
@@ -155,6 +157,10 @@ class Player(object):
 		if item is not None:
 			idx = idx or 0
 			if isinstance(item, PPlaylist):
+				if len(item.playlist) == 0:
+					# nothing to play ... add dummy entry to correctly stop playback
+					item.add(PVideoResolved())
+
 				self.playlist_item = item
 				self.playlist = item.playlist
 				play_item = item.playlist[idx]
@@ -166,15 +172,23 @@ class Player(object):
 		elif idx is not None and self.playlist and idx >= 0 and idx < len(self.playlist):
 			play_item = self.playlist[idx]
 
-		if play_item is not None and self._play_item != play_item:
-			self._play_item = play_item
-			self.curr_idx = self.playlist.index(play_item)
+		def play_item_continue(play_item):
+			if play_item is not None and self._play_item != play_item:
+				self._play_item = play_item
+				self.curr_idx = idx
 
-			if self.playlist_item:
-				# set current play item - needed for stats and trakt commands
-				self.playlist_item.set_current_item(play_item)
+				if self.playlist_item:
+					# set current play item - needed for stats and trakt commands
+					self.playlist_item.set_current_item(play_item)
 
-			self.play_stream(play_item.url, play_item.settings, play_item.subs, play_item.name, play_item)
+				self.play_stream(play_item.url, play_item.settings, play_item.subs, play_item.name, play_item)
+
+		if isinstance(play_item, PVideoNotResolved) and self.resolve_cbk:
+			# resolve video url and continue
+			self.resolve_cbk(play_item, play_item_continue)
+		else:
+			# video already resolved, so start play
+			play_item_continue(play_item)
 
 	def play_stream(self, play_url, play_settings=None, subtitles_url=None, title=None, wholeItem=None, status_msg=None):
 		log.info("play_stream(%s, %s, %s, %s)"%(play_url, play_settings, subtitles_url, title))

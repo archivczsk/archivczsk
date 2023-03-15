@@ -132,7 +132,7 @@ class MediaItemHandler(ItemHandler):
 			if finishedCB is not None:
 				finishedCB()
 
-	def play_item(self, item, mode='play', *args, **kwargs):
+	def play_item(self, item, mode='play', resolve_cbk=None, *args, **kwargs):
 		# This horrible code is needed to sync player end with calling of stats and trakt commands
 		# Without it endPlayFinish() will be called before stats command finishes and this will
 		# end in lock, because content provider will not be running
@@ -225,7 +225,7 @@ class MediaItemHandler(ItemHandler):
 		
 		self.content_screen.workingStarted()
 		self.content_provider.pause()
-		self.content_provider.play(self.session, item, mode, endPlayFinish, player_event_handler, stype)
+		self.content_provider.play(self.session, item, mode, endPlayFinish, player_event_handler, stype, resolve_cbk)
 
 	def download_item(self, item, mode="", *args, **kwargs):
 		@DownloadExceptionHandler(self.session)
@@ -298,7 +298,6 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 			self.content_provider.create_shortcut(self.item)
 
 	def play_item(self, item, mode='play', *args, **kwargs):
-
 		def video_selected_callback(res_item):
 			MediaItemHandler.play_item(self, res_item, mode, *args, **kwargs)
 
@@ -355,6 +354,7 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 					self.unpack_playlist(list_items)
 
 				self._filter_by_quality(list_items)
+
 				if len(list_items) > 1:
 					choices = [ (DeleteColors(toString(i.name)), i) for i in list_items ]
 
@@ -460,3 +460,56 @@ class PlaylistItemHandler(MediaItemHandler):
 		item.add_context_menu_item(_("Show playlist"),
 								   action=self.show_playlist,
 								   params={'item':item})
+
+	def play_item(self, item, mode='play', *args, **kwargs):
+		def resolve_cbk(item, callback):
+			self._resolve_video(item, callback)
+
+		MediaItemHandler.play_item(self, item, mode, resolve_cbk, *args, **kwargs)
+
+	def _filter_by_quality(self, items):
+		pass
+
+	def unpack_playlist(self, items):
+		for item in list(items):
+			if isinstance(item, PPlaylist):
+				items.remove(item)
+				items.extend(item.playlist)
+
+	def _resolve_video(self, item, callback):
+
+		def selected_source(answer):
+			if answer is not None:
+				# entry point of play video source
+				callback(answer[1])
+			else:
+				self.content_screen.workingFinished()
+
+		def open_item_success_cb(result):
+			list_items, command, args = result
+
+			self.content_screen.stopLoading()
+			self.content_screen.showList()
+
+			self.unpack_playlist(list_items)
+			self._filter_by_quality(list_items)
+
+			if len(list_items) != 0:
+				# if there is only one item or silent mode is enabled, then get only the first one
+				item = list_items[0]
+				callback(item)
+			else: # no video
+#				self.content_screen.workingFinished()
+				callback(None)
+
+		@AddonExceptionHandler(self.session)
+		def open_item_error_cb(failure):
+			self.content_screen.stopLoading()
+			self.content_screen.showList()
+			self.content_screen.workingFinished()
+			failure.raiseException()
+
+		self.content_screen.hideList()
+		self.content_screen.startLoading()
+		self.content_screen.workingStarted()
+		self.content_provider.get_content(self.session, item.params, open_item_success_cb, open_item_error_cb, True)
