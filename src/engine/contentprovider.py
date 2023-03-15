@@ -518,8 +518,9 @@ class ArchivCZSKContentProvider(ContentProvider):
 
 
 class DummyAddonInterface:
-	def __init__(self, run, trakt=None, stats=None, search=None):
+	def __init__(self, run, trakt=None, stats=None, search=None, run_silent=None):
 		self.run = run
+		self.run_silent = run_silent if run_silent else run
 		if trakt:
 			self.trakt = trakt
 		if stats:
@@ -610,7 +611,7 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 				log.error("Addon %s doesn't returned interface to mandatory run method" % (self.video_addon))
 				raise AddonError(_("Addon returned not supported communication interface"))
 
-			self.addon_interface = DummyAddonInterface(run=response['run'], trakt=response.get('trakt'), stats=response.get('stats'), search=response.get('search'))
+			self.addon_interface = DummyAddonInterface(run=response['run'], trakt=response.get('trakt'), stats=response.get('stats'), search=response.get('search'), run_silent=response.get('run_silent'))
 		elif callable(response):
 			# only method for get content returned as callable
 			self.addon_interface = DummyAddonInterface(run=response)
@@ -655,7 +656,7 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 					else:
 						log.debug("skipping")
 
-	def get_content(self, session, params, successCB, errorCB):
+	def get_content(self, session, params, successCB, errorCB, silent=False):
 		log.info('%s get_content - params: %s' % (self, str(params)))
 		# add/remove trakt compatibility on every content request
 		if self.video_addon.setting_exist('trakt_enabled'):
@@ -680,13 +681,16 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 			ssl._create_default_https_context = ssl._create_unverified_context
 		except:
 			pass
-		thread_task = task.Task(self._get_content_cb, self.call_addon_run_interface, session, params)
+		thread_task = task.Task(self._get_content_cb, self.call_addon_run_interface, session, params, silent)
 		thread_task.run()
 		return content_deferred
 
-	def call_addon_run_interface(self, session, params):
+	def call_addon_run_interface(self, session, params, silent):
 		self.resolve_addon_interface()
-		self.addon_interface.run(session, params)
+		if silent:
+			self.addon_interface.run_silent(session, params)
+		else:
+			self.addon_interface.run(session, params)
 
 	def trakt(self, session, item, action, result, successCB, errorCB):
 		log.info('%s trakt - action: %s, item %s' % (self, action, str(item)))
