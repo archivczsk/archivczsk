@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 11.8.2012
 
@@ -9,10 +10,9 @@ from Components.config import config, ConfigSelection, ConfigDirectory, getConfi
 import os
 
 choicelist_timeout = []
-for i in range(10, 120, 5):
+for i in range(4, 30, 1):
 	choicelist_timeout.append(("%d" % i, "%d s" % i))
-choicelist_timeout.append(("0", _("infinite")))
-
+choicelist_timeout.append(("0", "∞"))
 
 #define settings which will apply for every addon
 global_addon_settings = [
@@ -29,7 +29,7 @@ global_addon_settings = [
 			{
 				'label': _("Timeout"),
 				'id':'loading_timeout',
-				'entry':ConfigSelection(default="15", choices=choicelist_timeout)
+				'entry': ConfigSelection(default="10", choices=choicelist_timeout)
 			},
 		]
 	}
