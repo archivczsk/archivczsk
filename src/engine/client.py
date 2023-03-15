@@ -13,7 +13,7 @@ from Screens.InputBox import InputBox
 from .. import _, log, removeDiac
 from .contentprovider import VideoAddonContentProvider
 from .exceptions.addon import AddonInfoError, AddonWarningError, AddonError, AddonThreadException
-from .items import PFolder, PVideoResolved, PVideoNotResolved, PPlaylist, PSearch, PSearchItem, Stream
+from .items import PFolder, PVideoResolved, PVideoNotResolved, PPlaylist, PSearch, PSearchItem
 from .ydl import ydl
 from .tools.task import callFromThread, Task
 from .tools.util import toString, toUnicode
@@ -28,7 +28,7 @@ def abortTask(func):
 		task = Task.getInstance()
 		if task and task._aborted:
 			raise AddonThreadException()
-		func(*args, **kwargs)
+		return func(*args, **kwargs)
 	return wrapped_func
 
 
@@ -166,16 +166,22 @@ def getListInput(session, choices_list, title=""):
 
 
 def set_command(name, **kwargs):
-	"""set command for active content screen
+	"""
+	Set command for active content screen
 	first argument is always name of the command, next arguments are arguments for command
 
 	possible commands for content screen are: refreshafter - refreshes content screen when again loaded
-											  refreshnow- refreshes content screen immediately"""
+											  refreshnow- refreshes content screen immediately
+	"""
 	GItem_lst[1] = name
 	for arg in kwargs:
 		GItem_lst[2][arg] = kwargs[arg]
 
 def refresh_screen(restoreLastPosition=True):
+	"""
+	Refreshesh active screen
+	restoreLastPosition = if True, then restores position of cursor
+	"""
 	if restoreLastPosition:
 		set_command('refreshnow')
 	else:
@@ -183,6 +189,20 @@ def refresh_screen(restoreLastPosition=True):
 
 
 def create_directory_it(name, params={}, image=None, infoLabels={}, menuItems={}, search_folder=False, search_item=False, video_item=False, dataItem=None, traktItem=None, download=True):
+	'''
+	Creates new directory item. It can be:
+	search_item, search_folder, video_item if any of these are set to True or folder otherwise
+
+	@param name : name of the directory
+	@param params: dictationary of parameters for next resolving
+	@param image: image to show in directories info
+	@param infoLabels: dictationary of informations{'title':title,'plot':plot,'rating':rating,''}"
+	@param menuItems: dictationary with menu items
+	@param dataItem: data item that will be forwarded to stats() callback
+	@param traktItem: trakt item that holds informations for trakt scrobling
+	@param download: Enables or disables downloading of this item
+	'''
+
 	if search_item:
 		it = PSearchItem()
 	elif search_folder:
@@ -228,7 +248,23 @@ def create_directory_it(name, params={}, image=None, infoLabels={}, menuItems={}
 	return it
 
 
-def create_video_it(name, url, subs=None, image=None, infoLabels={}, menuItems={}, filename=None, live=False, stream=None, settings=None, dataItem=None, traktItem=None, download=True):
+def create_video_it(name, url, subs=None, image=None, infoLabels={}, menuItems={}, filename=None, live=False, settings=None, dataItem=None, traktItem=None, download=True):
+	'''
+	Creates new video item:
+
+	@param url: play url
+	@param subs: subtitles url
+	@param image: image of video item
+	@param infoLabels: dictationary of informations{'title':title,'plot':plot,'rating':rating,''}"
+	@param menuItems: dictationary with menu items
+	@param filename: set this filename when downloading
+	@param live: is video live stream (for rtmp)
+	@param settings: dictationary of player/download settings{"user-agent",:"","extra-headers":{}}
+	@param dataItem: data item that will be forwarded to stats() callback
+	@param traktItem: trakt item that holds informations for trakt scrobling
+	@param download: Enables or disables downloading of this item
+	'''
+
 	it = PVideoResolved()
 
 	if not config.plugins.archivCZSK.colored_items.value:
@@ -266,9 +302,6 @@ def create_video_it(name, url, subs=None, image=None, infoLabels={}, menuItems={
 
 	it.live = live
 
-	if stream is not None and isinstance(Stream):
-		it.add_stream(stream)
-
 	if settings is not None:
 		if not isinstance(settings, dict):
 			log.error("Cannot load settings %s class, it has to be dict class" , settings.__class__.__name__)
@@ -291,61 +324,25 @@ def create_video_it(name, url, subs=None, image=None, infoLabels={}, menuItems={
 	return it
 
 @abortTask
-def add_dir(name, params={}, image=None, infoLabels={}, menuItems={}, search_folder=False, search_item=False, video_item=False, dataItem=None, traktItem=None, download=True):
-	"""adds directory item to content screen
-
-		@param name : name of the directory
-		@param params: dictationary of parameters for next resolving
-		@param image: image to show in directories info
-		@param infoLabels: dictationary of informations{'title':title,'plot':plot,'rating':rating,''}"
-		@param menuItems: dictationary with menu items
-
-	"""
-	it = create_directory_it(name=name,
-							 params=params,
-							 image=image,
-							 infoLabels=infoLabels,
-							 menuItems=menuItems,
-							 search_folder=search_folder,
-							 search_item=search_item,
-							 video_item=video_item,
-							 dataItem=dataItem,
-							 traktItem=traktItem,
-							 download=download)
-	GItem_lst[0].append(it)
+def add_dir(*args, **kwargs):
+	'''
+	Creates new directory item and adds it to current screen. For parameters see create_directory_it()
+	'''
+	GItem_lst[0].append(create_directory_it(*args, **kwargs))
 
 @abortTask
-def add_video(name, url, subs=None, image=None, infoLabels={}, menuItems={}, filename=None, live=False, stream=None, settings=None, dataItem=None, traktItem=None, download=True):
+def add_video(*args, **kwargs):
+	'''
+	Creates new resolved video item and adds it to current screen. For parameters see create_video_it()
+	'''
+	GItem_lst[0].append(create_video_it(*args, **kwargs))
 
-	"""
-	adds video item to content screen
-		@param url: play url
-		@param subs: subtitles url
-		@param image: image of video item
-		@param infoLabels: dictationary of informations{'title':title,'plot':plot,'rating':rating,''}"
-		@param filename: set this filename when downloading
-		@param live: is video live stream
-		@param settings: dictationary of player/download settings{"user-agent",:"","extra-headers":{}}
-	"""
-	video_it = create_video_it(name=name,
-							   url=url,
-							   subs=subs,
-							   image=image,
-							   infoLabels=infoLabels,
-							   menuItems=menuItems,
-							   filename=filename,
-							   live=live,
-							   stream=stream,
-							   settings=settings,
-							   dataItem=dataItem,
-							   traktItem=traktItem,
-							   download=download)
-	if not is_py3 and isinstance(url, unicode ):
-		url = url.encode('utf-8')
-	if not isinstance(url, str):
-		log.info('add_video - ignoring %s, invalid url', repr(video_it))
-	else:
-		GItem_lst[0].append(video_it)
+@abortTask
+def add_item(item):
+	'''
+	Adds new item to current screen. Iten needs to be created using create_video_it() or create_directory_it()
+	'''
+	GItem_lst[0].append(item)
 
 @abortTask
 def add_playlist(name, media_list=[]):
@@ -354,6 +351,7 @@ def add_playlist(name, media_list=[]):
 	for media in media_list:
 		playlist.add(media)
 	GItem_lst[0].append(playlist)
+	return playlist
 
 @abortTask
 def add_operation_result(msg, isError=False):
