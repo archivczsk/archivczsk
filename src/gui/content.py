@@ -173,6 +173,12 @@ class BaseContentScreen(BaseArchivCZSKListSourceScreen):
 		if not self.working and len(self.lst_items) > 0:
 			self.contentHandler.info_item(self.getSelectedItem(), mode)
 
+	def get_lst_items(self, from_selected=False):
+		if from_selected:
+			return self.lst_items[self.getSelectedIndex():]
+		else:
+			return self.lst_items
+
 
 class ArchivCZSKVideoAddonsManagementScreen(BaseContentScreen, TipBar):
 	CONTEXT_TIP = (KEY_MENU_IMG, _("show menu of current addon"))

@@ -4,7 +4,7 @@ from Screens.MessageBox import MessageBox
 from .item import ItemHandler
 from ... import _, log
 from ...gui.exception import AddonExceptionHandler
-from ..items import PExit, PFolder, PSearchItem
+from ..items import PExit, PFolder, PSearchItem, PPlaylist, PVideo
 from ...gui.common import showInfoMessage, showErrorMessage, showWarningMessage
 from ..trakttv import trakttv
 from ..serialize import is_serializable
@@ -222,6 +222,7 @@ class FolderItemHandler(ItemHandler):
 				item.add_context_menu_item(_('Pair device with Trakt.tv'), action=self.cmdTrakt, params={'item':item, 'action':'pair'})
 
 		item.add_context_menu_item(_("Open"), action=self.open_item, params={'item':item})
+		item.add_context_menu_item(_("Play all videos"), action=self.play_all, params={'item':item})
 		if not self.is_search(item) and 'favorites' in self.content_provider.capabilities and is_serializable(item.params):
 			item.add_context_menu_item(_("Add Shortcut"), action=self.ask_add_shortcut, params={'item':item})
 		else:
@@ -236,3 +237,38 @@ class FolderItemHandler(ItemHandler):
 	def add_shortcut_cb(self, cb):
 		if cb:
 			self.content_provider.create_shortcut(self.item)
+
+	def play_all(self, item, *args, **kwargs):
+		# resolve folder content, create playlist and forward to handler
+		def start_playback(items):
+			playlist = PPlaylist()
+			playlist.name = _("Playlist of") + ' ' + item.name
+			for i in items:
+				if isinstance(i, PVideo):
+					playlist.add(i)
+
+			if len(playlist.playlist) > 0:
+				self.content_screen.contentHandler.open_item(playlist)
+			else:
+				self.session.open(MessageBox, text=_("No playable videos were found"), type=MessageBox.TYPE_INFO)
+
+		self._resolve_videos(item, start_playback)
+
+	def _resolve_videos(self, item, callback):
+
+		def open_item_success_cb(result):
+			list_items, command, args = result
+
+			self.content_screen.stopLoading()
+			self.content_screen.workingFinished()
+			callback(list_items)
+
+		@AddonExceptionHandler(self.session)
+		def open_item_error_cb(failure):
+			self.content_screen.stopLoading()
+			self.content_screen.workingFinished()
+			failure.raiseException()
+
+		self.content_screen.startLoading()
+		self.content_screen.workingStarted()
+		self.content_provider.get_content(self.session, item.params, open_item_success_cb, open_item_error_cb)

@@ -158,8 +158,7 @@ class Player(object):
 			idx = idx or 0
 			if isinstance(item, PPlaylist):
 				if len(item.playlist) == 0:
-					# nothing to play ... add dummy entry to correctly stop playback
-					item.add(PVideoResolved())
+					return self.player_exit_callback()
 
 				self.playlist_item = item
 				self.playlist = item.playlist
@@ -172,8 +171,25 @@ class Player(object):
 		elif idx is not None and self.playlist and idx >= 0 and idx < len(self.playlist):
 			play_item = self.playlist[idx]
 
+		def play_next_item():
+			# plays next item from playlist or closes player
+			# also handles if player was already started or not
+			if idx == len(self.playlist) - 1:
+				if self.video_player:
+					# player was already started - call standard close
+					self.video_player.close()
+				else:
+					# player was not started yet, so exit without video_player call
+					self.player_exit_callback()
+			else:
+				self.play_item(idx=idx + 1)
+
 		def play_item_continue(play_item):
-			if play_item is not None and self._play_item != play_item:
+			if play_item == None:
+				# resolving failed
+				return play_next_item()
+
+			if self._play_item != play_item:
 				self._play_item = play_item
 				self.curr_idx = idx
 
@@ -181,14 +197,20 @@ class Player(object):
 					# set current play item - needed for stats and trakt commands
 					self.playlist_item.set_current_item(play_item)
 
-				self.play_stream(play_item.url, play_item.settings, play_item.subs, play_item.name, play_item)
+				try:
+					self.play_stream(play_item.url, play_item.settings, play_item.subs, play_item.name, play_item)
+				except:
+					log.error(traceback.format_exc())
 
-		if isinstance(play_item, PVideoNotResolved) and self.resolve_cbk:
+		if isinstance(play_item, PVideoResolved):
+			# video already resolved, so start play
+			play_item_continue(play_item)
+		elif self.resolve_cbk:
 			# resolve video url and continue
 			self.resolve_cbk(play_item, play_item_continue)
 		else:
-			# video already resolved, so start play
-			play_item_continue(play_item)
+			# we can't play this item
+			play_next_item()
 
 	def play_stream(self, play_url, play_settings=None, subtitles_url=None, title=None, wholeItem=None, status_msg=None):
 		log.info("play_stream(%s, %s, %s, %s)"%(play_url, play_settings, subtitles_url, title))
@@ -288,8 +310,9 @@ class Player(object):
 						idx += 1
 						self.play_item(idx = idx)
 				elif callback[1] == "idx":
-					self.player_callback(('stop',))
-					self.play_item(idx = callback[2])
+					if callback[2] is not None:
+						self.player_callback(('stop',))
+						self.play_item(idx=callback[2])
 			elif callback[0] == "player_switch":
 				self.player_switch()
 			elif callback[0] in ("start", "stop", "pause", "unpause", "seek", "watching"):
@@ -297,7 +320,6 @@ class Player(object):
 
 	def player_exit_callback(self, playpos=None):
 		log.info("player_exit_callback(%s)", playpos)
-		self.video_player = None
 		if self.playlist_dialog and self.playlist_dialog.__dict__:
 			self.playlist_dialog.close()
 			self.playlist_dialog = None
@@ -308,7 +330,9 @@ class Player(object):
 		self.available_players = None
 		self.current_stype = None
 
-		self.session.nav.playService(self.old_service)
+		if self.video_player is not None:
+			self.session.nav.playService(self.old_service)
+		self.video_player = None
 		self.old_service = None
 		if self.callback is not None:
 			self.callback()
