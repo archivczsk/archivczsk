@@ -1,3 +1,7 @@
+archivCZSK 2.1.4, 17.03.2023
+    - oprava prehrávania filmov zo stiahnutých položiek
+    - malé opravy v gui sťahovania
+
 archivCZSK 2.1.3, 16.03.2023
     - pridanie podpory pre playlisty s oneskoreným resolvovaním URL adresy
     - pridanie možnosti prehrať všetky videa v priečinku a od aktuálneho cez kontextové menu
