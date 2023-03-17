@@ -42,7 +42,7 @@ except ImportError as e:
 
 from ... import _, log
 from ...compat import eConnectCallback, DMM_IMAGE
-from ..items import PVideo, PVideoResolved, PVideoNotResolved, PPlaylist
+from ..items import PVideo, PVideoNotResolved, PPlaylist
 from ..tools import e2util
 from ..tools.util import toString
 from ...colors import DeleteColors
@@ -202,15 +202,15 @@ class Player(object):
 				except:
 					log.error(traceback.format_exc())
 
-		if isinstance(play_item, PVideoResolved):
-			# video already resolved, so start play
-			play_item_continue(play_item)
-		elif self.resolve_cbk:
-			# resolve video url and continue
-			self.resolve_cbk(play_item, play_item_continue)
+		if isinstance(play_item, PVideoNotResolved):
+			if self.resolve_cbk:
+				self.resolve_cbk(play_item, play_item_continue)
+			else:
+				# we can't play this item without resolve callback
+				play_next_item()
 		else:
-			# we can't play this item
-			play_next_item()
+			# video sould be already resolved, so start play
+			play_item_continue(play_item)
 
 	def play_stream(self, play_url, play_settings=None, subtitles_url=None, title=None, wholeItem=None, status_msg=None):
 		log.info("play_stream(%s, %s, %s, %s)"%(play_url, play_settings, subtitles_url, title))
