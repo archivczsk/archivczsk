@@ -25,9 +25,7 @@ import skin
 RATIO = 1
 try:
 	width = getDesktop(0).size().width()
-	if width == 3840:
-		RATIO = 3
-	elif width == 1920:
+	if width >= 1920:
 		RATIO = 1.5
 except:
 	pass
@@ -151,17 +149,6 @@ class PanelListDownload(MenuList):
 		self.l.setFont(Font.REGULAR_BIG, gFont("Regular", resize(23)))
 		self.l.setFont(Font.REGULAR_SMALL, gFont("Regular", resize(17)))
 
-def PanelListDownloadEntry_SD(name, download):
-	res = [(name)]
-	res.append(MultiContentEntryText(pos=(0, resize(5)), size=(resize(610), resize(30)), font=Font.REGULAR_MEDIUM, flags=RT_HALIGN_LEFT, text=toString(name)))
-	if download.state == 'success_finished':
-		res.append(MultiContentEntryText(pos=(0, resize(5)), size=(resize(570), resize(30)), font=Font.REGULAR_MEDIUM, flags=RT_HALIGN_RIGHT, text=_('finished'), color=0x00FF00))
-	elif download.state == 'error_finished':
-		res.append(MultiContentEntryText(pos=(0, resize(5)), size=(resize(570), resize(30)), font=Font.REGULAR_MEDIUM, flags=RT_HALIGN_RIGHT, text=_('finished with errors'), color=0xff0000))
-	elif download.state == 'downloading':
-		res.append(MultiContentEntryText(pos=(0, resize(5)), size=(resize(570), resize(30)), font=Font.REGULAR_MEDIUM, flags=RT_HALIGN_RIGHT, text=_('downloading')))
-	return res
-
 
 def PanelListDownloadEntry(name, download):
 	res = [(name)]
@@ -189,33 +176,33 @@ def PanelColorListEntry2(name, value, colorName, colorValue, sizePanelX):
 
 def PanelListDownloadListEntry(pdownload):
 	res = [(pdownload.name)]
-	finishText = _('Finished:  ')
+	finishText = _('Finished:')
 	if pdownload.finish_time is not None:
-		finishText = _('Finished:  ') + time.strftime("%b %d %Y %H:%M:%S", time.localtime(pdownload.finish_time))
+		finishText += time.strftime("  %d.%m.%Y %H:%M:%S", time.localtime(pdownload.finish_time))
 
 	sizeKB = BtoKB(pdownload.size)
 	if sizeKB <= 1024 and sizeKB >= 0:
-		size = ("%d KB		  " % sizeKB)
+		size = ("%d KB" % sizeKB)
 	elif sizeKB <= 1024 * 1024:
-		size = ("%d MB		  " % BtoMB(pdownload.size))
+		size = ("%d MB" % BtoMB(pdownload.size))
 	else:
-		size = ("%.2f GB		" % BtoGB(pdownload.size))
+		size = ("%.2f GB" % BtoGB(pdownload.size))
 
-	sizeText = _('Size:	 ') + size
+	sizeText = _('Size:') + '  ' + size + '  '
 	stateText = pdownload.textState
 
 	res.append(MultiContentEntryPixmapAlphaTest(pos=(resize(5), resize(5)), size=(resize(35), resize(25)), png=loadPNG(pdownload.thumb)))
 	res.append(MultiContentEntryText(pos=(resize(60), resize(5)), size=(resize(760), resize(30)), font=Font.REGULAR_MEDIUM, flags=RT_HALIGN_LEFT, text=toString(pdownload.name)))
-	res.append(MultiContentEntryText(pos=(0, resize(38)), size=(resize(900), resize(18)), font=Font.REGULAR_SMALL, flags=RT_VALIGN_TOP | RT_HALIGN_RIGHT, text=sizeText, color=0xE6A800))
+	res.append(MultiContentEntryText(pos=(0, resize(38)), size=(resize(970), resize(18)), font=Font.REGULAR_SMALL, flags=RT_VALIGN_TOP | RT_HALIGN_RIGHT, text=sizeText, color=0xE6A800))
 
 	if pdownload.state == 'success_finished':
-		res.append(MultiContentEntryText(pos=(0, resize(38)), size=(resize(900), resize(18)), font=Font.REGULAR_SMALL, flags=RT_VALIGN_TOP | RT_HALIGN_LEFT, text=finishText, color=0xE6A800))
-		res.append(MultiContentEntryText(pos=(0, resize(38)), size=(resize(900), resize(18)), font=Font.REGULAR_SMALL, flags=RT_VALIGN_TOP | RT_HALIGN_CENTER, text=stateText, color=0x00FF00))
+		res.append(MultiContentEntryText(pos=(0, resize(38)), size=(resize(970), resize(18)), font=Font.REGULAR_SMALL, flags=RT_VALIGN_TOP | RT_HALIGN_LEFT, text=finishText, color=0xE6A800))
+		res.append(MultiContentEntryText(pos=(0, resize(38)), size=(resize(970), resize(18)), font=Font.REGULAR_SMALL, flags=RT_VALIGN_TOP | RT_HALIGN_CENTER, text=stateText, color=0x00FF00))
 	elif pdownload.state == 'error_finished':
-		res.append(MultiContentEntryText(pos=(0, resize(38)), size=(resize(900), resize(18)), font=Font.REGULAR_SMALL, flags=RT_VALIGN_TOP | RT_HALIGN_LEFT, text=finishText, color=0xE6A800))
-		res.append(MultiContentEntryText(pos=(0, resize(38)), size=(resize(900), resize(18)), font=Font.REGULAR_SMALL, flags=RT_VALIGN_TOP | RT_HALIGN_CENTER, text=stateText, color=0xff0000))
+		res.append(MultiContentEntryText(pos=(0, resize(38)), size=(resize(970), resize(18)), font=Font.REGULAR_SMALL, flags=RT_VALIGN_TOP | RT_HALIGN_LEFT, text=finishText, color=0xE6A800))
+		res.append(MultiContentEntryText(pos=(0, resize(38)), size=(resize(970), resize(18)), font=Font.REGULAR_SMALL, flags=RT_VALIGN_TOP | RT_HALIGN_CENTER, text=stateText, color=0xff0000))
 	elif pdownload.state == 'downloading':
-		res.append(MultiContentEntryText(pos=(0, resize(38)), size=(resize(900), resize(18)), font=Font.REGULAR_SMALL, flags=RT_VALIGN_TOP | RT_HALIGN_CENTER, text=stateText, color=0xE6A800))
+		res.append(MultiContentEntryText(pos=(0, resize(38)), size=(resize(970), resize(18)), font=Font.REGULAR_SMALL, flags=RT_VALIGN_TOP | RT_HALIGN_CENTER, text=stateText, color=0xE6A800))
 	return res
 
 

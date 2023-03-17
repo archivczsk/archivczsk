@@ -189,20 +189,20 @@
   </screen>
   
   <screen name="ArchivCZSKDownloadStatusScreen" position="center,center" size="534,370" backgroundColor="#0a000000">
-    <widget name="filename" position="8,5" size="519,37" font="Regular;15" foregroundColor="red" halign="center"/>
-    <widget name="path_label" position="8,56" size="101,17" backgroundColor="background" font="Regular;13" foregroundColor="#00e5b243"/>
-    <widget name="path" position="8,56" size="519,35" font="Regular;13"/>
-    <widget name="start_label" position="8,110" size="519,17" foregroundColor="#00e5b243" font="Regular;13"/>
-    <widget name="start" position="8,110" size="519,17" font="Regular;13"/>
-    <widget name="finish_label" position="8,137" size="519,17" foregroundColor="#00e5b243" font="Regular;13"/>
-    <widget name="finish" position="8,137" size="519,17" font="Regular;13"/>
-    <widget name="size_label" position="8,183" size="519,17" foregroundColor="#00e5b243" font="Regular;13"/>
-    <widget name="size" position="8,183" size="519,17" font="Regular;13"/>
-    <widget name="speed_label" position="8,206" size="519,17" foregroundColor="#00e5b243" font="Regular;13"/>
-    <widget name="speed" position="8,206" size="519,17" font="Regular;13"/>
-    <widget name="state_label" position="8,247" size="519,17" foregroundColor="#00e5b243" font="Regular;13"/>
-    <widget name="state" position="8,247" size="519,17" foregroundColors="#0000b837,#ff2b39,#024dd9" font="Regular;13"/>
-    <widget name="status" position="8,283" size="519,76" font="Console;9"/>
+    <widget name="filename" position="8,5" size="519,37" font="Regular;15" foregroundColor="red" halign="center" transparent="1"/>
+    <widget name="path_label" position="8,56" size="101,17" backgroundColor="background" font="Regular;13" foregroundColor="#00e5b243" transparent="1"/>
+    <widget name="path" position="8,56" size="519,35" font="Regular;13" transparent="1"/>
+    <widget name="start_label" position="8,110" size="519,17" foregroundColor="#00e5b243" font="Regular;13" transparent="1"/>
+    <widget name="start" position="8,110" size="519,17" font="Regular;13" transparent="1"/>
+    <widget name="finish_label" position="8,137" size="519,17" foregroundColor="#00e5b243" font="Regular;13" transparent="1"/>
+    <widget name="finish" position="8,137" size="519,17" font="Regular;13" transparent="1"/>
+    <widget name="size_label" position="8,183" size="519,17" foregroundColor="#00e5b243" font="Regular;13" transparent="1"/>
+    <widget name="size" position="8,183" size="519,17" font="Regular;13" transparent="1"/>
+    <widget name="speed_label" position="8,206" size="519,17" foregroundColor="#00e5b243" font="Regular;13" transparent="1"/>
+    <widget name="speed" position="8,206" size="519,17" font="Regular;13" transparent="1"/>
+    <widget name="state_label" position="8,247" size="519,17" foregroundColor="#00e5b243" font="Regular;13" transparent="1"/>
+    <widget name="state" position="8,247" size="519,17" foregroundColors="#0000b837,#ff2b39,#024dd9" font="Regular;13" transparent="1"/>
+    <widget name="status" position="8,283" size="519,76" font="Console;9" transparent="1"/>
   </screen>
   
   <screen name="ArchivCZSKCaptchaScreen" position="center,center" size="479,394" zPosition="99" backgroundColor="#0a000000" title="Virtual keyboard">

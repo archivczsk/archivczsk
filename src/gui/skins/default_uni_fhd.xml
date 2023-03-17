@@ -188,7 +188,7 @@
     <widget backgroundColor="#001f771f" font="Regular;30" halign="center" name="key_green" position="377,6" shadowColor="black" shadowOffset="-2,-2" size="357,57" valign="center" zPosition="1"/>
     <widget backgroundColor="#00a08500" font="Regular;30" halign="center" name="key_yellow" position="744,6" shadowColor="black" shadowOffset="-2,-2" size="357,57" valign="center" zPosition="1"/>
     <widget backgroundColor="#0018188b" font="Regular;30" halign="center" name="key_blue" position="1111,6" shadowColor="black" shadowOffset="-2,-2" size="357,57" valign="center" zPosition="1"/>
-    <widget name="menu" position="8,70" scrollbarMode="showOnDemand" size="1458,760" transparent="1"/>
+    <widget name="menu" position="10,70" scrollbarMode="showOnDemand" size="1458,760" transparent="1"/>
   </screen>
   
   <screen name="ArchivCZSKDownloadsScreen" position="center,center" size="1478,840" backgroundColor="#0a000000" title="DownloadScreen">
@@ -200,20 +200,20 @@
   </screen>
   
   <screen name="ArchivCZSKDownloadStatusScreen" position="center,center" backgroundColor="#0a000000" size="800,559">
-    <widget name="filename" position="12,8" size="779,56" font="Regular;22" foregroundColor="red" halign="center"/>
-    <widget name="path_label" position="12,84" size="152,26" backgroundColor="background" font="Regular;19" foregroundColor="#00e5b243"/>
-    <widget name="path" position="12,84" size="779,52" font="Regular;19"/>
-    <widget name="start_label" position="11,165" size="779,26" foregroundColor="#00e5b243" font="Regular;19"/>
-    <widget name="start" position="12,165" size="779,26" font="Regular;19"/>
-    <widget name="finish_label" position="11,206" size="779,26" foregroundColor="#00e5b243" font="Regular;19"/>
-    <widget name="finish" position="12,206" size="779,26" font="Regular;19"/>
-    <widget name="size_label" position="12,275" size="779,26" foregroundColor="#00e5b243" font="Regular;19"/>
-    <widget name="size" position="12,275" size="779,26" font="Regular;19"/>
-    <widget name="speed_label" position="12,309" size="779,26" foregroundColor="#00e5b243" font="Regular;19"/>
-    <widget name="speed" position="12,309" size="779,26" font="Regular;19"/>
-    <widget name="state_label" position="12,371" size="779,26" foregroundColor="#00e5b243" font="Regular;19"/>
-    <widget name="state" position="12,371" size="779,26" foregroundColors="#00b837,#ff2b39,#024dd9" font="Regular;19"/>
-    <widget name="status" position="12,424" size="779,114" font="Console;14"/>
+    <widget name="filename" position="12,8" size="779,56" font="Regular;22" foregroundColor="red" halign="center" transparent="1"/>
+    <widget name="path_label" position="12,84" size="152,26" backgroundColor="background" font="Regular;19" foregroundColor="#00e5b243" transparent="1"/>
+    <widget name="path" position="12,84" size="779,52" font="Regular;19" transparent="1"/>
+    <widget name="start_label" position="11,165" size="779,26" foregroundColor="#00e5b243" font="Regular;19" transparent="1"/>
+    <widget name="start" position="12,165" size="779,26" font="Regular;19" transparent="1"/>
+    <widget name="finish_label" position="11,206" size="779,26" foregroundColor="#00e5b243" font="Regular;19" transparent="1"/>
+    <widget name="finish" position="12,206" size="779,26" font="Regular;19" transparent="1"/>
+    <widget name="size_label" position="12,275" size="779,26" foregroundColor="#00e5b243" font="Regular;19" transparent="1"/>
+    <widget name="size" position="12,275" size="779,26" font="Regular;19" transparent="1"/>
+    <widget name="speed_label" position="12,309" size="779,26" foregroundColor="#00e5b243" font="Regular;19" transparent="1"/>
+    <widget name="speed" position="12,309" size="779,26" font="Regular;19" transparent="1"/>
+    <widget name="state_label" position="12,371" size="779,26" foregroundColor="#00e5b243" font="Regular;19" transparent="1"/>
+    <widget name="state" position="12,371" size="779,26" foregroundColors="#00b837,#ff2b39,#024dd9" font="Regular;19" transparent="1"/>
+    <widget name="status" position="12,424" size="779,114" font="Console;14" transparent="1"/>
   </screen>
   
   <screen name="ArchivCZSKCaptchaScreen" position="center,center" size="719,591" zPosition="99" backgroundColor="#0a000000" title="CaptchaScreen">

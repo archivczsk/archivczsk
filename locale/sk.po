@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-16 11:58+0100\n"
-"PO-Revision-Date: 2023-03-16 12:00+0100\n"
+"POT-Creation-Date: 2023-03-17 10:49+0100\n"
+"PO-Revision-Date: 2023-03-17 10:50+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: sk\n"
@@ -437,7 +437,7 @@ msgstr "Premenovať súbor"
 msgid "Download progress"
 msgstr "Priebeh sťahovania"
 
-#: src/gui/download.py:118
+#: src/gui/download.py:118 src/gui/common.py:191
 msgid "Size:"
 msgstr "Veľkosť:"
 
@@ -537,25 +537,9 @@ msgstr "Podľa velkosťi"
 msgid "Sort by state"
 msgstr "Podľa stavu"
 
-#: src/gui/common.py:158
-msgid "finished"
-msgstr "ukončené"
-
-#: src/gui/common.py:160
-msgid "finished with errors"
-msgstr "ukončené s chybami"
-
-#: src/gui/common.py:162 src/engine/downloader.py:246
-msgid "downloading"
-msgstr "sťahujem"
-
-#: src/gui/common.py:192 src/gui/common.py:194
-msgid "Finished:  "
-msgstr "Ukončené: "
-
-#: src/gui/common.py:204
-msgid "Size:\t "
-msgstr "Veľkosť:\t "
+#: src/gui/common.py:179
+msgid "Finished:"
+msgstr "Ukončené:"
 
 #: src/gui/shortcuts.py:27
 msgid "Remove shortcut"
@@ -1274,9 +1258,25 @@ msgstr ""
 msgid "not succesfully finished"
 msgstr "neúspešne skončilo"
 
+#: src/engine/downloader.py:246
+msgid "downloading"
+msgstr "sťahujem"
+
 #: src/plugin.py:73
 msgid "Search in ArchivCZSK"
 msgstr "Vyhľadávanie v ArchivCZSK"
+
+#~ msgid "finished"
+#~ msgstr "ukončené"
+
+#~ msgid "finished with errors"
+#~ msgstr "ukončené s chybami"
+
+#~ msgid "Finished:  "
+#~ msgstr "Ukončené: "
+
+#~ msgid "Size:\t "
+#~ msgstr "Veľkosť:\t "
 
 #~ msgid "infinite"
 #~ msgstr "nekonečno"

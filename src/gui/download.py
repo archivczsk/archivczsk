@@ -177,7 +177,7 @@ class ArchivCZSKDownloadStatusScreen(BaseArchivCZSKScreen):
 	def updateStaticInfo(self):
 		download = self._download
 		filename = py2_encode_utf8( download.filename )
-		start_time = time.strftime("%b %d %Y %H:%M:%S", time.localtime(download.start_time))
+		start_time = time.strftime("%d.%m.%Y %H:%M:%S", time.localtime(download.start_time))
 		path = os.path.split(download.local)[0]
 		path = py2_encode_utf8( path )
 
