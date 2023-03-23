@@ -19,7 +19,7 @@ from .tools.task import callFromThread, Task
 from .tools.util import toString, toUnicode
 from ..gui.captcha import Captcha
 from ..gui.common import LoadingScreen
-from ..colors import DeleteColors
+from ..colors import DeleteColors, ConvertColors
 from ..py3compat import *
 GItem_lst = VideoAddonContentProvider.get_shared_itemlist()
 
@@ -160,7 +160,12 @@ def getListInput(session, choices_list, title=""):
 	loading and loading.stop()
 
 	d = defer.Deferred()
-	newlist = [(toString(name),) for name in choices_list]
+
+	if config.plugins.archivCZSK.colored_items.value:
+		newlist = [(ConvertColors(toString(name)),) for name in choices_list]
+	else:
+		newlist = [(DeleteColors(toString(name)),) for name in choices_list]
+
 	session.openWithCallback(getListInputCB, ChoiceBox, toString(title), newlist, skin_name="ArchivCZSKChoiceBox")
 	return d
 
