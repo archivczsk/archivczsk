@@ -118,6 +118,8 @@ class Player(object):
 		self.video_player = None
 		self.playlist_dialog = None
 		self.playlist = []
+		self.auto_resume = False
+		self.auto_next = True
 		self.curr_idx = 0
 		self._play_item = None
 		self.callback = callback
@@ -146,14 +148,14 @@ class Player(object):
 		settings['stype'] = stype
 		settings['resume_time_sec'] = getPlayPositionInSeconds(self.session)
 		settings['resume_popup'] = False
-		play_item.settings = settings
 
 		status_msg = _("Player switched to {player}").format(player=videoPlayerInfo.getPlayerNameByStype(stype))
-		self.play_stream(play_item.url, play_item.settings, play_item.subs, play_item.name, play_item, status_msg)
+		self.play_stream(play_item.url, settings, play_item.subs, play_item.name, play_item, status_msg)
 		
 	def play_item(self, item = None, idx = None):
 		log.info("play_item(%s, %s)"%(item,toString(idx)))
 		play_item = None
+		auto_resume = False
 		if item is not None:
 			idx = idx or 0
 			if isinstance(item, PPlaylist):
@@ -162,6 +164,8 @@ class Player(object):
 
 				self.playlist_item = item
 				self.playlist = item.playlist
+				self.auto_next = item.auto_next
+				self.auto_resume = item.auto_resume
 				play_item = item.playlist[idx]
 			elif isinstance(item, PVideo):
 				if item not in self.playlist:
@@ -169,6 +173,7 @@ class Player(object):
 					self.playlist = [item]
 				play_item = item
 		elif idx is not None and self.playlist and idx >= 0 and idx < len(self.playlist):
+			auto_resume = self.auto_resume
 			play_item = self.playlist[idx]
 
 		def play_next_item():
@@ -197,8 +202,15 @@ class Player(object):
 					# set current play item - needed for stats and trakt commands
 					self.playlist_item.set_current_item(play_item)
 
+				if auto_resume:
+					settings = play_item.settings.copy()
+					settings['resume_time_sec'] = getPlayPositionInSeconds(self.session)
+					settings['resume_popup'] = False
+				else:
+					settings = play_item.settings
+
 				try:
-					self.play_stream(play_item.url, play_item.settings, play_item.subs, play_item.name, play_item)
+					self.play_stream(play_item.url, settings, play_item.subs, play_item.name, play_item)
 				except:
 					log.error(traceback.format_exc())
 
@@ -261,7 +273,7 @@ class Player(object):
 		log.info("player_callback(%r)" % (callback,))
 		if callback is not None:
 			if callback[0] == "eof":
-				if callback[1]:
+				if callback[1] and self.auto_next:
 					self.player_callback(("playlist", "next",))
 				else:
 					self.player_callback(('stop',))

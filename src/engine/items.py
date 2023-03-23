@@ -166,6 +166,8 @@ class PPlaylist(PItem):
 	def __init__(self):
 		PItem.__init__(self)
 		self.playlist = []
+		self.auto_next = True
+		self.auto_resume = False
 		self.current_item = None
 		self.thumb = PNG_PATH + '/playlist.png'
 

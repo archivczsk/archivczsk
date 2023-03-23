@@ -350,9 +350,11 @@ def add_item(item):
 	GItem_lst[0].append(item)
 
 @abortTask
-def add_playlist(name, media_list=[]):
+def add_playlist(name, media_list=[], auto_next=True, auto_resume=False):
 	playlist = PPlaylist()
 	playlist.name = toUnicode(name)
+	playlist.auto_next = auto_next
+	playlist.auto_resume = auto_resume
 	for media in media_list:
 		playlist.add(media)
 	GItem_lst[0].append(playlist)
