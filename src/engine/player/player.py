@@ -101,7 +101,7 @@ class ArchivCZSKPlaylist(Screen):
 	def buildPlaylist(self):
 		lst = []
 		for item in self.playlist:
-			lst.append((DeleteColors(toString(item.name)),))
+			lst.append((toString(item.name),))
 		return lst
 
 	def ok(self):

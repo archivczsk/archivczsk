@@ -219,6 +219,7 @@
   <screen name="ArchivCZSKPlaylistScreen" position="center,center" size="771,493" flags="wfNoBorder" backgroundColor="#48080808">
     <widget source="title" render="Label" position="0,0" size="771,59" valign="center" halign="center" backgroundColor="#28080808" font="Regular;20" foregroundColor="#00e9b253"/>
     <widget source="list" render="Listbox" position="5,77" size="761,415" scrollbarMode="showOnDemand" backgroundColor="#48080808">
+      <convert type="ACZSKKodiToE2List">Index:0,ColorCodes,Bold:FCE083,Italic:FCE083</convert>
       <convert type="TemplatedMultiContent">
         {"templates":
         {"default": (27, [
