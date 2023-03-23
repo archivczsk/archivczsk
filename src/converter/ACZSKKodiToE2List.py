@@ -91,13 +91,13 @@ class ACZSKKodiToE2List(Converter):
 		for arg in arguments:
 			if arg.startswith("Index"):
 				self.indexes = [int(i) for i in arg.split(':')[1].split('.')]
-				#print "[KodiToE2List] self.indexes = %s"%str(self.indexes)
+#				print("[KodiToE2List] self.indexes = %s" % str(self.indexes))
 		if "ColorCodes" in arguments:
 			self.type = self.TYPE_COLOR_CODES
-			#print "[KodiToE2List] self.type = self.TYPE_COLOR_CODES"
+#			print( "[KodiToE2List] self.type = self.TYPE_COLOR_CODES" )
 		else:
 			self.type = self.TYPE_TEXT
-			#print "[KodiToE2List] self.type = self.TYPE_TEXT"
+#			print("[KodiToE2List] self.type = self.TYPE_TEXT")
 		if self.type == self.TYPE_COLOR_CODES:
 			for arg in arguments:
 				if arg.split(':')[0] == "Bold":
@@ -114,6 +114,7 @@ class ACZSKKodiToE2List(Converter):
 		self.downstream_elements.changed(what)
 		
 	def getList(self):
+#		print("[KodiToE2List] getList()")
 		slist = self.source.list
 		clist = []
 		for e in slist:
@@ -125,6 +126,7 @@ class ACZSKKodiToE2List(Converter):
 	list = property(getList)
 		
 	def selectionChanged(self, index):
+#		print("[KodiToE2List] selectionChanged(%d) % index")
 		self.source.selectionChanged(index)
 
 	@cached
@@ -161,6 +163,8 @@ class ACZSKKodiToE2List(Converter):
 		self.downstream_elements.entry_changed(index)
 		
 	def getText(self, text):
+#		print("[KodiToE2List] getText(%s)" % text)
+
 		def uppercase(match):
 			return match.group('text').upper()
 

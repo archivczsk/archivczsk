@@ -1,25 +1,35 @@
 import re
+from .compat import DMM_IMAGE
 
-colorFixNeeded = True # old behaviour as default
+if DMM_IMAGE:
+	# DMM doesn't need color fix
+	colorFixNeeded = False
 
-try:
-	from Tools.Hex2strColor import Hex2strColor
-	if Hex2strColor(0xffffffff) == "\c????????":
-		colorFixNeeded = True
-	else:
-		colorFixNeeded = False
-except:
-	pass
+	# 0xff is for DMM not transparent - oposite of other images (a then make software portable ...)
+	alphaPrefix = "FF"
+else:
+	alphaPrefix = "00"
+	try:
+		# if there is Hex2strColor, then chceck the output ...
+		from Tools.Hex2strColor import Hex2strColor
+		if Hex2strColor(0xffffffff) == "\c????????":
+			colorFixNeeded = True # old behaviour
+		else:
+			colorFixNeeded = False
+	except:
+		# hmm, what now - how to know, if there we need to fix colors ...
+		# None will be handled the same way as True
+		colorFixNeeded = None
 
 
 def getEscapeColorFromHexString(color):
 	if color.startswith('#'):
 		color = color[1:]
 	if len(color) == 6:
-		color = "00"+ color
+		color = alphaPrefix + color
 	if len(color) != 8:
 		print('invalid color %s' % color)
-		return getEscapeColorFromHexString("00ffffff")
+		return getEscapeColorFromHexString("ffffff")
 	if colorFixNeeded == False:
 		return color
 	colorsarray = []
@@ -31,6 +41,7 @@ def getEscapeColorFromHexString(color):
 			c = x
 		colorsarray.append(chr(int(c, 16)))
 	return ''.join(colorsarray)
+
 
 COLORS = {
 	"red":"FF0000",
@@ -54,9 +65,8 @@ COLORS = {
 	"olive":"808000"
 }
 
-# COLOR_italicColor =	getEscapeColorFromHexString("FFFFFF")
-COLOR_italicColor =	getEscapeColorFromHexString( COLORS['yellow'] )
-COLOR_boldColor = getEscapeColorFromHexString("FFFFFF")
+COLOR_italicColor = getEscapeColorFromHexString("FCE083")
+COLOR_boldColor = getEscapeColorFromHexString("FCE083")
 COLOR_defaultColor = getEscapeColorFromHexString("FFFFFF")
 
 
