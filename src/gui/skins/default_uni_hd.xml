@@ -156,6 +156,7 @@
     <widget backgroundColor="#00a08500" font="Regular;20" halign="center" name="key_yellow" position="389,4" shadowColor="black" shadowOffset="-2,-2" size="184,38" valign="center" zPosition="1"/>
     <widget backgroundColor="#0018188b" font="Regular;20" halign="center" name="key_blue" position="580,4" shadowColor="black" shadowOffset="-2,-2" size="184,38" valign="center" zPosition="1"/>
     <widget source="menu" render="Listbox" position="5,47" size="758,465" transparent="1">
+      <convert type="ACZSKKodiToE2List">Index:1,ColorCodes,Bold:FCE083,Italic:FCE083</convert>
       <convert type="TemplatedMultiContent">
         {"templates":
         {"default": (27,

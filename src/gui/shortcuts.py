@@ -4,6 +4,7 @@ Created on 28.4.2012
 
 @author: marko
 '''
+from Components.config import config
 from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Screens.MessageBox import MessageBox
@@ -54,7 +55,14 @@ class ArchivCZSKShortcutsScreen(BaseArchivCZSKListSourceScreen):
 			self.updateMenuList()
 	
 	def updateMenuList(self, index=0):
-		self["menu"].list = [(LoadPixmap(toString(item.thumb)), toString(DeleteColors(item.name)))
+		if config.plugins.archivCZSK.colored_items.value:
+			def handle_colors(s):
+				return s
+		else:
+			def handle_colors(s):
+				return DeleteColors(s)
+
+		self["menu"].list = [(LoadPixmap(toString(item.thumb)), toString(handle_colors(item.name)))
 						for item in self.lst_items]
 		self["menu"].index = index
 
