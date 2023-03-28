@@ -84,9 +84,8 @@ class trakt_tv(object):
 		else:
 			response = requests.get(BASE + endpoint, headers=headers, timeout=5)
 		
-		log.logDebug("Trakt.tv response: code: %d, data: %s" % (response.status_code, response.json() if response.status_code < 300 else '') )
-		
-		log.logDebug("Trakt.tv response: code: %d, data: %s" % (response.status_code, response.json() if response.status_code < 300 else '') )
+#		log.logDebug("Trakt.tv response: code: %d, data: %s" % (response.status_code, response.json() if response.status_code < 300 else '') )
+		log.logDebug("Trakt.tv response: code: %d, data len: %d" % (response.status_code, len(response.text)))
 		
 		return response.status_code, response.json() if response.status_code < 300 else None 
 
@@ -132,13 +131,13 @@ class trakt_tv(object):
 	# #################################################################################################
 	
 	# API
-	def get_lists(self):
-		if self.valid():
+	def get_lists(self, user='me'):
+		if self.valid() or user != 'me':
 			ret = []
 			# always return watchlist category
 			ret.append( { 'name': 'Watchlist', 'id': 'watchlist' } )
 			
-			code, data = self.call_trakt_api('/users/me/lists' )
+			code, data = self.call_trakt_api('/users/%s/lists' % user)
 			
 			if code > 210:
 				raise Exception('Wrong response from Trakt server: %d' % code )
@@ -151,23 +150,23 @@ class trakt_tv(object):
 
 	# #################################################################################################
 		
-	def get_list_items(self, list_name):
-		if self.valid():
-			ret = []
+	def get_list_items(self, list_name, user='me'):
+		if self.valid() or user != 'me':
 			if list_name == 'watchlist':
 				# watchlist category has different url
-				code, data = self.call_trakt_api('/users/me/watchlist/items' )
+				code, data = self.call_trakt_api('/users/%s/watchlist/items' % user)
 			else:
-				code, data = self.call_trakt_api('/users/me/lists/%s/items' % list_name )
+				code, data = self.call_trakt_api('/users/%s/lists/%s/items' % (user, list_name))
 			
 			if code > 210:
 				raise Exception('Wrong response from Trakt server: %d' % code )
-
-			for m in data:
-				tp = '%s'%m['type']
-				obj = {'imdb':'%s'%m[tp]['ids']['imdb'], 'title':'%s (%s)'%(m[tp]['title'],m[tp]['year'])}
-				ret.append(obj)
 			return data
+
+#			ret = []
+#			for m in data:
+#				tp = '%s'%m['type']
+#				obj = {'imdb':'%s'%m[tp]['ids']['imdb'], 'title':'%s (%s)'%(m[tp]['title'],m[tp]['year'])}
+#				ret.append(obj)
 #			return ret
 		raise Exception('Invalid trakt token')
 
