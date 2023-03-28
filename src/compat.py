@@ -109,6 +109,10 @@ class MessageBox(OrigMessageBox):
 			
 		if kwargs.get('simple') is not None and not 'simple' in argspec.args:
 			del kwargs['simple']
+
+		if kwargs.get('timeout_default') is not None and not 'timeout_default' in argspec.args:
+			del kwargs['timeout_default']
+
 		if kwargs.get('list') is not None and not 'list' in argspec.args:
 			list = kwargs.pop('list')
 			self.dmm_fix = True

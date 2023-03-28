@@ -13,7 +13,6 @@ from Screens.ChoiceBox import ChoiceBox
 from Screens.HelpMenu import HelpableScreen
 from Screens.InfoBarGenerics import (InfoBarShowHide,
 		InfoBarSeek, InfoBarAudioSelection, InfoBarNotifications)
-from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
 from Tools.BoundFunction import boundFunction
 from Tools.Notifications import AddNotificationWithID, RemovePopup
@@ -41,7 +40,7 @@ except ImportError as e:
 		pass
 
 from ... import _, log
-from ...compat import eConnectCallback, DMM_IMAGE
+from ...compat import eConnectCallback, DMM_IMAGE, MessageBox
 from ..items import PVideo, PVideoNotResolved, PPlaylist
 from ..tools import e2util
 from ..tools.util import toString
@@ -660,13 +659,23 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.__timer.stop()
 		self.__timer_watching.stop()
 		self.resetSubs(True)
+
+		def service_started_continue(result):
+			if result == True:
+				AddNotificationWithID(self.RESUME_POPUP_ID,
+						MessageBox, _("Resuming playback"), timeout=0,
+						type=MessageBox.TYPE_INFO, enable_input=False)
+			elif result == False:
+				self.__resume_time_sec = None
+
+			# always run pts detection to get video length (if available)
+			self.__timer.start(500, True)
+
 		if self.__resume_time_sec is not None and self.__resume_popup:
-			AddNotificationWithID(self.RESUME_POPUP_ID,
-					MessageBox, _("Resuming playback"), timeout=0,
-					type=MessageBox.TYPE_INFO, enable_input=False)
+			self.session.openWithCallback(service_started_continue, MessageBox, text=_("Resume playback from last play position?"), type=MessageBox.TYPE_YESNO, timeout=10, timeout_default=False)
+		else:
+			service_started_continue(None)
 				
-		# always run pts detection to get video length (if available) 
-		self.__timer.start(500, True)
 		self.__timer_watching.start(5 * 60 * 1000) # 5 min.
 
 	def play_service_ref(self, service_ref, subtitles_url=None, resume_time_sec=None, resume_popup=True, status_msg=None):

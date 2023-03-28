@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-03-17 10:49+0100\n"
-"PO-Revision-Date: 2023-03-17 10:49+0100\n"
+"POT-Creation-Date: 2023-03-28 12:43+0200\n"
+"PO-Revision-Date: 2023-03-28 12:46+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -131,7 +131,7 @@ msgstr "Změny"
 msgid "Downloads"
 msgstr "Stažené soubory"
 
-#: src/gui/content.py:506 src/gui/shortcuts.py:26
+#: src/gui/content.py:506 src/gui/shortcuts.py:27
 #: src/engine/handlers/addon.py:195
 msgid "Shortcuts"
 msgstr "Záložky"
@@ -541,11 +541,11 @@ msgstr "Podle stavu"
 msgid "Finished:"
 msgstr "Dokončeno:"
 
-#: src/gui/shortcuts.py:27
+#: src/gui/shortcuts.py:28
 msgid "Remove shortcut"
 msgstr "Odstranit záložku"
 
-#: src/gui/shortcuts.py:46
+#: src/gui/shortcuts.py:47
 msgid "Do you want to delete"
 msgstr "Chcete smazat"
 
@@ -865,81 +865,85 @@ msgstr "Nyní nemůžete vyhledávat, vyhledávání právě probíhá"
 msgid "Cannot find searcher"
 msgstr "Nelze najít vyhledávač"
 
-#: src/engine/player/player.py:151
+#: src/engine/player/player.py:152
 #, python-brace-format
 msgid "Player switched to {player}"
 msgstr "Přehrávač změněn na {player}"
 
-#: src/engine/player/player.py:277
+#: src/engine/player/player.py:289
 msgid "Stop playing this movie?"
 msgstr "Ukončit přehrávání videa?"
 
-#: src/engine/player/player.py:371 src/engine/player/player.py:379
+#: src/engine/player/player.py:383 src/engine/player/player.py:391
 msgid "Letterbox"
 msgstr "Letterbox"
 
-#: src/engine/player/player.py:372 src/engine/player/player.py:376
-#: src/engine/player/player.py:380
+#: src/engine/player/player.py:384 src/engine/player/player.py:388
+#: src/engine/player/player.py:392
 msgid "Pan&scan"
 msgstr "Pan&scan"
 
-#: src/engine/player/player.py:373 src/engine/player/player.py:377
+#: src/engine/player/player.py:385 src/engine/player/player.py:389
 msgid "Nonlinear"
 msgstr "Nonlinear"
 
-#: src/engine/player/player.py:374 src/engine/player/player.py:378
-#: src/engine/player/player.py:381
+#: src/engine/player/player.py:386 src/engine/player/player.py:390
+#: src/engine/player/player.py:393
 msgid "Just scale"
 msgstr "Just scale"
 
-#: src/engine/player/player.py:375
+#: src/engine/player/player.py:387
 msgid "PillarBox"
 msgstr "PillarBox"
 
-#: src/engine/player/player.py:417
+#: src/engine/player/player.py:429
 msgid "Aspect"
 msgstr "Poměr"
 
-#: src/engine/player/player.py:418
+#: src/engine/player/player.py:430
 msgid "Policy"
 msgstr "Policy"
 
-#: src/engine/player/player.py:456
+#: src/engine/player/player.py:468
 msgid "Show subservices"
 msgstr "Zobrazit titulky"
 
-#: src/engine/player/player.py:481
+#: src/engine/player/player.py:493
 msgid "Please select subservice..."
 msgstr "Prosím zvolte subservice..."
 
-#: src/engine/player/player.py:581 src/engine/player/player.py:590
+#: src/engine/player/player.py:593 src/engine/player/player.py:602
 #: src/engine/handlers/media.py:504
 msgid "Show playlist"
 msgstr "Zobrazit playlist"
 
-#: src/engine/player/player.py:582 src/engine/player/player.py:591
+#: src/engine/player/player.py:594 src/engine/player/player.py:603
 msgid "Play next entry in playlist"
 msgstr "Přehrát následující záznam v playlistu"
 
-#: src/engine/player/player.py:583 src/engine/player/player.py:592
+#: src/engine/player/player.py:595 src/engine/player/player.py:604
 msgid "Play previous entry in playlist"
 msgstr "Přehrát předcházející záznam v playlistu"
 
-#: src/engine/player/player.py:584 src/engine/player/player.py:593
+#: src/engine/player/player.py:596 src/engine/player/player.py:605
 msgid "Exit player"
 msgstr "Ukončit přehrávač"
 
-#: src/engine/player/player.py:585
+#: src/engine/player/player.py:597
 msgid "Show/hide infobar"
 msgstr "Zobrazit/skrýt infobar"
 
-#: src/engine/player/player.py:586 src/engine/player/player.py:594
+#: src/engine/player/player.py:598 src/engine/player/player.py:606
 msgid "Switch player type"
 msgstr "Změnit typ přehrávače"
 
-#: src/engine/player/player.py:653
+#: src/engine/player/player.py:667
 msgid "Resuming playback"
 msgstr "Obnovuji přehrávání"
+
+#: src/engine/player/player.py:677 src/engine/player/player.py:679
+msgid "Resume playback from last play position?"
+msgstr "Obnovit přehrávání od poslední pozice?"
 
 #: src/engine/contentprovider.py:182
 msgid "Please wait until enough data is downloaded for fluent playback"
@@ -1142,57 +1146,57 @@ msgstr "Přidat do kategorie"
 msgid "Remove from category"
 msgstr "Zmazat z kategorie"
 
-#: src/engine/trakttv.py:469
+#: src/engine/trakttv.py:468
 #, python-brace-format
 msgid "Trakt.tv operation {action} ended successfuly"
 msgstr "Trakt.tv operace \"{action}\" skončila úspěšne"
 
-#: src/engine/trakttv.py:472
+#: src/engine/trakttv.py:471
 msgid "Trakt.tv is not paired with this device."
 msgstr "Trakt.tv není spárován s tímhle zařízením."
 
-#: src/engine/trakttv.py:476
+#: src/engine/trakttv.py:475
 #, python-brace-format
 msgid "Trakt.tv operation \"{action}\" failed"
 msgstr "Trakt.tv operace \"{action}\" selhala"
 
-#: src/engine/trakttv.py:490
+#: src/engine/trakttv.py:489
 msgid "Add to watchlist"
 msgstr "Přidat do Watchlist"
 
-#: src/engine/trakttv.py:491
+#: src/engine/trakttv.py:490
 msgid "Delete from watchlist"
 msgstr "Vymazat z Watchlist"
 
-#: src/engine/trakttv.py:494
+#: src/engine/trakttv.py:493
 msgid "Mark as watched"
 msgstr "Označit jako viděno"
 
-#: src/engine/trakttv.py:497
+#: src/engine/trakttv.py:496
 msgid "Mark as not watched"
 msgstr "Označit jako neviděno"
 
-#: src/engine/trakttv.py:499
+#: src/engine/trakttv.py:498
 msgid "Force data synchronisation"
 msgstr "Vynutit synchronizaci dat"
 
-#: src/engine/trakttv.py:502
+#: src/engine/trakttv.py:501
 msgid "Choose Trakt.tv action"
 msgstr "Zvolte akci pro Trakt.tv"
 
-#: src/engine/trakttv.py:517
+#: src/engine/trakttv.py:516
 msgid "Pairing timed out!"
 msgstr "Časový limit pro párování vypršel!"
 
-#: src/engine/trakttv.py:520 src/engine/trakttv.py:533
+#: src/engine/trakttv.py:519 src/engine/trakttv.py:532
 msgid "Pairing aborted by user"
 msgstr "Párování bylo zrušeno uživatelem"
 
-#: src/engine/trakttv.py:529
+#: src/engine/trakttv.py:528
 msgid "Pairing succesed. You can use Trakt.tv functions now"
 msgstr "Spárování bylo úspěšné. Nyní můžete využívat funkce Trakt.tv"
 
-#: src/engine/trakttv.py:542
+#: src/engine/trakttv.py:541
 #, python-brace-format
 msgid ""
 "To pair Trakt.tv with this device go to the activation address and enter pairing code.\n"
@@ -1207,7 +1211,7 @@ msgstr ""
 msgid "Please set your search expression"
 msgstr "Prosím vložte hledaný výraz"
 
-#: src/engine/items.py:191 src/engine/downloader.py:240
+#: src/engine/items.py:193 src/engine/downloader.py:240
 msgid "succesfully finished"
 msgstr "úspěšně dokončeno"
 
