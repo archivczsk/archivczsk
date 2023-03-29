@@ -11,10 +11,11 @@ except ImportError:
 from ..py3compat import *
 
 class PContextMenuItem(object):
-	def __init__(self, name, thumb, enabled, action=None, params=None):
+	def __init__(self, name, thumb, enabled, action=None, params=None, is_media=False):
 		self.name = name
 		self.thumb = thumb
 		self.enabled = enabled
+		self.__is_media = is_media
 		self.__action = action
 		self.__kwargs = params
 
@@ -32,6 +33,9 @@ class PContextMenuItem(object):
 	def execute(self):
 		if self.can_execute():
 			self.__action(**self.__kwargs)
+
+	def is_media(self):
+		return self.__is_media
 
 
 class PItem(object):
@@ -62,8 +66,8 @@ class PItem(object):
 		out += '>'
 		return py2_encode_utf8( out )
 
-	def add_context_menu_item(self, name, thumb=None, action=None, params=None, enabled=True):
-		item = PContextMenuItem(name, thumb, enabled, action, params)
+	def add_context_menu_item(self, name, thumb=None, action=None, params=None, enabled=True, is_media=False):
+		item = PContextMenuItem(name, thumb, enabled, action, params, is_media)
 		if item not in self.context:
 			self.context.append(item)
 

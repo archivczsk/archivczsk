@@ -232,13 +232,16 @@ def create_directory_it(name, params={}, image=None, infoLabels={}, menuItems={}
 	for key, value in menuItems.items():
 		item_name = decode_string(key)
 		thumb = None
+		is_media = False
 		if isinstance(value, dict):
 			params = value
 			thumb = None
-		if isinstance(value, list):
+		elif isinstance(value, list):
 			thumb = value[0]
 			params = value[1]
-		it.add_context_menu_item(item_name, thumb=thumb, params=params)
+			if len(value) == 3:
+				is_media = value[2]
+		it.add_context_menu_item(item_name, thumb=thumb, params=params, is_media=is_media)
 
 	if hasattr(it, 'dataItem'):
 		it.dataItem = dataItem
@@ -297,10 +300,13 @@ def create_video_it(name, url, subs=None, image=None, infoLabels={}, menuItems={
 		if isinstance(value, dict):
 			params = value
 			thumb = None
-		if isinstance(value, list):
+			is_media = False
+		elif isinstance(value, list):
 			thumb = value[0]
 			params = value[1]
-		it.add_context_menu_item(item_name, thumb=thumb, params=params)
+			if len(value) == 3:
+				is_media = value[2]
+		it.add_context_menu_item(item_name, thumb=thumb, params=params, is_media=is_media)
 
 	if filename is not None:
 		it.filename = toUnicode(filename)
