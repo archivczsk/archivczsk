@@ -355,6 +355,22 @@ def add_item(item):
 	'''
 	GItem_lst[0].append(item)
 
+
+@abortTask
+def sort_items(reverse=False, use_diacritics=True, ignore_case=False):
+	def key_fn(item):
+		if use_diacritics:
+			key = item.name
+		else:
+			key = removeDiac(item.name)
+
+		if ignore_case:
+			key = key.lower()
+		return key
+
+	GItem_lst[0].sort(key=key_fn, reverse=reverse)
+
+
 @abortTask
 def add_playlist(name, media_list=[], auto_next=True, auto_resume=False):
 	playlist = PPlaylist()
