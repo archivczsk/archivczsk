@@ -125,7 +125,7 @@ class PlayMixin(object):
 		self.player = Player(session, player_callback, event_callback, stype, resolve_cbk)
 		if mode in self.capabilities:
 			if mode == 'play':
-				self.handle_substitles_and_play(item)
+				self.player.play_item(item)
 			elif mode == 'play_and_download':
 				try:
 					self.play_and_download(session, item, "auto", player_callback)
@@ -133,21 +133,6 @@ class PlayMixin(object):
 					traceback.print_exc()
 		else:
 			log.error('Invalid playing mode - %s', str(mode))
-
-	def handle_substitles_and_play(self, item):
-		subs = ''
-		if not isinstance(item, PPlaylist) and hasattr(item, 'subs'):
-			subs = "%s"%item.subs
-		if subs.startswith('http'):
-			spl = subs.split('/')
-			fname = os.path.join(config.plugins.archivCZSK.tmpPath.getValue(), spl[len(spl)-1])
-			try:
-				download_web_file(subs, fname)
-				item.subs = fname
-			except:
-				log.logError("Handle substitle file failed.\n%s"%traceback.format_exc())
-
-		self.player.play_item(item)
 
 
 	def play_and_download(self, session, item, mode, player_callback=None, prefill_buffer=20*1024*1024):

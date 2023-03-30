@@ -1,4 +1,4 @@
-import traceback
+import traceback, os
 
 from enigma import eServiceReference, iPlayableService, eTimer
 from Components.ActionMap import ActionMap, HelpableActionMap
@@ -44,6 +44,7 @@ from ...compat import eConnectCallback, DMM_IMAGE, MessageBox
 from ..items import PVideo, PVideoNotResolved, PPlaylist
 from ..tools import e2util
 from ..tools.util import toString
+from ..tools.subtitles import download_subtitles
 from ...colors import DeleteColors
 from .info import videoPlayerInfo
 
@@ -128,6 +129,7 @@ class Player(object):
 		self.stype = stype
 		self.available_players = None
 		self.current_stype = None
+		self.cleanup_files = []
 
 	def player_switch(self):
 		if not self._play_item:
@@ -265,8 +267,13 @@ class Player(object):
 			service_ref.setName( sref_title )
 			self.video_player.setInfoBarText(sref_title)
 		
+		# handle subtitles
+		subtitles_file = download_subtitles(subtitles_url)
+		if subtitles_url != subtitles_file:
+			self.cleanup_files.append(subtitles_file)
+
 		self.video_player.play_service_ref(service_ref, 
-				self._play_item.subs, play_settings.get("resume_time_sec"), play_settings.get("resume_popup", True), status_msg)
+				subtitles_file, play_settings.get("resume_time_sec"), play_settings.get("resume_popup", True), status_msg)
 
 	def player_callback(self, callback):
 		log.info("player_callback(%r)" % (callback,))
@@ -348,6 +355,13 @@ class Player(object):
 		if self.callback is not None:
 			self.callback()
 			self.callback = None
+
+		for file in self.cleanup_files:
+			try:
+				os.remove(file)
+			except:
+				pass
+		self.cleanup_files = []
 
 
 class StatusScreen(Screen):
