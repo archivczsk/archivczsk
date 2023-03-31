@@ -61,7 +61,7 @@
         {"default": (29,
         [
         MultiContentEntryPixmapAlphaTest(pos=(5, 2), size=(35, 25), png=0),
-        MultiContentEntryText(pos=(50, 0), size=(950, 30), font=0, flags=RT_VALIGN_TOP | RT_HALIGN_LEFT, text=1)
+        MultiContentEntryText(pos=(50, 0), size=(640, 30), font=0, flags=RT_VALIGN_TOP | RT_HALIGN_LEFT, text=1)
         ]
         , True, "showOnDemand"),
         },
@@ -124,7 +124,7 @@
         {"templates":
         {"default": (27,
         [
-        MultiContentEntryText(pos=(7, 2), size=(633, 53), font=0, flags=RT_VALIGN_TOP | RT_HALIGN_LEFT, text=0)
+        MultiContentEntryText(pos=(7, 2), size=(410, 53), font=0, flags=RT_VALIGN_TOP | RT_HALIGN_LEFT, text=0)
         ]
         , True, "showOnDemand"),
         },
@@ -162,7 +162,7 @@
         {"default": (27,
         [
         MultiContentEntryPixmapAlphaTest(pos=(3, 0), size=(47, 26), png=0),
-        MultiContentEntryText(pos=(47, 2), size=(527, 67), font=0, flags=RT_VALIGN_TOP | RT_HALIGN_LEFT, text=1)
+        MultiContentEntryText(pos=(47, 2), size=(710, 67), font=0, flags=RT_VALIGN_TOP | RT_HALIGN_LEFT, text=1)
         ]
         , True, "showOnDemand"),
         },
@@ -224,7 +224,7 @@
       <convert type="TemplatedMultiContent">
         {"templates":
         {"default": (27, [
-        MultiContentEntryText(pos=(5,-2),size=(761,30),font=0,flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER,text=0)
+        MultiContentEntryText(pos=(5,-2),size=(751,30),font=0,flags=RT_HALIGN_LEFT|RT_VALIGN_CENTER,text=0)
         ], True, "showNever")
         },
         "fonts": [gFont("Regular", 18)],
