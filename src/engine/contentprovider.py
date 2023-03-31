@@ -613,20 +613,20 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 
 			# checking if archivCZSK version is compatible with this plugin
 			if addon_id == 'enigma2.archivczsk':
-				if	not util.check_version(aczsk.version, version):
+				if	not util.check_version(aczsk.version, version, False):
 					log.debug("%s archivCZSK version %s>=%s" , self, aczsk.version, version)
 				else:
-					log.debug("%s archivCZSK version %s<=%s" , self, aczsk.version, version)
+					log.debug("%s archivCZSK version %s<%s" , self, aczsk.version, version)
 					raise AddonError(_("You need to update archivCZSK at least to version {version}").format(version=version))
 			else:
 				log.info("%s requires %s addon, version %s" , self, addon_id, version)
 				if ArchivCZSK.has_addon(addon_id):
 					tools_addon = ArchivCZSK.get_addon(addon_id)
 					log.debug("%s required %s found" , self, tools_addon)
-					if	not util.check_version(tools_addon.version, version):
+					if	not util.check_version(tools_addon.version, version, False):
 						log.debug("%s version %s>=%s" , self, tools_addon.version, version)
 					else:
-						log.debug("%s version %s<=%s" , self, tools_addon.version, version)
+						log.debug("%s version %s<%s" , self, tools_addon.version, version)
 						if not optional:
 							log.error("%s cannot execute", self)
 							raise AddonError( _("Cannot execute addon {addon_name}. Dependency {dependency_name} version {dependency_version} needs to be at least version {dependency_version_requiered}".format(addon_name=self.video_addon, dependency_name=tools_addon.id, dependency_version=tools_addon.version, dependency_version_requiered=version)))

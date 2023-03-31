@@ -21,7 +21,7 @@ TMP_DIR=$(pushd $(dirname $0) &> /dev/null; cd tmp; pwd; popd &> /dev/null)
 # extract version from version.py file
 VER=`grep version ${ROOT_DIR}/src/version.py | cut -d \" -f2`
 
-if [ -z `echo $VER | grep '^[0-9]\+\.[0-9]\+\.[0-9]\+$'` ] ; then
+if [ -z `echo $VER | grep -E '^([0-9]{1,}\.)+[0-9]{1,}(~{1}[0-9]{1,})?$'` ] ; then
 	echo "Version in wrong format - must be x.y.z eg. 1.4.9"
 	exit 1
 fi

@@ -23,7 +23,7 @@ else
 	exit 1
 fi
 
-if [ -z `echo $VER | grep '^[0-9]\+\.[0-9]\+\.[0-9]\+$'` ] ; then
+if [ -z `echo $VER | grep -E '^([0-9]{1,}\.)+[0-9]{1,}(~{1}[0-9]{1,})?$'` ] ; then
 	echo "Version in wrong format - must be x.y.z eg. 1.4.9"
 	exit 1
 fi

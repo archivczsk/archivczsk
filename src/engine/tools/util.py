@@ -15,6 +15,7 @@ try:
 	from urllib import unquote_plus
 	from httplib import HTTPConnection, HTTPSConnection
 	from htmlentitydefs import name2codepoint as n2cp
+	from itertools import izip_longest as zip_longest
 except:
 	from urllib.request import urlopen
 	from urllib.request import Request as url_Request
@@ -22,7 +23,7 @@ except:
 	from urllib.error import HTTPError, URLError
 	from http.client import HTTPConnection, HTTPSConnection
 	from html.entities import name2codepoint as n2cp
-	
+	from itertools import zip_longest
 	
 from xml.etree.cElementTree import ElementTree, fromstring
 from ...py3compat import *
@@ -139,21 +140,51 @@ def toString(text):
 		
 	return str(text)
 
-def check_version(local, remote):
-	local = local.split('.')
-	remote = remote.split('.')
-	if len(local) < len(remote):
-		for i in range(len(local)):
-			if int(local[i]) == int(remote[i]):
-				continue
-			return int(local[i]) < int(remote[i])
-		return True
+def check_version(local, remote, compare_postfix=True):
+	'''
+	Returns True if local version is lower then remote = update is needed
+	Supports tilde (~) at the end of the version string (eg. 1.2.3~4).
+	Version with ~ is beta one, so it's value is always considered lower then version without ~
+	Examples:
+	1.2.3 < 1.2.4
+	1.2 < 1.2.1
+	1.2 == 1.2.0
+	1.2.1 > 1.2
+	1.2.3~4 < 1.2.3
+	1.2.3~4 > 1.2.4~3
+	'''
+
+	# extract postfix from version string
+	if '~' in local:
+		local, postfix_local = local.split('~')
 	else:
-		for i in range(len(remote)):
-			if int(local[i]) == int(remote[i]):
-				continue
-			return int(local[i]) < int(remote[i])
-		return False
+		postfix_local = None
+
+	if '~' in remote:
+		remote, postfix_remote = remote.split('~')
+	else:
+		postfix_remote = None
+
+	# split versions by dots, convert to int and compare each other
+	local = [int(i) for i in local.split('.')]
+	remote = [int(i) for i in remote.split('.')]
+
+	for l, r in zip_longest(local, remote, fillvalue=0):
+		if l == r:
+			continue
+		else:
+			return l < r
+
+	# versions are the same, so check for postfix (after ~)
+	if compare_postfix:
+		if postfix_remote is not None and postfix_local is not None:
+			return int(postfix_local) < int(postfix_remote)
+		elif postfix_local is not None:
+			# local has postfix, so version is lower then remote without postfix
+			return True
+
+	# remote has postfix or no versions have them, so locale version is not lower then remote
+	return False
 
 
 def make_path(p):
