@@ -67,7 +67,7 @@ class trakt_tv(object):
 
 	# #################################################################################################
 
-	def call_trakt_api(self, endpoint, data=None):
+	def call_trakt_api(self, endpoint, params=None, data=None):
 		headers = {
 			'Content-Type' : 'application/json',
 			'trakt-api-version' : "2",
@@ -80,9 +80,9 @@ class trakt_tv(object):
 		log.logDebug("Trakt.tv request: %s, data: %s" % (endpoint, json.dumps(data) if data else 'NO_DATA'))
 
 		if data:
-			response = requests.post(BASE + endpoint, headers=headers, json=data, timeout=5)
+			response = requests.post(BASE + endpoint, params=params, headers=headers, json=data, timeout=10)
 		else:
-			response = requests.get(BASE + endpoint, headers=headers, timeout=5)
+			response = requests.get(BASE + endpoint, params=params, headers=headers, timeout=10)
 		
 #		log.logDebug("Trakt.tv response: code: %d, data: %s" % (response.status_code, response.json() if response.status_code < 300 else '') )
 		log.logDebug("Trakt.tv response: code: %d, data len: %d" % (response.status_code, len(response.text)))
@@ -129,7 +129,24 @@ class trakt_tv(object):
 		return result
 
 	# #################################################################################################
+
+	def get_global_lists(self, list_type, page=0, limit=100):
+		ret = []
+
+		# list_type = trending, popular
+		code, data = self.call_trakt_api('/lists/' + list_type, params={'page': page + 1, 'limit': limit})
+
+		if code > 210:
+			raise Exception('Wrong response from Trakt server: %d' % code)
+
+		for m in data:
+			l = m['list']
+			ret.append({ 'name': l['name'], 'description': l['description'], 'user': l['user']['ids']['slug'], 'id': l['ids']['slug'] })
+
+		return ret
 	
+	# #################################################################################################
+
 	# API
 	def get_lists(self, user='me'):
 		if self.valid() or user != 'me':
@@ -173,7 +190,7 @@ class trakt_tv(object):
 	# #################################################################################################
 
 	def add_to_watchlist(self, item):
-		if item['type'] == 'movie' or item['type'] == 'show':
+		if item['type'] in ('movie', 'episode', 'season', 'show'):
 			item_type = item['type'] + 's'
 		else:
 			raise Exception('Unknown Trakt.tv item type: {item_type}'.format(item_type=item['type']))
@@ -192,7 +209,7 @@ class trakt_tv(object):
 	# #################################################################################################
 
 	def remove_from_watchlist(self, item):
-		if item['type'] == 'movie' or item['type'] == 'show':
+		if item['type'] in ('movie', 'episode', 'season', 'show'):
 			item_type = item['type'] + 's'
 		else:
 			raise Exception('Unknown Trakt.tv item type: {item_type}'.format(item_type=item['type']))
@@ -210,8 +227,8 @@ class trakt_tv(object):
 	# #################################################################################################
 	
 	def mark_as_watched(self, item):
-		if item['type'] == 'movie':
-			postdata = {"movies": [{"ids": self.getTraktIds(item)}]}
+		if item['type'] in ('movie', 'episode', 'season'):
+			postdata = { item['type'] + 's': [{"ids": self.getTraktIds(item)}] }
 		elif item['type'] == 'show':
 			if 'episode' in item:
 				# we mark only one episode
@@ -248,8 +265,8 @@ class trakt_tv(object):
 	# #################################################################################################
 	
 	def mark_as_not_watched(self, item):
-		if item['type'] == 'movie':
-			postdata = {"movies": [{"ids": self.getTraktIds(item)}]}
+		if item['type'] in ('movie', 'episode', 'season'):
+			postdata = { item['type'] + 's': [{"ids": self.getTraktIds(item)}] }
 		elif item['type'] == 'show':
 			if 'episode' in item:
 				# we mark only one episode
@@ -269,10 +286,10 @@ class trakt_tv(object):
 		if code > 210:
 			raise Exception('Wrong response from Trakt server: %d' % code )
 
-		if item['type'] == 'movie':
-			if int(data['deleted']['movies']) != 1:
-				raise Exception('Movie item not marked as not watched.')
-		else:
+		if item['type'] in ('movie', 'episode', 'season'):
+			if int(data['deleted'][item['type'] + 's']) != 1:
+				raise Exception('%s item not marked as not watched.' % item['type'].capitalize())
+		elif item['type'] == 'show':
 			if 'episode' in item:
 				if int(data['deleted']['episodes']) != 1:
 					raise Exception('TvShow episode not marked as not watched.')
