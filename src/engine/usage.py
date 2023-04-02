@@ -91,12 +91,13 @@ class UsageStats(object):
 		self.running[addon.id] = int(time.time())
 		
 	def addon_stop(self, addon):
-		stats = self.get_addon_stats(addon)
-		
-		stats['used'] = stats.get('used', 0) + 1
-		stats['time'] = stats.get('time', 0) + (int(time.time()) - self.running[addon.id])
-		del self.running[addon.id]
-		self.set_addon_stats(addon, stats)
+		if addon.id in self.running:
+			stats = self.get_addon_stats(addon)
+
+			stats['used'] = stats.get('used', 0) + 1
+			stats['time'] = stats.get('time', 0) + (int(time.time()) - self.running[addon.id])
+			del self.running[addon.id]
+			self.set_addon_stats(addon, stats)
 
 	def addon_http_call(self, addon):
 		stats = self.get_addon_stats(addon)

@@ -541,9 +541,9 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		DownloadsMixin.__init__(self, downloads_path, allowed_download)
 		FavoritesMixin.__init__(self, shortcuts_path)
 		self._dependencies = []
-		
-		self.on_start.append(self.__set_resolving_provider_light)
+
 		self.on_start.append(self.__stats_start)
+		self.on_start.append(self.__set_resolving_provider_light)
 		self.on_stop.append(self.__stats_stop)
 		self.on_stop.append(self.__unset_resolving_provider_light)
 
