@@ -360,7 +360,7 @@ class AddonSettings(object):
 			try:
 				#todo check if exist already
 				labelorder = _("Addon order")
-				obj = {'option': 'false', 'default': '99999', 'label': labelorder, 'visible': 'true', 'type': 'text', 'id': 'auto_addon_order'}
+				obj = {'option': 'false', 'default': '99999', 'label': labelorder, 'visible': 'true', 'type': 'number', 'id': 'auto_addon_order'}
 				self.category_entries[0]['subentries'].append(obj)
 
 				labelplayer = _("Used player")

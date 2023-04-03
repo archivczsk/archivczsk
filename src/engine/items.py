@@ -101,9 +101,7 @@ class PVideoAddon(PItem):
 		self.image = self.addon.get_info('image')
 		self.order = 99999
 		try:
-			tmporder = self.addon.get_setting('auto_addon_order')
-			if tmporder and tmporder.strip():
-				self.order = int(tmporder)
+			self.order = int(self.addon.get_setting('auto_addon_order'))
 		except:
 			log.logError("Invalid value setting 'auto_addon_order' for addon (%s)."%self.addon_id)
 			pass
