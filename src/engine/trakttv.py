@@ -197,7 +197,7 @@ class trakt_tv(object):
 		
 		postdata = { item_type: [{"ids": self.getTraktIds(item)}] }
 			
-		code, data = self.call_trakt_api('/sync/watchlist', postdata )
+		code, data = self.call_trakt_api('/sync/watchlist', data=postdata)
 		
 		if code > 210:
 			raise Exception('Wrong response from Trakt.tv server: %d' % code )
@@ -216,7 +216,7 @@ class trakt_tv(object):
 		
 		postdata = { item_type: [{"ids": self.getTraktIds(item)}] }
 			
-		code, data = self.call_trakt_api('/sync/watchlist/remove', postdata )
+		code, data = self.call_trakt_api('/sync/watchlist/remove', data=postdata)
 		
 		if code > 210:
 			raise Exception('Wrong response from Trakt.tv server: %d' % code )
@@ -242,9 +242,8 @@ class trakt_tv(object):
 
 		else:
 			raise Exception('Unknown Trakt.tv item type: {item_type}'.format(item_type=item['type']))
-			
 		
-		code, data = self.call_trakt_api( '/sync/history', postdata )
+		code, data = self.call_trakt_api('/sync/history', data=postdata)
 		if code > 210:
 			raise Exception('Wrong response from Trakt.tv server: %d' % code )
 
@@ -281,7 +280,7 @@ class trakt_tv(object):
 		else:
 			raise Exception('Unknown Trakt.tv item type: {item_type}'.format(item_type=item['type']))
 			
-		code, data = self.call_trakt_api('/sync/history/remove', postdata)
+		code, data = self.call_trakt_api('/sync/history/remove', data=postdata)
 		
 		if code > 210:
 			raise Exception('Wrong response from Trakt server: %d' % code )
@@ -389,7 +388,7 @@ class trakt_tv(object):
 			else:
 				return self.pairing_data
 		
-		code, data = self.call_trakt_api('/oauth/device/code', {'client_id':self.client_id})
+		code, data = self.call_trakt_api('/oauth/device/code', data={'client_id':self.client_id})
 
 		if code == 200:
 			self.pairing_data = data
@@ -407,7 +406,7 @@ class trakt_tv(object):
 			return None
 		
 		self.login_data = {}
-		code, data = self.call_trakt_api('/oauth/device/token', {'code':self.pairing_data['device_code'],'client_id':self.client_id, 'client_secret':self.client_secret})
+		code, data = self.call_trakt_api('/oauth/device/token', data={'code':self.pairing_data['device_code'], 'client_id':self.client_id, 'client_secret':self.client_secret})
 
 		self.pairing_data['next_pool_time'] = int(time.time()) + self.pairing_data['interval']
 		
@@ -446,7 +445,7 @@ class trakt_tv(object):
 		from ..version import version
 		postdata.update( { "progress":progress, "app_version": version, "app_date": "1970-01-01" } )
 		
-		code, data = self.call_trakt_api( '/scrobble/' + action, postdata)
+		code, data = self.call_trakt_api('/scrobble/' + action, data=postdata)
 		
 		if code < 300:
 			ret = data.get('action')
