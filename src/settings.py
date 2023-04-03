@@ -6,15 +6,18 @@ from Components.config import config, ConfigSubsection, ConfigSelection, \
 	NoSave, ConfigInteger
 from Tools.Directories import SCOPE_PLUGINS, resolveFilename
 
+from . import log, UpdateInfo, _
+from .engine.player.info import videoPlayerInfo
+from .compat import DMM_IMAGE, VTI_IMAGE
+
 try:
 	from Components.Converter.ACZSKKodiToE2List import colorFixNeeded
 except:
 	colorFixNeeded = None
 
-from . import log, UpdateInfo, _
-from .engine.player.info import videoPlayerInfo
-from .compat import DMM_IMAGE
-
+if colorFixNeeded == None and VTI_IMAGE:
+	# VTi needs color fix
+	colorFixNeeded = True
 
 def image_is_openpli():
 	try:
