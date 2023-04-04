@@ -437,6 +437,8 @@ class trakt_tv(object):
 	def scrobble(self, action, item, progress ):
 		if item['type'] == 'movie':
 			postdata = {"movie": {"ids": self.getTraktIds(item)}}
+		elif item['type'] == 'episode':
+			postdata = {"episode": {"ids": self.getTraktIds(item)}}
 		elif item['type'] == 'show' and 'episode' in item:
 			postdata = { 'show': {'ids': self.getTraktIds(item) }, 'episode': {'season':int('%s' % item.get('season', 1)), 'number':int('%s' % item['episode']) } }
 		else:
