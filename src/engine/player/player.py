@@ -272,8 +272,25 @@ class Player(object):
 		if subtitles_url != subtitles_file:
 			self.cleanup_files.append(subtitles_file)
 
+		tracks_settings = {
+			# list of priority langs used for audio and subtitles - audio will be automatically switched to first available language
+			'lang_priority': play_settings.get('lang_priority', []),
+
+			# list of fallback langs - audio will be automatically switched to first available language, but subtitles will be enabled also
+			'lang_fallback': play_settings.get('lang_fallback', []),
+
+			# allow autostart of subtitles (when subtitle lang will be found in lang_priority)
+			'subs_autostart': play_settings.get('subs_autostart', True),
+
+			# always start subtitles, even if audio from lang_priority was found
+			'subs_always': play_settings.get('subs_always', False),
+
+			# start subtitles when forced subtitle track is found (this is poorly supported by enigma)
+			'subs_forced_autostart': play_settings.get('subs_forced_autostart', True)
+		}
+
 		self.video_player.play_service_ref(service_ref, 
-				subtitles_file, play_settings.get("resume_time_sec"), play_settings.get("resume_popup", True), status_msg)
+				subtitles_file, play_settings.get("resume_time_sec"), play_settings.get("resume_popup", True), status_msg, tracks_settings)
 
 	def player_callback(self, callback):
 		log.info("player_callback(%r)" % (callback,))
@@ -593,6 +610,8 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.__timer_seek_conn = eConnectCallback(self.__timer_seek.timeout, self.__check_seek_position)
 		self.__timer_watching = eTimer()
 		self.__timer_watching_conn = eConnectCallback(self.__timer_watching.timeout, self.__watching)
+		self.__timer_tracks_setup = eTimer()
+		self.__timer_tracks_setup_conn = eConnectCallback(self.__timer_tracks_setup.timeout, self.setup_tracks)
 		self.__subtitles_url = None
 		self.__resume_time_sec = None
 		self.__resume_popup = True
@@ -641,6 +660,8 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		del self.__timer_seek
 		del self.__timer_watching_conn
 		del self.__timer_watching
+		del self.__timer_tracks_setup_conn
+		del self.__timer_tracks_setup
 		RemovePopup(self.RESUME_POPUP_ID)
 		self.session.deleteDialog(self.status_dialog)
 
@@ -669,6 +690,8 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 			if self.__subtitles_url:
 				self.loadSubs(toString(self.__subtitles_url))
 
+			self.__timer_tracks_setup.start(500, True)
+
 	def __service_started(self):
 		self.__timer.stop()
 		self.__timer_watching.stop()
@@ -692,11 +715,180 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 				
 		self.__timer_watching.start(5 * 60 * 1000) # 5 min.
 
-	def play_service_ref(self, service_ref, subtitles_url=None, resume_time_sec=None, resume_popup=True, status_msg=None):
+	# inspiration from InforBarGenerics,py and AudioSelection.py
+	def get_audio_track_list(self):
+		service = self.session.nav.getCurrentService()
+		audio_list = []
+
+		audio_service = service and service.audioTracks()
+		audio_count = audio_service.getNumberOfTracks()
+		for i in range(audio_count):
+			ti = audio_service.getTrackInfo(i)
+			audio_list.append((i, ti.getLanguage(), ti.getDescription(),))
+		return audio_service, audio_list
+
+	# inspiration from InforBarGenerics,py and AudioSelection.py
+	def get_subtitles_track_list(self):
+		service = self.session.nav.getCurrentService()
+
+		subs_list = []
+
+		if DMM_IMAGE:
+			subs_service = service and service.subtitleTracks()
+			subs_count = subs_service and subs_service.getNumberOfSubtitleTracks() or 0
+			for i in range(subs_count):
+				ti = subs_service.getSubtitleTrackInfo(i)
+#				ti.isForced()
+#				subs_list.append( (2, i, 1, 0, ti.getLanguage(), ))
+				subs_list.append({
+					'idx': i,
+					'forced': ti.isForced(),
+					'lang': ti.getLanguage()
+				})
+		else:
+			# the rest of the world
+			subs_service = service and service.subtitle()
+			for s in subs_service.getSubtitleList():
+				subs_list.append({
+					'idx': s[1],
+					'forced': None,
+					'lang': s[4]
+				})
+
+		return subs_list
+
+	def lang_to_lang_list(self, lang):
+		# get all possible ISO639 lang codes
+		if lang == 'cs':
+			return ['cs', 'ces', 'cze']
+		elif lang == 'sk':
+			return ['sk', 'slk', 'slo']
+		elif lang == 'en':
+			return ['en', 'eng']
+		else:
+			return [lang]
+
+	def setup_tracks(self):
+		try:
+			self.__setup_tracks()
+		except:
+			log.error("Failed to setup audio/subtitles tracks:\n%s" % traceback.format_exc())
+
+	def __setup_tracks(self):
+		if not self.tracks_settings:
+			return
+
+		audio_service, audio_list = self.get_audio_track_list()
+		log.debug("Available audio tracks: %s" % str(audio_list))
+
+		subs_list = self.get_subtitles_track_list()
+		log.debug("Available subtitle tracks: %s" % str(subs_list))
+
+		def get_audio_index(setting_name):
+			a_idx = []
+			for l in self.tracks_settings.get(setting_name):
+				lang_list = self.lang_to_lang_list(l)
+				for idx, alang, codec in audio_list:
+					if alang in lang_list:
+						log.debug("Found %s audio on index %d" % (l, idx))
+						a_idx.append((idx, codec.lower().replace('-', ''),))
+				if len(a_idx) > 0:
+					break
+			return a_idx
+
+		def get_subtitle_index(setting_name):
+			s_idx = []
+			for l in self.tracks_settings.get(setting_name):
+				lang_list = self.lang_to_lang_list(l)
+				for item in subs_list:
+					if item['lang'].lower() in lang_list:
+						log.debug("Found %s subtitle on index %d" % (l, item['idx']))
+						s_idx.append(item)
+				if len(s_idx) > 0:
+					break
+			return s_idx
+
+		def run_subtitles(idx, lang):
+			log.debug("Enabling subtitles on index %d" % idx)
+			try:
+				self.enableSubtitle((2, idx, 1, 0, lang,))
+			except:
+				# compatibility with durinov's oe25,26 subssupport patch
+				class FakeIdx():
+					def __init__(self, idx):
+						self.idx = idx
+
+				self.enableSubtitle(FakeIdx(idx))
+
+		a_idx = get_audio_index('lang_priority')
+		if len(a_idx) > 0:
+			audio_fallback = False
+		else:
+			audio_fallback = True
+			a_idx = get_audio_index('lang_fallback')
+
+		audio_selected = None
+		if len(a_idx) > 0:
+			# search for multichannel codec (if available)
+			for idx, codec in a_idx:
+				if 'ac3' in codec or 'dts' in codec:
+					audio_selected = idx
+					break
+			else:
+				audio_selected = a_idx[0][0]
+
+			# set new audio track
+			if audio_selected != 0:
+				# audio track 0 is always selected by default, so if it's the right one, then don't do anything
+				log.info("Setting audio track to index %d" % audio_selected)
+				audio_service.selectTrack(audio_selected)
+			else:
+				log.info("Audio track already set to index %d" % audio_selected)
+
+		# external subtitles have priority, so don't setup embedded when external are available
+		if not self.__subtitles_url:
+			s_idx = get_subtitle_index('lang_priority')
+
+			if len(s_idx) > 0:
+				# on other then DMM enigma's there is no infou about forced subtitles, so we will fake the fists one as forced if there are more subtitles with the same lang
+				i = 0
+				for s in s_idx:
+					if s['forced'] == None:
+						s['forced'] = (i == 0) and len(s_idx) > 1 # no info about forced subtitles from enigma, so use this fake one
+						if s['forced']:
+							log.debug("Setting fake forced subtitle to index %d" % s['idx'])
+					i += 1
+
+				if self.tracks_settings['subs_autostart']:
+					log.debug("Subtitles found and autostart is enabled")
+
+					if self.tracks_settings['subs_always'] or audio_fallback:
+						log.debug("Always run subtitles is enabled or no lang found in audio list")
+						# no dubbed movie - run the first not forced subtitle
+						for s in s_idx:
+							if not s['forced']:
+								subs_info = s
+								break
+						else:
+							subs_info = s_idx[0]
+
+						run_subtitles(subs_info['idx'], subs_info['lang'])
+					elif self.tracks_settings['subs_forced_autostart']:
+						log.debug("Forced subtitles are enabled")
+						# run forced subtitle
+						for subs_info in s_idx:
+							if subs_info['forced']:
+								run_subtitles(subs_info['idx'], subs_info['lang'])
+								break
+						else:
+							log.debug("No forced subtitles found")
+
+	def play_service_ref(self, service_ref, subtitles_url=None, resume_time_sec=None, resume_popup=True, status_msg=None, tracks_settings=None):
 		self.duration_sec = None
 		self.__subtitles_url = subtitles_url
 		self.__resume_time_sec = resume_time_sec
 		self.__resume_popup = resume_popup
+		self.tracks_settings = tracks_settings
 
 		self.session.nav.stopService()
 		self.session.nav.playService(service_ref)
