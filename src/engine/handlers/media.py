@@ -168,13 +168,18 @@ class MediaItemHandler(ItemHandler):
 				position_percentage = int((position * 100) // duration)
 				log.logInfo("Trakt.tv scrobble command %s received with position %d" % (command, position_percentage))
 
+				if isinstance(item, PPlaylist):
+					trakt_item = item.get_current_item().traktItem
+				else:
+					trakt_item = item.traktItem
+
 				try:
 					if command in ('start', 'seek', 'unpause'):
-						trakttv.scrobble('start', item.traktItem, position_percentage)
+						trakttv.scrobble('start', trakt_item, position_percentage)
 					elif command == 'pause':
-						trakttv.scrobble('pause', item.traktItem, position_percentage)
+						trakttv.scrobble('pause', trakt_item, position_percentage)
 					elif command == 'stop':
-						ret = trakttv.scrobble('stop', item.traktItem, position_percentage)
+						ret = trakttv.scrobble('stop', trakt_item, position_percentage)
 						if ret == 'scrobble':
 							notify_scrobble = True
 							
