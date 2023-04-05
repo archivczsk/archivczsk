@@ -2,6 +2,7 @@ archivCZSK 2.2.1, 05.04.2023
     - oprava trakt.tv scrobble pre položky v playliste
     - pridanie možnosti pre zmenu audio streamu a automatické zapnutie vnorených titulkov 
     - aktualizácia playlist api
+    - vypnutie verifikácie ssl pre curl downloader
  
 archivCZSK 2.2.0, 03.04.2023
     - vylepšená podpora pre titulky vrátane podpory pre VTT
