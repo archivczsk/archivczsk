@@ -372,11 +372,10 @@ def sort_items(reverse=False, use_diacritics=True, ignore_case=False):
 
 
 @abortTask
-def add_playlist(name, media_list=[], auto_next=True, auto_resume=False):
+def add_playlist(name, media_list=[], variant=False):
 	playlist = PPlaylist()
 	playlist.name = toUnicode(name)
-	playlist.auto_next = auto_next
-	playlist.auto_resume = auto_resume
+	playlist.variant = variant
 	for media in media_list:
 		playlist.add(media)
 	GItem_lst[0].append(playlist)

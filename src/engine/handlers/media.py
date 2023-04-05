@@ -285,7 +285,11 @@ class MediaItemHandler(ItemHandler):
 		for item in list(items):
 			if isinstance(item, PPlaylist):
 				items.remove(item)
-				items.extend(item.playlist)
+				if item.variant and len(item.playlist) > 0:
+					# if there is variant playlist, then unpack only first item
+					items.append(item.playlist[0])
+				else:
+					items.extend(item.playlist)
 
 	def player_video_resolve(self, item, callback):
 		def open_item_success_cb(result):

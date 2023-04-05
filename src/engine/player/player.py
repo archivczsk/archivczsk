@@ -165,8 +165,8 @@ class Player(object):
 
 				self.playlist_item = item
 				self.playlist = item.playlist
-				self.auto_next = item.auto_next
-				self.auto_resume = item.auto_resume
+				self.auto_next = not item.variant
+				self.auto_resume = item.variant
 				play_item = item.playlist[idx]
 			elif isinstance(item, PVideo):
 				if item not in self.playlist:
