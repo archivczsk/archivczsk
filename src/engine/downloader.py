@@ -367,7 +367,7 @@ class HTTPDownloadE2(DownloadProcessMixin, Download):
 		self.headers = headers or {}
 
 	def _buildCmd(self):
-		cmd = "curl -o '%s' -L"% (self.local)
+		cmd = "curl -k -o '%s' -L" % (self.local)
 		if "User-Agent" in self.headers:
 			cmd += " -A '%s'"% self.headers.pop("User-Agent")
 		if self.headers:
