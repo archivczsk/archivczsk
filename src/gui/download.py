@@ -466,7 +466,7 @@ class ArchivCZSKDownloadsScreen(BaseArchivCZSKMenuListScreen, DownloadList):
 		elif self.sort_current['id'] == 'state':
 			self.lst_items.sort(key=lambda d:d.state)
 		elif self.sort_current['id'] == 'date':
-			self.lst_items.sort(key=lambda d:d.finish_time)
+			self.lst_items.sort(key=lambda d:d.finish_time or 0)
 		self.refreshList(True)
 
 
