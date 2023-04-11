@@ -73,7 +73,10 @@ class ArchivCZSK():
 			skin_name = config.plugins.archivCZSK.skin.value
 			skin_path = os.path.join(settings.SKIN_PATH, skin_name + ".xml")
 
-			if skin_name == 'auto' or not os.path.isfile(skin_path):
+			if skin_name in ('auto', 'auto_transparent') or not os.path.isfile(skin_path):
+				if skin_name == 'auto_transparent':
+					default_skin_name = default_skin_name.replace('_uni_', '_transparent_')
+
 				skin_path = os.path.join(settings.SKIN_PATH, default_skin_name + ".xml")
 
 			log.info("Loading skin %s" % skin_path)

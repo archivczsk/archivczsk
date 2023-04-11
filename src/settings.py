@@ -120,8 +120,16 @@ def skin_changed(configElement):
 	from .archivczsk import ArchivCZSK
 	ArchivCZSK.force_skin_reload = True
 
-skinChoices = [os.path.splitext(fname)[0] for fname in os.listdir(SKIN_PATH) if fname.endswith('.xml') ]
-skinChoices.append('auto')
+
+if config.plugins.archivCZSK.allow_custom_update.value or config.plugins.archivCZSK.update_branch.value == 'testing':
+	# don't allow to choose default skins directly for normal users - they are only able to select default skins usin auto or auto_transparent
+	skinChoices = [os.path.splitext(fname)[0] for fname in os.listdir(SKIN_PATH) if fname.endswith('.xml') and not fname.startswith('default_') ]
+else:
+	# when custom update or testing repo is enabled, then allow explicitly setting any of default skins
+	skinChoices = [os.path.splitext(fname)[0] for fname in os.listdir(SKIN_PATH) if fname.endswith('.xml') ]
+
+skinChoices.append(('auto', _("Default"),))
+skinChoices.append(('auto_transparent', _("Default transparent"),))
 config.plugins.archivCZSK.skin = ConfigSelection(default="auto", choices=skinChoices)
 config.plugins.archivCZSK.skin.addNotifier(skin_changed, initial_call=False)
 config.plugins.archivCZSK.colored_items = ConfigYesNo(default=False if colorFixNeeded == None else True)
