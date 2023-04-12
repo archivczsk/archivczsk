@@ -1,6 +1,7 @@
 from Screens.MessageBox import MessageBox
 import shutil
 import traceback
+import os
 
 from .item import ItemHandler
 from .content import ContentHandler
@@ -102,16 +103,37 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 				self.content_screen.workingFinished()
 				raise
 
+		def continue_to_addon():
+			params = 'params' in kwargs and kwargs['params'] or {}
+			self.content_screen.workingStarted()
+			self.content_screen.startLoading()
+			get_content(addon, params)
+
+		def get_addon_previous_version(addon_path):
+			# check if
+			previous_version = None
+			prev_ver_file = os.path.join(addon_path, '.update_ver')
+			if os.path.isfile(prev_ver_file):
+				with open(prev_ver_file, 'r') as f:
+					previous_version = f.readline().strip()
+
+				os.remove(prev_ver_file)
+			return previous_version
+
 		addon = item.addon
 		if addon.get_info('broken'):
 			self._handle_broken_addon(addon)
 		elif addon.get_info('deprecated'):
 			self._handle_deprecated_addon(addon)
 		else:
-			params = 'params' in kwargs and kwargs['params'] or {}
-			self.content_screen.workingStarted()
-			self.content_screen.startLoading()
-			get_content(addon, params)
+			# check if update from previous version was done
+			prev_ver = get_addon_previous_version(addon.path)
+			log.debug("Addon's previous version: %s" % prev_ver)
+			if config.plugins.archivCZSK.changelogAfterUpdate.value and prev_ver:
+				from ...gui.info import openPartialChangelog
+				openPartialChangelog(self.session, continue_to_addon, addon.name, addon.changelog_path, prev_ver)
+			else:
+				continue_to_addon()
 
 	def open_video_addon(self, addon, list_items):
 		from ...gui.content import ArchivCZSKAddonContentScreenAdvanced

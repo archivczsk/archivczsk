@@ -28,7 +28,7 @@ class Addon(object):
 		self.name = info.name
 		self.version = info.version
 		self.description = info.description
-		self.changelog = info.changelog
+		self.changelog_path = info.changelog_path
 		self.path = info.path
 		self.relative_path = os.path.relpath(self.path, repository.path)
 		self.supported = True
@@ -109,8 +109,7 @@ class Addon(object):
 		menu.openAddonMenu(session, self, __settings_closed)
 
 	def open_changelog(self, session):
-		info.showChangelog(session, self.name, self.changelog)
-
+		info.showChangelog(session, self.name, self.changelog_path)
 
 	def close(self):
 		self.info = None
@@ -582,36 +581,16 @@ class AddonInfo(object):
 		self.image = os.path.join(self.path, 'icon.png')
 
 		#changelog
-		changelog_path = None
 		if os.path.isfile(os.path.join(self.path, 'changelog.txt')):
-			changelog_path = os.path.join(self.path, 'changelog.txt')
-
+			self.changelog_path = os.path.join(self.path, 'changelog.txt')
 		elif os.path.isfile(os.path.join(self.path, 'Changelog.txt')):
-			changelog_path = os.path.join(self.path, 'Changelog.txt')
-
+			self.changelog_path = os.path.join(self.path, 'Changelog.txt')
 		else:
-			changelog_path = None
-
-		if changelog_path is not None:
-			with open(changelog_path, 'r') as f:
-				text = f.read()
-			try:
-				self.changelog = text
-			except Exception:
-				log.error('%s c[C]angleog.txt cannot be decoded', self)
-				self.changelog = u''
-				pass
-		else:
-			log.error('%s c[C]hangelog.txt file is missing', self)
-			self.changelog = u''
-
+			self.changelog_path = None
 
 	def __repr__(self):
 		return "AddonInfo(%s)" % ('/'.join(self.path.split('/')[-2:]))
 
-
-	def get_changelog(self):
-		return self.changelog
 
 	def close(self):
 		self.addon = None

@@ -274,6 +274,10 @@ class Updater(object):
 			
 			unzip_to_dir(zip_file, self.local_path)
 			
+			# store addon's previous version - used to show changelog on first run
+			with open(os.path.join(local_base, '.update_ver'), 'w') as f:
+				f.write(addon.version)
+
 			log.debug("%s was successfully updated to version %s", addon.name, self.remote_addons_dict[addon.id]['version'])
 			return True
 		log.debug("%s failed to update to version %s", addon.name, addon.version)

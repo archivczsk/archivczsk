@@ -276,17 +276,10 @@ class DownloadList:
 		self.session.openWithCallback(self.workingFinished, ArchivCZSKDownloadListScreen)
 
 	def showArchivChangeLog(self):
-		clog = u''
 		changelog_path = os.path.join(settings.PLUGIN_PATH, 'changelog.txt')
 		if os.path.isfile(changelog_path):
-			with open(changelog_path, 'r') as f:
-				text = f.read()
-			try:
-				clog = text
-			except Exception:
-				log.logError('ArchivCZSK changelog cannot be decoded')
-				pass
-		info.showChangelog(self.session, "ArchivCZSK", clog)
+			info.showChangelog(self.session, "ArchivCZSK", changelog_path)
+
 
 class ArchivCZSKDownloadListScreen(BaseArchivCZSKMenuListScreen):
 	instance = None

@@ -601,7 +601,7 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 	def openChangelog(self):
 		if not self.working:
 			from . import info
-			info.showChangelog(self.session, self.addon.name, self.addon.changelog)
+			info.showChangelog(self.session, self.addon.name, self.addon.changelog_path)
 
 	def setWindowTitle(self):
 		self.setTitle(toString(self.addon.name))

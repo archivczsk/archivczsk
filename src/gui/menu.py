@@ -97,17 +97,9 @@ class BaseArchivCZSKConfigScreen(BaseArchivCZSKScreen, ConfigListScreen):
 
 
 	def changelog(self):
-		clog = u''
 		changelog_path = os.path.join(settings.PLUGIN_PATH, 'changelog.txt')
 		if os.path.isfile(changelog_path):
-			with open(changelog_path, 'r') as f:
-				text = f.read()
-			try:
-				clog = text
-			except Exception:
-				log.logError('ArchivCZSK changelog cannot be decoded')
-				pass
-		info.showChangelog(self.session, "ArchivCZSK", clog)
+			info.showChangelog(self.session, "ArchivCZSK", changelog_path)
 
 	def keyOk(self):
 		current = self["config"].getCurrent()[1]
@@ -212,7 +204,7 @@ class ArchivCZSKAddonConfigScreen(BaseArchivCZSKConfigScreen):
 		self.setTitle( name + " - " + _("Settings"))
 
 	def changelog(self):
-		info.showChangelog(self.session, self.addon.name, self.addon.changelog)
+		info.showChangelog(self.session, self.addon.name, self.addon.changelog_path)
 
 	def buildMenu(self):
 		self.refreshConfigList()

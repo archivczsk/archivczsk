@@ -26,7 +26,35 @@ from ..engine.player.info import videoPlayerInfo
 from ..colors import DeleteColors
 from ..py3compat import *
 
-def showChangelog(session, changelog_title, changelog_text):
+
+def openPartialChangelog(session, continue_cb, changelog_title, changelog_path, prev_ver):
+	changelog_text = ''
+	changelog_data = []
+	try:
+		with open(changelog_path, 'r') as f:
+			for line in f:
+				if prev_ver in line:
+					break
+				changelog_data.append(line)
+
+		changelog_text = ''.join(changelog_data)
+	except:
+		log.error("Failed to open changelog:\n%s" % traceback.format_exc())
+
+	if len(changelog_text) > 0:
+		session.openWithCallback(continue_cb, ArchivCZSKChangelogScreen, changelog_title, changelog_text)
+	else:
+		continue_cb()
+
+
+def showChangelog(session, changelog_title, changelog_path):
+	changelog_text = ''
+	try:
+		with open(changelog_path, 'r') as f:
+			changelog_text = f.read()
+	except:
+		pass
+
 	session.open(ArchivCZSKChangelogScreen, changelog_title, changelog_text)
 
 def showItemInfo(session, item):
@@ -107,7 +135,7 @@ class ArchivCZSKChangelogScreen(BaseArchivCZSKScreen):
 			from ..engine.tools.util import toString
 			if text is not None:
 				self.changelog = toString(text)
-			self.title = toString(title) + ' changelog'
+			self.title = toString(title) + ' - ' + _('changelog')
 		except:
 			self.changelog = "failed"
 			log.logError("Convert log file text failed.\n%s"%traceback.format_exc())
@@ -117,6 +145,7 @@ class ArchivCZSKChangelogScreen(BaseArchivCZSKScreen):
 		self["actions"] = NumberActionMap(["archivCZSKActions"],
 		{
 			"cancel": self.close,
+			"ok": self.close,
 			"up": self.pageUp,
 			"down": self.pageDown,
 		}, -2)	
