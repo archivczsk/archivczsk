@@ -23,6 +23,10 @@ if videoPlayerInfo.type == 'gstreamer' and videoPlayerInfo.version == '1.0':
 elif videoPlayerInfo.type =='gstreamer' and videoPlayerInfo.version == '0.10':
 	GST_LAUNCH = 'gst-launch-0.10'
 
+FFMPEG_PATH = '/usr/bin/ffmpeg'
+if not os.path.isfile(FFMPEG_PATH):
+	FFMPEG_PATH = None
+
 RTMP_DUMP_PATH		= '/usr/bin/rtmpdump'
 WGET_PATH			= 'wget'
 
@@ -113,7 +117,9 @@ class DownloadManager(object):
 		headers.setdefault('User-Agent', USER_AGENT)
 		filename, length = getFilenameAndLength(url, headers, filename)
 		log.info("Downloader.createDownload() filename=%s, length=%s", toString(filename), length)
-		if (((url[0:4] == 'rtmp' and mode in ('auto', 'gstreamer')) or
+		if url[0:4] == 'http' and isHLSUrl(url) and mode in ('auto', 'ffmpeg') and FFMPEG_PATH is not None:
+			d = FFMpegDownload(url=url, name=name, destDir=destination, filename=filename, headers=headers)
+		elif (((url[0:4] == 'rtmp' and mode in ('auto', 'gstreamer')) or
 			  (url[0:4] == 'http' and mode	in ('auto', 'gstreamer') and isHLSUrl(url)) or
 			  (url[0:4] == 'http' and mode in ('auto', 'gstreamer') and playDownload) or
 			  (url[0:4] == 'http' and mode in ('gstreamer',))) and GST_LAUNCH is not None):
@@ -401,5 +407,28 @@ class GstDownload(DownloadProcessMixin, Download):
 			if isHLSUrl(self.url):
 				cmd += " ! hlsdemux"
 		cmd += " ! filesink location='%s'"%(self.local)
+		return cmd
+
+
+class FFMpegDownload(DownloadProcessMixin, Download):
+	def __init__(self, name, url, destDir, filename, quiet=False, headers=None):
+		Download.__init__(self, name, url, destDir, filename, quiet)
+		DownloadProcessMixin.__init__(self)
+		self.headers = headers or {}
+
+	def _buildCmd(self):
+		cmd = FFMPEG_PATH
+		if self.quiet:
+			cmd += ' -loglevel fatal'
+
+		if "User-Agent" in self.headers:
+			cmd += " -user_agent '%s'" % self.headers.pop("User-Agent")
+
+		if self.headers:
+			cmd += " -headers '%s'" % '\\r\\n'.join(["%s: %s" % (k, v)
+				for k,v in self.headers.items()])
+
+		cmd += " -i '%s' -c copy %s" % (self.url, self.local)
+		#log.logDebug("Download cmd:\n%s"%cmd)
 		return cmd
 
