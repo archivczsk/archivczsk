@@ -281,11 +281,11 @@ class MediaItemHandler(ItemHandler):
 	def _filter_by_quality(self, items):
 		pass
 
-	def unpack_playlist(self, items):
+	def unpack_playlist(self, items, only_first=False):
 		for item in list(items):
 			if isinstance(item, PPlaylist):
 				items.remove(item)
-				if item.variant and len(item.playlist) > 0:
+				if only_first and item.variant and len(item.playlist) > 0:
 					# if there is variant playlist, then unpack only first item
 					items.append(item.playlist[0])
 				else:
@@ -298,7 +298,7 @@ class MediaItemHandler(ItemHandler):
 			self.content_screen.stopLoading()
 			self.content_screen.workingFinished()
 
-			self.unpack_playlist(list_items)
+			self.unpack_playlist(list_items, True)
 			self._filter_by_quality(list_items)
 
 			if len(list_items) != 0:
