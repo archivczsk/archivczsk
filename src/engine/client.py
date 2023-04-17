@@ -169,6 +169,27 @@ def getListInput(session, choices_list, title=""):
 	session.openWithCallback(getListInputCB, ChoiceBox, toString(title), newlist, skin_name="ArchivCZSKChoiceBox")
 	return d
 
+@callFromThread
+def show_message(session, message, msg_type='info', timeout=5):
+	def show_message_cb(callback=None):
+		loading and loading.start()
+		if callback:
+			d.callback(True)
+		else:
+			d.callback(False)
+
+	msg_type_map = {
+		'info': MessageBox.TYPE_INFO,
+		'error': MessageBox.TYPE_ERROR,
+		'warning': MessageBox.TYPE_WARNING,
+	}
+
+	loading = LoadingScreen.get_running_instance()
+	loading and loading.stop()
+	d = defer.Deferred()
+	session.openWithCallback(show_message_cb, MessageBox, text=toString(message), type=msg_type_map.get(msg_type, MessageBox.TYPE_YESNO), timeout=timeout, close_on_any_key=True, enable_input=True)
+	return d
+
 
 def set_command(name, **kwargs):
 	"""
