@@ -281,13 +281,20 @@ class MediaItemHandler(ItemHandler):
 	def _filter_by_quality(self, items):
 		pass
 
-	def unpack_playlist(self, items, only_first=False):
+	def unpack_playlist(self, items, only_first=False, only_resolved=False):
 		for item in list(items):
 			if isinstance(item, PPlaylist):
 				items.remove(item)
-				if only_first and item.variant and len(item.playlist) > 0:
-					# if there is variant playlist, then unpack only first item
-					items.append(item.playlist[0])
+
+				if item.variant:
+					# variant playlist = the same video with different qualities
+					for pitem in item.playlist:
+						if only_resolved and not isinstance(pitem, PVideoResolved):
+							continue
+
+						items.append(pitem)
+						if only_first:
+							break
 				else:
 					items.extend(item.playlist)
 
@@ -298,7 +305,7 @@ class MediaItemHandler(ItemHandler):
 			self.content_screen.stopLoading()
 			self.content_screen.workingFinished()
 
-			self.unpack_playlist(list_items, True)
+			self.unpack_playlist(list_items, only_first=True)
 			self._filter_by_quality(list_items)
 
 			if len(list_items) != 0:
@@ -404,7 +411,7 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 		def open_item_success_cb(result):
 			def continue_cb(res):
 				if not keep_playlists:
-					self.unpack_playlist(list_items)
+					self.unpack_playlist(list_items, only_resolved=True)
 
 				self._filter_by_quality(list_items)
 
