@@ -26,99 +26,14 @@ class FolderItemHandler(ItemHandler):
 	def _open_item(self, item, *args, **kwargs):
 		
 		def open_item_success_cb(result):
-			def continue_cb(res):
-				list_items = []
-				list_items.insert(0, PExit())
-				self.content_screen.startLoading()
-				if not self.content_screen.refreshing:
-					self.content_screen.save()
-				else:
-					self.content_screen.refreshing = False
-
-				if self.is_search(item):
-					parent_content = self.content_screen.getParent()
-					if parent_content:
-						parent_content['refresh'] = True
-
-				content = {'parent_it':item,
-						   'lst_items':list_items, 
-						   'refresh':False,
-						   'index':kwargs.get('position', 0)}
-				self.content_screen.load(content)
-				self.content_screen.stopLoading()
-				self.content_screen.showList()
-				self.content_screen.workingFinished()
-
-			def continue_cb_normal(res):
-				if not list_items and screen_command is not None:
-					self.content_screen.resolveCommand(screen_command, args)
-				else:
-					list_items.insert(0, PExit())
-					if screen_command is not None:
-						self.content_screen.resolveCommand(screen_command, args)
-
-					if not self.content_screen.refreshing:
-						self.content_screen.save()
-					else:
-						self.content_screen.refreshing = False
-
-					if self.is_search(item):
-						parent_content = self.content_screen.getParent()
-						if parent_content:
-							parent_content['refresh'] = True
-
-					content = {'parent_it':item,
-							'lst_items':list_items, 
-							'refresh':False,
-							'index':kwargs.get('position', 0)}
-					self.content_screen.load(content)
-					self.content_screen.stopLoading()
-					self.content_screen.showList()
-					self.content_screen.workingFinished()
-
 			list_items, screen_command, args = result
-			
-			try:
-				#client.add_operation("SHOW_MSG", {'msg': 'some text'},
-				#								   'msgType': 'info|error|warning',		#optional
-				#								   'msgTimeout': 10,					#optional
-				#								   'canClose': True						#optional
-				#								  })
 
-#				client.add_operation("TRAKT_PAIR_NEW", { 'client_id' : client_id, 'client_secret' : client_secret } )
-
-				if screen_command is not None:
-					cmd = ("%s"%screen_command).lower()
-					if cmd == "show_msg":
-						screen_command = None
-						#dialogStart = datetime.datetime.now()
-						self.content_screen.stopLoading()
-						msgType = 'info'
-						if 'msgType' in args:
-							msgType = ("%s"%args['msgType']).lower()
-						msgTimeout = 15
-						if 'msgTimeout' in args:
-							msgTimeout = int(args['msgTimeout'])
-						canClose = True
-						if 'canClose' in args:
-							canClose = args['canClose']
-						if msgType == 'error':
-							return showErrorMessage(self.session, args['msg'], msgTimeout, continue_cb_normal, enableInput=canClose)
-						if msgType == 'warning':
-							return showWarningMessage(self.session, args['msg'], msgTimeout, continue_cb_normal, enableInput=canClose)
-						return showInfoMessage(self.session, args['msg'], msgTimeout, continue_cb_normal, enableInput=canClose)
-			except:
-				log.logError("Execute HACK command failed.\n%s"%traceback.format_exc())
-				screen_command = None
-				args = {}
-
-			
 			if not list_items and screen_command is not None:
+				# if there are no items to process, then just resolve screen command - this is needed for correct working of edit ctx menu commands of search menu
 				self.content_screen.resolveCommand(screen_command, args)
 			else:
 				list_items.insert(0, PExit())
-				if screen_command is not None:
-					self.content_screen.resolveCommand(screen_command, args)
+				self.content_screen.resolveCommand(screen_command, args)
 
 				if not self.content_screen.refreshing:
 					self.content_screen.save()
@@ -131,7 +46,7 @@ class FolderItemHandler(ItemHandler):
 						parent_content['refresh'] = True
 
 				content = {'parent_it':item,
-						'lst_items':list_items, 
+						'lst_items':list_items,
 						'refresh':False,
 						'index':kwargs.get('position', 0)}
 				self.content_screen.load(content)

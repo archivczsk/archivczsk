@@ -29,54 +29,7 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 	def _open_item(self, item, *args, **kwargs):
 
 		def open_item_success_cb(result):
-			def continue_cb(res):
-				list_items.insert(0, PExit())
-				self.content_screen.resolveCommand(command, args)
-				self.content_screen.stopLoading()
-				self.open_video_addon(item.addon, list_items)
-
 			list_items, command, args = result
-			try:
-				#client.add_operation("SHOW_MSG", {'msg': 'some text'},
-				#								   'msgType': 'info|error|warning',		#optional
-				#								   'msgTimeout': 10,					#optional
-				#								   'canClose': True						#optional
-				#								  })
-
-				if command is not None:
-					cmd = ("%s"%command).lower()
-
-					if cmd == "show_msg":
-						#dialogStart = datetime.datetime.now()
-						self.content_screen.stopLoading()
-						
-						if 'msgType' in args:
-							msgType = ("%s"%args['msgType']).lower()
-						else:
-							msgType = 'info'
-							
-						if 'msgTimeout' in args:
-							msgTimeout = int(args['msgTimeout'])
-						else:
-							msgTimeout = 15
-							
-						if 'canClose' in args:
-							canClose = args['canClose']
-						else:
-							canClose = True
-
-						command = None
-
-						if msgType == 'error':
-							return showErrorMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
-						elif msgType == 'warning':
-							return showWarningMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
-						return showInfoMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
-
-			except:
-				log.logError("Execute HACK command failed (addon handler).\n%s" % traceback.format_exc())
-				command = None
-				args = {}
 
 			list_items.insert(0, PExit())
 			self.content_screen.resolveCommand(command, args)

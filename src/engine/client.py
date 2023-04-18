@@ -401,14 +401,3 @@ def add_playlist(name, media_list=[], variant=False):
 		playlist.add(media)
 	GItem_lst[0].append(playlist)
 	return playlist
-
-@abortTask
-def add_operation_result(msg, isError=False):
-	GItem_lst[1] = "RESULT_MSG"
-	GItem_lst[2] = {'msg':msg, 'isError':isError}
-
-@abortTask
-def add_operation(cmd, params):
-	log.logDebug("add_operation hit %s"%cmd)
-	GItem_lst[1] = cmd
-	GItem_lst[2] = params

@@ -337,7 +337,6 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 	handles = (PVideoNotResolved, )
 	def __init__(self, session, content_screen, content_provider):
 		MediaItemHandler.__init__(self, session, content_screen, content_provider, ['item','csfd'])
-		self.known_commands = ('show_msg',)
 
 	def _init_menu(self, item):
 		MediaItemHandler._init_menu(self, item)
@@ -385,20 +384,6 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 
 		self._resolve_video(item, wrapped, keep_playlists=False)
 
-	def handle_known_command(self, cmd, args, continue_cb):
-		if cmd == "show_msg":
-			self.content_screen.stopLoading()
-			msgType = args.get('msgType', 'info').lower()
-			msgTimeout = int(args.get('msgTimeout', 15))
-			canClose = args.get('canClose', True)
-
-			if msgType == 'error':
-				return showErrorMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
-			elif msgType == 'warning':
-				return showWarningMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
-			else:
-				return showInfoMessage(self.session, args['msg'], msgTimeout, continue_cb, enableInput=canClose)
-
 	def _resolve_video(self, item, callback, keep_playlists=True):
 
 		def selected_source(answer):
@@ -409,43 +394,29 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 				self.content_screen.workingFinished()
 
 		def open_item_success_cb(result):
-			def continue_cb(res):
-				if not keep_playlists:
-					self.unpack_playlist(list_items, only_resolved=True)
-
-				self._filter_by_quality(list_items)
-
-				if len(list_items) > 1:
-					choices = [ (DeleteColors(toString(i.name)), i) for i in list_items ]
-
-					self.session.openWithCallback(selected_source,
-							ChoiceBox, _("Please select source"),
-							list=choices,
-							skin_name=["ArchivCZSKVideoSourceSelection"])
-				elif len(list_items) == 1:
-					item = list_items[0]
-					callback(item)
-				else: # no video
-					self.content_screen.workingFinished()
-
 			self.content_screen.stopLoading()
 			self.content_screen.showList()
-			list_items, command, args = result
-			
-			command = command.lower() if command else None
-			#client.add_operation("SHOW_MSG", {'msg': 'some text'},
-			#								   'msgType': 'info|error|warning',		#optional
-			#								   'msgTimeout': 10,					#optional
-			#								   'canClose': True						#optional
-			#								  })
-			if command in self.known_commands:
-				return self.handle_known_command(command, args, continue_cb)
-			elif command:
-				log.logError("Unknown media handler command %s - ignoring" % command)
-				command = None
-				args = {}
 
-			continue_cb(None)
+			list_items, command, args = result
+			self.content_screen.resolveCommand(command, args)
+
+			if not keep_playlists:
+				self.unpack_playlist(list_items, only_resolved=True)
+
+			self._filter_by_quality(list_items)
+
+			if len(list_items) > 1:
+				choices = [ (DeleteColors(toString(i.name)), i) for i in list_items ]
+
+				self.session.openWithCallback(selected_source,
+						ChoiceBox, _("Please select source"),
+						list=choices,
+						skin_name=["ArchivCZSKVideoSourceSelection"])
+			elif len(list_items) == 1:
+				item = list_items[0]
+				callback(item)
+			else: # no video
+				self.content_screen.workingFinished()
 
 		@AddonExceptionHandler(self.session)
 		def open_item_error_cb(failure):
@@ -462,23 +433,15 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 
 	def _resolve_videos(self, item):
 		def open_item_success_cb(result):
-			def continue_cb(res):
-				self.content_screen.save()
-				content = {'parent_it':item, 'lst_items':list_items, 'refresh':False}
-				self.content_screen.stopLoading()
-				self.content_screen.load(content)
-				self.content_screen.showList()
-				self.content_screen.workingFinished()
-
 			list_items, screen_command, args = result
 			list_items.insert(0, PExit())
-			if screen_command is not None:
-				if screen_command.lower() in self.known_commands:
-					return self.handle_known_command(screen_command.lower(), args, continue_cb)
-				else:
-					self.content_screen.resolveCommand(screen_command, args)
-			else:
-				continue_cb(None)
+			self.content_screen.resolveCommand(screen_command, args)
+			self.content_screen.save()
+			content = {'parent_it':item, 'lst_items':list_items, 'refresh':False}
+			self.content_screen.stopLoading()
+			self.content_screen.load(content)
+			self.content_screen.showList()
+			self.content_screen.workingFinished()
 
 		@AddonExceptionHandler(self.session)
 		def open_item_error_cb(failure):
