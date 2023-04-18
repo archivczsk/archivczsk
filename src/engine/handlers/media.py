@@ -91,15 +91,11 @@ class MediaItemHandler(ItemHandler):
 				self.content_provider.pause()
 			if finishedCB is not None:
 				finishedCB()
+
 		def open_item_success_cb(result):
 			log.logDebug("Trakt.tv (%s) call success. %s" % (action, result))
-			#OK, ERROR
-#			list_items, command, args = result
-#			if args['isError']:
-#				return showErrorMessage(self.session, args['msg'], 10, finishCb)
-#			else:
-#				return showInfoMessage(self.session, args['msg'], 10, finishCb)
 			finishCb(None)
+
 		def open_item_error_cb(failure):
 			log.logDebug("Trakt.tv (%s) call failed. %s" % (action,failure))
 #			return showErrorMessage(self.session, "Operation failed.", 10, finishCb)

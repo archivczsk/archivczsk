@@ -85,15 +85,7 @@ class FolderItemHandler(ItemHandler):
 				self.content_provider.pause()
 		def open_item_success_cb(result):
 			log.logDebug("Trakt (%s) call success. %s"%(action, result))
-			list_items, command, args = result
-			if command is not None and command.lower()=='result_msg':
-				#{'msg':msg, 'isError':isError}
-				if args['isError']:
-					showErrorMessage(self.session, args['msg'], 10, finishCb)
-				else:
-					showInfoMessage(self.session, args['msg'], 10, finishCb)
-			else:
-				finishCb(None)
+			finishCb(None)
 
 		def open_item_error_cb(failure):
 			log.logDebug("Trakt (%s) call failed. %s"%(action,failure))
