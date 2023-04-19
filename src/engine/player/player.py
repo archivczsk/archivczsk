@@ -850,14 +850,20 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 			s_idx = get_subtitle_index('lang_priority')
 
 			if len(s_idx) > 0:
-				# on other then DMM enigma's there is no infou about forced subtitles, so we will fake the fists one as forced if there are more subtitles with the same lang
-				i = 0
-				for s in s_idx:
-					if s['forced'] == None:
-						s['forced'] = (i == 0) and len(s_idx) > 1 # no info about forced subtitles from enigma, so use this fake one
-						if s['forced']:
-							log.debug("Setting fake forced subtitle to index %d" % s['idx'])
-					i += 1
+				# on other then DMM enigma's there is no info about forced subtitles
+				# we consider forced subtitles when there is only one audio track and one subtitle track with the same language and no forced info is available
+				if len(audio_list) == 1 and len(subs_list) == 1 and audio_list[0][1].lower() == subs_list[0]['lang'].lower() and s_idx[0]['forced'] == None:
+					log.debug("Setting fake forced subtitles to index 0 - have only one audio and subtitles track with the same language")
+					s_idx[0]['forced'] = True
+				else:
+					# or we will fake the first one as forced if there are more subtitles with the same lang
+					i = 0
+					for s in s_idx:
+						if s['forced'] == None:
+							s['forced'] = (i == 0) and len(s_idx) > 1 # no info about forced subtitles from enigma, so use this fake one
+							if s['forced']:
+								log.debug("Setting fake forced subtitles to index %d" % s['idx'])
+						i += 1
 
 				if self.tracks_settings['subs_autostart']:
 					log.debug("Subtitles found and autostart is enabled")
