@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-04-12 15:23+0200\n"
-"PO-Revision-Date: 2023-04-12 15:25+0200\n"
+"POT-Creation-Date: 2023-04-20 17:01+0200\n"
+"PO-Revision-Date: 2023-04-20 17:02+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -93,7 +93,7 @@ msgid "Support us"
 msgstr "Podpořte nás"
 
 #: src/gui/content.py:339 src/gui/content.py:507 src/gui/menu.py:204
-#: src/engine/handlers/addon.py:207 src/engine/handlers/addon.py:286
+#: src/engine/handlers/addon.py:160 src/engine/handlers/addon.py:239
 msgid "Settings"
 msgstr "Nastavení"
 
@@ -121,18 +121,18 @@ msgstr "zobrazit informace"
 msgid "show menu of current item"
 msgstr "zobrazí informace o vybrané položce"
 
-#: src/gui/content.py:504 src/gui/menu.py:41 src/engine/handlers/addon.py:210
-#: src/engine/handlers/addon.py:289
+#: src/gui/content.py:504 src/gui/menu.py:41 src/engine/handlers/addon.py:163
+#: src/engine/handlers/addon.py:242
 msgid "Changelog"
 msgstr "Změny"
 
 #: src/gui/content.py:505 src/gui/download.py:407
-#: src/engine/handlers/addon.py:213
+#: src/engine/handlers/addon.py:166
 msgid "Downloads"
 msgstr "Stažené soubory"
 
 #: src/gui/content.py:506 src/gui/shortcuts.py:27
-#: src/engine/handlers/addon.py:217
+#: src/engine/handlers/addon.py:170
 msgid "Shortcuts"
 msgstr "Záložky"
 
@@ -469,8 +469,8 @@ msgstr "Rychlost:"
 msgid "not finished"
 msgstr "nedokončeno"
 
-#: src/gui/download.py:231 src/engine/downloader.py:221
-#: src/engine/downloader.py:249
+#: src/gui/download.py:231 src/engine/downloader.py:227
+#: src/engine/downloader.py:255
 msgid "unknown"
 msgstr "neznámý"
 
@@ -494,13 +494,13 @@ msgstr "zobrazit aktuálně stahované soubory"
 msgid "Cancel"
 msgstr "Zrušit"
 
-#: src/gui/download.py:290 src/engine/handlers/media.py:270
-#: src/engine/handlers/media.py:509
+#: src/gui/download.py:290 src/engine/handlers/media.py:266
+#: src/engine/handlers/media.py:475
 msgid "Play"
 msgstr "Přehrát"
 
 #: src/gui/download.py:291 src/gui/download.py:403
-#: src/engine/handlers/category.py:44 src/engine/handlers/addon.py:293
+#: src/engine/handlers/category.py:44 src/engine/handlers/addon.py:246
 msgid "Remove"
 msgstr "Odstranit"
 
@@ -513,7 +513,7 @@ msgid "Do you want to cancel"
 msgstr "Chcete zrušit"
 
 #: src/gui/download.py:341 src/gui/download.py:433
-#: src/engine/handlers/category.py:61 src/engine/handlers/addon.py:331
+#: src/engine/handlers/category.py:61 src/engine/handlers/addon.py:284
 msgid "Do you want to remove"
 msgstr "Chcete odstranit"
 
@@ -645,11 +645,11 @@ msgstr "upravený přehrávač (podpora titulků)"
 msgid "Preload"
 msgstr "Přednačíst"
 
-#: src/settings.py:84 src/engine/handlers/addon.py:278
+#: src/settings.py:84 src/engine/handlers/addon.py:231
 msgid "Enable"
 msgstr "Zapnout"
 
-#: src/settings.py:85 src/engine/handlers/addon.py:282
+#: src/settings.py:85 src/engine/handlers/addon.py:235
 msgid "Disable"
 msgstr "Vypnout"
 
@@ -833,7 +833,7 @@ msgstr "Port interního HTTP serveru"
 msgid "Run HTTP only for internal addons usage"
 msgstr "Spustit HTTP server jen pro interní použití doplňkami"
 
-#: src/resources/repositories/config.py:20 src/engine/handlers/media.py:268
+#: src/resources/repositories/config.py:20 src/engine/handlers/media.py:264
 msgid "Download"
 msgstr "Stáhnout"
 
@@ -881,83 +881,95 @@ msgstr "Nyní nemůžete vyhledávat, vyhledávání právě probíhá"
 msgid "Cannot find searcher"
 msgstr "Nelze najít vyhledávač"
 
-#: src/engine/player/player.py:153
+#: src/engine/player/player.py:154
 #, python-brace-format
 msgid "Player switched to {player}"
 msgstr "Přehrávač změněn na {player}"
 
-#: src/engine/player/player.py:312
+#: src/engine/player/player.py:313
 msgid "Stop playing this movie?"
 msgstr "Ukončit přehrávání videa?"
 
-#: src/engine/player/player.py:413 src/engine/player/player.py:421
+#: src/engine/player/player.py:466 src/engine/player/player.py:474
 msgid "Letterbox"
 msgstr "Letterbox"
 
-#: src/engine/player/player.py:414 src/engine/player/player.py:418
-#: src/engine/player/player.py:422
+#: src/engine/player/player.py:467 src/engine/player/player.py:471
+#: src/engine/player/player.py:475
 msgid "Pan&scan"
 msgstr "Pan&scan"
 
-#: src/engine/player/player.py:415 src/engine/player/player.py:419
+#: src/engine/player/player.py:468 src/engine/player/player.py:472
 msgid "Nonlinear"
 msgstr "Nonlinear"
 
-#: src/engine/player/player.py:416 src/engine/player/player.py:420
-#: src/engine/player/player.py:423
+#: src/engine/player/player.py:469 src/engine/player/player.py:473
+#: src/engine/player/player.py:476
 msgid "Just scale"
 msgstr "Just scale"
 
-#: src/engine/player/player.py:417
+#: src/engine/player/player.py:470
 msgid "PillarBox"
 msgstr "PillarBox"
 
-#: src/engine/player/player.py:459
+#: src/engine/player/player.py:512
 msgid "Aspect"
 msgstr "Poměr"
 
-#: src/engine/player/player.py:460
+#: src/engine/player/player.py:513
 msgid "Policy"
 msgstr "Policy"
 
-#: src/engine/player/player.py:498
+#: src/engine/player/player.py:551
 msgid "Show subservices"
 msgstr "Zobrazit titulky"
 
-#: src/engine/player/player.py:523
+#: src/engine/player/player.py:576
 msgid "Please select subservice..."
 msgstr "Prosím zvolte subservice..."
 
-#: src/engine/player/player.py:625 src/engine/player/player.py:634
-#: src/engine/handlers/media.py:513
+#: src/engine/player/player.py:682 src/engine/player/player.py:693
+#: src/engine/handlers/media.py:479
 msgid "Show playlist"
 msgstr "Zobrazit playlist"
 
-#: src/engine/player/player.py:626 src/engine/player/player.py:635
+#: src/engine/player/player.py:683 src/engine/player/player.py:694
 msgid "Play next entry in playlist"
 msgstr "Přehrát následující záznam v playlistu"
 
-#: src/engine/player/player.py:627 src/engine/player/player.py:636
+#: src/engine/player/player.py:684 src/engine/player/player.py:695
 msgid "Play previous entry in playlist"
 msgstr "Přehrát předcházející záznam v playlistu"
 
-#: src/engine/player/player.py:628 src/engine/player/player.py:637
+#: src/engine/player/player.py:686 src/engine/player/player.py:697
 msgid "Exit player"
 msgstr "Ukončit přehrávač"
 
-#: src/engine/player/player.py:629
+#: src/engine/player/player.py:687 src/engine/player/player.py:699
 msgid "Show/hide infobar"
 msgstr "Zobrazit/skrýt infobar"
 
-#: src/engine/player/player.py:630 src/engine/player/player.py:638
+#: src/engine/player/player.py:689 src/engine/player/player.py:700
 msgid "Switch player type"
 msgstr "Změnit typ přehrávače"
 
-#: src/engine/player/player.py:703
+#: src/engine/player/player.py:759
+msgid "Skip intro"
+msgstr "Přeskočit úvod"
+
+#: src/engine/player/player.py:761
+msgid "Skip credits"
+msgstr "Přeskočit titulky"
+
+#: src/engine/player/player.py:763
+msgid "Skip this part"
+msgstr "Přeskočit tuhle část"
+
+#: src/engine/player/player.py:839
 msgid "Resuming playback"
 msgstr "Obnovuji přehrávání"
 
-#: src/engine/player/player.py:712
+#: src/engine/player/player.py:848
 msgid "Resume playback from last play position?"
 msgstr "Obnovit přehrávání od poslední pozice?"
 
@@ -1069,96 +1081,96 @@ msgstr "Zadejte nové jméno kategorie:"
 msgid "category"
 msgstr "kategorii"
 
-#: src/engine/handlers/folder.py:220 src/engine/handlers/media.py:261
+#: src/engine/handlers/folder.py:124 src/engine/handlers/media.py:257
 msgid "Trakt.tv action"
 msgstr "Trakt.tv akce"
 
-#: src/engine/handlers/folder.py:222 src/engine/handlers/media.py:263
+#: src/engine/handlers/folder.py:126 src/engine/handlers/media.py:259
 msgid "Pair device with Trakt.tv"
 msgstr "Spárovat toto zařízení s Trakt.tv"
 
-#: src/engine/handlers/folder.py:224
+#: src/engine/handlers/folder.py:128
 msgid "Open"
 msgstr "Otevřít položku"
 
-#: src/engine/handlers/folder.py:225
+#: src/engine/handlers/folder.py:129
 msgid "Play all videos"
 msgstr "Přehrát všechny videa"
 
-#: src/engine/handlers/folder.py:227 src/engine/handlers/folder.py:229
-#: src/engine/handlers/media.py:341 src/engine/handlers/media.py:345
+#: src/engine/handlers/folder.py:131 src/engine/handlers/folder.py:133
+#: src/engine/handlers/media.py:343 src/engine/handlers/media.py:347
 msgid "Add Shortcut"
 msgstr "Přidat záložku"
 
-#: src/engine/handlers/folder.py:234 src/engine/handlers/media.py:352
+#: src/engine/handlers/folder.py:138 src/engine/handlers/media.py:354
 msgid "Do you want to add"
 msgstr "Chcete přidat"
 
-#: src/engine/handlers/folder.py:234 src/engine/handlers/media.py:352
+#: src/engine/handlers/folder.py:138 src/engine/handlers/media.py:354
 msgid "shortcut?"
 msgstr "záložku?"
 
-#: src/engine/handlers/folder.py:245
+#: src/engine/handlers/folder.py:149
 msgid "Playlist of"
 msgstr "Playlist z"
 
-#: src/engine/handlers/folder.py:253
+#: src/engine/handlers/folder.py:157
 msgid "No playable videos were found"
 msgstr "Nenašli se žádné přehratelné videa"
 
-#: src/engine/handlers/media.py:235
+#: src/engine/handlers/media.py:231
 msgid "Automatically generated"
 msgstr "Automaticky generován"
 
-#: src/engine/handlers/media.py:271
+#: src/engine/handlers/media.py:267
 msgid "Play all"
 msgstr "Přehrát všechno"
 
-#: src/engine/handlers/media.py:274
+#: src/engine/handlers/media.py:270
 msgid "Play using gstplayer"
 msgstr "Přehrát pomocí gstplayer"
 
-#: src/engine/handlers/media.py:277
+#: src/engine/handlers/media.py:273
 msgid "Play using exteplayer3"
 msgstr "Přehrát pomocí exteplayer3"
 
-#: src/engine/handlers/media.py:279
+#: src/engine/handlers/media.py:275
 msgid "Play and Download"
 msgstr "Přehraj a stahuj"
 
-#: src/engine/handlers/media.py:337
+#: src/engine/handlers/media.py:339
 msgid "Resolve videos"
 msgstr "Načítej videa"
 
-#: src/engine/handlers/media.py:415
+#: src/engine/handlers/media.py:408
 msgid "Please select source"
 msgstr "Prosím zvolte zdroj"
 
-#: src/engine/handlers/addon.py:160
+#: src/engine/handlers/addon.py:113
 msgid "Addon is broken"
 msgstr "Doplněk je nefunkční"
 
-#: src/engine/handlers/addon.py:161
+#: src/engine/handlers/addon.py:114
 msgid "Reason"
 msgstr "Důvod"
 
-#: src/engine/handlers/addon.py:162 src/engine/handlers/addon.py:194
+#: src/engine/handlers/addon.py:115 src/engine/handlers/addon.py:147
 msgid "Do you want to disable this addon?"
 msgstr "Chcete vypnout tento doplněk?"
 
-#: src/engine/handlers/addon.py:192
+#: src/engine/handlers/addon.py:145
 msgid "Addon is created for archivCZSK 1.x.x version and will not work anymore in this version. Author of the addon need to adopt it for this version."
 msgstr "Doplněk je vytvořen pro verzi archivCZSK 1.x.x a v této verzi už není funkční. Autor doplňku jej pro tuto verzi musí přizpůsobit."
 
-#: src/engine/handlers/addon.py:197
+#: src/engine/handlers/addon.py:150
 msgid "Do you want to remove this addon?"
 msgstr "Chcete vymazat tento doplněk?"
 
-#: src/engine/handlers/addon.py:230
+#: src/engine/handlers/addon.py:183
 msgid "Add to category"
 msgstr "Přidat do kategorie"
 
-#: src/engine/handlers/addon.py:256
+#: src/engine/handlers/addon.py:209
 msgid "Remove from category"
 msgstr "Zmazat z kategorie"
 
@@ -1227,7 +1239,7 @@ msgstr ""
 msgid "Please set your search expression"
 msgstr "Prosím vložte hledaný výraz"
 
-#: src/engine/items.py:194 src/engine/downloader.py:240
+#: src/engine/items.py:194 src/engine/downloader.py:246
 msgid "succesfully finished"
 msgstr "úspěšně dokončeno"
 
@@ -1276,11 +1288,11 @@ msgstr ""
 "Aktualizace archivCZSK selhala. {cmd} skončilo chybou\n"
 "{msg}"
 
-#: src/engine/downloader.py:243
+#: src/engine/downloader.py:249
 msgid "not succesfully finished"
 msgstr "neúspěšně dokončeno"
 
-#: src/engine/downloader.py:246
+#: src/engine/downloader.py:252
 msgid "downloading"
 msgstr "stahuji"
 

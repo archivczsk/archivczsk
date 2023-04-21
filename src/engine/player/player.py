@@ -47,6 +47,7 @@ from ..tools.util import toString
 from ..tools.subtitles import download_subtitles
 from ...colors import DeleteColors
 from .info import videoPlayerInfo
+from ...gui.common import resize
 
 config_archivczsk = config.plugins.archivCZSK
 
@@ -290,7 +291,7 @@ class Player(object):
 		}
 
 		self.video_player.play_service_ref(service_ref, 
-				subtitles_file, play_settings.get("resume_time_sec"), play_settings.get("resume_popup", True), status_msg, tracks_settings)
+				subtitles_file, play_settings.get("resume_time_sec"), play_settings.get("resume_popup", True), status_msg, tracks_settings, play_settings.get('skip_times'))
 
 	def player_callback(self, callback):
 		log.info("player_callback(%r)" % (callback,))
@@ -379,6 +380,60 @@ class Player(object):
 			except:
 				pass
 		self.cleanup_files = []
+
+
+class SkipNotificationScreen(Screen):
+
+	def __init__(self, session):
+		Screen.__init__(self, session)
+		self.stand_alone = True
+		width, height = e2util.get_desktop_width_and_height()
+		skin = '<screen position="%d,%d" size="%d,%d" backgroundColor="#20000000" flags="wfNoBorder">' % (
+				0.82 * width, 0.9 * height, 0.14 * width, 0.07 * height)
+		skin += '<widget name="status" position="5,5" size="%d,%d" zPosition="1" valign="center" halign="center" font="Regular;%d" foregroundColor="white" backgroundColor="#5f606060" shadowColor="black" shadowOffset="-2,-2" />' % (
+				(0.14 * width) - 10, (0.07 * height) - 10, resize(18))
+		skin += '</screen>'
+		self.skin = skin
+		self["status"] = Label()
+
+		self.timer = eTimer()
+		self.timer_conn = eConnectCallback(self.timer.timeout, self.hide)
+		self.onClose.append(self.__on_close)
+		self.onShow.append(self.__on_show)
+		self.onHide.append(self.__on_hide)
+		self.is_shown = False
+		self.timeout = 5000
+	
+	def run_skip(self):
+		self.hide()
+		if self.skip_cbk:
+			self.skip_cbk()
+
+	def __on_close(self):
+		self.timer.stop()
+		del self.timer_conn
+		del self.timer
+
+	def __on_show(self):
+		if self.timer.isActive():
+			self.timer.stop()
+
+		self.is_shown = True
+		self.timer.start(self.timeout, True)
+		log.debug("Notification window shown")
+
+	def __on_hide(self):
+		if self.timer.isActive():
+			self.timer.stop()
+
+		self.is_shown = False
+		log.debug("Notification window hidden")
+
+	def show_skip(self, text, cbk=None, timeout=5):
+		self.skip_cbk = cbk
+		self.timeout = timeout * 1000
+		self['status'].setText(toString(text))
+		self.show()
 
 
 class StatusScreen(Screen):
@@ -603,40 +658,36 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.postAspectChange.append(self.__aspect_changed)
 		HelpableScreen.__init__(self)
 		self.status_dialog = self.session.instantiateDialog(StatusScreen)
+		self.skip_dialog = self.session.instantiateDialog(SkipNotificationScreen)
 		self.player_callback = player_callback
 		self.__timer = eTimer()
 		self.__timer_conn = eConnectCallback(self.__timer.timeout, self.__pts_available)
 		self.__timer_seek = eTimer()
 		self.__timer_seek_conn = eConnectCallback(self.__timer_seek.timeout, self.__check_seek_position)
+		self.__timer_seek_notification = eTimer()
+		self.__timer_seek_notification_conn = eConnectCallback(self.__timer_seek_notification.timeout, self.setup_skip_notification)
 		self.__timer_watching = eTimer()
 		self.__timer_watching_conn = eConnectCallback(self.__timer_watching.timeout, self.__watching)
 		self.__timer_tracks_setup = eTimer()
 		self.__timer_tracks_setup_conn = eConnectCallback(self.__timer_tracks_setup.timeout, self.setup_tracks)
+		self.__timer_skip_notification = eTimer()
+		self.__timer_skip_notification_conn = eConnectCallback(self.__timer_skip_notification.timeout, self.show_skip_notification)
 		self.__subtitles_url = None
 		self.__resume_time_sec = None
 		self.__resume_popup = True
 		self.duration_sec = None
+		self.skip_times = None #[(5, 30), (35, 70), (120, 300)]
+		self.old_position = -1
+		self.auto_skip = {}
 
-		if DMM_IMAGE:
-			# on DMM there is need to add toggleShow action, because without that toggling infobar don't work.
-			# But this breaks for example OpenATV where infobar flashes :-( On OpenPLi it works with booth settings.
-			# Happy portability ...
-			self["actions"] = HelpableActionMap(self, "ArchivCZSKMoviePlayerActions", {
-				"showPlaylist": (boundFunction(self.player_callback, ("playlist", "show",)), _("Show playlist")),
-				"nextEntry": (boundFunction(self.player_callback, ("playlist", "next",)), _("Play next entry in playlist")),
-				"prevEntry": (boundFunction(self.player_callback, ("playlist", "prev",)), _("Play previous entry in playlist")),
-				"cancel": (boundFunction(self.player_callback, ("exit",)), _("Exit player")),
-				"toggleShow": (boundFunction(self.__my_toggleShow,), _("Show/hide infobar")),
-				"switchPlayer": (boundFunction(self.player_callback, ("player_switch",)), _("Switch player type")),
-			}, -2)
-		else:
-			self["actions"] = HelpableActionMap(self, "ArchivCZSKMoviePlayerActions", {
-				"showPlaylist": (boundFunction(self.player_callback, ("playlist", "show",)), _("Show playlist")),
-				"nextEntry": (boundFunction(self.player_callback, ("playlist", "next",)), _("Play next entry in playlist")),
-				"prevEntry": (boundFunction(self.player_callback, ("playlist", "prev",)), _("Play previous entry in playlist")),
-				"cancel": (boundFunction(self.player_callback, ("exit",)), _("Exit player")),
-				"switchPlayer": (boundFunction(self.player_callback, ("player_switch",)), _("Switch player type")),
-			}, -2)
+		self["actions"] = HelpableActionMap(self, "ArchivCZSKMoviePlayerActions", {
+			"showPlaylist": (boundFunction(self.player_callback, ("playlist", "show",)), _("Show playlist")),
+			"nextEntry": (boundFunction(self.player_callback, ("playlist", "next",)), _("Play next entry in playlist")),
+			"prevEntry": (boundFunction(self.player_callback, ("playlist", "prev",)), _("Play previous entry in playlist")),
+			"cancel": (self.__my_cancel, _("Exit player")),
+			"toggleShow": (boundFunction(self.toggleShow, aczsk=True), _("Show/hide infobar")),
+			"switchPlayer": (boundFunction(self.player_callback, ("player_switch",)), _("Switch player type")),
+		}, -2)
 
 		self.__event_tracker = ServiceEventTracker(screen=self, eventmap=
 		{
@@ -644,12 +695,26 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		})
 		self.onClose.append(self.__on_close)
 
-	def __my_toggleShow(self):
-		try:
+	def __my_cancel(self):
+		if self.skip_dialog.is_shown:
+			log.debug("Hiding notification window")
+			self.skip_dialog.hide()
+		else:
+			self.player_callback(("exit",))
+
+	def toggleShow(self, aczsk=False):
+		if aczsk == False:
+			# this is hack to filter out double run on OpenATV images ...
+			return
+
+		if self.skip_dialog.is_shown:
+			self.skip_dialog.run_skip()
+		else:
 			# tries to call infobar's toggleShow() - this should be implemented in InfoBarShowHide, but nobody knows ...
-			self.toggleShow()
-		except:
-			pass
+			try:
+				InfoBarShowHide.toggleShow(self)
+			except:
+				pass
 
 	def __on_close(self):
 		self.__timer.stop()
@@ -658,12 +723,90 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		del self.__timer
 		del self.__timer_seek_conn
 		del self.__timer_seek
+		del self.__timer_seek_notification_conn
+		del self.__timer_seek_notification
 		del self.__timer_watching_conn
 		del self.__timer_watching
 		del self.__timer_tracks_setup_conn
 		del self.__timer_tracks_setup
+		del self.__timer_skip_notification_conn
+		del self.__timer_skip_notification
 		RemovePopup(self.RESUME_POPUP_ID)
 		self.session.deleteDialog(self.status_dialog)
+		self.session.deleteDialog(self.skip_dialog)
+
+	def show_skip_notification(self):
+		def do_skip(skip_id, position):
+			self.auto_skip[skip_id] = True
+			self.doSeek(position * 90000)
+			
+		# show window with skip notifiction
+		cur_position = getPlayPositionInSeconds(self.session)
+		log.debug("Going to show skip notification - current position is %d" % cur_position)
+
+		i = 0
+		for st in self.skip_times:
+			st_end = st[1]
+			if not st_end:
+				st_end = self.duration_sec + 60
+
+			if cur_position >= st[0] and cur_position < st_end:
+				if i != 2 and self.auto_skip.get(i, False):
+					self.doSeek(st_end * 90000)
+				else:
+					if i == 0:
+						text = _("Skip intro")
+					elif i == 3:
+						text = _("Skip credits")
+					else:
+						text = _("Skip this part")
+
+					log.debug("Showing skip notification to seek to position: %d" % st_end)
+					self.skip_dialog.show_skip(text + ' >>>', cbk=lambda: do_skip(i, st_end), timeout=(st_end - cur_position))
+				break
+			i = 3 if st == self.skip_times[-1] else 2
+
+		self.setup_skip_notification(True)
+
+	def setup_skip_notification(self, only_future=False):
+		if self.__timer_skip_notification.isActive():
+			self.__timer_skip_notification.stop()
+
+		if self.__timer_seek_notification.isActive():
+			self.__timer_seek_notification.stop()
+
+		if not self.skip_times:
+			log.debug("No skip times configured")
+			return
+
+		if not self.duration_sec:
+			log.debug("Movie duration is unknown - not setting up skip times")
+			# showing skip notification is only available, when we know total play length
+			return
+
+		cur_position = getPlayPositionInSeconds(self.session)
+		if cur_position == self.old_position:
+			# seek still in progress, try again later
+			log.debug("Seek not finished yet - planing new setup in a while")
+			self.__timer_seek_notification.start(1000, True)
+			return
+
+		for st in self.skip_times:
+			if cur_position < st[0]:
+				# plan to show skip notification
+				log.debug("Planing skip notification in %ds" % (st[0] - cur_position))
+				self.__timer_skip_notification.start((1 + st[0] - cur_position) * 1000, True)
+				break
+
+			st_end = st[1]
+			if not st_end:
+				st_end = self.duration_sec
+
+			if not self.skip_dialog.is_shown and not only_future and cur_position >= st[0] and cur_position < st_end and (st_end - cur_position) > 3:
+				# show notification now (using timer)
+				log.debug("Showing skip notification now")
+				self.__timer_skip_notification.start(10, True)
+				break
 
 	def __aspect_changed(self):
 		self.status_dialog.set_status(self.getAspectString(), "#00ff00")
@@ -680,6 +823,7 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		else:
 			self.player_callback(("start",))
 			self.duration_sec = getDurationInSeconds(self.session)
+			self.setup_skip_notification()
 			if self.__resume_time_sec is not None:
 				if self.__resume_time_sec > 0 and self.duration_sec and self.duration_sec > 0 and self.__resume_time_sec < self.duration_sec:
 					self.doSeek(self.__resume_time_sec * 90000)
@@ -889,12 +1033,13 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 						else:
 							log.debug("No forced subtitles found")
 
-	def play_service_ref(self, service_ref, subtitles_url=None, resume_time_sec=None, resume_popup=True, status_msg=None, tracks_settings=None):
+	def play_service_ref(self, service_ref, subtitles_url=None, resume_time_sec=None, resume_popup=True, status_msg=None, tracks_settings=None, skip_times=None):
 		self.duration_sec = None
 		self.__subtitles_url = subtitles_url
 		self.__resume_time_sec = resume_time_sec
 		self.__resume_popup = resume_popup
 		self.tracks_settings = tracks_settings
+		self.skip_times = skip_times
 
 		self.session.nav.stopService()
 		self.session.nav.playService(service_ref)
@@ -928,15 +1073,31 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 			self.player_callback(("unpause",))
 		
 	def doSeek(self, pts ):
+		self.old_position = getPlayPositionInSeconds(self.session)
 		InfoBarSeek.doSeek(self, pts )
 		if self.__timer_seek.isActive():
 			self.__timer_seek.stop()
 
 		self.__timer_seek.start(5000, True)
 
+		if self.skip_times:
+			if self.__timer_seek_notification.isActive():
+				self.__timer_seek_notification.stop()
+
+			self.__timer_seek_notification.start(1000, True)
+
 	def doSeekRelative(self, pts ):
+		self.old_position = getPlayPositionInSeconds(self.session)
 		InfoBarSeek.doSeekRelative(self, pts )
 		if self.__timer_seek.isActive():
 			self.__timer_seek.stop()
 
+		# start timer to notify addon about seek state
 		self.__timer_seek.start(5000, True)
+
+		if self.skip_times:
+			if self.__timer_seek_notification.isActive():
+				self.__timer_seek_notification.stop()
+
+			# start timer to for handling skip notifications
+			self.__timer_seek_notification.start(1000, True)
