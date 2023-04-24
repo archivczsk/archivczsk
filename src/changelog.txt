@@ -1,3 +1,8 @@
+archivCZSK 2.3.0, 24.04.2023
+    - odstránenie show_msg hack API pre doplnky (náhradou je priame volanie show_message())
+    - vylepšenia pri určovaní forced titulkov u nie-DMM prijímačov
+    - pridanie možnosti nastaviť prehrávaču časové úseky ktoré má preskočiť (umožní preskočiť úvodnú zvučku a záverečné titulky)
+
 archivCZSK 2.2.4, 17.04.2023
     - oprava rozbaľovania playlistu pri sťahovaní
     - nové message box api pre doplnky
