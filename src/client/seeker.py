@@ -118,6 +118,11 @@ class ArchivCZSKSeeker():
 		
 		
 	def _errorSearch(self, failure):
+		try:
+			failure.raiseException()
+		except:
+			log.error(traceback.format_exc())
+
 		showErrorMessage(self.session, _('Error while trying to retrieve search list'), 5)
 		if self.searcher is not None:
 			self.searcher.close()
