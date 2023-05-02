@@ -78,6 +78,7 @@ config.plugins.archivCZSK.videoPlayer.type = ConfigSelection(default="custom", c
 config.plugins.archivCZSK.videoPlayer.autoPlay = ConfigYesNo(default=True)
 config.plugins.archivCZSK.videoPlayer.confirmExit = ConfigYesNo(default=False)
 config.plugins.archivCZSK.videoPlayer.subtitlesInAudioSelection = ConfigYesNo(default=True if image_is_openpli() else False)
+config.plugins.archivCZSK.videoPlayer.autoChangeAudio = ConfigYesNo(default=True)
 
 ydl_choicelist = [
 	('preload', _("Preload")),
@@ -206,6 +207,7 @@ def get_player_settings():
 		list.append(getConfigListEntry(_("Allow choosing subtitles in audio selection menu"), config.plugins.archivCZSK.videoPlayer.subtitlesInAudioSelection))
 	except:
 		pass
+	list.append(getConfigListEntry(_("Allow automatically changing audio track"), config.plugins.archivCZSK.videoPlayer.autoChangeAudio))
 	list.append(getConfigListEntry(_("Support for youtube videos"), config.plugins.archivCZSK.videoPlayer.ydl))
 
 	return list
