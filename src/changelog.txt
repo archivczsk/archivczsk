@@ -1,3 +1,6 @@
+archivCZSK 2.3.1, 02.05.2023
+    - pridanie voľby pre povolenie/zakázanie automatickej zmeny audio stopy
+
 archivCZSK 2.3.0, 24.04.2023
     - odstránenie show_msg hack API pre doplnky (náhradou je priame volanie show_message())
     - vylepšenia pri určovaní forced titulkov u nie-DMM prijímačov
