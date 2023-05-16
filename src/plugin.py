@@ -4,13 +4,14 @@ import time
 from Components.config import config
 from Plugins.Plugin import PluginDescriptor
 
-from . import _
+from . import _, log
 from .archivczsk import ArchivCZSK
 from .gsession import GlobalSession
 from .gui.search import ArchivCZSKSearchClientScreen
 from .gui.icon import IconD
 from .engine.downloader import DownloadManager
 from .engine.httpserver import archivCZSKHttpServer
+from .client.shortcut import run_shortcut
 
 NAME = _("ArchivCZSK")
 DESCRIPTION = _("Playing CZ/SK archives")
@@ -54,11 +55,43 @@ def autostart(reason, *args, **kwargs):
 		ArchivCZSK.stop()
 
 
+def open_content_by_ref(session, **kwargs):
+	ref = session.nav.getCurrentlyPlayingServiceReference()
+	if not ref:
+		return
+
+	ref = ref.toString()
+
+	if 'http%3a//' in ref:
+		# extract url from service reference (if there's any)
+		url = ref.split(':')[10].replace('%3a', ':')
+	else:
+		return
+
+	log.debug("Called with service reference: %s" % ref)
+	log.debug("Extracted url: %s" % url)
+
+	# extract addon's http endpoint from url
+	endpoint = archivCZSKHttpServer.urlToEndpoint(url)
+	if not endpoint:
+		return None
+
+	log.debug("Addon's endpoint extracted from url: %s" % endpoint)
+	addon = archivCZSKHttpServer.getAddonByEndpoint(endpoint)
+	if not addon:
+		return
+
+	log.debug("Found addon for endpoint: %s" % addon.id)
+	path = url[url.find(endpoint) + len(endpoint) + 1:].split('#')[0]
+	run_shortcut(session, addon, 'archive', {'path': path})
+
+
 def Plugins(path, **kwargs):
 	result = [
-		PluginDescriptor(where=[PluginDescriptor.WHERE_SESSIONSTART], fnc=sessionStart),
-		PluginDescriptor(where=[PluginDescriptor.WHERE_AUTOSTART], fnc=autostart),
-		PluginDescriptor(NAME, description=DESCRIPTION, where=PluginDescriptor.WHERE_PLUGINMENU, fnc=main, icon="czsk.png")
+		PluginDescriptor(where=PluginDescriptor.WHERE_SESSIONSTART, fnc=sessionStart),
+		PluginDescriptor(where=PluginDescriptor.WHERE_AUTOSTART, fnc=autostart),
+		PluginDescriptor(NAME, description=DESCRIPTION, where=PluginDescriptor.WHERE_PLUGINMENU, fnc=main, icon="czsk.png"),
+		PluginDescriptor(_('Open ArchivCZSK addon for current channel'), description=_('When current channel is managed by ArchivCZSK addon, then it opens archive for it'), where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=open_content_by_ref, weight=100)
 	]
 
 	if config.plugins.archivCZSK.extensions_menu.value:

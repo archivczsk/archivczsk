@@ -5,6 +5,7 @@ from .. import log
 from Components.config import config
 from ..py3compat import *
 from .usage import usage_stats
+import traceback
 
 class AddonHttpRequestHandler(resource.Resource):
 	isLeaf = True
@@ -105,27 +106,39 @@ class ArchivCZSKHttpServer:
 		self.running = None
 	
 	def start_listening(self, only_restart=False):
-		if only_restart:
-			if self.running:
-				self.stop_listening()
-			else:
-				self.port = config.plugins.archivCZSK.httpPort.value
-				# restart requiered, but server is not running - no nothing
-				return
-			
-		if not self.running:
-			# server not running - start it
+		def continue_cbk(*args):
 			self.port = config.plugins.archivCZSK.httpPort.value
-			if config.plugins.archivCZSK.httpLocalhost.value:
-				listen_address = '127.0.0.1'
-			else:
-				listen_address = '0.0.0.0'
-			self.running = reactor.listenTCP(self.port, self.site, interface=listen_address)
 
-	def stop_listening(self):
-		if self.running:
-			self.running.stopListening()
+			if only_restart and not was_started:
+				# restart requiered, but server is not running - do nothing
+				return
+
+			if self.running == None:
+				if config.plugins.archivCZSK.httpLocalhost.value:
+					listen_address = '127.0.0.1'
+				else:
+					listen_address = '0.0.0.0'
+
+				try:
+					self.running = reactor.listenTCP(self.port, self.site, interface=listen_address)
+				except:
+					log.error("Failed to start internal HTTP server:\n%s" % traceback.format_exc())
+
+		was_started = self.running != None
+		
+		if self.running == None:
+			continue_cbk()
+		elif only_restart:
+			self.stop_listening(continue_cbk)
+
+	def stop_listening(self, cbk=None):
+		if self.running != None:
+			defer = self.running.stopListening()
 			self.running = None
+			if cbk:
+				defer.addBoth(cbk)
+		elif cbk:
+			cbk()
 		
 	def getAddonEndpoint(self, handler_or_id, base_url=None, relative=False):
 		if isinstance( handler_or_id, AddonHttpRequestHandler ):
@@ -145,9 +158,18 @@ class ArchivCZSKHttpServer:
 		self.start_listening()
 		log.logInfo( "Adding HTTP request handler for endpoint: %s" % requestHandler.name)
 		self.root.putChild(requestHandler.name.encode('utf-8'), requestHandler)
+		
+	def getAddonByEndpoint(self, endpoint):
+		handler = self.root.getStaticEntity(endpoint)
+		return handler.addon if handler else None
+
+	def urlToEndpoint(self, url):
+		server_url = "http://127.0.0.1:%d/" % self.port
+
+		if url.startswith(server_url):
+			return url[len(server_url):].split('/')[0]
+
+		return None
 
 
-archivCZSKHttpServer = None	
-
-if archivCZSKHttpServer == None:
-	archivCZSKHttpServer = ArchivCZSKHttpServer()
+archivCZSKHttpServer = ArchivCZSKHttpServer()

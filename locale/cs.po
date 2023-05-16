@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-02 13:33+0200\n"
-"PO-Revision-Date: 2023-05-02 13:34+0200\n"
+"POT-Creation-Date: 2023-05-16 18:49+0200\n"
+"PO-Revision-Date: 2023-05-16 18:57+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -245,7 +245,7 @@ msgstr "Vyhledávání v ArchivCZSK"
 msgid "Set your search expression"
 msgstr "Prosím vložte hledaný výraz"
 
-#: src/gui/info.py:118 src/client/seeker.py:245
+#: src/gui/info.py:118 src/client/seeker.py:244
 msgid "Show CSFD info failed."
 msgstr "Zobrazení CSFD informací selhalo."
 
@@ -613,11 +613,11 @@ msgstr "Konfigurace"
 msgid "Select category"
 msgstr "Vyberte kategorii"
 
-#: src/version.py:3 src/plugin.py:15
+#: src/version.py:3 src/plugin.py:16
 msgid "ArchivCZSK"
 msgstr "ArchivCZSK"
 
-#: src/version.py:6 src/plugin.py:16
+#: src/version.py:6 src/plugin.py:17
 msgid "Playing CZ/SK archives"
 msgstr "Přehrávání CZ/SK archivů"
 
@@ -641,51 +641,51 @@ msgstr "standardní přehrávač"
 msgid "custom player (subtitle support)"
 msgstr "upravený přehrávač (podpora titulků)"
 
-#: src/settings.py:83
+#: src/settings.py:84
 msgid "Preload"
 msgstr "Přednačíst"
 
-#: src/settings.py:84 src/engine/handlers/addon.py:231
+#: src/settings.py:85 src/engine/handlers/addon.py:231
 msgid "Enable"
 msgstr "Zapnout"
 
-#: src/settings.py:85 src/engine/handlers/addon.py:235
+#: src/settings.py:86 src/engine/handlers/addon.py:235
 msgid "Disable"
 msgstr "Vypnout"
 
-#: src/settings.py:112
+#: src/settings.py:113
 msgid "Stable"
 msgstr "Stabilní"
 
-#: src/settings.py:112
+#: src/settings.py:113
 msgid "Testing"
 msgstr "Testovací"
 
-#: src/settings.py:132
+#: src/settings.py:133
 msgid "Default"
 msgstr "Předvolený"
 
-#: src/settings.py:133
+#: src/settings.py:134
 msgid "Default transparent"
 msgstr "Předvolený transpatentní"
 
-#: src/settings.py:144
+#: src/settings.py:145
 msgid "Internal"
 msgstr "Vnitřní"
 
-#: src/settings.py:144
+#: src/settings.py:145
 msgid "CSFD"
 msgstr "CSFD"
 
-#: src/settings.py:144
+#: src/settings.py:145
 msgid "CSFDLite"
 msgstr "CSFDLite"
 
-#: src/settings.py:167
+#: src/settings.py:168
 msgid "info"
 msgstr "info"
 
-#: src/settings.py:167
+#: src/settings.py:168
 msgid "debug"
 msgstr "debug"
 
@@ -853,35 +853,51 @@ msgstr "Načítání"
 msgid "Timeout"
 msgstr "Časový limit"
 
-#: src/client/seeker.py:27 src/client/seeker.py:30
-msgid "Search in"
-msgstr "Vyhledávat v"
+#: src/client/shortcut.py:35
+msgid "Run addon fatal error."
+msgstr "Při spuštěni doplňku nastala chyba."
 
-#: src/client/seeker.py:48
-msgid "Empty search expression"
-msgstr "Žádný hledaný výraz"
+#: src/client/shortcut.py:70
+msgid "Cannot run shortcut, archivCZSK is not installed"
+msgstr "Nelze spustit zkratku, ArchivCZSK není nainstalován"
 
-#: src/client/seeker.py:56
-msgid "Search fatal error."
-msgstr "Při vyhledávání nastala chyba."
-
-#: src/client/seeker.py:91
-msgid "Cannot search, archivCZSK is not installed"
-msgstr "Nelze vyhledávat, ArchivCZSK není nainstalován"
-
-#: src/client/seeker.py:97
+#: src/client/shortcut.py:76 src/client/seeker.py:96
 msgid "Unknown error"
 msgstr "Neznáma chyba"
 
-#: src/client/seeker.py:126
+#: src/client/shortcut.py:104
+msgid "Error while trying to retrieve content list"
+msgstr "Vyskytla se chyba při získávaní obsahu dat"
+
+#: src/client/shortcut.py:120
+msgid "You cannot run ArchivCZSK again because it is already running"
+msgstr "Nemůžete spustit ArchivCZSK znovu protože už je aktuálně spuštěn"
+
+#: src/client/seeker.py:26 src/client/seeker.py:29
+msgid "Search in"
+msgstr "Vyhledávat v"
+
+#: src/client/seeker.py:47
+msgid "Empty search expression"
+msgstr "Žádný hledaný výraz"
+
+#: src/client/seeker.py:55
+msgid "Search fatal error."
+msgstr "Při vyhledávání nastala chyba."
+
+#: src/client/seeker.py:90
+msgid "Cannot search, archivCZSK is not installed"
+msgstr "Nelze vyhledávat, ArchivCZSK není nainstalován"
+
+#: src/client/seeker.py:125
 msgid "Error while trying to retrieve search list"
 msgstr "Chyba při pokusu o načtení seznamu hledání"
 
-#: src/client/seeker.py:147
+#: src/client/seeker.py:146
 msgid "You cannot search, archivCZSK Search is already running"
 msgstr "Nyní nemůžete vyhledávat, vyhledávání právě probíhá"
 
-#: src/client/seeker.py:162
+#: src/client/seeker.py:161
 msgid "Cannot find searcher"
 msgstr "Nelze najít vyhledávač"
 
@@ -1299,7 +1315,15 @@ msgstr "neúspěšně dokončeno"
 msgid "downloading"
 msgstr "stahuji"
 
-#: src/plugin.py:73
+#: src/plugin.py:94
+msgid "Open ArchivCZSK addon for current channel"
+msgstr "Otevřít doplněk Archívu CZSK pro aktuální kanál"
+
+#: src/plugin.py:94
+msgid "When current channel is managed by ArchivCZSK addon, then it opens archive for it"
+msgstr "Pokud je aktuální kanál spravován doplňkem pro ArchivCZSK, potom pro něj otevře archív"
+
+#: src/plugin.py:106
 msgid "Search in ArchivCZSK"
 msgstr "Vyhledávání v Archivu CZSK"
 

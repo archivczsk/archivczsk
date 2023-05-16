@@ -13,7 +13,6 @@ from Components.config import config
 
 from ..py3compat import *
 
-
 def getCapabilities():
 	"""
 	Vrati zoznam vsetkych moznosti vyhladavania: tuple(nazov_vyhladavania, id_doplnku, mod_vyhladavania)
@@ -159,7 +158,7 @@ class ArchivCZSKSeeker():
 				searcher.start()
 				searcher.search(search_exp, mode)
 			else:
-				showInfoMessage(self.session, _("Cannot find searcher") + ' ' + py2_encode_utf8( addon_id ))
+				showInfoMessage(self.session, _("Cannot find searcher") + ' ' + addon_id)
 				return self.cb()
 			
 	def close(self):

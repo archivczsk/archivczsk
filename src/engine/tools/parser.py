@@ -90,6 +90,7 @@ class XBMCAddonXMLParser(XMLParser):
 		import_preload = False
 		deprecated = False
 		seekers = []
+		shortcuts = []
 		
 		req = addon.find('requires')
 		if req:
@@ -135,6 +136,9 @@ class XBMCAddonXMLParser(XMLParser):
 			elif point == 'archivczsk.addon.seeker':
 				seekers.append((info.attrib.get('name', name), info.attrib.get('id'),))
 
+			elif point == 'archivczsk.addon.shortcut':
+				shortcuts.append(info.attrib.get('name'))
+
 		return {
 			"id":addon_id,
 			"name":name,
@@ -151,6 +155,7 @@ class XBMCAddonXMLParser(XMLParser):
 			"import_preload": import_preload,
 			"deprecated": deprecated,
 			"seekers": seekers,
+			"shortcuts": shortcuts,
 		}
 
 

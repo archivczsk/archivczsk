@@ -596,7 +596,7 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 				log.error("Addon %s doesn't returned interface to mandatory run method" % (self.video_addon))
 				raise AddonError(_("Addon returned not supported communication interface"))
 
-			self.addon_interface = DummyAddonInterface(run=response['run'], trakt=response.get('trakt'), stats=response.get('stats'), search=response.get('search'), run_silent=response.get('run_silent'))
+			self.addon_interface = DummyAddonInterface(run=response['run'], trakt=response.get('trakt'), stats=response.get('stats'), search=response.get('search'), run_silent=response.get('run_silent'), run_shortcut=response.get('run_shortcut'))
 		elif callable(response):
 			# only method for get content returned as callable
 			self.addon_interface = DummyAddonInterface(run=response)
@@ -719,6 +719,21 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		self.resolve_addon_interface()
 		if hasattr(self.addon_interface, 'search'):
 			self.addon_interface.search(session, keyword=keyword, search_id=search_id)
+
+	def run_shortcut(self, session, name, params, successCB, errorCB):
+		log.info('%s run_shortcut - name: %s, params: %s' % (self, name, params))
+		self.__clear_list()
+		content_deferred = defer.Deferred()
+		content_deferred.addCallbacks(successCB, errorCB)
+		self.content_deferred.append(content_deferred)
+		thread_task = task.Task(self._get_content_cb, self.call_addon_shortcut_interface, session, name, params)
+		thread_task.run()
+		return content_deferred
+
+	def call_addon_shortcut_interface(self, session, name, params):
+		self.resolve_addon_interface()
+		if hasattr(self.addon_interface, 'run_shortcut'):
+			self.addon_interface.run_shortcut(session, name, params)
 
 	def preload_addon(self):
 		if self.video_addon.import_preload:
