@@ -6,6 +6,7 @@ Created on 21.10.2012
 '''
 import os, traceback
 import gettext
+import importlib
 from Components.config import config, ConfigSubsection, ConfigSelection, ConfigYesNo, ConfigText, ConfigNumber, ConfigIP, ConfigPassword, getConfigListEntry
 
 from .tools import util, parser
@@ -158,6 +159,10 @@ class XBMCAddon(object):
 class ToolsAddon(Addon):
 	def __init__(self, info, repository):
 		Addon.__init__(self, info, repository)
+		self.import_package = os.path.basename(info.path)
+
+	def init(self):
+		importlib.import_module(self.import_package)
 
 
 class VideoAddon(Addon):

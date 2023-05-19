@@ -10,7 +10,7 @@ from Screens.MessageBox import MessageBox
 from skin import loadSkin
 from enigma import eTimer
 from . import _, log, toString, settings, UpdateInfo
-from .engine.addon import VideoAddon, XBMCAddon
+from .engine.addon import ToolsAddon, VideoAddon, XBMCAddon
 from .engine.exceptions.updater import UpdateXMLVersionError, UpdateXMLNoUpdateUrl
 from .engine.tools.task import Task
 from .gui.content import ArchivCZSKContentScreen
@@ -109,6 +109,10 @@ class ArchivCZSK():
 		return [addon for addon in ArchivCZSK.get_addons() if isinstance(addon, VideoAddon)]
 
 	@staticmethod
+	def get_tools_addons():
+		return [addon for addon in ArchivCZSK.get_addons() if isinstance(addon, ToolsAddon)]
+
+	@staticmethod
 	def get_xbmc_addon(addon_id):
 		return XBMCAddon(ArchivCZSK.__addons[addon_id])
 
@@ -132,6 +136,16 @@ class ArchivCZSK():
 					addon.provider.preload_addon()
 			except:
 				log.logError("Preload of addon %s failed:\n%s" % (addon, traceback.format_exc()))
+
+	@staticmethod
+	def init_addons():
+		for addon in ArchivCZSK.get_tools_addons():
+			try:
+				if addon.is_enabled():
+					log.debug("Initialising tools addon: %s" % addon)
+					addon.init()
+			except:
+				log.logError("Init of addon %s failed:\n%s" % (addon, traceback.format_exc()))
 
 	@staticmethod
 	def stop():

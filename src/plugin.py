@@ -110,6 +110,7 @@ def Plugins(path, **kwargs):
 
 ArchivCZSK.load_skin()
 ArchivCZSK.load_repositories()
+ArchivCZSK.init_addons()
 archivCZSKHttpServer.start_listening()
 
 if config.plugins.archivCZSK.preload.value:
