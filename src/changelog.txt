@@ -1,3 +1,8 @@
+archivCZSK 2.3.2, 19.05.2023
+    - vylepšenie možností tools doplnkov
+    - pridanie podpory pre skratky - umožňujú priamo pristúpiť na nejakú funkcionalitu doplnku
+    - pridanie skratky pre vstup do archívu programu ak je manažovaný pomocou doplnku
+
 archivCZSK 2.3.1, 02.05.2023
     - pridanie voľby pre povolenie/zakázanie automatickej zmeny audio stopy
 
