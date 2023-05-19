@@ -50,8 +50,6 @@ CUSTOM_COLORS_PATH = os.path.join(SKIN_PATH,'color.json')
 CUSTOM_SIZES_PATH = os.path.join(SKIN_PATH,'sizes.json')
 
 ############ Updater Paths #############
-
-
 USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/106.0.0.0 Safari/537.36'
 
 config.plugins.archivCZSK = ConfigSubsection()
@@ -96,6 +94,11 @@ choicelist = []
 for i in range(1000, 50000, 1000):
 	choicelist.append(("%d" % i, "%d ms" % i))
 config.plugins.archivCZSK.videoPlayer.rtmpBuffer = ConfigSelection(default="10000", choices=choicelist)
+
+############ Shortcuts config #################
+
+config.plugins.archivCZSK.shortcuts = ConfigSubsection()
+config.plugins.archivCZSK.shortcuts.archive = ConfigYesNo(default=True)
 
 ############ Main config #################
 
@@ -231,6 +234,7 @@ def get_main_settings():
 	list.append(getConfigListEntry(_("Add to extensions menu"), config.plugins.archivCZSK.extensions_menu))
 	list.append(getConfigListEntry(_("Add to main menu"), config.plugins.archivCZSK.main_menu))
 	list.append(getConfigListEntry(_("Add search option in epg menu"), config.plugins.archivCZSK.epg_menu))
+	list.append(getConfigListEntry(_("Add archive enter shortcut to extensions menu"), config.plugins.archivCZSK.shortcuts.archive))
 	list.append(MENU_SEPARATOR)
 	list.append(getConfigListEntry(_("CSFD plugin"), config.plugins.archivCZSK.csfdMode))
 	

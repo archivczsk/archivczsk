@@ -91,8 +91,10 @@ def Plugins(path, **kwargs):
 		PluginDescriptor(where=PluginDescriptor.WHERE_SESSIONSTART, fnc=sessionStart),
 		PluginDescriptor(where=PluginDescriptor.WHERE_AUTOSTART, fnc=autostart),
 		PluginDescriptor(NAME, description=DESCRIPTION, where=PluginDescriptor.WHERE_PLUGINMENU, fnc=main, icon="czsk.png"),
-		PluginDescriptor(_('Open ArchivCZSK addon for current channel'), description=_('When current channel is managed by ArchivCZSK addon, then it opens archive for it'), where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=open_content_by_ref, weight=100)
 	]
+
+	if config.plugins.archivCZSK.shortcuts.archive.value:
+		result.append(PluginDescriptor(_('Open archive for current channel using ArchivCZSK addon'), description=_('When current channel is managed by ArchivCZSK addon, then it opens archive for it'), where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=open_content_by_ref))
 
 	if config.plugins.archivCZSK.extensions_menu.value:
 		#result.append(PluginDescriptor(NAME, where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main))

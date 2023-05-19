@@ -160,7 +160,7 @@ class ArchivCZSKHttpServer:
 		self.root.putChild(requestHandler.name.encode('utf-8'), requestHandler)
 		
 	def getAddonByEndpoint(self, endpoint):
-		handler = self.root.getStaticEntity(endpoint)
+		handler = self.root.getStaticEntity(endpoint.encode('utf-8'))
 		return handler.addon if handler else None
 
 	def urlToEndpoint(self, url):
