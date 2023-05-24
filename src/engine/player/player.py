@@ -982,8 +982,8 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 				audio_selected = a_idx[0][0]
 
 			# set new audio track
-			if audio_selected != 0:
-				# audio track 0 is always selected by default, so if it's the right one, then don't do anything
+			if audio_selected != audio_service.getCurrentTrack():
+				# if new audio track is not actually selected
 				if config.plugins.archivCZSK.videoPlayer.autoChangeAudio.value:
 					log.info("Setting audio track to index %d" % audio_selected)
 					audio_service.selectTrack(audio_selected)
