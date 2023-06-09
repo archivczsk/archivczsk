@@ -145,6 +145,10 @@ for i in range(0, 310, 10):
 	choicelist.append(("%d" % i, "%d" % i))
 config.plugins.archivCZSK.posterImageMax = ConfigSelection(default="20", choices=choicelist)
 
+for i in range(0, 10000, 500):
+	choicelist.append(("%d" % i, "%d" % i))
+config.plugins.archivCZSK.posterSizeMax = ConfigSelection(default="5000", choices=choicelist)
+
 choicelistCsfd = [('1', _("Internal")), ('2', _("CSFD")), ('3', _("CSFDLite"))]
 config.plugins.archivCZSK.csfdMode = ConfigSelection(default='1', choices=choicelistCsfd)
 
@@ -229,6 +233,7 @@ def get_main_settings():
 	list.append(getConfigListEntry(_("Show changelog after update"), config.plugins.archivCZSK.changelogAfterUpdate))
 	list.append(MENU_SEPARATOR)
 	list.append(getConfigListEntry(_("Show movie poster"), config.plugins.archivCZSK.downloadPoster))
+	list.append(getConfigListEntry(_("Poster maximum processing size (in kB)"), config.plugins.archivCZSK.posterSizeMax))
 	list.append(getConfigListEntry(_("Max posters on HDD"), config.plugins.archivCZSK.posterImageMax))
 	list.append(MENU_SEPARATOR)
 	list.append(getConfigListEntry(_("Add to extensions menu"), config.plugins.archivCZSK.extensions_menu))

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-05-19 09:33+0200\n"
-"PO-Revision-Date: 2023-05-19 09:37+0200\n"
+"POT-Creation-Date: 2023-06-09 19:18+0200\n"
+"PO-Revision-Date: 2023-06-09 19:20+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -669,175 +669,179 @@ msgstr "Předvolený"
 msgid "Default transparent"
 msgstr "Předvolený transpatentní"
 
-#: src/settings.py:148
+#: src/settings.py:152
 msgid "Internal"
 msgstr "Vnitřní"
 
-#: src/settings.py:148
+#: src/settings.py:152
 msgid "CSFD"
 msgstr "CSFD"
 
-#: src/settings.py:148
+#: src/settings.py:152
 msgid "CSFDLite"
 msgstr "CSFDLite"
 
-#: src/settings.py:171
+#: src/settings.py:175
 msgid "info"
 msgstr "info"
 
-#: src/settings.py:171
+#: src/settings.py:175
 msgid "debug"
 msgstr "debug"
 
-#: src/settings.py:203
+#: src/settings.py:207
 msgid "Show more info about player"
 msgstr "Informace o video přehrávači"
 
-#: src/settings.py:204
+#: src/settings.py:208
 msgid "RTMP Timeout"
 msgstr "Časový limit RTMP"
 
-#: src/settings.py:205
+#: src/settings.py:209
 msgid "RTMP Buffer"
 msgstr "RTMP zásobník"
 
-#: src/settings.py:206
+#: src/settings.py:210
 msgid "Confirm exit when closing player"
 msgstr "Potvrdit ukončení při opouštění přehrávače"
 
-#: src/settings.py:210
+#: src/settings.py:214
 msgid "Allow choosing subtitles in audio selection menu"
 msgstr "Povolit volbu titulků v menu pro výběr audio stopy"
 
-#: src/settings.py:213
+#: src/settings.py:217
 msgid "Allow automatically changing audio track"
 msgstr "Povolit automatickou změnu zvukové stopy"
 
-#: src/settings.py:214
+#: src/settings.py:218
 msgid "Support for youtube videos"
 msgstr "Podpora pro youtube videa"
 
-#: src/settings.py:220
+#: src/settings.py:224
 msgid "Skin"
 msgstr "Skin"
 
-#: src/settings.py:221
+#: src/settings.py:225
 msgid "Enable colored items"
 msgstr "Povolit vyfarbování jednotlivých položek v seznamu"
 
-#: src/settings.py:222
+#: src/settings.py:226
 msgid "Default category"
 msgstr "Předvolená kategorie"
 
-#: src/settings.py:223
+#: src/settings.py:227
 msgid "Allow archivCZSK auto update"
 msgstr "Povolit kontrolu aktualizací archivuCZSK"
 
-#: src/settings.py:224
+#: src/settings.py:228
 msgid "Allow addons auto update"
 msgstr "Povolit kontrolu aktualizací doplňků"
 
-#: src/settings.py:225
+#: src/settings.py:229
 msgid "Update timeout"
 msgstr "Časový limit kontroly aktualizace"
 
-#: src/settings.py:227
+#: src/settings.py:231
 msgid "Update repository"
 msgstr "Aktualizační repozitář"
 
-#: src/settings.py:228
+#: src/settings.py:232
 msgid "Update channel"
 msgstr "Aktualizační kanál"
 
-#: src/settings.py:229
+#: src/settings.py:233
 msgid "Show changelog after update"
 msgstr "Po aktualizaci zobrazit seznam změn"
 
-#: src/settings.py:231
+#: src/settings.py:235
 msgid "Show movie poster"
 msgstr "Zobrazit plakát filmu"
 
-#: src/settings.py:232
+#: src/settings.py:236
+msgid "Poster maximum processing size (in kB)"
+msgstr "Maximální velikost plakátu pro zpracování (v kB)"
+
+#: src/settings.py:237
 msgid "Max posters on HDD"
 msgstr "Max počet plakátů na disku"
 
-#: src/settings.py:234
+#: src/settings.py:239
 msgid "Add to extensions menu"
 msgstr "Přidat do menu rozšíření"
 
-#: src/settings.py:235
+#: src/settings.py:240
 msgid "Add to main menu"
 msgstr "Přidat do hlavního menu"
 
-#: src/settings.py:236
+#: src/settings.py:241
 msgid "Add search option in epg menu"
 msgstr "Přidat vyhledávání v archivu na dlouhé stisknutí EPG/INFO"
 
-#: src/settings.py:237
+#: src/settings.py:242
 msgid "Add archive enter shortcut to extensions menu"
 msgstr "Přidat zkratku pro vstup do archívu do menu rozšíření"
 
-#: src/settings.py:239
+#: src/settings.py:244
 msgid "CSFD plugin"
 msgstr "CSFD plugin"
 
-#: src/settings.py:245
+#: src/settings.py:250
 msgid "Data path"
 msgstr "Adresář pro data"
 
-#: src/settings.py:246
+#: src/settings.py:251
 msgid "Temp path"
 msgstr "Dočasný adresář"
 
-#: src/settings.py:247
+#: src/settings.py:252
 msgid "Downloads path"
 msgstr "Stahovat do"
 
-#: src/settings.py:248
+#: src/settings.py:253
 msgid "Posters path"
 msgstr "Plakáty stahovat do"
 
-#: src/settings.py:250
+#: src/settings.py:255
 msgid "Log path"
 msgstr "Logovat do"
 
-#: src/settings.py:255
+#: src/settings.py:260
 msgid "Debug mode"
 msgstr "Režim ladění"
 
-#: src/settings.py:256
+#: src/settings.py:261
 msgid "Allow preloading of addons on start"
 msgstr "Povolit přednačtení doplňků při startu"
 
-#: src/settings.py:257
+#: src/settings.py:262
 msgid "Confirm exit when closing plugin"
 msgstr "Potvrdit ukončení při opouštění modulu"
 
-#: src/settings.py:258
+#: src/settings.py:263
 msgid "Show broken addons"
 msgstr "Zobrazit nefunkční doplňky"
 
-#: src/settings.py:259
+#: src/settings.py:264
 msgid "Show not supported addons"
 msgstr "Zobrazit nepodporované doplňky"
 
-#: src/settings.py:260
+#: src/settings.py:265
 msgid "Show video source selection"
 msgstr "Zobrazit výběr zdroje videa"
 
-#: src/settings.py:261
+#: src/settings.py:266
 msgid "Convert captcha images to 8bit"
 msgstr "Konvertovat captcha obrázky na 8bitové"
 
-#: src/settings.py:262
+#: src/settings.py:267
 msgid "Drop caches on exit"
 msgstr "Vymazat mezipamět po ukončení pluginu"
 
-#: src/settings.py:263
+#: src/settings.py:268
 msgid "Internal HTTP server listen port"
 msgstr "Port interního HTTP serveru"
 
-#: src/settings.py:264
+#: src/settings.py:269
 msgid "Run HTTP only for internal addons usage"
 msgstr "Spustit HTTP server jen pro interní použití doplňkami"
 

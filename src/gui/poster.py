@@ -11,11 +11,14 @@ from Components.AVSwitch import AVSwitch
 from Tools.LoadPixmap import LoadPixmap
 
 from enigma import eTimer, ePicLoad, gPixmapPtr
+from Components.config import config
+
 
 class PosterProcessing:
 	def __init__(self, poster_limit, poster_dir):
 		self.poster_limit = poster_limit
 		self.poster_dir = poster_dir
+		self.poster_max_size = int(config.plugins.archivCZSK.posterSizeMax.getValue()) * 1024
 		self.got_image_callback = None
 
 		self.poster_files = []
@@ -53,6 +56,25 @@ class PosterProcessing:
 		dest = os.path.join(self.poster_dir, filename)
 		return dest
 
+	def _check_file_size_limit(self, path):
+		if os.path.isfile(path):
+			file_size = os.stat(path).st_size
+			if self.poster_max_size > 0 and file_size > self.poster_max_size:
+				log.debug("PosterProcessing.image over maximum size allowed for processing: {0}".format(path))
+				# truncate file to 0, because it is out of limit and can not be processed,
+				# but we need to keep it in order not to download it again
+				with open(path, 'w') as f:
+					f.truncate()
+
+				file_size = 0
+
+			if file_size == 0:
+				return None
+			else:
+				return path
+		else:
+			return None
+
 	def _image_downloaded(self, url, path):
 		if path is None:
 			return
@@ -62,7 +84,9 @@ class PosterProcessing:
 			self._remove_oldest_poster_file()
 		log.debug("PosterProcessing._image_downloaded: {0}".format(path))
 		self.poster_files.append((url, path))
-		self.got_image_callback(url, path)
+		
+		if self._check_file_size_limit(path) != None:
+			self.got_image_callback(url, path)
 
 	def get_image_file(self, poster_url):
 		if os.path.isfile(poster_url):
@@ -72,7 +96,7 @@ class PosterProcessing:
 		for idx, (url, path) in enumerate(self.poster_files):
 			if (url == poster_url):
 				print("PosterProcessing.get_image_file: found poster path on position {0}/{1}".format(idx, self.poster_limit))
-				return path
+				return self._check_file_size_limit(path)
 		
 		from ..settings import USER_AGENT
 		headers = {"User-Agent": USER_AGENT }
