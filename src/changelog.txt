@@ -1,3 +1,6 @@
+archivCZSK 2.3.3, 09.06.2023
+    - pridaný limit pre maximálnu veľkosť obrázku určeného na spracovanie (veľký obrázok môže zhodiť enigmu)
+
 archivCZSK 2.3.2, 19.05.2023
     - vylepšenie možností tools doplnkov
     - pridanie podpory pre skratky - umožňujú priamo pristúpiť na nejakú funkcionalitu doplnku
