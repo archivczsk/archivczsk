@@ -87,6 +87,9 @@ class trakt_tv(object):
 #		log.logDebug("Trakt.tv response: code: %d, data: %s" % (response.status_code, response.json() if response.status_code < 300 else '') )
 		log.logDebug("Trakt.tv response: code: %d, data len: %d" % (response.status_code, len(response.text)))
 		
+		if response.status_code == 401:
+			self.unpair()
+
 		return response.status_code, response.json() if response.status_code < 300 else None 
 
 	# #################################################################################################
@@ -430,6 +433,9 @@ class trakt_tv(object):
 			self.login_data['refresh_token'] = data['refresh_token']
 			self.login_data['expiration'] = data['expires_in'] + data['created_at']
 			self.save_login_data()
+		else:
+			self.unpair()
+
 		return code
 		
 	# #################################################################################################
@@ -514,6 +520,7 @@ class trakt_tv(object):
 			choice_list[ _("Mark as not watched") ] = 'unwatched'
 			
 		choice_list[ _("Force data synchronisation") ] = 'reload'
+		choice_list[ _("Unpair this device from Trakt.tv") ] = 'unpair'
 		
 		newlist = [ (name,) for name in choice_list.keys()]
 		session.openWithCallback(getListInputCB, ChoiceBox, toString( _("Choose Trakt.tv action")), newlist, skin_name="ArchivCZSKChoiceBox")
@@ -563,6 +570,10 @@ class trakt_tv(object):
 		pairing_data = self.get_pairing_data()
 		
 		ask_to_activate()
+
+	def unpair(self):
+		self.login_data = {}
+		self.save_login_data()
 
 # #################################################################################################
 

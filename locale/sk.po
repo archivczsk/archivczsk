@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-06-09 19:18+0200\n"
-"PO-Revision-Date: 2023-06-09 19:19+0200\n"
+"POT-Creation-Date: 2023-07-07 08:49+0200\n"
+"PO-Revision-Date: 2023-07-07 08:52+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: sk\n"
@@ -494,8 +494,8 @@ msgstr "zobraziť aktuálne sťahované súbory"
 msgid "Cancel"
 msgstr "Zrušiť"
 
-#: src/gui/download.py:290 src/engine/handlers/media.py:266
-#: src/engine/handlers/media.py:475
+#: src/gui/download.py:290 src/engine/handlers/media.py:268
+#: src/engine/handlers/media.py:477
 msgid "Play"
 msgstr "Prehrať"
 
@@ -845,7 +845,7 @@ msgstr "Port interného HTTP servera"
 msgid "Run HTTP only for internal addons usage"
 msgstr "Spustiť HTTP server iba pre interné použitie doplnkami"
 
-#: src/resources/repositories/config.py:20 src/engine/handlers/media.py:264
+#: src/resources/repositories/config.py:20 src/engine/handlers/media.py:266
 msgid "Download"
 msgstr "Stiahnuť"
 
@@ -956,7 +956,7 @@ msgstr "Zobraziť subservices"
 msgid "Please select subservice..."
 msgstr "Prosím zvoľte subservice..."
 
-#: src/engine/player/player.py:684 src/engine/handlers/media.py:479
+#: src/engine/player/player.py:684 src/engine/handlers/media.py:481
 msgid "Show playlist"
 msgstr "Zobraziť playlist"
 
@@ -1106,68 +1106,68 @@ msgstr "Zvoľte nové meno kategórie:"
 msgid "category"
 msgstr "kategóriu"
 
-#: src/engine/handlers/folder.py:127 src/engine/handlers/media.py:257
+#: src/engine/handlers/folder.py:129 src/engine/handlers/media.py:259
 msgid "Trakt.tv action"
 msgstr "Trakt.tv akcia"
 
-#: src/engine/handlers/folder.py:129 src/engine/handlers/media.py:259
+#: src/engine/handlers/folder.py:131 src/engine/handlers/media.py:261
 msgid "Pair device with Trakt.tv"
 msgstr "Spárovať zariadenie s Trakt.tv"
 
-#: src/engine/handlers/folder.py:131
+#: src/engine/handlers/folder.py:133
 msgid "Open"
 msgstr "Otvoriť"
 
-#: src/engine/handlers/folder.py:132
+#: src/engine/handlers/folder.py:134
 msgid "Play all videos"
 msgstr "Prehrať všetky videá"
 
-#: src/engine/handlers/folder.py:134 src/engine/handlers/folder.py:136
-#: src/engine/handlers/media.py:343 src/engine/handlers/media.py:347
+#: src/engine/handlers/folder.py:136 src/engine/handlers/folder.py:138
+#: src/engine/handlers/media.py:345 src/engine/handlers/media.py:349
 msgid "Add Shortcut"
 msgstr "Pridať záložku"
 
-#: src/engine/handlers/folder.py:141 src/engine/handlers/media.py:354
+#: src/engine/handlers/folder.py:143 src/engine/handlers/media.py:356
 msgid "Do you want to add"
 msgstr "Chcete pridať"
 
-#: src/engine/handlers/folder.py:141 src/engine/handlers/media.py:354
+#: src/engine/handlers/folder.py:143 src/engine/handlers/media.py:356
 msgid "shortcut?"
 msgstr "záložku?"
 
-#: src/engine/handlers/folder.py:152
+#: src/engine/handlers/folder.py:154
 msgid "Playlist of"
 msgstr "Playlist z"
 
-#: src/engine/handlers/folder.py:160
+#: src/engine/handlers/folder.py:162
 msgid "No playable videos were found"
 msgstr "Nenašli sa žiadne prehrateľné videá"
 
-#: src/engine/handlers/media.py:231
+#: src/engine/handlers/media.py:233
 msgid "Automatically generated"
 msgstr "Automaticky vygenerovaný"
 
-#: src/engine/handlers/media.py:267
+#: src/engine/handlers/media.py:269
 msgid "Play all"
 msgstr "Prehrať všetko"
 
-#: src/engine/handlers/media.py:270
+#: src/engine/handlers/media.py:272
 msgid "Play using gstplayer"
 msgstr "Prehrať pomocou gstplayer"
 
-#: src/engine/handlers/media.py:273
+#: src/engine/handlers/media.py:275
 msgid "Play using exteplayer3"
 msgstr "Prehrať pomocou exteplayer3"
 
-#: src/engine/handlers/media.py:275
+#: src/engine/handlers/media.py:277
 msgid "Play and Download"
 msgstr "Prehrávaj a sťahuj"
 
-#: src/engine/handlers/media.py:339
+#: src/engine/handlers/media.py:341
 msgid "Resolve videos"
 msgstr "Načítať videá"
 
-#: src/engine/handlers/media.py:408
+#: src/engine/handlers/media.py:410
 msgid "Please select source"
 msgstr "Prosím zvoľte zdroj"
 
@@ -1199,57 +1199,61 @@ msgstr "Pridať do kategórie"
 msgid "Remove from category"
 msgstr "Zmazať z kategórie"
 
-#: src/engine/trakttv.py:486
+#: src/engine/trakttv.py:492
 #, python-brace-format
 msgid "Trakt.tv operation {action} ended successfuly"
 msgstr "Trakt.tv operácia \"{action}\" skončila úspešne"
 
-#: src/engine/trakttv.py:489
+#: src/engine/trakttv.py:495
 msgid "Trakt.tv is not paired with this device."
 msgstr "Trakt.tv nie je spárovaný s týmto zariadením."
 
-#: src/engine/trakttv.py:493
+#: src/engine/trakttv.py:499
 #, python-brace-format
 msgid "Trakt.tv operation \"{action}\" failed"
 msgstr "Trakt.tv operácia \"{action}\" zlyhala"
 
-#: src/engine/trakttv.py:507
+#: src/engine/trakttv.py:513
 msgid "Add to watchlist"
 msgstr "Pridať do Watchlist"
 
-#: src/engine/trakttv.py:508
+#: src/engine/trakttv.py:514
 msgid "Delete from watchlist"
 msgstr "Vymazať z Watchlist"
 
-#: src/engine/trakttv.py:511
+#: src/engine/trakttv.py:517
 msgid "Mark as watched"
 msgstr "Označiť ako videné"
 
-#: src/engine/trakttv.py:514
+#: src/engine/trakttv.py:520
 msgid "Mark as not watched"
 msgstr "Označiť ako nevidené"
 
-#: src/engine/trakttv.py:516
+#: src/engine/trakttv.py:522
 msgid "Force data synchronisation"
 msgstr "Vynútiť synchronizáciu dát"
 
-#: src/engine/trakttv.py:519
+#: src/engine/trakttv.py:523
+msgid "Unpair this device from Trakt.tv"
+msgstr "Zrušiť spárovanie zariadenia s Trakt.tv"
+
+#: src/engine/trakttv.py:526
 msgid "Choose Trakt.tv action"
 msgstr "Zvoľte Trakt.tv akciu"
 
-#: src/engine/trakttv.py:534
+#: src/engine/trakttv.py:541
 msgid "Pairing timed out!"
 msgstr "Časový limit párovania vypršal!"
 
-#: src/engine/trakttv.py:537 src/engine/trakttv.py:550
+#: src/engine/trakttv.py:544 src/engine/trakttv.py:557
 msgid "Pairing aborted by user"
 msgstr "Párovanie bolo zrušené používateľom"
 
-#: src/engine/trakttv.py:546
+#: src/engine/trakttv.py:553
 msgid "Pairing succesed. You can use Trakt.tv functions now"
 msgstr "Párovanie úspešné. Teraz môžete využívať funkcie Trakt.tv"
 
-#: src/engine/trakttv.py:559
+#: src/engine/trakttv.py:566
 #, python-brace-format
 msgid ""
 "To pair Trakt.tv with this device go to the activation address and enter pairing code.\n"

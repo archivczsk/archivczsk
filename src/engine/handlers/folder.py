@@ -103,6 +103,8 @@ class FolderItemHandler(ItemHandler):
 				trakttv.open_trakt_action_choicebox(self.session, item, self.cmdTrakt)
 			elif action == 'pair':
 				trakttv.handle_trakt_pairing(self.session, eval_trakt_pairing )
+			elif action == 'unpair':
+				trakttv.unpair()
 			else:
 				if paused:
 					self.content_provider.resume()
