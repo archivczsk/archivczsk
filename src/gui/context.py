@@ -21,9 +21,11 @@ from ..py3compat import *
 RATIO = 1
 try:
 	width = getDesktop(0).size().width()
-	if width == 3840:
+	if width >= 3840:
 		RATIO = 3
-	elif width == 1920:
+	elif width >= 2560:
+		RATIO = 2
+	elif width >= 1920:
 		RATIO = 1.5
 except:
 	pass

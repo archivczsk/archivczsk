@@ -65,7 +65,9 @@ class ArchivCZSK():
 			desktop_width = getDesktop(0).size().width()
 			log.logDebug("Screen width %s px" % desktop_width)
 			
-			if desktop_width >= 1920:
+			if desktop_width >= 2560:
+				default_skin_name = "default_uni_wqhd"
+			elif desktop_width >= 1920:
 				default_skin_name = "default_uni_fhd"
 			else:
 				default_skin_name = "default_uni_hd"
