@@ -1,3 +1,7 @@
+archivCZSK 2.3.4, 08.09.2023
+    - pridaná podpora pre WQHD skiny (thx durinov)
+    - pridaná možnosť odhlásenia z trakt.tv
+
 archivCZSK 2.3.3, 09.06.2023
     - pridaný limit pre maximálnu veľkosť obrázku určeného na spracovanie (veľký obrázok môže zhodiť enigmu)
 
