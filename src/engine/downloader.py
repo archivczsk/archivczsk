@@ -39,6 +39,9 @@ MEDIA_EXTENSIONS	= VIDEO_EXTENSIONS + AUDIO_EXTENSIONS + ARCHIVE_EXTENSIONS + PL
 def isHLSUrl(url):
 	return url.startswith('http') and urlparse(url).path.endswith('.m3u8')
 
+def isMPDUrl(url):
+	return url.startswith('http') and urlparse(url).path.endswith('.mpd')
+
 def getFilenameAndLength(url=None, headers=None, filename=None):
 	length = None
 	if url is not None:
@@ -117,10 +120,11 @@ class DownloadManager(object):
 		headers.setdefault('User-Agent', USER_AGENT)
 		filename, length = getFilenameAndLength(url, headers, filename)
 		log.info("Downloader.createDownload() filename=%s, length=%s", toString(filename), length)
-		if url[0:4] == 'http' and isHLSUrl(url) and mode in ('auto', 'ffmpeg') and FFMPEG_PATH is not None:
+		if url[0:4] == 'http' and (isHLSUrl(url) or isMPDUrl(url)) and mode in ('auto', 'ffmpeg') and FFMPEG_PATH is not None:
 			d = FFMpegDownload(url=url, name=name, destDir=destination, filename=filename, headers=headers)
 		elif (((url[0:4] == 'rtmp' and mode in ('auto', 'gstreamer')) or
 			  (url[0:4] == 'http' and mode	in ('auto', 'gstreamer') and isHLSUrl(url)) or
+			  (url[0:4] == 'http' and mode	in ('auto', 'gstreamer') and isMPDUrl(url)) or
 			  (url[0:4] == 'http' and mode in ('auto', 'gstreamer') and playDownload) or
 			  (url[0:4] == 'http' and mode in ('gstreamer',))) and GST_LAUNCH is not None):
 			d = GstDownload(url = url, name = name, destDir = destination, filename=filename, headers=headers)
@@ -406,6 +410,8 @@ class GstDownload(DownloadProcessMixin, Download):
 				cmd += "'"
 			if isHLSUrl(self.url):
 				cmd += " ! hlsdemux"
+			if isMPDUrl(self.url):
+				cmd += " ! dashdemux"
 		cmd += " ! filesink location='%s'"%(self.local)
 		return cmd
 
@@ -431,4 +437,3 @@ class FFMpegDownload(DownloadProcessMixin, Download):
 		cmd += " -i '%s' -c copy %s" % (self.url, self.local)
 		#log.logDebug("Download cmd:\n%s"%cmd)
 		return cmd
-
