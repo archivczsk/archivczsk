@@ -1,3 +1,6 @@
+archivCZSK 2.3.5, 23.11.2023
+    - pridaná podpora pre sťahovanie MPEG-DASH streamov
+
 archivCZSK 2.3.4, 08.09.2023
     - pridaná podpora pre WQHD skiny (thx durinov)
     - pridaná možnosť odhlásenia z trakt.tv
