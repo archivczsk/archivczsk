@@ -391,7 +391,7 @@ class SkipNotificationScreen(Screen):
 		skin = '<screen position="%d,%d" size="%d,%d" backgroundColor="#20000000" flags="wfNoBorder">' % (
 				0.82 * width, 0.9 * height, 0.14 * width, 0.07 * height)
 		skin += '<widget name="status" position="5,5" size="%d,%d" zPosition="1" valign="center" halign="center" font="Regular;%d" foregroundColor="white" backgroundColor="#5f606060" shadowColor="black" shadowOffset="-2,-2" />' % (
-				(0.14 * width) - 10, (0.07 * height) - 10, resize(18))
+				(0.14 * width) - 10, (0.07 * height) - 10, resize(17))
 		skin += '</screen>'
 		self.skin = skin
 		self["status"] = Label()
@@ -756,7 +756,7 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 				else:
 					if i == 0:
 						text = _("Skip intro")
-					elif i == 3:
+					elif i == len(self.skip_times)-1:
 						text = _("Skip credits")
 					else:
 						text = _("Skip this part")
@@ -764,7 +764,7 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 					log.debug("Showing skip notification to seek to position: %d" % st_end)
 					self.skip_dialog.show_skip(text + ' >>>', cbk=lambda: do_skip(i, st_end), timeout=(st_end - cur_position))
 				break
-			i = 3 if st == self.skip_times[-1] else 2
+			i = i + 1
 
 		self.setup_skip_notification(True)
 
