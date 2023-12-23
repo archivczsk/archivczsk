@@ -85,7 +85,11 @@ class AddonHttpRequestHandler(resource.Resource):
 			func = getattr(self, "P_" + path, None)
 			
 			if callable(func):
-				return self.__to_bytes((func(request, path_full[len(path)+1:])))
+				try:
+					return self.__to_bytes((func(request, path_full[len(path)+1:])))
+				except:
+					log.error("Error by handling HTTP request:\n%s" % traceback.format_exc())
+					return self.reply_error500(request)
 		
 		return self.__to_bytes(self.default_handler( request, path_full ))
 	
