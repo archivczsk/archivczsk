@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-07-07 08:49+0200\n"
-"PO-Revision-Date: 2023-07-07 08:52+0200\n"
+"POT-Creation-Date: 2023-12-27 12:10+0100\n"
+"PO-Revision-Date: 2023-12-27 12:11+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: sk\n"
@@ -16,39 +16,39 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.0.1\n"
 
-#: src/archivczsk.py:223
+#: src/archivczsk.py:225
 msgid "Checking for addons updates"
 msgstr "Kontrolujem aktualizácie doplnkov"
 
-#: src/archivczsk.py:280
+#: src/archivczsk.py:282
 msgid "Do you want to update"
 msgstr "Chcete aktualizovať"
 
-#: src/archivczsk.py:280
+#: src/archivczsk.py:282
 msgid "addons"
 msgstr "doplnky"
 
-#: src/archivczsk.py:290
+#: src/archivczsk.py:292
 msgid "Following addons were updated"
 msgstr "Nasledujúce doplnky boli aktualizované"
 
-#: src/archivczsk.py:318
+#: src/archivczsk.py:320
 msgid "You need to restart E2. Do you want to restart it now?"
 msgstr "Zmeny sa prejavia po reštarte E2. Chcete reštartovať E2 teraz?"
 
-#: src/archivczsk.py:349
+#: src/archivczsk.py:351
 msgid "By system check there was no system plugin with name ServiceApp detected. This means, that your system only supports video player integrated in enigma2. Some addons doesn't work properly with internal player or don't work at all. If you will have problem with playing some videos, try to install ServiceApp system plugin from feed of your distribution. Then you can change in addon settings used video player to gstplayer or exteplayer3 that can handle some video formats better."
 msgstr "Pri kontrole systému nebol nájdený systémový plugin s názvom ServiceApp. To znamená, že váš systém podporuje iba video prehrávač integrovaný v enigma2. Niektoré doplnky s interným prehrávačom nefungujú správne alebo nefungujú vôbec. Ak budete mať problém s prehrávaním niektorých videí, skúste si nainštalovať systémový plugin ServiceApp z feedu vašej distribúcie. Potom môžete v nastaveniach doplnku zmeniť použitý video prehrávač na gstplayer alebo exteplayer3, ktorý lepšie zvládne niektoré formáty videa."
 
-#: src/archivczsk.py:351
+#: src/archivczsk.py:353
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3 and gstplayer. These video players are needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer and exteplayer3 from feed of your distribution to be able use all available addons."
 msgstr "Pri kontrole systému bol zistený systémový plugin s názvom ServiceApp, ale chýba vám prehrávač exteplayer3 a gstplayer. Tieto video prehrávače sú potrebné na spracovanie niektorých formátov videa, ktoré integrovaný video prehrávač v enigma2 nedokáže. Odporúča sa nainštalovať gstplayer a exteplayer3 z feedu vašej distribúcie, aby ste mohli využívať všetky dostupné doplnky."
 
-#: src/archivczsk.py:353
+#: src/archivczsk.py:355
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install exteplayer3 from feed of your distribution to be able use all available addons."
 msgstr "Pri kontrole systému bol zistený systémový plugin s názvom ServiceApp, ale chýba vám prehrávač exteplayer3. Tento video prehrávač je potrebný na spracovanie niektorých formátov videa, ktoré integrovaný video prehrávač v enigma2 nedokáže. Odporúča sa nainštalovať exteplayer3 z feedu vašej distribúcie, aby ste mohli využívať všetky dostupné doplnky."
 
-#: src/archivczsk.py:355
+#: src/archivczsk.py:357
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss gstplayer. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer from feed of your distribution to be able use all available addons."
 msgstr "Pri kontrole systému bol zistený systémový plugin s názvom ServiceApp, ale chýba vám prehrávač gstplayer. Tento video prehrávač je potrebný na spracovanie niektorých formátov videa, ktoré integrovaný video prehrávač v enigma2 nedokáže. Odporúča sa nainštalovať gstplayer z feedu vašej distribúcie, aby ste mohli využívať všetky dostupné doplnky."
 
@@ -140,88 +140,102 @@ msgstr "Záložky"
 msgid "Type text of picture"
 msgstr "Opíšte text obrázku"
 
-#: src/gui/exception.py:20
+#: src/gui/exception.py:21
 msgid "Unknown Error"
 msgstr "Neznáma Chyba"
 
-#: src/gui/exception.py:21
+#: src/gui/exception.py:22
 msgid "Unknown Warning"
 msgstr "Neznáme varovanie"
 
-#: src/gui/exception.py:22
+#: src/gui/exception.py:23
 msgid "Unknown Info"
 msgstr "Neznáma informácia"
 
-#: src/gui/exception.py:49
+#: src/gui/exception.py:50
 msgid "Addon error"
 msgstr "Chyba archívu"
 
-#: src/gui/exception.py:50
+#: src/gui/exception.py:51
 msgid "Addon warning"
 msgstr "Upozornenie doplnku"
 
-#: src/gui/exception.py:51
+#: src/gui/exception.py:52
 msgid "Addon info"
 msgstr "Informácia doplnku"
 
-#: src/gui/exception.py:71 src/gui/exception.py:75 src/gui/exception.py:107
-#: src/gui/exception.py:110 src/gui/exception.py:124 src/gui/exception.py:127
+#: src/gui/exception.py:72 src/gui/exception.py:76 src/gui/exception.py:83
+#: src/gui/exception.py:87 src/gui/exception.py:91 src/gui/exception.py:95
+#: src/gui/exception.py:124 src/gui/exception.py:127 src/gui/exception.py:141
+#: src/gui/exception.py:144
 msgid "Error in loading"
 msgstr "Chyba v načítavaní"
 
-#: src/gui/exception.py:71 src/gui/exception.py:107 src/gui/exception.py:124
+#: src/gui/exception.py:72 src/gui/exception.py:124 src/gui/exception.py:141
 msgid "HTTP Error"
 msgstr "HTTP Chyba"
 
-#: src/gui/exception.py:75 src/gui/exception.py:110 src/gui/exception.py:127
+#: src/gui/exception.py:76 src/gui/exception.py:127 src/gui/exception.py:144
 msgid "URL Error"
 msgstr "URL Chyba"
 
 #: src/gui/exception.py:83
+msgid "Connection to server timed out"
+msgstr "Časový limit pre pripojenie na server vypršal"
+
+#: src/gui/exception.py:87
+msgid "Waiting for data from server timed out"
+msgstr "Časový limit pri čakaní na dáta zo servera vypršal"
+
+#: src/gui/exception.py:91 src/gui/exception.py:95
+msgid "Connection to server failed"
+msgstr "Pripojenie na server zlyhalo"
+
+#: src/gui/exception.py:100
 msgid "An unhandled error occurred while calling the addon. Please report a bug so it can be fixed."
 msgstr "Pri volaní doplnku nastala neošetrená chyba. Prosím nahláste chybu aby ju bolo možné opraviť."
 
-#: src/gui/exception.py:95
+#: src/gui/exception.py:112
 msgid "Download error"
 msgstr "Chyba sťahovania"
 
-#: src/gui/exception.py:96
+#: src/gui/exception.py:113
 msgid "Download warning"
 msgstr "Upoznenie sťahovania"
 
-#: src/gui/exception.py:97
+#: src/gui/exception.py:114
 msgid "Download info"
 msgstr "Informácia o sťahovaní"
 
-#: src/gui/exception.py:104
+#: src/gui/exception.py:121
 msgid "protocol is not supported"
 msgstr "prokol nie je podporovaný"
 
-#: src/gui/exception.py:116
+#: src/gui/exception.py:133
 msgid "Updater error"
 msgstr "Chyba aktualizácie"
 
-#: src/gui/exception.py:117
+#: src/gui/exception.py:134
 msgid "Updater warning"
 msgstr "Upozornenie aktualizacii"
 
-#: src/gui/exception.py:118
+#: src/gui/exception.py:135
 msgid "Updater info"
 msgstr "Informácia aktualizácii"
 
-#: src/gui/exception.py:133
+#: src/gui/exception.py:150
 msgid "Play error"
 msgstr "Chyba prehrávania"
 
-#: src/gui/exception.py:134
+#: src/gui/exception.py:151
 msgid "Play warning"
 msgstr "Upozornenie prehŕavania"
 
-#: src/gui/exception.py:135
+#: src/gui/exception.py:152
 msgid "Play info"
 msgstr "Informácia o prehrávaní"
 
-#: src/gui/exception.py:142
+#: src/gui/exception.py:159
 msgid "Video url doesnt exist"
 msgstr "Video adresa, ktorú chcete prehrať neexistuje"
 
@@ -441,7 +455,7 @@ msgstr "Premenovať súbor"
 msgid "Download progress"
 msgstr "Priebeh sťahovania"
 
-#: src/gui/download.py:118 src/gui/common.py:191
+#: src/gui/download.py:118 src/gui/common.py:195
 msgid "Size:"
 msgstr "Veľkosť:"
 
@@ -469,8 +483,8 @@ msgstr "Rýchlosť:"
 msgid "not finished"
 msgstr "neukončené"
 
-#: src/gui/download.py:231 src/engine/downloader.py:227
-#: src/engine/downloader.py:255
+#: src/gui/download.py:231 src/engine/downloader.py:231
+#: src/engine/downloader.py:259
 msgid "unknown"
 msgstr "??? MB"
 
@@ -541,7 +555,7 @@ msgstr "Podľa velkosťi"
 msgid "Sort by state"
 msgstr "Podľa stavu"
 
-#: src/gui/common.py:179
+#: src/gui/common.py:183
 msgid "Finished:"
 msgstr "Ukončené:"
 
@@ -609,7 +623,7 @@ msgstr "Rôzne"
 msgid "Configuration"
 msgstr "Konfigurácia"
 
-#: src/gui/context.py:188
+#: src/gui/context.py:190
 msgid "Select category"
 msgstr "Vyberte kategóriu"
 
@@ -1268,7 +1282,7 @@ msgstr ""
 msgid "Please set your search expression"
 msgstr "Prosím vložte hľadaný výraz"
 
-#: src/engine/items.py:194 src/engine/downloader.py:246
+#: src/engine/items.py:194 src/engine/downloader.py:250
 msgid "succesfully finished"
 msgstr "úspešne skončilo"
 
@@ -1317,11 +1331,11 @@ msgstr ""
 "Aktualizácia archivCZSK zlyhala. {cmd} skončilo chybou\n"
 "{msg}"
 
-#: src/engine/downloader.py:249
+#: src/engine/downloader.py:253
 msgid "not succesfully finished"
 msgstr "neúspešne skončilo"
 
-#: src/engine/downloader.py:252
+#: src/engine/downloader.py:256
 msgid "downloading"
 msgstr "sťahujem"
 
