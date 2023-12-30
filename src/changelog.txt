@@ -1,3 +1,6 @@
+archivCZSK 2.3.7, 30.12.2023
+    - vylepšené vypisovanie chybových hlásení pokiaľ zlyhá komunikácia so serverom
+
 archivCZSK 2.3.6, 01.12.2023
     - oprava chýb pri preskakovaní časových úsekov
 
