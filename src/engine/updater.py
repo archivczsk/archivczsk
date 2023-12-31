@@ -229,7 +229,7 @@ class Updater(object):
 		check if addon needs update and if its broken
 		"""
 		try:
-			log.debug("checking updates for %s", addon.name)
+			log.debug("[%s] checking updates" % addon.name)
 			self._get_server_addon(addon, update_xml)
 		
 			broken = self.remote_addons_dict[addon.id]['broken']
@@ -237,23 +237,19 @@ class Updater(object):
 			local_version = addon.version
 		
 			if util.check_version(local_version, remote_version):
-				log.logDebug("Addon '%s' need update (local %s < remote %s)." % (addon.name, local_version, remote_version))
-				log.debug("%s local version %s < remote version %s", addon.name, local_version, remote_version)
-				log.debug("%s is not up to date", addon.name)
+				log.debug("[%s] update needed: local %s < remote %s" % (addon.name, local_version, remote_version))
 				return True, broken
 			else:
-				log.logDebug("Addon '%s' (%s) is up to date." % (addon.name, local_version))
-				log.debug("%s local version %s >= remote version %s", addon.name, local_version, remote_version)
-				log.debug("%s is up to date", addon.name)
+				log.debug("[%s] update not needed: local %s >= remote %s" % (addon.name, local_version, remote_version))
 			return False, broken
 		except:
-			log.logError("Check addon '%s' update failed.\n%s" % (addon.name, traceback.format_exc()))
+			log.logError("[%s] update failed\n%s" % (addon.name, traceback.format_exc()))
 			raise
 
 	def update_addon(self, addon):
 		"""updates addon"""
 		
-		log.debug("updating %s", addon.name)
+		log.debug("[%s] starting update" % addon.name)
 		self._get_server_addon(addon)
 
 		# real path where addon is installed
@@ -278,9 +274,10 @@ class Updater(object):
 			with open(os.path.join(local_base, '.update_ver'), 'w') as f:
 				f.write(addon.version)
 
-			log.debug("%s was successfully updated to version %s", addon.name, self.remote_addons_dict[addon.id]['version'])
+			log.debug("[%s] successfully updated to version %s" % (addon.name, self.remote_addons_dict[addon.id]['version']))
+			os.remove(zip_file)
 			return True
-		log.debug("%s failed to update to version %s", addon.name, addon.version)
+		log.debug("[%s] failed to update to version %s" % (addon.name, addon.version))
 		return False
 	
 	
@@ -296,16 +293,15 @@ class Updater(object):
 				if local_addon.check_update(False):
 					update_needed.append(local_addon)
 			elif new:
-				log.debug("%s not in local repository, adding dummy Addon to update", remote_addon['name'])
-				log.logDebug("'%s' not in local repository, adding Addon to update"%remote_addon['name'])
+				log.debug("[%s] not in local repository, adding dummy Addon to update" % remote_addon['name'])
 				new_addon = DummyAddon(self.repository, remote_addon['id'], remote_addon['name'], remote_addon['version'])
 				update_needed.append(new_addon)
 			else:
-				log.debug("dont want new addons skipping %s", remote_addon['id'])
+				log.debug("[%s] downloading of new addons disabled - skipping" % remote_addon['id'])
 
 		for addon_id in self.repository._addons:
 			if addon_id not in list(self.remote_addons_dict.keys()):
-				log.debug("Addon %s not found in remote repository - marking as not supported" % addon_id)
+				log.debug("[%s] not found in remote repository - marking as not supported" % addon_id)
 				local_addon = self.repository.get_addon(addon_id)
 				local_addon.supported = False
 
@@ -326,12 +322,11 @@ class Updater(object):
 				
 	def _get_server_addons(self):
 		"""loads info about addons from remote repository to remote_addons_dict"""
-		log.logDebug("pre update xml")
 		self._download_update_xml()
-		log.logDebug("post update xml")
-			
+
 		pars = parser.XBMCMultiAddonXMLParser(self.update_xml_file)
 		self.remote_addons_dict = pars.parse_addons()
+		os.remove(self.update_xml_file)
 			
 
 	def _get_server_addon(self, addon, load_again=False):
@@ -380,7 +375,7 @@ class Updater(object):
 		# if update xml path contains variables configurable by user, then set it here
 		update_xml_url = self.update_xml_url.replace('{update_repository}', config.plugins.archivCZSK.update_repository.value ).replace('{update_branch}', config.plugins.archivCZSK.update_branch.value)
 
-		log.debug("Checking addons updates from: %s" % update_xml_url)
+		log.debug("[%s] checking addons updates from: %s" % (self.repository.name, update_xml_url))
 		
 		headers = {}
 		if self.update_authorization:
@@ -389,7 +384,7 @@ class Updater(object):
 		try:
 			util.download_to_file(update_xml_url, self.update_xml_file, debugfnc=log.debug, timeout=config.plugins.archivCZSK.updateTimeout.value, headers=headers)
 		except Exception:
-			log.error('cannot download %s update xml', self.repository.name)
+			log.error('[%s] download update xml failed' % self.repository.name)
 			log.logError( traceback.format_exc())
 			raise UpdateXMLVersionError()
 		
@@ -410,5 +405,3 @@ class DummyAddon(object):
 	
 	def update(self):
 		return self.repository._updater.update_addon(self)
-
-
