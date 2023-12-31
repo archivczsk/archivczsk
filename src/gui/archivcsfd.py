@@ -321,7 +321,7 @@ class ArchivCSFD(Screen):
 			nazevfilmu = self.najdi('<h1 itemprop=\"name\">(.*?)<', self.inhtml)
 			nazevfilmu = nazevfilmu.replace("\t","").replace("\n","")
 			self.resultlist = [(nazevfilmu, odkaz)]
-		elif "SFD.cz </title>" in self.inhtml:
+		else:
 			seznamfilmu = self.najdi('<h2>Filmy(.*?)<h2>Seri', self.inhtml)
 			seznamserialu = self.najdi('<h2>Seri(.*?)</section>', self.inhtml)
 			seznamcely = seznamfilmu + seznamserialu
@@ -366,8 +366,6 @@ class ArchivCSFD(Screen):
 						self.unikatni = True
 						break
 			self.resultlist = [(v1, v2) for v1, v2, v3, v4 in self.resultlist]
-		else:
-			self["detailslabel"].setText("Csfd request failed.")
 
 		if self.resultlist:
 			self.resultlist = [(self.odstraneniTagu(nazevinfo), odkaz) for nazevinfo, odkaz in self.resultlist]
@@ -473,7 +471,7 @@ class ArchivCSFD(Screen):
 			obory = [u'Režie', u'Předloha', u'Scénař', u'Kamera', u'Hudba', u'Hrají']
 			for obor in obory:
 				obor = py2_encode_utf8( obor )
-				jmena = self.najdi('<h4>' + obor + ': </h4>(.*?)</div>', self.inhtml)
+				jmena = self.najdi('<h4>' + obor + ':.*?</h4>(.*?)</div>', self.inhtml)
 				autori = ""
 				for tvurce in self.hledejVse('<a href=".*?">(.*?)</a>', jmena):
 					autori += tvurce + ", "
