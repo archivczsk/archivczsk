@@ -28,12 +28,8 @@ fi
 
 # S -> source directory where source files used to build ipk will be copied
 # P -> package dir - it is root dir of in package files
-# DP -> dependencies dir - directory where dependencies will be stored
 S=${TMP_DIR}/ipkg.src.$$
 P=${TMP_DIR}/ipkg.tmp.$$
-DP=${TMP_DIR}/ipkg.deps
-
-P27="https://www.python.org/ftp/python/2.7.5/Python-2.7.5.tgz"
 
 pushd ${ROOT_DIR} &> /dev/null
 
@@ -47,7 +43,6 @@ rm -rf ${TMP_DIR}/ipkg.tmp*
 
 mkdir -p ${P}
 mkdir -p ${P}/DEBIAN
-mkdir -p ${DP}
 mkdir -p ${S}
 
 # build package from HEAD revision or from what's on disc?
@@ -60,16 +55,6 @@ else
 fi
 
 popd &> /dev/null
-
-# prepare python dependencies - do we need that???
-if [ -d ${DP}/Python-2.7 ]; then
-	echo "python packages are already downloaded"
-else
-	echo "downloading neccesary python packages..."
-	curl $P27 -s -o ${DP}/Python-2.7.5.tgz
-	tar -C ${DP} -xzf ${DP}/Python-2.7.5.tgz
-	mv ${DP}/Python-2.7.5 ${DP}/Python-2.7
-fi
 
 # set build version in control file
 E_VER=$(printf '%s\n' "$VER" | sed -e 's/[\/&]/\\&/g')
@@ -115,48 +100,6 @@ if ! [ -z "${ADDONS_COMMIT}" ]; then
 	$py_cmd ${S}/build/plugin/src/script/getaddons.py addons ${P} $ADDONS_COMMIT
 fi
 
-# prepare and add dependencies
-mkdir -p ${P}/tmp/archivczsk
-mkdir -p ${P}/tmp/archivczsk/python2.7
-
-cp -p ${DP}/Python-2.7/Lib/encodings/utf_8.py ${P}/tmp/archivczsk/python2.7/utf_8.py
-cp -p ${DP}/Python-2.7/Lib/encodings/cp1251.py ${P}/tmp/archivczsk/python2.7/cp1251.py
-cp -p ${DP}/Python-2.7/Lib/encodings/cp1252.py ${P}/tmp/archivczsk/python2.7/cp1252.py
-cp -p ${DP}/Python-2.7/Lib/encodings/cp1253.py ${P}/tmp/archivczsk/python2.7/cp1253.py
-cp -p ${DP}/Python-2.7/Lib/encodings/cp1254.py ${P}/tmp/archivczsk/python2.7/cp1254.py
-cp -p ${DP}/Python-2.7/Lib/encodings/cp1256.py ${P}/tmp/archivczsk/python2.7/cp1256.py
-cp -p ${DP}/Python-2.7/Lib/encodings/iso8859_6.py ${P}/tmp/archivczsk/python2.7/iso8859_6.py
-cp -p ${DP}/Python-2.7/Lib/encodings/iso8859_7.py ${P}/tmp/archivczsk/python2.7/iso8859_7.py
-cp -p ${DP}/Python-2.7/Lib/encodings/iso8859_9.py ${P}/tmp/archivczsk/python2.7/iso8859_9.py
-cp -p ${DP}/Python-2.7/Lib/encodings/iso8859_15.py ${P}/tmp/archivczsk/python2.7/iso8859_15.py
-
-cp -p ${DP}/Python-2.7/Lib/encodings/hex_codec.py ${P}/tmp/archivczsk/python2.7/hex_codec.py
-cp -p ${DP}/Python-2.7/Lib/encodings/string_escape.py ${P}/tmp/archivczsk/python2.7/string_escape.py
-cp -p ${DP}/Python-2.7/Lib/encodings/latin_1.py ${P}/tmp/archivczsk/python2.7/latin_1.py
-cp -p ${DP}/Python-2.7/Lib/encodings/utf_16.py ${P}/tmp/archivczsk/python2.7/utf_16.py
-cp -p ${DP}/Python-2.7/Lib/encodings/idna.py ${P}/tmp/archivczsk/python2.7/idna.py
-cp -p ${DP}/Python-2.7/Lib/encodings/iso8859_2.py ${P}/tmp/archivczsk/python2.7/iso8859_2.py
-cp -p ${DP}/Python-2.7/Lib/encodings/cp1250.py ${P}/tmp/archivczsk/python2.7/cp1250.py
-cp -p ${DP}/Python-2.7/Lib/decimal.py ${P}/tmp/archivczsk/python2.7/decimal.py
-cp -p ${DP}/Python-2.7/Lib/formatter.py ${P}/tmp/archivczsk/python2.7/formatter.py
-cp -p ${DP}/Python-2.7/Lib/markupbase.py ${P}/tmp/archivczsk/python2.7/markupbase.py
-cp -p ${DP}/Python-2.7/Lib/HTMLParser.py ${P}/tmp/archivczsk/python2.7/HTMLParser.py
-cp -p ${DP}/Python-2.7/Lib/htmlentitydefs.py ${P}/tmp/archivczsk/python2.7/htmlentitydefs.py
-cp -p ${DP}/Python-2.7/Lib/htmllib.py ${P}/tmp/archivczsk/python2.7/htmllib.py
-cp -p ${DP}/Python-2.7/Lib/sgmllib.py ${P}/tmp/archivczsk/python2.7/sgmllib.py
-cp -p ${DP}/Python-2.7/Lib/stringprep.py ${P}/tmp/archivczsk/python2.7/stringprep.py
-cp -p ${DP}/Python-2.7/Lib/numbers.py ${P}/tmp/archivczsk/python2.7/numbers.py
-cp -p ${DP}/Python-2.7/Lib/subprocess.py ${P}/tmp/archivczsk/python2.7/subprocess.py
-cp -p ${DP}/Python-2.7/Lib/_LWPCookieJar.py ${P}/tmp/archivczsk/python2.7/_LWPCookieJar.py
-cp -p ${DP}/Python-2.7/Lib/_MozillaCookieJar.py ${P}/tmp/archivczsk/python2.7/_MozillaCookieJar.py
-cp -p ${DP}/Python-2.7/Lib/cookielib.py ${P}/tmp/archivczsk/python2.7/cookielib.py
-cp -p ${DP}/Python-2.7/Lib/shutil.py ${P}/tmp/archivczsk/python2.7/shutil.py
-cp -p ${DP}/Python-2.7/Lib/fnmatch.py ${P}/tmp/archivczsk/python2.7/fnmatch.py
-cp -p ${DP}/Python-2.7/Lib/threading.py ${P}/tmp/archivczsk/python2.7/threading.py
-cp -p ${DP}/Python-2.7/Lib/zipfile.py ${P}/tmp/archivczsk/python2.7/zipfile.py
-cp -p ${DP}/Python-2.7/Lib/httplib.py ${P}/tmp/archivczsk/python2.7/httplib.py
-cp -p ${DP}/Python-2.7/Lib/stat.py ${P}/tmp/archivczsk/python2.7/stat.py
-
 # exec dpkg-deb to create fresh new deb package and create ipk from it
 dpkg-deb --root-owner-group -Zgzip -b ${P} ${PKG}.deb
 mv ${PKG}.deb ${PKG}.ipk
@@ -164,5 +107,3 @@ mv ${PKG}.deb ${PKG}.ipk
 # some cleanup
 rm -rf ${P}
 rm -rf ${S}
-
-#rm -rf ${DP}
