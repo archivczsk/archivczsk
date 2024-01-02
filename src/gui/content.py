@@ -20,6 +20,7 @@ from ..engine.handlers import ArchivCZSKContentHandler, VideoAddonContentHandler
 from ..engine.items import PFolder, PRoot, PExit, PSearch, PSearchItem, PVideoNotResolved
 from ..engine.tools.task import Task
 from ..engine.tools.util import toString
+from ..engine.parental import parental_pin
 from .base import BaseArchivCZSKListSourceScreen
 from .common import LoadingScreen, TipBar, CutLabel
 from .download import DownloadList
@@ -53,6 +54,9 @@ class BaseContentScreen(BaseArchivCZSKListSourceScreen):
 		if not self.enabled_path:
 			self["path_label"].hide()
 		self.onClose.append(self.__onClose)
+
+		if parental_pin.is_locked():
+			self.ctx_items.append((_("Unlock protected content"), None, lambda: parental_pin.check_and_unlock(session, cbk=lambda r: self.refreshList())))
 
 	def __onClose(self):
 		self.session.deleteDialog(self.loadingScreen)
@@ -155,7 +159,7 @@ class BaseContentScreen(BaseArchivCZSKListSourceScreen):
 
 
 	def ok(self):
-		
+
 		if not self.working and len(self.lst_items) > 0:
 			itm = self.getSelectedItem()
 			try:
@@ -187,8 +191,8 @@ class ArchivCZSKVideoAddonsManagementScreen(BaseContentScreen, TipBar):
 
 		contentHandler = VideoAddonManagementScreenContentHandler(session, self, provider)
 		addonItems = provider.get_content(
-			{'category_addons':'all_addons', 
-			'filter_enabled':False, 
+			{'category_addons':'all_addons',
+			'filter_enabled':False,
 			'filter_supported': False})
 		BaseContentScreen.__init__(self, session, contentHandler, addonItems)
 		TipBar.__init__(self, [self.CONTEXT_TIP], startOnShown=False)
@@ -491,7 +495,7 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 		self.updateGUITimer_conn = eConnectCallback(self.updateGUITimer.timeout, self.updateAddonGUI)
 		self.onUpdateGUI.append(self.changeAddon)
 		self.onClose.append(self.__onClose)
-		
+
 		#settigns
 		self.showImageEnabled = config.plugins.archivCZSK.downloadPoster.getValue()
 		self.maxSavedImages = int(config.plugins.archivCZSK.posterImageMax.getValue())
@@ -508,13 +512,13 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 		self["movie_poster_image"] = Pixmap()
 		poster_processing = PosterProcessing(self.maxSavedImages,
 											 self.imagePosterDir)
-		self.poster = PosterPixmapHandler(self["movie_poster_image"], 
+		self.poster = PosterPixmapHandler(self["movie_poster_image"],
 										  poster_processing,
 										  self.noImage)
 		self["movie_rating"] = Label("")
 		self["movie_duration"] = Label("")
 		self["movie_plot"] = Label("")
-		
+
 		self["actions"] = ActionMap(["archivCZSKActions"],
 			{
 				"ok": self.ok,
@@ -584,12 +588,17 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 						no_image_path = os.path.join(settings.IMAGE_PATH, 'no_movie_image.png')
 					else:
 						no_image_path = os.path.join(settings.IMAGE_PATH, 'empty.png')
-					self.poster.set_image(item.image, no_image_path)
+
+					if item.info.get('adult', False) and parental_pin.get_settings('show_posters') == False:
+						# disable posters for adult content
+						self.poster.set_image(None, no_image_path)
+					else:
+						self.poster.set_image(item.image, no_image_path)
 
 			self["movie_duration"].setText(idur)
 			self["movie_rating"].setText(irat)
 			self["movie_plot"].setText(iplot)
-			
+
 		except:
 			log.logError("updateAddonGUI fail...\n%s"%traceback.format_exc())
 

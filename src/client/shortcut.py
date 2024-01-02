@@ -9,6 +9,7 @@ import traceback
 import re
 from .. import _, log, removeDiac
 from ..gui.common import showInfoMessage, showErrorMessage
+from ..engine.parental import parental_pin
 from Components.config import config
 
 from ..py3compat import *
@@ -34,22 +35,22 @@ def run_shortcut(session, addon, shortcut_name, params):
 		log.logError("Searching failed.\n%s"%traceback.format_exc())
 		showInfoMessage(session, _("Run addon fatal error."))
 
-	
+
 def searchClose():
 	"""
 	Uvolni pamat po unkonceni prace s vyhladavacom
 	"""
 	if ArchivCZSKShortcut.instance is not None:
 		ArchivCZSKShortcut.instance.close()
-		
+
 
 def isArchivCZSKRunning(session):
 	for dialog in session.dialog_stack:
-		# csfd plugin sa da otvorit len z ContentScreen	   
+		# csfd plugin sa da otvorit len z ContentScreen
 		if dialog.__class__.__name__ == 'ContentScreen':
 			return True
 	return False
-	
+
 def getArchivCZSK():
 	from ..archivczsk import ArchivCZSK
 	from ..engine.tools.task import Task
@@ -59,7 +60,7 @@ def getArchivCZSK():
 
 class ArchivCZSKShortcut():
 	instance = None
-	
+
 	@staticmethod
 	def getInstance(session, cb=None):
 		if ArchivCZSKShortcut.instance is None:
@@ -76,25 +77,26 @@ class ArchivCZSKShortcut():
 				showErrorMessage(session, _('Unknown error'), 5, cb=cb)
 				return None
 		return ArchivCZSKShortcut.instance
-	
+
 	def __init__(self, session, cb=None):
 		self.session = session
 		self.cb = cb
-		self.archivCZSK, self.contentScreen, self.task = getArchivCZSK() 
+		self.archivCZSK, self.contentScreen, self.task = getArchivCZSK()
 		self.addon = None
 		self.searching = False
 		if not isArchivCZSKRunning(session):
 			self.task.startWorkerThread()
 		ArchivCZSKShortcut.instance = self
-		
+		parental_pin.lock_pin()
+
 	def __repr__(self):
 		return '[ArchivCZSKShortcut]'
-			
+
 	def _successSearch(self, content):
 		(searchItems, command, args) = content
 		self.session.openWithCallback(self._contentScreenCB, self.contentScreen, self.addon, searchItems)
-		
-		
+
+
 	def _errorSearch(self, failure):
 		try:
 			failure.raiseException()
@@ -107,14 +109,14 @@ class ArchivCZSKShortcut():
 		self.addon = None
 		if self.cb:
 			self.cb()
-		
+
 	def _contentScreenCB(self, cp):
 		self.addon.provider.stop()
 		self.searching = False
 		self.addon = None
 		if self.cb:
-			self.cb()		 
-		
+			self.cb()
+
 	def run_shortcut(self, addon, shortcut_name, params):
 		if self.searching:
 			showInfoMessage(self.session, _("You cannot run ArchivCZSK again because it is already running"))
@@ -124,7 +126,7 @@ class ArchivCZSKShortcut():
 		self.searching = True
 		addon.provider.start()
 		addon.provider.run_shortcut(self.session, shortcut_name, params, self._successSearch, self._errorSearch)
-			
+
 	def close(self):
 		if self.searching:
 			print('%s cannot close, searching is not finished yet' % self)
@@ -133,4 +135,4 @@ class ArchivCZSKShortcut():
 			self.task.stopWorkerThread()
 		ArchivCZSKShortcut.instance = None
 		return True
-		
+

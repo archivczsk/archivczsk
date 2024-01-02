@@ -23,6 +23,7 @@ from ..compat import eConnectCallback
 from .common import showInfoMessage, PanelColorListEntry, PanelList
 from .poster import PosterProcessing, PosterPixmapHandler
 from ..engine.player.info import videoPlayerInfo
+from ..engine.parental import parental_pin
 from ..colors import DeleteColors
 from ..py3compat import *
 
@@ -59,16 +60,16 @@ def showChangelog(session, changelog_title, changelog_path):
 
 def showItemInfo(session, item):
 	Info(session, item)
-	
+
 #def removeDiacriticsCsfd(text):
 #	 searchExp = text
 #	 try:
 #		 import unicodedata
-#		 searchExp = ''.join((c for c in unicodedata.normalize('NFD', searchExp) 
+#		 searchExp = ''.join((c for c in unicodedata.normalize('NFD', searchExp)
 #									 if unicodedata.category(c) != 'Mn')).encode('utf-8')
 #	 except:
 #		 log.logError("CSFD remove diacritics failed.\n%s"%traceback.format_exc())
-		
+
 #	 return searchExp
 
 def showCSFDInfo(session, item):
@@ -77,10 +78,10 @@ def showCSFDInfo(session, item):
 		name = item.info.get('title', DeleteColors(item.name))
 		name = removeDiac(name)
 		name = name.replace('.', ' ').replace('_', ' ').replace('*','')
-		
+
 		# remove languages ... "Mother - CZ, EN, KO (2017)"
 		name = re.sub("\s-\s[A-Z]{2}(,\s[A-Z]{2})*\s\(", " (", name)
-		
+
 		year = 0
 		yearStr = ""
 		try:
@@ -141,15 +142,15 @@ class ArchivCZSKChangelogScreen(BaseArchivCZSKScreen):
 			log.logError("Convert log file text failed.\n%s"%traceback.format_exc())
 			pass
 		self["changelog"] = ScrollLabel(self.changelog)
-		
+
 		self["actions"] = NumberActionMap(["archivCZSKActions"],
 		{
 			"cancel": self.close,
 			"ok": self.close,
 			"up": self.pageUp,
 			"down": self.pageDown,
-		}, -2)	
-	
+		}, -2)
+
 	def pageUp(self):
 		self["changelog"].pageUp()
 
@@ -163,7 +164,7 @@ class Info(object):
 		self.it = it
 		self.dest = ''
 		self.imagelink = ''
-		if it.image is not None:
+		if it.image is not None and (it.info.get('adult', False) == False or parental_pin.get_settings('show_posters')):
 			self.imagelink = py2_encode_utf8( it.image )
 			self.dest = os.path.join('/tmp/', self.imagelink.split('/')[-1])
 
@@ -173,26 +174,26 @@ class Info(object):
 				self.downloadPicture()
 		else:
 			self.showInfo()
-		
+
 	def downloadPicture(self):
 		print('[Info] downloadPicture %s to %s' % (self.imagelink, self.dest) )
 		imagelink = self.imagelink
 		if isinstance( self.imagelink, str ):
 			imagelink = self.imagelink.encode('utf-8')
-			
+
 		downloadPage(imagelink, self.dest).addCallback(self.downloadPictureCallback).addErrback(self.downloadPictureErrorCallback)
-		
+
 	def downloadPictureCallback(self, txt=""):
 		print('[Info] picture was succesfully downloaded')
 		self.showInfo()
-		
+
 	def downloadPictureErrorCallback(self, err):
 		print('[Info] picture was not succesfully downloaded: %s' % str(err))
 		self.showInfo()
-		
+
 	def closeInfo(self):
 		print('[Info] closeInfo')
-		
+
 	def showInfo(self):
 		print('[Info] showInfo')
 		self.session.openWithCallback(self.closeInfo, ArchivCZSKItemInfoScreen, self.it)
@@ -212,8 +213,8 @@ class ArchivCZSKItemInfoScreen(BaseArchivCZSKScreen):
 		self.year = ''
 
 		self.title = py2_encode_utf8(DeleteColors(self.it.name))
-		
-		for key, value in it.info.items():		
+
+		for key, value in it.info.items():
 			if key == 'plot':
 				self.plot = py2_encode_utf8( value )
 			elif key == 'genre':
@@ -226,20 +227,20 @@ class ArchivCZSKItemInfoScreen(BaseArchivCZSKScreen):
 				self.title = py2_encode_utf8(value)
 			elif key == 'img':
 				self.image_link = py2_encode_utf8(value)
-			
+
 		self["img"] = Pixmap()
 		self["genre"] = Label(_("Genre: ") + self.genre)
 		self["year"] = Label(_("Year: ") + self.year)
 		self["rating"] = Label(_("Rating: ") + self.rating)
 		self["plot"] = ScrollLabel(self.plot)
-			
+
 		self["actions"] = NumberActionMap(["archivCZSKActions"],
 		{
 			"cancel": self.close,
 			"up": self.pageUp,
 			"down": self.pageDown,
 			"info": self.openCsfd,
-		}, -2)	
+		}, -2)
 #		self.title = py2_encode_utf8(DeleteColors(self.it.name))
 		self.Scale = AVSwitch().getFramebufferScale()
 		self.onLayoutFinish.append(self.showPicture)
@@ -269,7 +270,7 @@ class ArchivCZSKVideoPlayerInfoScreen(BaseArchivCZSKScreen):
 	def __init__(self, session):
 		BaseArchivCZSKScreen.__init__(self, session)
 		self.__settings = config.plugins.archivCZSK.videoPlayer
-		
+
 		self["key_red"] = Label("")
 		self["key_green"] = Label("")
 		self["key_yellow"] = Label("")
@@ -281,7 +282,7 @@ class ArchivCZSKVideoPlayerInfoScreen(BaseArchivCZSKScreen):
 		self["container"] = Label(_("Supported containers:"))
 		self["container_list"] = PanelList([], 24)
 		self["info_scrolllabel"] = ScrollLabel()
-			
+
 		self["actions"] = ActionMap(["archivCZSKActions"],
 		{
 			"up": self.pageUp,
@@ -291,29 +292,29 @@ class ArchivCZSKVideoPlayerInfoScreen(BaseArchivCZSKScreen):
 			"cancel":self.cancel,
 			"blue": self.updateGUI,
 		}, -2)
-		
+
 		self.onShown.append(self.setWindowTitle)
 		self.onLayoutFinish.append(self.disableSelection)
 		self.onLayoutFinish.append(self.setPlayer)
 		self.onLayoutFinish.append(self.setInfo)
 		self.onLayoutFinish.append(self.updateGUI)
-	
+
 	def setWindowTitle(self):
 		self.title = _("VideoPlayer Info")
-		
+
 	def disableSelection(self):
 		self["container_list"].selectionEnabled(False)
 		self["protocol_list"].selectionEnabled(False)
-		
+
 	def updateGUI(self):
 		containerWidth = self["container_list"].instance.size().width()
 		protocolWidth = self["protocol_list"].instance.size().width()
 		self.updateProtocolList(containerWidth)
 		self.updateContainerList(protocolWidth)
-		
+
 	def setPlayer(self):
 		self["detected player_val"].setText(videoPlayerInfo.getName())
-		
+
 	def setInfo(self):
 		infoText=''
 		infoText += _("These informations are valid only for internal enigma2 player based on gstreamer") + "."
@@ -330,7 +331,7 @@ class ArchivCZSKVideoPlayerInfoScreen(BaseArchivCZSKScreen):
 		infoText += " " + _("In WMV container is used VC1 encoded video") + "."
 		infoText += " " + _("If your player cannot decode VC1 codec, than you cannot play this video.")
 		self["info_scrolllabel"].setText(infoText)
-		
+
 	def updateProtocolList(self,width):
 		menuList = []
 		menuList.append(self.buildEntry(_("HTTP Protocol"), videoPlayerInfo.isHTTPSupported(), width))
@@ -339,7 +340,7 @@ class ArchivCZSKVideoPlayerInfoScreen(BaseArchivCZSKScreen):
 		menuList.append(self.buildEntry(_("RTMP Protocol"), videoPlayerInfo.isRTMPSupported(), width))
 		menuList.append(self.buildEntry(_("RTSP Protocol"), videoPlayerInfo.isRTSPSupported(), width))
 		self["protocol_list"].setList(menuList)
-		
+
 	def updateContainerList(self,width):
 		menuList = []
 		menuList.append(self.buildEntry(_("3GP container"), videoPlayerInfo.isMP4Supported(), width))
@@ -350,7 +351,7 @@ class ArchivCZSKVideoPlayerInfoScreen(BaseArchivCZSKScreen):
 		menuList.append(self.buildEntry(_("MP4 Container"), videoPlayerInfo.isMP4Supported(), width))
 		self["container_list"].setList(menuList)
 
-		
+
 	def buildEntry(self, name, res, width):
 		if res is None:
 			return PanelColorListEntry(name, _("UNKNOWN"), 0xffff00, width)
@@ -358,13 +359,13 @@ class ArchivCZSKVideoPlayerInfoScreen(BaseArchivCZSKScreen):
 			return PanelColorListEntry(name, _("OK"), 0x00ff00, width)
 		else:
 			return PanelColorListEntry(name, _("FAIL"), 0xff0000, width)
-		
+
 	def pageUp(self):
 		self["info_scrolllabel"].pageUp()
 
 	def pageDown(self):
 		self["info_scrolllabel"].pageDown()
-		
-		
+
+
 	def cancel(self):
 		self.close()

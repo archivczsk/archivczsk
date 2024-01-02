@@ -55,7 +55,7 @@ class Addon(object):
 
 		# this is the function, that should be called on direct call
 		self.entry_point = None
-		
+
 	def __repr__(self):
 		return "%s(%s-%s)" % (self.__class__.__name__, self.name, self.version)
 
@@ -125,11 +125,11 @@ class Addon(object):
 		if enabled:
 			if isinstance( self, VideoAddon ):
 				self.provider.preload_addon()
-		
+
 	def add_setting_change_notifier(self, setting_ids, cbk):
 		self.settings.add_change_notifier(setting_ids, cbk)
 
-		
+
 class XBMCAddon(object):
 	def __init__(self, addon):
 		self._addon = addon
@@ -369,7 +369,7 @@ class AddonSettings(object):
 
 				labelplayer = _("Used player")
 				available_players="Default|gstplayer|exteplayer3"
-				
+
 				if DMM_IMAGE:
 					available_players += "|DMM|DVB (OE>=2.5)"
 
@@ -413,7 +413,7 @@ class AddonSettings(object):
 			return True
 		except:
 			return False
-	
+
 	def get_setting(self, setting_id):
 		try:
 			if self.setting_exist(setting_id):
@@ -553,7 +553,7 @@ class AddonInfo(object):
 		log.info("AddonInfo(%s) initializing.." , '/'.join(info_file.split('/')[-3:]))
 
 		addon_dict = parser.XBMCAddonXMLParser(info_file).parse()
-		
+
 		self.id = addon_dict['id']
 		self.name = addon_dict['name']
 		self.version = addon_dict['version']

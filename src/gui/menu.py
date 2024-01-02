@@ -13,6 +13,7 @@ from .. import _, settings, log, removeDiac
 from ..resources.repositories import config as addon_config
 from .base import BaseArchivCZSKScreen
 from .common import Tabs
+from ..engine.parental import parental_pin
 
 from ..compat import DMM_IMAGE
 from ..py3compat import *
@@ -153,6 +154,7 @@ class ArchivCZSKConfigScreen(BaseArchivCZSKConfigScreen):
 		categories = [
 			{ 'label':_("Main"), 'subentries': settings.get_main_settings },
 			{ 'label':_("Player"), 'subentries': settings.get_player_settings },
+			{ 'label':_("Protection"), 'subentries': self.get_parental_settings },
 			{ 'label':_("Path"), 'subentries': settings.get_path_settings },
 			{ 'label':_("Misc"), 'subentries': settings.get_misc_settings }
 		]
@@ -165,10 +167,18 @@ class ArchivCZSKConfigScreen(BaseArchivCZSKConfigScreen):
 
 		self.onLayoutFinish.append(self.layoutFinished)
 		self.onShown.append(self.buildMenu)
+		self.onClose.append(self.restore_pin_state)
+		self.pin_state_locked = parental_pin.is_locked()
+		parental_pin.lock_pin()
+
+	def restore_pin_state(self):
+		if self.pin_state_locked:
+			parental_pin.lock_pin()
+		else:
+			parental_pin.unlock_pin()
 
 	def layoutFinished(self):
 		self.setTitle("ArchivCZSK" + " - " + _("Configuration"))
-
 
 	def buildMenu(self):
 		self.refreshConfigList()
@@ -177,8 +187,21 @@ class ArchivCZSKConfigScreen(BaseArchivCZSKConfigScreen):
 		current = self["config"].getCurrent()[1]
 		if current == config.plugins.archivCZSK.videoPlayer.info:
 			info.showVideoPlayerInfo(self.session)
+		elif current == config.plugins.archivCZSK.parental.change_settings:
+			def parental_continue(response):
+				if response == True:
+					self.refreshConfigList()
+			parental_pin.check_and_unlock(self.session, parental_continue, msg=_('Please enter PIN code ({ramaining_tries})'))
+		elif current == config.plugins.archivCZSK.parental.pin_setup:
+			parental_pin.change(self.session)
 		else:
 			super(ArchivCZSKConfigScreen, self).keyOk()
+
+	def changeCategory(self):
+		super(ArchivCZSKConfigScreen, self).changeCategory()
+
+	def get_parental_settings(self):
+		return settings.get_parental_settings(parental_pin.is_locked())
 
 
 class ArchivCZSKAddonConfigScreen(BaseArchivCZSKConfigScreen):
@@ -208,4 +231,4 @@ class ArchivCZSKAddonConfigScreen(BaseArchivCZSKConfigScreen):
 
 	def buildMenu(self):
 		self.refreshConfigList()
-		
+

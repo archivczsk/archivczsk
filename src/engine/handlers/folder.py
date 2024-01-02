@@ -62,10 +62,14 @@ class FolderItemHandler(ItemHandler):
 			self.content_screen.workingFinished()
 			failure.raiseException()
 
-		self.content_screen.workingStarted()
-		self.content_screen.startLoading()
-		self.content_screen.hideList()
-		self.content_provider.get_content(self.session, item.params, open_item_success_cb, open_item_error_cb)
+		def pin_checked(pin_result):
+			if pin_result == True:
+				self.content_screen.workingStarted()
+				self.content_screen.startLoading()
+				self.content_screen.hideList()
+				self.content_provider.get_content(self.session, item.params, open_item_success_cb, open_item_error_cb)
+
+		self.check_pin(item, pin_checked)
 
 
 	def isValidForTrakt(self, item):

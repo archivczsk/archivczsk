@@ -28,6 +28,7 @@ class MediaItemHandler(ItemHandler):
 	def _open_item(self, item, mode='play', *args, **kwargs):
 		self.play_item(item, mode, *args, **kwargs)
 
+
 	def isValidForTrakt(self, item):
 		if isinstance(item, PPlaylist):
 			item = item.get_current_item()
@@ -37,7 +38,7 @@ class MediaItemHandler(ItemHandler):
 				return True
 		return False
 
-	
+
 	# action:
 	# 	- play
 	# 	- end
@@ -61,12 +62,12 @@ class MediaItemHandler(ItemHandler):
 		try:
 			if paused:
 				self.content_provider.resume()
-			
+
 			extra_params = {
 				'duration': duration,
 				'position': position,
 			}
-				
+
 			# content provider must be in running state (not paused)
 			self.content_provider.stats(self.session, item.dataItem, action, extra_params, successCB=open_item_finish, errorCB=open_item_finish)
 		except:
@@ -75,7 +76,7 @@ class MediaItemHandler(ItemHandler):
 				self.content_provider.pause()
 			if finishCB is not None:
 				finishCB()
-			
+
 	# action:
 	#	- add
 	#	- remove
@@ -106,7 +107,7 @@ class MediaItemHandler(ItemHandler):
 				self.cmdTrakt( item, 'reload', finishedCB )
 			else:
 				finishCb(None)
-				
+
 		paused = self.content_provider.isPaused()
 		try:
 			if action == 'open_action_choicebox':
@@ -131,6 +132,13 @@ class MediaItemHandler(ItemHandler):
 				finishedCB()
 
 	def play_item(self, item, mode='play', forced_player=None, *args, **kwargs):
+		def pin_checked(pin_result):
+			if pin_result == True:
+				self.play_item_internal(item, mode, forced_player, *args, **kwargs)
+
+		self.check_pin(item, pin_checked)
+
+	def play_item_internal(self, item, mode='play', forced_player=None, *args, **kwargs):
 		# This horrible code is needed to sync player end with calling of stats and trakt commands
 		# Without it endPlayFinish() will be called before stats command finishes and this will
 		# end in lock, because content provider will not be running
@@ -138,7 +146,7 @@ class MediaItemHandler(ItemHandler):
 			'stats_command_running': False,
 			'endPlayFinish_delayed': False
 		}
-		
+
 		def endPlayFinish():
 			if sync_info['stats_command_running']:
 				sync_info['endPlayFinish_delayed'] = True
@@ -180,7 +188,7 @@ class MediaItemHandler(ItemHandler):
 						ret = trakttv.scrobble('stop', trakt_item, position_percentage)
 						if ret == 'scrobble':
 							notify_scrobble = True
-							
+
 				except:
 					log.logError("Trakt.tv scrobble command failed.\n%s" % traceback.format_exc())
 
@@ -212,14 +220,14 @@ class MediaItemHandler(ItemHandler):
 					player_mapping['1'] = 5001  # gstplayer
 				if videoPlayerInfo.exteplayer3Available:
 					player_mapping['2'] = 5002  # exteplayer3
-			
+
 			if DMM_IMAGE:
 				# this is only available on DreamOS
 				player_mapping['3'] = 8193  # DMM player
 				player_mapping['4'] = 1     # DVB service
-				
+
 			return player_mapping.get( player, 4097 )
-		
+
 		stype = None
 		if forced_player is not None:
 			stype = forced_player
@@ -249,7 +257,12 @@ class MediaItemHandler(ItemHandler):
 			except Exception:
 				self.content_screen.workingFinished()
 				raise
-		start_download(mode)
+
+		def pin_checked(pin_result):
+			if pin_result == True:
+				start_download(mode)
+
+		self.check_pin(item, pin_checked)
 
 	def _init_menu(self, item):
 		provider = self.content_provider
@@ -270,7 +283,7 @@ class MediaItemHandler(ItemHandler):
 			if videoPlayerInfo.serviceappAvailable:
 				if videoPlayerInfo.gstplayerAvailable:
 					item.add_context_menu_item(_("Play using gstplayer"), action=self.play_item, params={'item':item, 'mode':'play', 'forced_player':5001})
-				
+
 				if videoPlayerInfo.exteplayer3Available:
 					item.add_context_menu_item(_("Play using exteplayer3"), action=self.play_item, params={'item':item, 'mode':'play', 'forced_player':5002})
 		if 'play_and_download' in provider.capabilities and download_enabled:
@@ -307,8 +320,14 @@ class MediaItemHandler(ItemHandler):
 			self._filter_by_quality(list_items)
 
 			if len(list_items) != 0:
-				# if there is only one item or silent mode is enabled, then get only the first one
-				callback(list_items[0])
+				def pin_checked(pin_result):
+					if pin_result == True:
+						callback(list_items[0])
+					else:
+						callback(None)
+
+				self.check_pin(item, pin_checked)
+
 			else: # no video
 				callback(None)
 
@@ -342,12 +361,12 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 									   action=self._resolve_videos,
 									   params={'item':item})
 		if 'favorites' in self.content_provider.capabilities and is_serializable(item.params):
-			item.add_context_menu_item(_("Add Shortcut"), 
-					action=self.ask_add_shortcut, 
+			item.add_context_menu_item(_("Add Shortcut"),
+					action=self.ask_add_shortcut,
 					params={'item':item})
 		else:
-			item.remove_context_menu_item(_("Add Shortcut"), 
-					action=self.ask_add_shortcut, 
+			item.remove_context_menu_item(_("Add Shortcut"),
+					action=self.ask_add_shortcut,
 					params={'item':item})
 
 	def ask_add_shortcut(self, item):
@@ -360,9 +379,9 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 		if cb:
 			self.content_provider.create_shortcut(self.item)
 
-	def play_item(self, item, mode='play', *args, **kwargs):
+	def play_item_internal(self, item, mode='play', *args, **kwargs):
 		def video_selected_callback(res_item):
-			MediaItemHandler.play_item(self, res_item, mode, *args, **kwargs)
+			MediaItemHandler.play_item_internal(self, res_item, mode, *args, **kwargs)
 
 		if mode == 'play_playlist':
 			# in this mode everything is handled directly in MediaItemHandler

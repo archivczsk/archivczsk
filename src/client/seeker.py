@@ -9,6 +9,7 @@ import traceback
 import re
 from .. import _, log, removeDiac
 from ..gui.common import showInfoMessage, showErrorMessage
+from ..engine.parental import parental_pin
 from Components.config import config
 
 from ..py3compat import *
@@ -30,7 +31,7 @@ def getCapabilities():
 	return cap_list
 
 #	 Napriklad:
-#	
+#
 #	 search_exp = u'Matrix'
 #	 search(session, search_exp, 'plugin.video.online-files')
 
@@ -46,7 +47,7 @@ def search(session, search_exp, addon_id, mode=None, cb=None):
 		if search_exp is None or search_exp == "":
 			showInfoMessage(session, _("Empty search expression"))
 			return cb()
-	
+
 		archivCZSKSeeker = ArchivCZSKSeeker.getInstance(session, cb)
 		if archivCZSKSeeker is not None:
 			archivCZSKSeeker.search(search_exp, addon_id, mode)
@@ -54,22 +55,22 @@ def search(session, search_exp, addon_id, mode=None, cb=None):
 		log.logError("Searching failed.\n%s"%traceback.format_exc())
 		showInfoMessage(session, _("Search fatal error."))
 		return cb()
-	
+
 def searchClose():
 	"""
 	Uvolni pamat po unkonceni prace s vyhladavacom
 	"""
 	if ArchivCZSKSeeker.instance is not None:
 		ArchivCZSKSeeker.instance.close()
-		
+
 
 def isArchivCZSKRunning(session):
 	for dialog in session.dialog_stack:
-		# csfd plugin sa da otvorit len z ContentScreen	   
+		# csfd plugin sa da otvorit len z ContentScreen
 		if dialog.__class__.__name__ == 'ContentScreen':
 			return True
 	return False
-	
+
 def getArchivCZSK():
 	from ..archivczsk import ArchivCZSK
 	from ..engine.tools.task import Task
@@ -79,7 +80,7 @@ def getArchivCZSK():
 
 class ArchivCZSKSeeker():
 	instance = None
-	
+
 	@staticmethod
 	def getInstance(session, cb=None):
 		if ArchivCZSKSeeker.instance is None:
@@ -96,26 +97,27 @@ class ArchivCZSKSeeker():
 				showErrorMessage(session, _('Unknown error'), 5, cb=cb)
 				return None
 		return ArchivCZSKSeeker.instance
-	
+
 	def __init__(self, session, cb=None):
 		self.session = session
 		self.cb = cb
-		self.archivCZSK, self.contentScreen, self.task = getArchivCZSK() 
+		self.archivCZSK, self.contentScreen, self.task = getArchivCZSK()
 		self.searcher = None
 		self.addon = None
 		self.searching = False
 		if not isArchivCZSKRunning(session):
 			self.task.startWorkerThread()
 		ArchivCZSKSeeker.instance = self
-		
+		parental_pin.lock_pin()
+
 	def __repr__(self):
 		return '[ArchivCZSKSeeker]'
-			
+
 	def _successSearch(self, content):
 		(searchItems, command, args) = content
 		self.session.openWithCallback(self._contentScreenCB, self.contentScreen, self.addon, searchItems)
-		
-		
+
+
 	def _errorSearch(self, failure):
 		try:
 			failure.raiseException()
@@ -130,7 +132,7 @@ class ArchivCZSKSeeker():
 		self.addon = None
 		if self.cb:
 			self.cb()
-		
+
 	def _contentScreenCB(self, cp):
 		if self.searcher is not None:
 			self.searcher.close()
@@ -138,9 +140,9 @@ class ArchivCZSKSeeker():
 		self.searching = False
 		self.addon = None
 		if self.cb:
-			self.cb()		 
+			self.cb()
 
-		
+
 	def search(self, search_exp, addon_id, mode=None):
 		if self.searching:
 			showInfoMessage(self.session, _("You cannot search, archivCZSK Search is already running"))
@@ -160,7 +162,7 @@ class ArchivCZSKSeeker():
 			else:
 				showInfoMessage(self.session, _("Cannot find searcher") + ' ' + addon_id)
 				return self.cb()
-			
+
 	def close(self):
 		if self.searching:
 			print('%s cannot close, searching is not finished yet' % self)
@@ -169,15 +171,15 @@ class ArchivCZSKSeeker():
 			self.task.stopWorkerThread()
 		ArchivCZSKSeeker.instance = None
 		return True
-		
-		
+
+
 def getSearcher(session, addon_id, archivczsk, succ_cb, err_cb):
 	try:
 		return Search(session, addon_id, archivczsk, succ_cb, err_cb)
 	except:
 		log.logError("ArchivCZSKSeeker: failed to init search\n%s" % traceback.format_exc())
 		return None
-			
+
 
 class Search(object):
 	def __init__(self, session, addon_id, archivczsk, succ_cb, err_cb):
@@ -186,13 +188,13 @@ class Search(object):
 		self.provider = self.addon.provider
 		self.succ_cb = succ_cb
 		self.err_cb = err_cb
-		
+
 	def start(self):
 		self.provider.start()
-		
+
 	def search(self, search_exp, mode=None):
 		self.provider.search(self.session, search_exp, mode, self.succ_cb, self.err_cb)
-	
+
 	def close(self):
 		"""releases resources"""
 		self.provider.stop()
@@ -203,10 +205,10 @@ class CsfdSearch():
 		try:
 			name = removeDiac(searchExp)
 			name = name.replace('.', ' ').replace('_', ' ').replace('*','')
-		
+
 			# remove languages ... "Mother - CZ, EN, KO (2017)"
 			name = re.sub("\s-\s[A-Z]{2}(,\s[A-Z]{2})*\s\(", " (", name)
-		
+
 			year = 0
 			yearStr = ""
 			try:

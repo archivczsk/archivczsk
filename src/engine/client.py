@@ -15,6 +15,7 @@ from .contentprovider import VideoAddonContentProvider
 from .exceptions.addon import AddonInfoError, AddonWarningError, AddonError, AddonThreadException
 from .items import PFolder, PVideoResolved, PVideoNotResolved, PPlaylist, PSearch, PSearchItem
 from .ydl import ydl
+from .parental import parental_pin
 from .tools.task import callFromThread, Task
 from .tools.util import toString, toUnicode
 from ..gui.captcha import Captcha
@@ -240,7 +241,7 @@ def create_directory_it(name, params={}, image=None, infoLabels={}, menuItems={}
 
 	if not config.plugins.archivCZSK.colored_items.value:
 		name = DeleteColors(name)
-		
+
 	it.name = toUnicode(name)
 	it.params = params
 	it.image = toUnicode(image)
@@ -248,7 +249,10 @@ def create_directory_it(name, params={}, image=None, infoLabels={}, menuItems={}
 	infolabel_uni = {}
 	for key, value in infoLabels.items():
 		if value != None:
-			infolabel_uni[key] = toUnicode(value)
+			if isinstance(value, bool):
+				infolabel_uni[key] = value
+			else:
+				infolabel_uni[key] = toUnicode(value)
 
 	for key, value in menuItems.items():
 		item_name = decode_string(key)
@@ -266,7 +270,7 @@ def create_directory_it(name, params={}, image=None, infoLabels={}, menuItems={}
 
 	if hasattr(it, 'dataItem'):
 		it.dataItem = dataItem
-		
+
 	if hasattr(it, 'traktItem'):
 		it.traktItem=traktItem
 
@@ -352,30 +356,28 @@ def create_video_it(name, url, subs=None, image=None, infoLabels={}, menuItems={
 	it.dataItem = dataItem
 	it.traktItem = traktItem
 	it.download = download
-	
+
 	return it
-
-@abortTask
-def add_dir(*args, **kwargs):
-	'''
-	Creates new directory item and adds it to current screen. For parameters see create_directory_it()
-	'''
-	GItem_lst[0].append(create_directory_it(*args, **kwargs))
-
-@abortTask
-def add_video(*args, **kwargs):
-	'''
-	Creates new resolved video item and adds it to current screen. For parameters see create_video_it()
-	'''
-	GItem_lst[0].append(create_video_it(*args, **kwargs))
 
 @abortTask
 def add_item(item):
 	'''
-	Adds new item to current screen. Iten needs to be created using create_video_it() or create_directory_it()
+	Adds new item to current screen. Item needs to be created using create_video_it() or create_directory_it()
 	'''
-	GItem_lst[0].append(item)
+	if getattr(item, 'info', {}).get('adult', False) == False or parental_pin.get_settings('show_adult'):
+		GItem_lst[0].append(item)
 
+def add_dir(*args, **kwargs):
+	'''
+	Creates new directory item and adds it to current screen. For parameters see create_directory_it()
+	'''
+	add_item(create_directory_it(*args, **kwargs))
+
+def add_video(*args, **kwargs):
+	'''
+	Creates new resolved video item and adds it to current screen. For parameters see create_video_it()
+	'''
+	add_item(create_video_it(*args, **kwargs))
 
 @abortTask
 def sort_items(reverse=False, use_diacritics=True, ignore_case=False):

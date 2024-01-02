@@ -14,6 +14,7 @@ from .engine.addon import ToolsAddon, VideoAddon, XBMCAddon
 from .engine.exceptions.updater import UpdateXMLVersionError, UpdateXMLNoUpdateUrl
 from .engine.tools.task import Task
 from .gui.content import ArchivCZSKContentScreen
+from .engine.parental import parental_pin
 from .compat import DMM_IMAGE, eConnectCallback
 from .engine.updater import ArchivUpdater
 from .engine.bgservice import BGServiceTask
@@ -36,7 +37,7 @@ class ArchivCZSK():
 	def load_repositories():
 		start = time.time()
 		from .engine.repository import Repository
-		
+
 		# list directories in settings.REPOSITORY_PATH and search for directory containing addon.xml file = repository
 		for repo in [f for f in os.listdir(settings.REPOSITORY_PATH) if os.path.isdir(os.path.join(settings.REPOSITORY_PATH, f))]:
 			repo_xml = os.path.join(settings.REPOSITORY_PATH, repo, 'addon.xml')
@@ -48,7 +49,7 @@ class ArchivCZSK():
 				else:
 					ArchivCZSK.add_repository(repository)
 					sys.path.append(repository.path)
-			
+
 		ArchivCZSK.__loaded = True
 		diff = time.time() - start
 		log.info("load repositories in {0}".format(diff))
@@ -64,7 +65,7 @@ class ArchivCZSK():
 			from enigma import getDesktop
 			desktop_width = getDesktop(0).size().width()
 			log.logDebug("Screen width %s px" % desktop_width)
-			
+
 			if desktop_width >= 2560:
 				default_skin_name = "default_uni_wqhd"
 			elif desktop_width >= 1920:
@@ -221,11 +222,11 @@ class ArchivCZSK():
 	def runAddonsUpdateCheck(self):
 		try:
 			log.logInfo("Checking addons update...")
-			self.__updateDialog = self.session.openWithCallback(self.check_updates_finished, MessageBox, 
-											   _("Checking for addons updates"), 
-											   type=MessageBox.TYPE_INFO, 
+			self.__updateDialog = self.session.openWithCallback(self.check_updates_finished, MessageBox,
+											   _("Checking for addons updates"),
+											   type=MessageBox.TYPE_INFO,
 											   enable_input=False)
-			
+
 			# this is needed in order to show __updateDialog
 			self.updateCheckTimer = eTimer()
 			self.updateCheckTimer_conn = eConnectCallback(self.updateCheckTimer.timeout, self.check_addon_updates)
@@ -237,7 +238,7 @@ class ArchivCZSK():
 	def check_addon_updates(self):
 		del self.updateCheckTimer
 		del self.updateCheckTimer_conn
-		
+
 		lock = threading.Lock()
 		threads = []
 		def check_repository(repository):
@@ -315,9 +316,9 @@ class ArchivCZSK():
 
 	def ask_restart_e2(self, callback=None):
 		ArchivCZSK.__need_restart = True
-		self.session.openWithCallback(self.restart_e2, 
-				MessageBox, 
-				_("You need to restart E2. Do you want to restart it now?"), 
+		self.session.openWithCallback(self.restart_e2,
+				MessageBox,
+				_("You need to restart E2. Do you want to restart it now?"),
 				type=MessageBox.TYPE_YESNO)
 
 
@@ -334,17 +335,18 @@ class ArchivCZSK():
 			# first screen to open when starting plugin,
 			# so we start worker thread where we can run our tasks(ie. loading archives)
 			Task.startWorkerThread()
+			parental_pin.lock_pin()
 			self.session.openWithCallback(self.close_archive_screen, ArchivCZSKContentScreen, self)
-		
+
 		# check if this is first start after update
 		from .settings import PLUGIN_PATH
 		first_start_file = os.path.join( PLUGIN_PATH, '.first_start')
 		if os.path.isfile( first_start_file ):
 			os.remove( first_start_file )
-			
+
 			# check if we have all players installed
 			from .engine.player.info import videoPlayerInfo
-			
+
 			if DMM_IMAGE:
 				msg = None
 			elif not videoPlayerInfo.serviceappAvailable:
@@ -357,7 +359,7 @@ class ArchivCZSK():
 				msg = _("By system check there was system plugin with name ServiceApp detected, but you miss gstplayer. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer from feed of your distribution to be able use all available addons.")
 			else:
 				msg = None
-			
+
 			if msg:
 				self.session.openWithCallback(first_start_handled, MessageBox, msg, type=MessageBox.TYPE_INFO, enable_input=True)
 			else:
