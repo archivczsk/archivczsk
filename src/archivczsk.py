@@ -20,6 +20,20 @@ from .engine.updater import ArchivUpdater
 from .engine.bgservice import BGServiceTask
 from .engine.usage import usage_stats
 
+def have_valid_ssl_certificates():
+	# outdated images don't have Let's Encrypt CA, so make a simple check here
+	import requests
+
+	ret = True
+	try:
+		requests.get('https://ntp.org', timeout=3)
+	except requests.exceptions.SSLError:
+		ret = False
+	except:
+		pass
+
+	return ret
+
 class ArchivCZSK():
 
 	__loaded = False
@@ -357,6 +371,8 @@ class ArchivCZSK():
 				msg = _("By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install exteplayer3 from feed of your distribution to be able use all available addons.")
 			elif not videoPlayerInfo.gstplayerAvailable:
 				msg = _("By system check there was system plugin with name ServiceApp detected, but you miss gstplayer. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer from feed of your distribution to be able use all available addons.")
+			elif have_valid_ssl_certificates() == False:
+				msg = _("You are using outdated image in your receiver without updated SSL certificates used for HTTPS communication. This can cause problems connecting to some sites or services. Outdated images are not supported and errors related to SSL communication will not be fixed. Update your image to latest version or switch to other image if current one doesn't get updates anymore.")
 			else:
 				msg = None
 

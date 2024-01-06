@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-06 14:56+0100\n"
-"PO-Revision-Date: 2024-01-06 15:14+0100\n"
+"POT-Creation-Date: 2024-01-06 20:17+0100\n"
+"PO-Revision-Date: 2024-01-06 20:22+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: sk\n"
@@ -16,41 +16,45 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.0.1\n"
 
-#: src/archivczsk.py:226
+#: src/archivczsk.py:240
 msgid "Checking for addons updates"
 msgstr "Kontrolujem aktualizácie doplnkov"
 
-#: src/archivczsk.py:283
+#: src/archivczsk.py:297
 msgid "Do you want to update"
 msgstr "Chcete aktualizovať"
 
-#: src/archivczsk.py:283
+#: src/archivczsk.py:297
 msgid "addons"
 msgstr "doplnky"
 
-#: src/archivczsk.py:293
+#: src/archivczsk.py:307
 msgid "Following addons were updated"
 msgstr "Nasledujúce doplnky boli aktualizované"
 
-#: src/archivczsk.py:321
+#: src/archivczsk.py:335
 msgid "You need to restart E2. Do you want to restart it now?"
 msgstr "Zmeny sa prejavia po reštarte E2. Chcete reštartovať E2 teraz?"
 
-#: src/archivczsk.py:353
+#: src/archivczsk.py:367
 msgid "By system check there was no system plugin with name ServiceApp detected. This means, that your system only supports video player integrated in enigma2. Some addons doesn't work properly with internal player or don't work at all. If you will have problem with playing some videos, try to install ServiceApp system plugin from feed of your distribution. Then you can change in addon settings used video player to gstplayer or exteplayer3 that can handle some video formats better."
 msgstr "Pri kontrole systému nebol nájdený systémový plugin s názvom ServiceApp. To znamená, že váš systém podporuje iba video prehrávač integrovaný v enigma2. Niektoré doplnky s interným prehrávačom nefungujú správne alebo nefungujú vôbec. Ak budete mať problém s prehrávaním niektorých videí, skúste si nainštalovať systémový plugin ServiceApp z feedu vašej distribúcie. Potom môžete v nastaveniach doplnku zmeniť použitý video prehrávač na gstplayer alebo exteplayer3, ktorý lepšie zvládne niektoré formáty videa."
 
-#: src/archivczsk.py:355
+#: src/archivczsk.py:369
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3 and gstplayer. These video players are needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer and exteplayer3 from feed of your distribution to be able use all available addons."
 msgstr "Pri kontrole systému bol zistený systémový plugin s názvom ServiceApp, ale chýba vám prehrávač exteplayer3 a gstplayer. Tieto video prehrávače sú potrebné na spracovanie niektorých formátov videa, ktoré integrovaný video prehrávač v enigma2 nedokáže. Odporúča sa nainštalovať gstplayer a exteplayer3 z feedu vašej distribúcie, aby ste mohli využívať všetky dostupné doplnky."
 
-#: src/archivczsk.py:357
+#: src/archivczsk.py:371
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install exteplayer3 from feed of your distribution to be able use all available addons."
 msgstr "Pri kontrole systému bol zistený systémový plugin s názvom ServiceApp, ale chýba vám prehrávač exteplayer3. Tento video prehrávač je potrebný na spracovanie niektorých formátov videa, ktoré integrovaný video prehrávač v enigma2 nedokáže. Odporúča sa nainštalovať exteplayer3 z feedu vašej distribúcie, aby ste mohli využívať všetky dostupné doplnky."
 
-#: src/archivczsk.py:359
+#: src/archivczsk.py:373
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss gstplayer. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer from feed of your distribution to be able use all available addons."
 msgstr "Pri kontrole systému bol zistený systémový plugin s názvom ServiceApp, ale chýba vám prehrávač gstplayer. Tento video prehrávač je potrebný na spracovanie niektorých formátov videa, ktoré integrovaný video prehrávač v enigma2 nedokáže. Odporúča sa nainštalovať gstplayer z feedu vašej distribúcie, aby ste mohli využívať všetky dostupné doplnky."
+
+#: src/archivczsk.py:375
+msgid "You are using outdated image in your receiver without updated SSL certificates used for HTTPS communication. This can cause problems connecting to some sites or services. Outdated images are not supported and errors related to SSL communication will not be fixed. Update your image to latest version or switch to other image if current one doesn't get updates anymore."
+msgstr "Vo svojom prijímači používate zastarané image bez aktualizovaných SSL certifikátov používaných pre HTTPS komunikáciu. Môže to spôsobiť problémy s pripojením k niektorým stránkam alebo službám. Zastarané image nie sú podporované a chyby súvisiace s SSL komunikáciou nebudú opravené. Aktualizujte svoje image na najnovšiu verziu alebo prejdite na iné, ak už vaše aktuálne nedostáva ďalšie aktualizácie."
 
 #: src/gui/content.py:59
 msgid "Unlock protected content"
@@ -170,16 +174,16 @@ msgstr "Informácia doplnku"
 
 #: src/gui/exception.py:72 src/gui/exception.py:76 src/gui/exception.py:83
 #: src/gui/exception.py:87 src/gui/exception.py:91 src/gui/exception.py:95
-#: src/gui/exception.py:124 src/gui/exception.py:127 src/gui/exception.py:141
-#: src/gui/exception.py:144
+#: src/gui/exception.py:99 src/gui/exception.py:128 src/gui/exception.py:131
+#: src/gui/exception.py:145 src/gui/exception.py:148
 msgid "Error in loading"
 msgstr "Chyba v načítavaní"
 
-#: src/gui/exception.py:72 src/gui/exception.py:124 src/gui/exception.py:141
+#: src/gui/exception.py:72 src/gui/exception.py:128 src/gui/exception.py:145
 msgid "HTTP Error"
 msgstr "HTTP Chyba"
 
-#: src/gui/exception.py:76 src/gui/exception.py:127 src/gui/exception.py:144
+#: src/gui/exception.py:76 src/gui/exception.py:131 src/gui/exception.py:148
 msgid "URL Error"
 msgstr "URL Chyba"
 
@@ -191,55 +195,59 @@ msgstr "Časový limit pre pripojenie na server vypršal"
 msgid "Waiting for data from server timed out"
 msgstr "Časový limit pri čakaní na dáta zo servera vypršal"
 
-#: src/gui/exception.py:91 src/gui/exception.py:95
+#: src/gui/exception.py:91 src/gui/exception.py:99
 msgid "Connection to server failed"
 msgstr "Pripojenie na server zlyhalo"
 
-#: src/gui/exception.py:100
+#: src/gui/exception.py:95
+msgid "Unable to establish SSL connection to server"
+msgstr "Nepodarilo sa vytvoriť SSL spojenie na server"
+
+#: src/gui/exception.py:104
 msgid "An unhandled error occurred while calling the addon. Please report a bug so it can be fixed."
 msgstr "Pri volaní doplnku nastala neošetrená chyba. Prosím nahláste chybu aby ju bolo možné opraviť."
 
-#: src/gui/exception.py:112
+#: src/gui/exception.py:116
 msgid "Download error"
 msgstr "Chyba sťahovania"
 
-#: src/gui/exception.py:113
+#: src/gui/exception.py:117
 msgid "Download warning"
 msgstr "Upoznenie sťahovania"
 
-#: src/gui/exception.py:114
+#: src/gui/exception.py:118
 msgid "Download info"
 msgstr "Informácia o sťahovaní"
 
-#: src/gui/exception.py:121
+#: src/gui/exception.py:125
 msgid "protocol is not supported"
 msgstr "prokol nie je podporovaný"
 
-#: src/gui/exception.py:133
+#: src/gui/exception.py:137
 msgid "Updater error"
 msgstr "Chyba aktualizácie"
 
-#: src/gui/exception.py:134
+#: src/gui/exception.py:138
 msgid "Updater warning"
 msgstr "Upozornenie aktualizacii"
 
-#: src/gui/exception.py:135
+#: src/gui/exception.py:139
 msgid "Updater info"
 msgstr "Informácia aktualizácii"
 
-#: src/gui/exception.py:150
+#: src/gui/exception.py:154
 msgid "Play error"
 msgstr "Chyba prehrávania"
 
-#: src/gui/exception.py:151
+#: src/gui/exception.py:155
 msgid "Play warning"
 msgstr "Upozornenie prehŕavania"
 
-#: src/gui/exception.py:152
+#: src/gui/exception.py:156
 msgid "Play info"
 msgstr "Informácia o prehrávaní"
 
-#: src/gui/exception.py:159
+#: src/gui/exception.py:163
 msgid "Video url doesnt exist"
 msgstr "Video adresa, ktorú chcete prehrať neexistuje"
 
@@ -1323,49 +1331,49 @@ msgstr "Prosím vložte hľadaný výraz"
 msgid "succesfully finished"
 msgstr "úspešne skončilo"
 
-#: src/engine/parental.py:80 src/engine/parental.py:82
+#: src/engine/parental.py:84 src/engine/parental.py:86
 msgid "seconds"
 msgstr "sekúnd"
 
-#: src/engine/parental.py:85
+#: src/engine/parental.py:89
 msgid "minutes"
 msgstr "minút"
 
-#: src/engine/parental.py:90
+#: src/engine/parental.py:94
 #, python-brace-format
 msgid "You entered {max_tries} times wrong PIN. Wait {remaining_time} and try again."
 msgstr "Zadali ste {max_tries} krát nesprávny PIN. Počkajte {remaining_time} a skúste to znovu."
 
-#: src/engine/parental.py:95
+#: src/engine/parental.py:99
 msgid "Entered parental PIN code is not correct"
 msgstr "Zadaný PIN kód je nesprávny"
 
-#: src/engine/parental.py:100
+#: src/engine/parental.py:104
 msgid "Entered PIN code must be at least 4 characters long"
 msgstr "Zadaný PIN kód musí mať aspoň 4 číslice"
 
-#: src/engine/parental.py:125
+#: src/engine/parental.py:129
 #, python-brace-format
 msgid "To show this content you need to enter parental PIN ({ramaining_tries})"
 msgstr "Pre zobrazenie tohto obsahu musíte zadať rodičovský PIN ({ramaining_tries})"
 
-#: src/engine/parental.py:141
+#: src/engine/parental.py:145
 msgid "Entered PIN codes are different"
 msgstr "Zadané PIN kódy sú rozdielne"
 
-#: src/engine/parental.py:144
+#: src/engine/parental.py:148
 msgid "PIN code successfuly changed"
 msgstr "PIN kód bol úspešne zmenený"
 
-#: src/engine/parental.py:153
+#: src/engine/parental.py:157
 msgid "Repeat new PIN"
 msgstr "Znovu zadajte nový PIN kód"
 
-#: src/engine/parental.py:160
+#: src/engine/parental.py:164
 msgid "Enter new PIN"
 msgstr "Zadajte nový PIN kód"
 
-#: src/engine/parental.py:165
+#: src/engine/parental.py:169
 #, python-brace-format
 msgid "Enter current PIN ({ramaining_tries})"
 msgstr "Zadajte aktuálny PIN kód ({ramaining_tries})"
