@@ -27,6 +27,7 @@ from .download import DownloadList
 from enigma import eTimer, gPixmapPtr
 from .menu import ArchivCZSKConfigScreen
 from ..colors import DeleteColors
+from . import info
 
 KEY_MENU_IMG = LoadPixmap(cached=True, path=os.path.join(settings.IMAGE_PATH, 'key_menu.png'))
 KEY_INFO_IMG = LoadPixmap(cached=True, path=os.path.join(settings.IMAGE_PATH, 'key_info.png'))
@@ -339,7 +340,7 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 
 		self["key_red"] = Label(_("Manager"))
 		self["key_green"] = Label(_("Support us"))
-		self["key_yellow"] = Label("")
+		self["key_yellow"] = Label(_("Changelog"))
 		self["key_blue"] = Label(_("Settings"))
 
 		self["actions"] = ActionMap(["archivCZSKActions"],
@@ -350,6 +351,7 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 				"down": self.down,
 				"blue": self.openSettings,
 				"green": self.showIconD,
+				"yellow": self.changelog,
 				"red": self.openAddonManagement,
 				"menu" : self.menu
 			}, -2)
@@ -400,6 +402,11 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 		self.workingStarted()
 		self.refreshList()
 		self.workingFinished()
+
+	def changelog(self):
+		changelog_path = os.path.join(settings.PLUGIN_PATH, 'changelog.txt')
+		if os.path.isfile(changelog_path):
+			info.showChangelog(self.session, "ArchivCZSK", changelog_path)
 
 	def addCategory(self):
 		self.session.openWithCallback(self.addCategoryCB, InputBox, _("Set category name"))
