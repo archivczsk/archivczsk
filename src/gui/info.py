@@ -34,7 +34,7 @@ def openPartialChangelog(session, continue_cb, changelog_title, changelog_path, 
 	try:
 		with open(changelog_path, 'r') as f:
 			for line in f:
-				if prev_ver in line:
+				if prev_ver and prev_ver in line:
 					break
 				changelog_data.append(line)
 

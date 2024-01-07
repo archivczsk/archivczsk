@@ -14,6 +14,7 @@ from .engine.addon import ToolsAddon, VideoAddon, XBMCAddon
 from .engine.exceptions.updater import UpdateXMLVersionError, UpdateXMLNoUpdateUrl
 from .engine.tools.task import Task
 from .gui.content import ArchivCZSKContentScreen
+from .gui.info import openPartialChangelog
 from .engine.parental import parental_pin
 from .compat import DMM_IMAGE, eConnectCallback
 from .engine.updater import ArchivUpdater
@@ -352,12 +353,7 @@ class ArchivCZSK():
 			parental_pin.lock_pin()
 			self.session.openWithCallback(self.close_archive_screen, ArchivCZSKContentScreen, self)
 
-		# check if this is first start after update
-		from .settings import PLUGIN_PATH
-		first_start_file = os.path.join( PLUGIN_PATH, '.first_start')
-		if os.path.isfile( first_start_file ):
-			os.remove( first_start_file )
-
+		def check_player():
 			# check if we have all players installed
 			from .engine.player.info import videoPlayerInfo
 
@@ -371,15 +367,46 @@ class ArchivCZSK():
 				msg = _("By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install exteplayer3 from feed of your distribution to be able use all available addons.")
 			elif not videoPlayerInfo.gstplayerAvailable:
 				msg = _("By system check there was system plugin with name ServiceApp detected, but you miss gstplayer. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer from feed of your distribution to be able use all available addons.")
-			elif have_valid_ssl_certificates() == False:
+			else:
+				msg = None
+
+			return msg
+
+		def check_ssl_certificates():
+			if have_valid_ssl_certificates() == False:
 				msg = _("You are using outdated image in your receiver without updated SSL certificates used for HTTPS communication. This can cause problems connecting to some sites or services. Outdated images are not supported and errors related to SSL communication will not be fixed. Update your image to latest version or switch to other image if current one doesn't get updates anymore.")
 			else:
 				msg = None
 
-			if msg:
-				self.session.openWithCallback(first_start_handled, MessageBox, msg, type=MessageBox.TYPE_INFO, enable_input=True)
+			return msg
+
+
+		def run_first_start_actions(actions, prev_ver):
+			if len(actions) > 0:
+				a = actions[0]
+				next_a = actions[1:]
+
+				msg = a()
+				if msg:
+					self.session.openWithCallback(lambda x: run_first_start_actions(next_a, prev_ver), MessageBox, msg, type=MessageBox.TYPE_INFO, enable_input=True)
+				else:
+					run_first_start_actions(next_a, prev_ver)
 			else:
-				first_start_handled()
+				changelog_path = os.path.join(settings.PLUGIN_PATH, 'changelog.txt')
+				openPartialChangelog(self.session, first_start_handled, "ArchivCZSK", changelog_path, prev_ver)
+
+		# check if this is first start after update
+		from .settings import PLUGIN_PATH
+		first_start_file = os.path.join( PLUGIN_PATH, '.first_start')
+
+		if os.path.isfile( first_start_file ):
+			try:
+				prev_ver = open(first_start_file).readline().strip()
+			except:
+				prev_ver = ''
+			os.remove( first_start_file )
+
+			run_first_start_actions( [check_player, check_ssl_certificates], prev_ver )
 		else:
 			first_start_handled()
 

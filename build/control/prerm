@@ -12,7 +12,7 @@ fi
 if [ -d /usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/skins/ ]; then
 	echo "saving SKINS to /tmp/archivczsk ..."
 	cp -R /usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/skins/ /tmp/archivczsk/
-	
+
 	# don't backup default skins
 	rm -f /tmp/archivczsk/skins/default_*.xml
 fi
@@ -30,8 +30,12 @@ if [ -d /usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/resources/reposito
 		fi
 	done
 
-	# remove addon.xml from official repo so it can be updated using this package	
+	# remove addon.xml from official repo so it can be updated using this package
 	rm -f /tmp/archivczsk/repositories/addons/addon.xml
+fi
+
+if [ -f /usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/version.py ]; then
+	grep version /usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/version.py | cut -d \" -f2 > /tmp/archivczsk/last_version.txt
 fi
 
 exit 0

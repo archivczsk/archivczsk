@@ -27,7 +27,7 @@ if [ -d $TMP/addons/ ] ; then
 	echo "Found official ADDONS, restoring..."
 	# remove saved addon.xml file, so it can be updated
 	rm -f $TMP/addons/addon.xml
-	
+
 	cp -R $TMP/addons $ARCHIVCZSK/resources/repositories
 fi
 
@@ -38,10 +38,14 @@ if [ -d $TMP/repositories/ ] ; then
 	done
 fi
 
+touch $ARCHIVCZSK/.first_start
+
+if [ -f ${TMP}/last_version.txt ] ; then
+	cat ${TMP}/last_version.txt > $ARCHIVCZSK/.first_start
+fi
+
 echo "Removing temp folder..."
 rm -rf ${TMP}/
-
-touch $ARCHIVCZSK/.first_start
 
 echo "Installation of archivCZSK was successfull, starting script to install dependencies in background ..."
 
