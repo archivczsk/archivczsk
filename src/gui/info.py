@@ -149,6 +149,10 @@ class ArchivCZSKChangelogScreen(BaseArchivCZSKScreen):
 			"ok": self.close,
 			"up": self.pageUp,
 			"down": self.pageDown,
+			"left": self.pageUp,
+			"right": self.pageDown,
+			"channelUp": self.homePage,
+			"channelDown": self.endPage
 		}, -2)
 
 	def pageUp(self):
@@ -156,6 +160,12 @@ class ArchivCZSKChangelogScreen(BaseArchivCZSKScreen):
 
 	def pageDown(self):
 		self["changelog"].pageDown()
+
+	def homePage(self):
+		self["changelog"].homePage()
+
+	def endPage(self):
+		self["changelog"].endPage()
 
 
 class Info(object):
@@ -239,6 +249,10 @@ class ArchivCZSKItemInfoScreen(BaseArchivCZSKScreen):
 			"cancel": self.close,
 			"up": self.pageUp,
 			"down": self.pageDown,
+			"left": self.pageUp,
+			"right": self.pageDown,
+			"channelUp": self.homePage,
+			"channelDown": self.endPage,
 			"info": self.openCsfd,
 		}, -2)
 #		self.title = py2_encode_utf8(DeleteColors(self.it.name))
@@ -254,6 +268,12 @@ class ArchivCZSKItemInfoScreen(BaseArchivCZSKScreen):
 
 	def pageDown(self):
 		self["plot"].pageDown()
+
+	def homePage(self):
+		self["plot"].homePage()
+
+	def endPage(self):
+		self["plot"].endPage()
 
 	def openCsfd(self):
 		showCSFDInfo(self.session, self.it)

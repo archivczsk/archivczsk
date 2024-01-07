@@ -17,48 +17,48 @@ from ..py3compat import *
 
 class BaseArchivCZSKScreen(Screen):
 	"""Base Screen for archivCZSK screens"""
-	
+
 	def __init__(self, session, initScreen=True):
 		self.HD = False
-		
+
 		#setting SD/HD skin
 		if getDesktop(0).size().width() >= 1280:
 			self.HD = True
 
-		if initScreen:	  
+		if initScreen:
 			Screen.__init__(self, session)
-		
+
 class BaseArchivCZSKMenuListScreen(BaseArchivCZSKScreen):
 	"""Base Screen for screens with menu list"""
 	def __init__(self, session, panelList=None):
 		BaseArchivCZSKScreen.__init__(self, session)
-		
+
 		pl = PanelList
 		if panelList is not None:
 			pl = panelList
-		
+
 		# timeout for dialogs
 		self.timeout = 5
-		
+
 		# currently selected item in PanelList
-		self.selected_it = None	  
-		
+		self.selected_it = None
+
 		# item list holding loaded items
 		self.lst_items = []
-		
+
 		# item list holding items corresponding to indexes of items in MenuList
 		self.menu_list = []
-		
+
 		# working flag, set to true when we are doing time demanding task
 		self.working = False
-		
+
 		# gui menu list
 		self["menu"] = pl([])
 		self["menu"].onSelectionChanged.append(self.updateGUI)
-		
+
 		#called by workingStarted
 		self.onStartWork = [self.startWorking]
-		
+
 		#called by workingFinished
 		self.onStopWork = [self.stopWorking]
 
@@ -102,7 +102,7 @@ class BaseArchivCZSKMenuListScreen(BaseArchivCZSKScreen):
 	def showList(self):
 		try:
 			log.debug('showing list')
-			self["menu"].show()	 
+			self["menu"].show()
 		except:
 			log.logError("Action [showList] failed.\n%s"%traceback.format_exc())
 			pass
@@ -165,6 +165,7 @@ class BaseArchivCZSKMenuListScreen(BaseArchivCZSKScreen):
 		except:
 			log.logError("Action [left] failed.\n%s"%traceback.format_exc())
 			pass
+
 
 class BaseArchivCZSKListSourceScreen(BaseArchivCZSKScreen):
 	"""Base Screen for screens with menu list"""
@@ -242,7 +243,7 @@ class BaseArchivCZSKListSourceScreen(BaseArchivCZSKScreen):
 	def showList(self):
 		try:
 			log.debug("<%s>: showList"%(self.__class__.__name__))
-			self.__listboxRenderer.show() 
+			self.__listboxRenderer.show()
 		except:
 			log.logError("Action [showList] failed.\n%s"%traceback.format_exc())
 			pass
@@ -320,6 +321,26 @@ class BaseArchivCZSKListSourceScreen(BaseArchivCZSKScreen):
 		except:
 			log.logError("Action [left] failed.\n%s"%traceback.format_exc())
 			pass
+
+	def home(self):
+		try:
+			if not self.working:
+				self.__listboxRenderer.move(self.__listboxRenderer.instance.moveTop)
+		except:
+			log.logError("Action [home] failed.\n%s"%traceback.format_exc())
+			pass
+
+	def end(self):
+		try:
+			if not self.working:
+#				self.__listboxRenderer.instance.move(self.__listboxRenderer.instance.moveEnd)
+				# Hack because moveEnd command doesn't work - use wrap aroud feature
+				self.__listboxRenderer.move(self.__listboxRenderer.instance.moveTop)
+				self.__listboxRenderer.move(self.__listboxRenderer.instance.moveUp)
+		except:
+			log.logError("Action [end] failed.\n%s"%traceback.format_exc())
+			pass
+
 
 	### Messages ###
 

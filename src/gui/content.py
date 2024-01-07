@@ -217,6 +217,8 @@ class ArchivCZSKVideoAddonsManagementScreen(BaseContentScreen, TipBar):
 					"cancel": self.close,
 					"up": self.up,
 					"down": self.down,
+					"channelUp": self.home,
+					"channelDown": self.end,
 					"menu" : self.menu
 			 }, -2)
 		self.onLayoutFinish.append(self.updateAddonGUI)
@@ -349,6 +351,8 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 				"cancel": self.cancel,
 				"up": self.up,
 				"down": self.down,
+				"channelUp": self.home,
+				"channelDown": self.end,
 				"blue": self.openSettings,
 				"green": self.showIconD,
 				"yellow": self.changelog,
@@ -531,6 +535,8 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 				"ok": self.ok,
 				"up": self.up,
 				"down": self.down,
+				"channelUp": self.home,
+				"channelDown": self.end,
 				"cancel": self.cancel,
 				"red" : self.openChangelog,
 				"green" : self.openAddonDownloads,

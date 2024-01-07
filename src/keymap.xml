@@ -23,6 +23,8 @@
 		<key id="KEY_DOWN" mapto="down" flags="m" />
 		<key id="KEY_LEFT" mapto="left" flags="m" />
 		<key id="KEY_RIGHT" mapto="right" flags="m" />
+		<key id="KEY_CHANNELUP" mapto="channelUp" flags="m" />
+		<key id="KEY_CHANNELDOWN" mapto="channelDown" flags="m" />
 		<key id="KEY_5" mapto="csfd" flags="m" />
 	</map>
 

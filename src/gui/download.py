@@ -43,7 +43,7 @@ class DownloadManagerMessages(object):
 		def updateDownloadList(callback=None):
 			if ArchivCZSKDownloadListScreen.instance is not None:
 				ArchivCZSKDownloadListScreen.instance.refreshList()
-		
+
 		if download.downloaded:
 			session.openWithCallback(updateDownloadList, MessageBox, _("ArchivCZSK - Download:") + ' ' + \
 									  py2_encode_utf8( download.name ) + ' ' + _("successfully finished."), \
@@ -405,7 +405,7 @@ class ArchivCZSKDownloadsScreen(BaseArchivCZSKMenuListScreen, DownloadList):
 		self["key_yellow"] = Button(self.sort_next['name'])
 		self["key_blue"] = Button("")
 		self.title = py2_encode_utf8( self.name ) + ' - ' + (_("Downloads"))
-		
+
 		self["actions"] = NumberActionMap(["archivCZSKActions"],
 			{
 				"ok": self.ok,
