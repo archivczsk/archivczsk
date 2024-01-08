@@ -395,7 +395,7 @@ class DummyAddon(object):
 		self.repository = repository
 		self.name = name
 		self.id = addon_id
-		self.relative_path = self.id
+		self.relative_path = self.id.replace('.','_')
 		self.version = version
 		self.path = os.path.normpath(os.path.join(repository.path, self.relative_path))
 		self.__need_update = True
