@@ -27,7 +27,9 @@ def have_valid_ssl_certificates():
 
 	ret = True
 	try:
-		requests.get('https://ntp.org', timeout=3)
+#		we have options to disable SSL verification, so this is not needed for now
+#		requests.get('https://ntp.org', timeout=3)
+		pass
 	except requests.exceptions.SSLError:
 		ret = False
 	except:

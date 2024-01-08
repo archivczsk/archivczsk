@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-06 20:17+0100\n"
-"PO-Revision-Date: 2024-01-06 20:26+0100\n"
+"POT-Creation-Date: 2024-01-08 19:44+0100\n"
+"PO-Revision-Date: 2024-01-08 19:45+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -16,130 +16,130 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.0.1\n"
 
-#: src/archivczsk.py:240
+#: src/archivczsk.py:243
 msgid "Checking for addons updates"
 msgstr "Kontrola aktualizací doplňků"
 
-#: src/archivczsk.py:297
+#: src/archivczsk.py:300
 msgid "Do you want to update"
 msgstr "Chcete aktualizovat"
 
-#: src/archivczsk.py:297
+#: src/archivczsk.py:300
 msgid "addons"
 msgstr "doplňky"
 
-#: src/archivczsk.py:307
+#: src/archivczsk.py:310
 msgid "Following addons were updated"
 msgstr "Následující doplňky byly aktualizovány"
 
-#: src/archivczsk.py:335
+#: src/archivczsk.py:338
 msgid "You need to restart E2. Do you want to restart it now?"
 msgstr "Změny se projeví po restartu E2. Chcete nyní restartovat E2?"
 
-#: src/archivczsk.py:367
+#: src/archivczsk.py:365
 msgid "By system check there was no system plugin with name ServiceApp detected. This means, that your system only supports video player integrated in enigma2. Some addons doesn't work properly with internal player or don't work at all. If you will have problem with playing some videos, try to install ServiceApp system plugin from feed of your distribution. Then you can change in addon settings used video player to gstplayer or exteplayer3 that can handle some video formats better."
 msgstr "Při kontrole systému nebyl detekován systémový plugin s názvem ServiceApp. To znamená, že váš systém podporuje pouze video přehrávač integrovaný v enigma2. Některé doplňky nefungují správně s interním přehrávačem nebo nefungují vůbec. Pokud budete mít problém s přehráváním některých videí, zkuste si nainstalovat systémový plugin ServiceApp z feedu vaší distribuce. Poté můžete v nastavení doplňku změnit použitý video přehrávač na gstplayer nebo exteplayer3, který si lépe poradí s některými formáty videa."
 
-#: src/archivczsk.py:369
+#: src/archivczsk.py:367
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3 and gstplayer. These video players are needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer and exteplayer3 from feed of your distribution to be able use all available addons."
 msgstr "Při kontrole systému byl zjištěn systémový plugin s názvem ServiceApp, ale chybí vám přehrávače exteplayer3 a gstplayer. Tyto videopřehrávače jsou potřeba ke zpracování některých video formátů, které interní videopřehrávač zabudovaný do enigma2 zpracovat nedokáže. Doporučuje se nainstalovat gstplayer a exteplayer3 z feedu vaší distribuce, abyste mohli používat všechny dostupné doplňky."
 
-#: src/archivczsk.py:371
+#: src/archivczsk.py:369
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install exteplayer3 from feed of your distribution to be able use all available addons."
 msgstr "Při kontrole systému byl zjištěn systémový plugin s názvem ServiceApp, ale chybí vám přehrávač exteplayer3. Tento videopřehrávač je potřeba ke zpracování některých video formátů, které interní videopřehrávač zabudovaný do enigma2 zpracovat nedokáže. Doporučuje se nainstalovat exteplayer3 z feedu vaší distribuce, abyste mohli používat všechny dostupné doplňky."
 
-#: src/archivczsk.py:373
+#: src/archivczsk.py:371
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss gstplayer. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer from feed of your distribution to be able use all available addons."
 msgstr "Při kontrole systému byl zjištěn systémový plugin s názvem ServiceApp, ale chybí vám přehrávač gstplayer. Tento videopřehrávač je potřeba ke zpracování některých video formátů, které interní videopřehrávač zabudovaný do enigma2 zpracovat nedokáže. Doporučuje se nainstalovat gstplayer z feedu vaší distribuce, abyste mohli používat všechny dostupné doplňky."
 
-#: src/archivczsk.py:375
+#: src/archivczsk.py:379
 msgid "You are using outdated image in your receiver without updated SSL certificates used for HTTPS communication. This can cause problems connecting to some sites or services. Outdated images are not supported and errors related to SSL communication will not be fixed. Update your image to latest version or switch to other image if current one doesn't get updates anymore."
 msgstr "Ve svém přijímači používáte zastaralé image bez aktualizovaných SSL certifikátů používaných pro HTTPS komunikaci. Může to způsobit problémy s připojením k některým stránkám nebo službám. Zastaralé image nejsou podporované a chyby souvisící s SSL komunikaci nebudou opravené. Aktualizujte své image na nejnovější verzi nebo přejděte na jiné, pokud už vaše aktuální nedostává další aktualizace."
 
-#: src/gui/content.py:59
+#: src/gui/content.py:60
 msgid "Unlock protected content"
 msgstr "Odemknout chráněný obsah"
 
-#: src/gui/content.py:66 src/gui/content.py:457
+#: src/gui/content.py:67 src/gui/content.py:468
 msgid "Loading..."
 msgstr "Načítám..."
 
-#: src/gui/content.py:188 src/gui/content.py:294
+#: src/gui/content.py:189 src/gui/content.py:297
 msgid "show menu of current addon"
 msgstr "zobrazí informace o doplňku"
 
-#: src/gui/content.py:230 src/gui/content.py:251
+#: src/gui/content.py:233 src/gui/content.py:254
 msgid "enabled"
 msgstr "zapnuto"
 
-#: src/gui/content.py:236
+#: src/gui/content.py:239
 msgid "broken"
 msgstr "nefunkční"
 
-#: src/gui/content.py:239
+#: src/gui/content.py:242
 msgid "deprecated"
 msgstr "zastarané"
 
-#: src/gui/content.py:245
+#: src/gui/content.py:248
 msgid "disabled"
 msgstr "vypnutý"
 
-#: src/gui/content.py:276 src/gui/content.py:442
+#: src/gui/content.py:279 src/gui/content.py:453
 msgid "Version: "
 msgstr "Verze: "
 
-#: src/gui/content.py:320
+#: src/gui/content.py:323
 msgid "Add Category"
 msgstr "Přidat kategorii"
 
-#: src/gui/content.py:340
+#: src/gui/content.py:343
 msgid "Manager"
 msgstr "Manažér"
 
-#: src/gui/content.py:341
+#: src/gui/content.py:344
 msgid "Support us"
 msgstr "Podpořte nás"
 
-#: src/gui/content.py:343 src/gui/content.py:511 src/gui/menu.py:227
+#: src/gui/content.py:345 src/gui/content.py:519 src/gui/menu.py:42
+#: src/engine/handlers/addon.py:163 src/engine/handlers/addon.py:242
+msgid "Changelog"
+msgstr "Změny"
+
+#: src/gui/content.py:346 src/gui/content.py:522 src/gui/menu.py:227
 #: src/engine/handlers/addon.py:160 src/engine/handlers/addon.py:239
 msgid "Settings"
 msgstr "Nastavení"
 
-#: src/gui/content.py:405
+#: src/gui/content.py:416
 msgid "Set category name"
 msgstr "Zvolte jméno kategorie"
 
-#: src/gui/content.py:453
+#: src/gui/content.py:464
 msgid "Canceling..."
 msgstr "Ruší se načítání..."
 
-#: src/gui/content.py:468
+#: src/gui/content.py:479
 msgid "Do you want to exit ArchivCZSK?"
 msgstr "Chcete ukončit archivCZSK?"
 
-#: src/gui/content.py:482
+#: src/gui/content.py:493
 msgid "show info in CSFD"
 msgstr "zobrazit informace v CSFD doplňku"
 
-#: src/gui/content.py:483
+#: src/gui/content.py:494
 msgid "show additional info"
 msgstr "zobrazit informace"
 
-#: src/gui/content.py:484
+#: src/gui/content.py:495
 msgid "show menu of current item"
 msgstr "zobrazí informace o vybrané položce"
 
-#: src/gui/content.py:508 src/gui/menu.py:42 src/engine/handlers/addon.py:163
-#: src/engine/handlers/addon.py:242
-msgid "Changelog"
-msgstr "Změny"
-
-#: src/gui/content.py:509 src/gui/download.py:407
+#: src/gui/content.py:520 src/gui/download.py:407
 #: src/engine/handlers/addon.py:166
 msgid "Downloads"
 msgstr "Stažené soubory"
 
-#: src/gui/content.py:510 src/gui/shortcuts.py:27
+#: src/gui/content.py:521 src/gui/shortcuts.py:27
 #: src/engine/handlers/addon.py:170
 msgid "Shortcuts"
 msgstr "Záložky"
@@ -279,135 +279,135 @@ msgstr "Zobrazení CSFD informací selhalo."
 msgid "changelog"
 msgstr "seznam změn"
 
-#: src/gui/info.py:232
+#: src/gui/info.py:242
 msgid "Genre: "
 msgstr "Žánr: "
 
-#: src/gui/info.py:233
+#: src/gui/info.py:243
 msgid "Year: "
 msgstr "Rok: "
 
-#: src/gui/info.py:234
+#: src/gui/info.py:244
 msgid "Rating: "
 msgstr "Hodnocení: "
 
-#: src/gui/info.py:277
+#: src/gui/info.py:297
 msgid "Refresh"
 msgstr "Aktualizovat"
 
-#: src/gui/info.py:278
+#: src/gui/info.py:298
 msgid "Detected player:"
 msgstr "Zjištěný přehrávač:"
 
-#: src/gui/info.py:280
+#: src/gui/info.py:300
 msgid "Supported protocols:"
 msgstr "Podporované protokoly:"
 
-#: src/gui/info.py:282
+#: src/gui/info.py:302
 msgid "Supported containers:"
 msgstr "Podporované kontejnery:"
 
-#: src/gui/info.py:303
+#: src/gui/info.py:323
 msgid "VideoPlayer Info"
 msgstr "Informace o Video přehrávači"
 
-#: src/gui/info.py:320
+#: src/gui/info.py:340
 msgid "These informations are valid only for internal enigma2 player based on gstreamer"
 msgstr "Tyto informace jsou platné pouze pro interní přehrávač enigma2 založený na gstreameru"
 
-#: src/gui/info.py:321
+#: src/gui/info.py:341
 msgid "If you use other player like exteplayer3, then this check is not valid to you."
 msgstr "Pokud používáte jiný přehrávač, jako je exteplayer3, pak pro vás tato kontrola neplatí."
 
-#: src/gui/info.py:323
+#: src/gui/info.py:343
 msgid "* Status UNKNOWN means, that I dont know how to get info,"
 msgstr "* Stav NEZNÁMÝ znamená, že plugin neví, jak získat informace,"
 
-#: src/gui/info.py:324
+#: src/gui/info.py:344
 msgid "it doesnt mean that protocol or container isn't supported"
 msgstr "ale neznamená to, že protokol nebo kontejner není podporován"
 
-#: src/gui/info.py:326
+#: src/gui/info.py:346
 msgid "* Videos are encoded by various codecs"
 msgstr "* Videa jsou kódována různými kodeky"
 
-#: src/gui/info.py:327
+#: src/gui/info.py:347
 msgid "to play them you need to have HW support of your receiver to decode them"
 msgstr "a k jejich přehrání je nutné, aby váš přijímač hardwarově podporoval jejich dekódovaní"
 
-#: src/gui/info.py:328
+#: src/gui/info.py:348
 msgid "For example if you have ASF(WMV) - OK state"
 msgstr "Máte-li například stav ASF(WMV) - FAIL"
 
-#: src/gui/info.py:329
+#: src/gui/info.py:349
 msgid "it doesnt already mean that you can play WMV file"
 msgstr "neznamená to, že můžete přehrávat WMV soubory"
 
-#: src/gui/info.py:330
+#: src/gui/info.py:350
 msgid "it just means that player can open WMV container and get ENCODED video out of it"
 msgstr "znamená to, že přehrávač může otevřít WMV kontejner a získat z něj kódované video"
 
-#: src/gui/info.py:331
+#: src/gui/info.py:351
 msgid "In WMV container is used VC1 encoded video"
 msgstr "Ve WMV kontejneru je video zakódováno VC1 kodekem"
 
-#: src/gui/info.py:332
+#: src/gui/info.py:352
 msgid "If your player cannot decode VC1 codec, than you cannot play this video."
 msgstr "Pokud váš přehrávač neumí dekódovat VC1 kodek, video nepřehrajete."
 
-#: src/gui/info.py:337
+#: src/gui/info.py:357
 msgid "HTTP Protocol"
 msgstr "HTTP protokol"
 
-#: src/gui/info.py:338
+#: src/gui/info.py:358
 msgid "HLS Protocol"
 msgstr "HLS protokol"
 
-#: src/gui/info.py:339
+#: src/gui/info.py:359
 msgid "MMS Protocol"
 msgstr "MMS protokol"
 
-#: src/gui/info.py:340
+#: src/gui/info.py:360
 msgid "RTMP Protocol"
 msgstr "RTMP protokol"
 
-#: src/gui/info.py:341
+#: src/gui/info.py:361
 msgid "RTSP Protocol"
 msgstr "RTSP protokol"
 
-#: src/gui/info.py:346
+#: src/gui/info.py:366
 msgid "3GP container"
 msgstr "3GP kontejner"
 
-#: src/gui/info.py:347
+#: src/gui/info.py:367
 msgid "ASF(WMV) Container"
 msgstr "ASF(WMV) kontejner"
 
-#: src/gui/info.py:348
+#: src/gui/info.py:368
 msgid "AVI Container"
 msgstr "AVI kontejner"
 
-#: src/gui/info.py:349
+#: src/gui/info.py:369
 msgid "FLV Container"
 msgstr "FLV kontejner"
 
-#: src/gui/info.py:350
+#: src/gui/info.py:370
 msgid "MKV Container"
 msgstr "MKV kontejner"
 
-#: src/gui/info.py:351
+#: src/gui/info.py:371
 msgid "MP4 Container"
 msgstr "MP4 kontejner"
 
-#: src/gui/info.py:357
+#: src/gui/info.py:377
 msgid "UNKNOWN"
 msgstr "NEZNÁMÝ"
 
-#: src/gui/info.py:359
+#: src/gui/info.py:379
 msgid "OK"
 msgstr "OK"
 
-#: src/gui/info.py:361
+#: src/gui/info.py:381
 msgid "FAIL"
 msgstr "FAIL"
 
@@ -908,17 +908,21 @@ msgstr "Spustit HTTP server jen pro interní použití doplňkami"
 msgid "Download"
 msgstr "Stáhnout"
 
-#: src/resources/repositories/config.py:22
+#: src/resources/repositories/config.py:23
 msgid "Download path"
 msgstr "Adresář pro stahování"
 
-#: src/resources/repositories/config.py:28
+#: src/resources/repositories/config.py:29
 msgid "Loading"
 msgstr "Načítání"
 
-#: src/resources/repositories/config.py:30
+#: src/resources/repositories/config.py:32
 msgid "Timeout"
 msgstr "Časový limit"
+
+#: src/resources/repositories/config.py:37
+msgid "Verify SSL certificates"
+msgstr "Kontrolovat SSL certifikáty"
 
 #: src/client/shortcut.py:36
 msgid "Run addon fatal error."

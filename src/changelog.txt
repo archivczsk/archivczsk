@@ -34,17 +34,17 @@ archivCZSK 2.2.4, 17.04.2023
 archivCZSK 2.2.3, 14.04.2023
     - oprava voľby kvality pri sťahovaní playlistu
     - pridanie sťahovania HLS streamu pomocou ffmpeg (opravuje sťahovanie streamov s oddelenou video a audio stopou)
-         
+
 archivCZSK 2.2.2, 12.04.2023
     - rozdelenie skinov na normálne a s transparentným pozadím
     - pridanie zobrazenia changelogu po aktualizácii doplnku
 
 archivCZSK 2.2.1, 05.04.2023
     - oprava trakt.tv scrobble pre položky v playliste
-    - pridanie možnosti pre zmenu audio streamu a automatické zapnutie vnorených titulkov 
+    - pridanie možnosti pre zmenu audio streamu a automatické zapnutie vnorených titulkov
     - aktualizácia playlist api
     - vypnutie verifikácie ssl pre curl downloader
- 
+
 archivCZSK 2.2.0, 03.04.2023
     - vylepšená podpora pre titulky vrátane podpory pre VTT
     - aktualizované trakt.tv api pre doplnky
@@ -59,11 +59,11 @@ archivCZSK 2.1.4, 17.03.2023
 archivCZSK 2.1.3, 16.03.2023
     - pridanie podpory pre playlisty s oneskoreným resolvovaním URL adresy
     - pridanie možnosti prehrať všetky videa v priečinku a od aktuálneho cez kontextové menu
-    
+
 archivCZSK 2.1.2, 15.03.2023
     - oprava korektného ukončovania servisného vlákna
     - zmena predvoleného timeoutu pre doplnky
-    
+
 archivCZSK 2.1.1, 11.03.2023
     - oprava skinov pre VTi a iné zastaralé image
     - pridanie pycrypto do závislosti a kontrola na konfilikt s pycryptodome (kvôli chybe vo VTi)
@@ -109,7 +109,7 @@ archivCZSK 2.0.1, 21.02.2023
     - opravené závislosti balíka pre VTi
     - voľba titulkov v audio menu je zapnutá len pre OpenPLi a OpenATV
     - pridanie možnosti zmeniť prehrávač klávesou 0
-    
+
 archivCZSK 2.0.0, 16.02.2023
     - zmena formátu API doplnkov - kompletne prerobný spôsob komunikácie s doplnkami
     - odstránenie podpory pre služby doplnkov a nahradenie za úlohy bežiace na pozadí
@@ -152,20 +152,20 @@ archivCZSK 1.5.6, 29.09.2022
 
 archivCZSK 1.5.5, 20.09.2022
     - oprava pádu pri pomalom dekódovaní obrázku
-    - pridanie informácie o tom, že DreamBox s originálnym SW je nepodporovaný  
+    - pridanie informácie o tom, že DreamBox s originálnym SW je nepodporovaný
 
 archivCZSK 1.5.4, 28.07.2022
     - pridanie voľby pre vypnutie farbičkovania textov v hlavnej ponuke
     - možnosť nastavenia zoznamu URL pre picony
     - aktualizácia lokalizácii
-    
+
 archivCZSK 1.5.3, 22.07.2022
     - zmena IPC protokolu pre služby na textový kvôli kompatibilite s DreamOS
     - pridanie podpory pre reload settingov na DreamOS v zabezpečenom režime
 
 archivCZSK 1.5.2, 18.07.2022
     - oprava pádu pri chybe v IPC medzi hlavnou aplikáciou a službami doplnkov
-    
+
 archivCZSK 1.5.1, 17.07.2022
     - pridanie dĺžky filmu do stats prikazu pre doplnky
     - pridanie interného HTTP servera pre použitie doplnkami (napr. ako proxy)
@@ -187,7 +187,7 @@ archivCZSK 1.4.9, 31.05.2022
     - pridanie podpory pre viac repozitárov
     - oprava pohybu v menu addonu pre OpenATV 7.0
     - úpravy pre Trakt.tv
-    
+
 archivCZSK 1.4.8, 13.05.2022
     - oprava pádu pri obnovení prehrávania
     - pridanie podpory pre nastavenie prehrávača z addonu
@@ -198,12 +198,12 @@ archivCZSK 1.4.7, 28.04.2022
     - zrušenie rozlišovania video a TV doplnkov
     - automatická detekcia ServiceApp a dostupných prehrávačov
     - zmena formátu aktualizácie zo .zip na ipk/deb
-    - oprava zachovávania atribútov súborov pri aktualizácii doplnkov 
+    - oprava zachovávania atribútov súborov pri aktualizácii doplnkov
 
 archivCZSK 1.4.6, 19.04.2022
     - oprava mazania formatovacich znakov na dalsich miestach
     - presun aktualizacie archivu a doplnkov do noveho repozitara
-	
+
 archivCZSK 1.4.5, 10.04.2022
     - moznost volby titulkov z menu pre vyber audio stopy
     - oprava formatovacich znakov v niektorych textoch
@@ -265,7 +265,7 @@ archivCZSK 1.2.3, 22.04.2020
     - odstranena hlaska na premium
     - odstranena nepotrebna hlaska o videoprehravaci pri prvotnom spusteni
     - odstranene zaseky pri pohybe v menu pri stahovani obrazkov
-    - rychlejsia kontrola aktualizacii, zobrazena hlaska pri kontrole 
+    - rychlejsia kontrola aktualizacii, zobrazena hlaska pri kontrole
     - oprava zobrazenia poloziek pre ivysilani
 
 archivCZSK 1.2.2, 05.05.2019
@@ -297,7 +297,7 @@ archivCZSK 1.1.0, 23.6.2018
     - podpora funkcie trakt.tv ak to doplnok umoznuje (stream-cinema) aj pre OE2.5
     - automaticke oznacenie filmu ako videny po zhliadnuti viac ako 80% (trakt)
     - znovu vyvolanie kontroly aktualizacie bez nutnosti restartovat box alebo uplynutia 2h
-      (zmenit a ulozit nastavenie povolujuce update na NIE 
+      (zmenit a ulozit nastavenie povolujuce update na NIE
        nasledne ho opat zapnut ANO ulozit vypnut a znovu zapnut archivczsk)
     - drobne opravy (oprava nazvu suboru pri stiahnuti na HDD, skiny, ...)
     - zmeny v instalacnom balicku (pre openPLi[ATV] 6.2)
@@ -470,7 +470,7 @@ Archivy:
 - befun - opravene vyhladavanie pri zadani viacerych slov
 - ulozto -  #155 přidána podpora oblíbených a uživatelských souborů (zatím pouze zobrazení)
 - kouknicz - oprava nacitavania videii
-- pohadkar - je spat :) 
+- pohadkar - je spat :)
            - nacitanie jednotlivych kategorii trva aj na najnovsich prijmacoch okolo minuty
              dalsie nacitania su uz okamzite, kedze sa ukladaju na disk
 
@@ -517,7 +517,7 @@ Archivy:
  - befun
       * nyní se natahují informace o filmu (textový popis)
       * oprava chyby při listování seriálů
-      
+
 
 verzia 0.7 alpha12:
 Vseobecne:
@@ -557,8 +557,8 @@ moje upravy :) :
 - ivysilani - opravene nacitanie videa pri niektorych relaciach
         - pridane oznacenie programov len z bonusmy
         - zrychlene nacitavanie kategorii
-- voyo - opravene spravy, 
-       - opravene listovanie v niektorych relaciach, 
+- voyo - opravene spravy,
+       - opravene listovanie v niektorych relaciach,
        - zobrazenie kvality prehravaneho videa
 - ta3 - pridany archiv televizie TA3, podla mp2online projektu(treba mat nainstalovany HLS plugin)
 - stv - opravene nacitavanie video linku (na IPBOX ABCOM 25.4 image prehravanie RTMP sposobi zelenac [prilis dlhy link] a na HLS nejde zasa zvuk :( )
@@ -593,7 +593,7 @@ xbmc_doplnky:
  - serialycz - fixnuto rutube a podpora videomail, zobrazuje uz vsetky videa
  - sledujuserialy.cz - prehravani opet funkcni
  - befun.cz - pridana podpora zoradovania filmov, oprava nahladov
- 
+
 
 verzia 0.7 alpha9:
 Vseobecne:
@@ -746,7 +746,7 @@ Prehravac:
       - opravene chyby vo video kontrolery
       - moznost pouzit upravenu openpli gstreamer aplikaciu - servicemp4(sh4 s gstreamer,mips32el):
     * moznost nastavit tip bufferingu:
-        default- standardne nastavanie -> video sa zacne prehravat okamzite nezavisle na velkosti buffera 
+        default- standardne nastavanie -> video sa zacne prehravat okamzite nezavisle na velkosti buffera
         prefill- video sa pauzuje pokial sa buffer nezaplni
         progresive streaming - buffer je umiestneny na hdd
         manual- to iste ako prefill ale naprogramovane v pythone na zaklade evBufferChange eventov
@@ -761,7 +761,7 @@ Prehravac:
    * opravena strata synchronizacie tituliek s obrazom po pretacani dozadu
    * refactoring a optimalizacia kodu
 
-  
+
 Stahovanie:
 - pridana moznost volby modu stahovania:
     * Twisted - stahovanie pomocou kniznice twisted
@@ -787,7 +787,7 @@ Archivy:
  * befun (prehravanie napriamo funguje len pri pouziti servicemp4)
 
 Balicky:
-- mipsel/mips32el 
+- mipsel/mips32el
     * potrebne gstreamer kniznice pridane do Depends namiesto ich umiestnenia v baliku ->
     -> nainstaluju sa aktualne kniznice vytvorene pre konkretny image,
       !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
@@ -802,12 +802,12 @@ Balicky:
 GSteamer skript:
 
 - V pripade ze vam nefunguje prehravanie niektorych streamov mozte skusit
-  preinstalovat potrebne gstreamer balicky pomocou skriptu. 
+  preinstalovat potrebne gstreamer balicky pomocou skriptu.
 
-Skript, ktory nainstaluje/preinstaluje vsetky potrebne kniznice na prehravanie streamov. 
+Skript, ktory nainstaluje/preinstaluje vsetky potrebne kniznice na prehravanie streamov.
 Treba len vediet ci mate OE1.6(mipsel) alebo OE2.0(mips32el) image.
 
-Postup: 
+Postup:
 prehrat subor z prilohy do prijmaca.
 
 tar -xzvf gst-plugins-archivczsk.tar.gz
@@ -860,7 +860,7 @@ verzia 0.7
 - zjednoteny balik pre mipsel OE1.6 (Python2.6/Python2.7)
 - doplneny mipsel balicke o shutil.py,numbers.py -thx moulikpeta, doplnene kniznice pre titulky
 
-    
+
 verzia 0.61
 - opravena automaticka aktualizacia archivov
 - aktualizovane archivy - stv,markiza,voyo,ct,movielibrary
