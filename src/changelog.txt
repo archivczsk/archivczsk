@@ -1,3 +1,18 @@
+archivCZSK 2.4.0, 07.01.2024
+    - oprava interného CSFD prehliadača
+    - odstránenie integrovaných závislosti pre python 2.7 z balíka (opravuje problém s mazaním /tmp adresára pri aktualizácii)
+    - prečistenie kódu na viacerých miestach
+    - automatické zobrazenie zmien od poslednej verzie pri prvom spustení po aktualizácii
+    - pridaná funkcionalita home/end kláves pre viaceré menu prostredníctvom Channel Up/Down klávesov
+    - pridanie voľby pre vypnutie SSL verifikácie pre každý doplnok
+    - pridaná globálna rodičovská kontrola prostredníctvom PIN kódu:
+        * v nastaveniach je možné povoliť/zakázať rodičovskú kontrolu
+        * ak je aktívna, tak akýkoľvek obsah označený doplnkom ako 'adult' je možné zobraziť len pri zadaní PIN kódu
+        * taktiež je možné zakázať zobrazovanie adult obsahu alebo u tohto obsahu zakázať postery
+        * PIN kód je možné odblokovať cez kontextové menu alebo pri pokuse o zobrazenie 'adult' obsahu
+        * PIN kód sa automaticky uzamkne pri odchode z pluginu - pri novom spustení je nutné ho zadať znovu
+        * PIN kód je globálny - po jeho zadaní sa odblokuje 'adult' obsah vo všetkých doplnkoch
+
 archivCZSK 2.3.7, 30.12.2023
     - vylepšené vypisovanie chybových hlásení pokiaľ zlyhá komunikácia so serverom
 
