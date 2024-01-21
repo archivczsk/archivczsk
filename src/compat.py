@@ -20,25 +20,9 @@ from . import _
 from skin import parseSize as __parseSize
 from skin import parsePosition as __parsePosition
 
-def isDMMImage():
-	try:
-		from enigma import eTimer
-		eTimer().timeout.connect
-	except Exception as e:
-		return False
-	return True
-
-def isVTIImage():
-	import inspect
-	
-	try:
-		argspec = inspect.getargspec(__parseSize)
-	except:
-		argspec = inspect.getfullargspec(__parseSize)
-	return len(argspec.args) == 2
-
-DMM_IMAGE = isDMMImage()
-VTI_IMAGE = isVTIImage()
+from .engine.tools.boxinfo import BoxInfo
+DMM_IMAGE = BoxInfo.is_dmm_image()
+VTI_IMAGE = BoxInfo.is_vti_image()
 
 def parseSize(s, scale, object = None, desktop = None):
 	if VTI_IMAGE:
@@ -60,7 +44,7 @@ class eConnectCallbackObj:
 	def __init__(self, obj=None, connectHandler=None):
 		self.connectHandler = connectHandler
 		self.obj = obj
-	
+
 	def __del__(self):
 		if 'connect' not in dir(self.obj):
 			if 'get' in dir(self.obj):
@@ -106,7 +90,7 @@ class MessageBox(OrigMessageBox):
 			argspec = inspect.getargspec(OrigMessageBox.__init__)
 		except:
 			argspec = inspect.getfullargspec(OrigMessageBox.__init__)
-			
+
 		if kwargs.get('simple') is not None and not 'simple' in argspec.args:
 			del kwargs['simple']
 
