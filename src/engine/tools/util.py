@@ -24,13 +24,26 @@ except:
 	from http.client import HTTPConnection, HTTPSConnection
 	from html.entities import name2codepoint as n2cp
 	from itertools import zip_longest
-	
+
 from xml.etree.cElementTree import ElementTree, fromstring
 from ...py3compat import *
 
 from twisted.internet import reactor
 from twisted.web.client import Agent, BrowserLikeRedirectAgent, readBody
 from twisted.web.http_headers import Headers
+
+try:
+	FileExistsError
+
+	def check_EEXIST(e):
+		return True
+except:
+	# py2 workaround
+	import errno
+	FileExistsError = OSError
+
+	def check_EEXIST(e):
+		return e.errno == errno.EEXIST
 
 try:
 	from ... import log, removeDiac
@@ -108,7 +121,7 @@ def decode_string(string):
 def toUnicode(text):
 	if text == None:
 		return None
-	
+
 	if is_py3:
 		if isinstance(text, bytes):
 			return text.decode('utf-8')
@@ -137,7 +150,7 @@ def toString(text):
 			if isinstance(text, unicode):
 				return text.encode('utf-8')
 			return text
-		
+
 	return str(text)
 
 def check_version(local, remote, compare_postfix=True):
@@ -191,6 +204,11 @@ def make_path(p):
 	'''Makes sure directory components of p exist.'''
 	try:
 		os.makedirs(p)
+	except FileExistsError as e:
+		if check_EEXIST(e):
+			pass
+	try:
+		os.makedirs(p)
 	except OSError:
 		pass
 
@@ -201,9 +219,9 @@ def download_to_file(remote, local, mode='wb', debugfnc=None, timeout=10, header
 			debugfnc("downloading %s to %s", remote, local)
 		else:
 			print("downloading %s to %s", (remote, local))
-			
+
 		req = url_Request(remote, headers=headers)
-		
+
 		try:
 			import ssl
 			context = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
