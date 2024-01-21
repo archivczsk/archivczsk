@@ -306,7 +306,7 @@ def get_misc_settings():
 	if config.plugins.archivCZSK.update_branch.value == 'testing':
 		config.plugins.archivCZSK.send_usage_stats.setValue(True)
 	else:
-#		list.append(getConfigListEntry(_("Allow sending anonymous usage statistics"), config.plugins.archivCZSK.send_usage_stats))
+		list.append(getConfigListEntry(_("Allow sending anonymous usage statistics"), config.plugins.archivCZSK.send_usage_stats))
 		pass
 
 	return list

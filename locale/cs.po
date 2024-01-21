@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-08 19:44+0100\n"
-"PO-Revision-Date: 2024-01-08 19:45+0100\n"
+"POT-Creation-Date: 2024-01-21 19:22+0100\n"
+"PO-Revision-Date: 2024-01-21 19:24+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -656,15 +656,15 @@ msgstr "ArchivCZSK"
 msgid "Playing CZ/SK archives"
 msgstr "Přehrávání CZ/SK archivů"
 
-#: src/compat.py:271
+#: src/compat.py:255
 msgid "List of storage devices"
 msgstr "Seznam úložišť"
 
-#: src/compat.py:273
+#: src/compat.py:257
 msgid "Parent directory"
 msgstr "Nadřízený adresář"
 
-#: src/compat.py:292
+#: src/compat.py:276
 msgid "nothing connected"
 msgstr "nic nepřipojeno"
 
@@ -903,6 +903,10 @@ msgstr "Port interního HTTP serveru"
 #: src/settings.py:305
 msgid "Run HTTP only for internal addons usage"
 msgstr "Spustit HTTP server jen pro interní použití doplňkami"
+
+#: src/settings.py:309
+msgid "Allow sending anonymous usage statistics"
+msgstr "Povolit posílání anonymních statistik používání pluginu"
 
 #: src/resources/repositories/config.py:20 src/engine/handlers/media.py:279
 msgid "Download"
