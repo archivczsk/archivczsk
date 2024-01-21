@@ -1,3 +1,12 @@
+archivCZSK 2.4.1, 21.01.2024
+    - oprava aktualizácie rozbaľovania aktualizačných zip súborov pre doplnky ak neobsahuju cesty
+    - vylepšená detekcia hw na ktorom beží plugin
+    - aktivácia anonymných štatistík používania pluginu a doplnkov:
+        * štatistiky sú anonymné a posielajú sa raz za týždeň
+        * zasielajú sa informácie o verzii pluginu, nastaveniach aktualizácii a type a verzii použitého image
+        * pre doplnky sa posiela verzia a info o kumulatívnom čase strávenom v používaných doplnkoch
+        * zasielanie je možné vypnúť v nastaveniach pluginu, no nerobte to prosím - je to potrebné pre ďalší vývoj
+
 archivCZSK 2.4.0, 07.01.2024
     - oprava interného CSFD prehliadača
     - odstránenie integrovaných závislosti pre python 2.7 z balíka (opravuje problém s mazaním /tmp adresára pri aktualizácii)
