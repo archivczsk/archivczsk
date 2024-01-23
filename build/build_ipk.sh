@@ -8,9 +8,6 @@ else
 	COMMITED_ONLY="yes"
 fi
 
-# if ADDONS_COMMIT is not set, then no addons will be packed to ipk/deb
-# ADDONS_COMMIT="a6336a067dec9ff441e1779496c27496213c9fa2"
-
 # prepare directories
 
 # ROOT_DIR -> root git directory
@@ -75,7 +72,6 @@ mkdir -p ${P}/usr/lib/enigma2/python/Components/Converter/
 # copy files into new direcotry structure
 cp -rp ${S}/src/* ${P}${PLUGINPATH}
 cp -p ${S}/src/converter/* ${P}/usr/lib/enigma2/python/Components/Converter/
-touch ${P}${PLUGINPATH}/firsttime
 
 echo "creating locales"
 msgfmt ${S}/locale/cs.po -o ${P}${PLUGINPATH}/locale/cs/LC_MESSAGES/archivCZSK.mo
@@ -88,17 +84,6 @@ echo "cleanup of unnecessary files"
 find ${P} -type f -name ".gitignore" -exec rm {} \;
 rm -rf ${P}${PLUGINPATH}/converter
 rm -rf ${P}${PLUGINPATH}/resources/data/*
-
-# if we have ADDONS_COMMIT, then download latest addons and add them to package
-if ! [ -z "${ADDONS_COMMIT}" ]; then
-	if [ -e /usr/bin/python3 ] ; then
-		py_cmd=python3
-	else
-		py_cmd=python
-	fi
-
-	$py_cmd ${S}/build/plugin/src/script/getaddons.py addons ${P} $ADDONS_COMMIT
-fi
 
 # exec dpkg-deb to create fresh new deb package and create ipk from it
 dpkg-deb --root-owner-group -Zgzip -b ${P} ${PKG}.deb

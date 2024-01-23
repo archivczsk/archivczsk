@@ -2,36 +2,10 @@
 
 # backup all files needed to restore functionality after upgrade
 mkdir -p /tmp/archivczsk
-mkdir -p /tmp/archivczsk/repositories
 
 if [ -f /usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/categories.xml ]; then
 	echo "saving categories.xml to /tmp/archivczsk ..."
 	cp /usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/categories.xml /tmp/archivczsk/
-fi
-
-if [ -d /usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/skins/ ]; then
-	echo "saving SKINS to /tmp/archivczsk ..."
-	cp -R /usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/skins/ /tmp/archivczsk/
-
-	# don't backup default skins
-	rm -f /tmp/archivczsk/skins/default_*.xml
-fi
-
-if [ -d /usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/resources/data/ ]; then
-	echo "saving DATA to /tmp/archivczsk ..."
-	cp -R /usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/resources/data/ /tmp/archivczsk/
-fi
-
-if [ -d /usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/resources/repositories/ ]; then
-	find /usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/resources/repositories -type d -maxdepth 1 -mindepth 1 | while read REPO ; do
-		if [ -f $REPO/addon.xml ] ; then
-			echo "saving REPOSITORY `basename $REPO` to /tmp/archivczsk/repositories ..."
-			cp -R $REPO /tmp/archivczsk/repositories
-		fi
-	done
-
-	# remove addon.xml from official repo so it can be updated using this package
-	rm -f /tmp/archivczsk/repositories/addons/addon.xml
 fi
 
 if [ -f /usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/version.py ]; then

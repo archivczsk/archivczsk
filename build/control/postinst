@@ -7,35 +7,22 @@ chmod 755 $ARCHIVCZSK/script/*.sh 2>/dev/null
 
 if [ -f $TMP/categories.xml ] ; then
 	echo "Found categories.xml, restoring..."
-	cp $TMP/categories.xml $ARCHIVCZSK
+	cp $TMP/categories.xml $ARCHIVCZSK/resources/data
 fi
 
 if [ -d $TMP/data/ ] ; then
-	echo "Found DATA, restoring..."
-	if [ -d $ARCHIVCZSK/resources/data ]; then
-		rm -rf $ARCHIVCZSK/resources/data
-	fi
-	cp -R $TMP/data $ARCHIVCZSK/resources
+	echo "Cleaning DATA from temp folder ..."
+	rm -rf $TMP/data
 fi
 
 if [ -d $TMP/skins/ ] ; then
-	echo "Found SKINS, restoring..."
-	cp $TMP/skins/* $ARCHIVCZSK/gui/skins
-fi
-
-if [ -d $TMP/addons/ ] ; then
-	echo "Found official ADDONS, restoring..."
-	# remove saved addon.xml file, so it can be updated
-	rm -f $TMP/addons/addon.xml
-
-	cp -R $TMP/addons $ARCHIVCZSK/resources/repositories
+	echo "Cleaning SKINS from temp folder ..."
+	rm -rf $TMP/skins
 fi
 
 if [ -d $TMP/repositories/ ] ; then
-	find $TMP/repositories -type d -maxdepth 1 -mindepth 1 | while read REPO ; do
-		echo "restoring REPOSITORY `basename $REPO` ..."
-		cp -R $REPO $ARCHIVCZSK/resources/repositories
-	done
+	echo "Cleaning REPOSITORIES from temp folder ..."
+	rm -rf $TMP/repositories
 fi
 
 touch $ARCHIVCZSK/.first_start
@@ -45,7 +32,7 @@ if [ -f ${TMP}/last_version.txt ] ; then
 fi
 
 echo "Removing temp folder..."
-rm -rf ${TMP}/
+rm -rf ${TMP}
 
 echo "Installation of archivCZSK was successfull, starting script to install dependencies in background ..."
 
