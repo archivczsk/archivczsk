@@ -108,11 +108,11 @@ def skin_changed(configElement):
 	ArchivCZSK.force_skin_reload = True
 
 if config.plugins.archivCZSK.allow_custom_update.value or config.plugins.archivCZSK.update_branch.value == 'testing':
-	# don't allow to choose default skins directly for normal users - they are only able to select default skins usin auto or auto_transparent
-	skinChoices = [os.path.splitext(fname)[0] for fname in os.listdir(SKIN_PATH) if fname.endswith('.xml') and not fname.startswith('default_') ]
-else:
 	# when custom update or testing repo is enabled, then allow explicitly setting any of default skins
 	skinChoices = [os.path.splitext(fname)[0] for fname in os.listdir(SKIN_PATH) if fname.endswith('.xml') ]
+else:
+	# don't allow to choose default skins directly for normal users - they are only able to select default skins usin auto or auto_transparent
+	skinChoices = [os.path.splitext(fname)[0] for fname in os.listdir(SKIN_PATH) if fname.endswith('.xml') and not fname.startswith('default_') ]
 
 skinChoices.append(('auto', _("Default"),))
 skinChoices.append(('auto_transparent', _("Default transparent"),))
