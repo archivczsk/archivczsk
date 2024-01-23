@@ -6,7 +6,9 @@ from .. import log
 from .bgservice import AddonBackgroundService
 from datetime import datetime
 from .tools.boxinfo import BoxInfo
+from .tools.util import get_ntp_timestamp
 import requests
+import platform
 
 try:
 	import cPickle as pickle
@@ -25,12 +27,39 @@ class UsageStats(object):
 			self.stats_open_mode = 'b'
 		self.store_as_json = store_as_json
 		self.bgservice = AddonBackgroundService('UsageStats')
-		self.year, self.week_number, _ = datetime.now().isocalendar()
+		self.year = None
+		self.week_number = None
 		self.addon_stats = {}
 		self.running = {}
 		self.need_save = False
 		self.load()
+		if self.year == None or self.week_number == None:
+			# year and week number not loaded from cache, so set to actuall
+			self.year, self.week_number = self.get_year_and_week_number()
+
 		self.bgservice.run_in_loop('CheckStats', 7200, self.check_stats)
+
+	def get_year_and_week_number(self):
+		# actual date is in many times inaccurate, so try to get one from internet
+		t = get_ntp_timestamp()
+
+		if t != None:
+			year, week_number, _ = datetime.fromtimestamp(t).isocalendar()
+			log.debug("Received date info from ntp.org: year = %d, week_number = %d" % (year, week_number))
+		else:
+			# NTP not worked - try HTTP instead
+			try:
+				inet_date = requests.get('http://worldtimeapi.org/api/timezone/Europe/London', timeout=3).json()
+
+				week_number = int(inet_date['week_number'])
+				year = int(inet_date['utc_datetime'].split('-')[0])
+				log.debug("Received date info from worldtimeapi: year = %d, week_number = %d" % (year, week_number))
+			except:
+				# failed to get data from net, so use one (untrusted) from local clock
+				year, week_number, _ = datetime.now().isocalendar()
+				log.error("Failed to get date info from internet - using local provided by system: year = %d, week_number = %d" % (year, week_number))
+
+		return year, week_number
 
 	def load(self):
 		try:
@@ -66,11 +95,11 @@ class UsageStats(object):
 		if self.addon_stats != {}:
 			self.addon_stats = {}
 			self.need_save = True
-		self.year, self.week_number, _ = datetime.now().isocalendar()
+		self.year, self.week_number = self.get_year_and_week_number()
 		self.save()
 
 	def check_stats(self, in_background=False):
-		year, week_number, _ = datetime.now().isocalendar()
+		year, week_number = self.get_year_and_week_number()
 
 		if year > self.year or week_number > self.week_number:
 			self.send(in_background)
@@ -130,6 +159,7 @@ class UsageStats(object):
 					"vendor": boxinfo.get_info_value('brand'),
 					"model": boxinfo.get_info_value('model'),
 					"chipset": boxinfo.get_info_value('chipset'),
+					"arch": platform.machine(),
 				},
 				'software': {
 					"os_version": boxinfo.get_info_value('imagever'),
@@ -137,6 +167,7 @@ class UsageStats(object):
 					"enigma_version": boxinfo.get_info_value('enigmaver'),
 					"oe_version": boxinfo.get_info_value('oever'),
 					"distro_type": distro_type,
+					"python_ver": platform.python_version(),
 				},
 				'archivczsk': {
 					'version': version,
@@ -161,14 +192,14 @@ class UsageStats(object):
 			data['checksum'] = self.calc_data_checksum(data)
 
 			if in_background:
-				self.bgservice.run_task("SendStats", None, self.__send_data, data)
+				self.bgservice.run_task("SendStats", None, self.__send_data, data, in_background)
 			else:
 				self.__send_data(data)
 		self.reset()
 
-	def __send_data(self, data):
+	def __send_data(self, data, in_background=False):
 		try:
-			requests.post('http://archivczsk.webredirect.org:15101/stats/send', json=data, timeout=5)
+			requests.post('http://archivczsk.webredirect.org:15101/stats/send', json=data, timeout=10 if in_background else 3)
 		except Exception as e:
 			log.error("Failed to send stats data: %s" % str(e))
 

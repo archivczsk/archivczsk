@@ -4,6 +4,7 @@ import re
 import stat
 import sys
 import socket
+import struct
 import traceback
 
 from enigma import eConsoleAppContainer
@@ -663,3 +664,25 @@ def set_thread_name(name):
 	except:
 		pass
 
+
+def get_ntp_timestamp():
+	# simple implementation of getting timestamp from external NTP server with without dependency on non standard libraries
+	t = None
+	client = None
+
+	try:
+		client = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+		client.settimeout(2)
+		client.sendto(b'\x1b' + 47 * b'\0', ('pool.ntp.org', 123))
+		data, _ = client.recvfrom(1024)
+
+		if data:
+			t = struct.unpack('!12I', data)[10]
+			t -= 2208988800  # Reference time (1.1.1970)
+	except:
+		pass
+	finally:
+		if client != None:
+			client.close()
+
+	return t
