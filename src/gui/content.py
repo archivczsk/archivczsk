@@ -297,7 +297,7 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 	CONTEXT_TIP = (KEY_MENU_IMG, _("show menu of current addon"))
 
 	def __init__(self, session, archivCZSK):
-		provider = ArchivCZSKContentProvider(archivCZSK, os.path.join(settings.PLUGIN_PATH, 'categories'))
+		provider = ArchivCZSKContentProvider(archivCZSK, os.path.join(config.plugins.archivCZSK.dataPath.value, 'categories'))
 		provider.start()
 		contentHandler = ArchivCZSKContentHandler(session, self, provider)
 		defaultCategory = config.plugins.archivCZSK.defaultCategory.value
