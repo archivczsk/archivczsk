@@ -172,7 +172,11 @@ class UsageStats(object):
 					'id': stbinfo.installation_id,
 					'update_enabled': config.plugins.archivCZSK.archivAutoUpdate.value,
 					'addons_update_enabled': config.plugins.archivCZSK.autoUpdate.value,
-					'update_channel': config.plugins.archivCZSK.update_branch.value
+					'update_channel': config.plugins.archivCZSK.update_branch.value,
+					'settings' : {
+						'csfd_mode': config.plugins.archivCZSK.csfdMode.value,
+						'parental_enabled': config.plugins.archivCZSK.parental.enable.value
+					}
 				},
 				'addons': []
 			}
