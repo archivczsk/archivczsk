@@ -5,10 +5,9 @@ from ..settings import config
 from .. import log
 from .bgservice import AddonBackgroundService
 from datetime import datetime
-from .tools.boxinfo import BoxInfo
+from .tools.stbinfo import stbinfo
 from .tools.util import get_ntp_timestamp
 import requests
-import platform
 
 try:
 	import cPickle as pickle
@@ -142,11 +141,10 @@ class UsageStats(object):
 	def send(self, in_background=False):
 		if config.plugins.archivCZSK.send_usage_stats.value:
 			from ..version import version
-			boxinfo = BoxInfo()
 
-			if boxinfo.is_dmm_image():
+			if stbinfo.is_dmm_image:
 				distro_type = 'dmm'
-			elif boxinfo.is_vti_image():
+			elif stbinfo.is_vti_image:
 				distro_type = 'vti'
 			else:
 				distro_type = 'other'
@@ -156,22 +154,22 @@ class UsageStats(object):
 				'year': self.year,
 				'week': self.week_number,
 				'hardware' : {
-					"vendor": boxinfo.get_info_value('brand'),
-					"model": boxinfo.get_info_value('model'),
-					"chipset": boxinfo.get_info_value('chipset'),
-					"arch": platform.machine(),
+					"vendor": stbinfo.hw_vendor,
+					"model": stbinfo.hw_model,
+					"chipset": stbinfo.hw_chipset,
+					"arch": stbinfo.hw_arch,
 				},
 				'software': {
-					"os_version": boxinfo.get_info_value('imagever'),
-					"distro": boxinfo.get_info_value('friendlyimagedistro'),
-					"enigma_version": boxinfo.get_info_value('enigmaver'),
-					"oe_version": boxinfo.get_info_value('oever'),
+					"os_version": stbinfo.sw_distro_ver,
+					"distro": stbinfo.sw_distro,
+					"enigma_version": stbinfo.sw_enigma_ver,
+					"oe_version": stbinfo.sw_oe_ver,
 					"distro_type": distro_type,
-					"python_ver": platform.python_version(),
+					"python_ver": stbinfo.python_version,
 				},
 				'archivczsk': {
 					'version': version,
-					'id': boxinfo.get_installation_id(),
+					'id': stbinfo.installation_id,
 					'update_enabled': config.plugins.archivCZSK.archivAutoUpdate.value,
 					'addons_update_enabled': config.plugins.archivCZSK.autoUpdate.value,
 					'update_channel': config.plugins.archivCZSK.update_branch.value
@@ -207,6 +205,5 @@ class UsageStats(object):
 #		with open('/tmp/%d_stats_to_send.json' % data['week'], 'w') as f:
 #			json.dump(data, f)
 		return
-
 
 usage_stats = UsageStats()

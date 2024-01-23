@@ -20,9 +20,9 @@ from . import _
 from skin import parseSize as __parseSize
 from skin import parsePosition as __parsePosition
 
-from .engine.tools.boxinfo import BoxInfo
-DMM_IMAGE = BoxInfo.is_dmm_image()
-VTI_IMAGE = BoxInfo.is_vti_image()
+from .engine.tools.stbinfo import stbinfo
+DMM_IMAGE = stbinfo.is_dmm_image
+VTI_IMAGE = stbinfo.is_vti_image
 
 def parseSize(s, scale, object = None, desktop = None):
 	if VTI_IMAGE:
