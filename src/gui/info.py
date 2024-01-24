@@ -24,6 +24,7 @@ from .common import showInfoMessage, PanelColorListEntry, PanelList
 from .poster import PosterProcessing, PosterPixmapHandler
 from ..engine.player.info import videoPlayerInfo
 from ..engine.parental import parental_pin
+from ..engine.usage import usage_stats
 from ..colors import DeleteColors
 from ..py3compat import *
 
@@ -100,12 +101,15 @@ def showCSFDInfo(session, item):
 
 		if csfdType == 1:
 			from ..gui.archivcsfd import ArchivCSFD
+			usage_stats.update_counter('csfd_i')
 			session.open(ArchivCSFD, name, year)
 		elif csfdType == 2:
 			from Plugins.Extensions.CSFD.plugin import CSFD
+			usage_stats.update_counter('csfd_e')
 			session.open(CSFD, name)
 		elif csfdType == 3:
 			from Plugins.Extensions.CSFDLite.plugin import CSFDLite
+			usage_stats.update_counter('csfd_l')
 			try:
 				session.open(CSFDLite, name, yearStr)
 			except:

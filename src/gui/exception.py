@@ -13,7 +13,7 @@ except:
 
 from .common import showInfoMessage, showWarningMessage, showErrorMessage
 from ..engine.exceptions import addon, download, play
-from ..gsession import GlobalSession
+from ..engine.usage import usage_stats
 from .. import _, log
 import requests
 
@@ -25,7 +25,6 @@ class GUIExceptionHandler(object):
 	def __init__(self,session, timeout=6):
 		self.timeout = timeout
 		self.session = session
-		#self.session = GlobalSession.getSession()
 		self.messageFormat = "[%s]\n%s"
 
 	def infoMessage(self, text):
@@ -50,6 +49,13 @@ class AddonExceptionHandler(GUIExceptionHandler):
 	errorName = _("Addon error")
 	warningName = _("Addon warning")
 	infoName = _("Addon info")
+
+	def __init__(self, session, content_provider=None, timeout = 6):
+		GUIExceptionHandler.__init__(self, session, timeout)
+		if content_provider != None:
+			self.addon = getattr(content_provider, "video_addon", None)
+		else:
+			self.addon = None
 
 	def __call__(self, func):
 		def wrapped(*args, **kwargs):
@@ -100,9 +106,10 @@ class AddonExceptionHandler(GUIExceptionHandler):
 					self.errorMessage(message)
 				# we handle all possible exceptions since we dont want plugin to crash because of addon error...
 				except Exception as e:
+					if self.addon:
+						usage_stats.addon_exception(self.addon)
 					log.logError("Addon error.\n%s"%traceback.format_exc())
 					self.errorMessage(_("An unhandled error occurred while calling the addon. Please report a bug so it can be fixed."))
-					traceback.print_exc()
 			except:
 				log.logError("Addon (LOG) error.\n%s"%traceback.format_exc())
 				# this can go to crash because want show modal from screen which is not modal

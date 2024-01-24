@@ -331,7 +331,7 @@ class MediaItemHandler(ItemHandler):
 			else: # no video
 				callback(None)
 
-		@AddonExceptionHandler(self.session)
+		@AddonExceptionHandler(self.session, self.content_provider)
 		def open_item_error_cb(failure):
 			self.content_screen.stopLoading()
 			self.content_screen.workingFinished()
@@ -435,7 +435,7 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 			else: # no video
 				self.content_screen.workingFinished()
 
-		@AddonExceptionHandler(self.session)
+		@AddonExceptionHandler(self.session, self.content_provider)
 		def open_item_error_cb(failure):
 			self.content_screen.stopLoading()
 			self.content_screen.showList()
@@ -460,7 +460,7 @@ class VideoNotResolvedItemHandler(MediaItemHandler):
 			self.content_screen.showList()
 			self.content_screen.workingFinished()
 
-		@AddonExceptionHandler(self.session)
+		@AddonExceptionHandler(self.session, self.content_provider)
 		def open_item_error_cb(failure):
 			self.content_screen.stopLoading()
 			self.content_screen.showList()

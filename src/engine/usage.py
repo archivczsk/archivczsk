@@ -28,6 +28,7 @@ class UsageStats(object):
 		self.bgservice = AddonBackgroundService('UsageStats')
 		self.year = None
 		self.week_number = None
+		self.counters = {}
 		self.addon_stats = {}
 		self.running = {}
 		self.need_save = False
@@ -70,6 +71,7 @@ class UsageStats(object):
 				self.addon_stats = data.get('addons', {})
 				self.year = data.get('year', self.year)
 				self.week_number = data.get('week', self.week_number)
+				self.counters = data.get('counters', {})
 		except:
 			pass
 
@@ -80,6 +82,7 @@ class UsageStats(object):
 					data = {
 						'year': self.year,
 						'week': self.week_number,
+						'counters': self.counters,
 						'addons': self.addon_stats,
 					}
 					if self.store_as_json:
@@ -95,6 +98,7 @@ class UsageStats(object):
 			self.addon_stats = {}
 			self.need_save = True
 		self.year, self.week_number = self.get_year_and_week_number()
+		self.counters = {}
 		self.save()
 
 	def check_stats(self, in_background=False):
@@ -132,6 +136,14 @@ class UsageStats(object):
 		stats = self.get_addon_stats(addon)
 		stats['http_calls'] = stats.get('http_calls', 0) + 1
 		self.set_addon_stats(addon, stats)
+
+	def addon_exception(self, addon):
+		stats = self.get_addon_stats(addon)
+		stats['exceptions'] = stats.get('exceptions', 0) + 1
+		self.set_addon_stats(addon, stats)
+
+	def update_counter(self, name):
+		self.counters[name] = self.counters.get(name, 0) + 1
 
 	def calc_data_checksum(self, data):
 		from hashlib import md5
@@ -173,6 +185,7 @@ class UsageStats(object):
 					'update_enabled': config.plugins.archivCZSK.archivAutoUpdate.value,
 					'addons_update_enabled': config.plugins.archivCZSK.autoUpdate.value,
 					'update_channel': config.plugins.archivCZSK.update_branch.value,
+					'counters': self.counters,
 					'settings' : {
 						'csfd_mode': config.plugins.archivCZSK.csfdMode.value,
 						'parental_enabled': config.plugins.archivCZSK.parental.enable.value
@@ -189,6 +202,7 @@ class UsageStats(object):
 						'used': stats_data.get('used', 0),
 						'time': stats_data.get('time', 0),
 						'http_calls': stats_data.get('http_calls', 0),
+						'exceptions': stats_data.get('exceptions', 0),
 					})
 
 			data['checksum'] = self.calc_data_checksum(data)

@@ -24,7 +24,7 @@ class FolderItemHandler(ItemHandler):
 		return isinstance(item, (PSearchItem))
 
 	def _open_item(self, item, *args, **kwargs):
-		
+
 		def open_item_success_cb(result):
 			list_items, screen_command, args = result
 
@@ -54,7 +54,7 @@ class FolderItemHandler(ItemHandler):
 				self.content_screen.showList()
 				self.content_screen.workingFinished()
 
-		@AddonExceptionHandler(self.session)
+		@AddonExceptionHandler(self.session, self.content_provider)
 		def open_item_error_cb(failure):
 			log.logError("Folder get_content error cb.\n%s"%failure)
 			self.content_screen.stopLoading()
@@ -112,11 +112,11 @@ class FolderItemHandler(ItemHandler):
 			else:
 				if paused:
 					self.content_provider.resume()
-				
+
 				if hasattr(item, 'traktItem'): # do it only on item which have trakt data
 					# handle trakt action localy and after that forward it to addon
 					success, msg = trakttv.handle_trakt_action( action, item.traktItem )
-					
+
 					# content provider must be in running state (not paused)
 					self.content_provider.trakt(self.session, item.traktItem, action, { 'success': success, 'msg': msg }, successCB=open_item_success_cb, errorCB=open_item_error_cb)
 				else:
@@ -125,7 +125,7 @@ class FolderItemHandler(ItemHandler):
 			log.logError("Trakt call failed.\n%s"%traceback.format_exc())
 			if paused:
 				self.content_provider.pause()
-				
+
 	def _init_menu(self, item, *args, **kwargs):
 		# TRAKT menu (show only if item got data to handle trakt)
 		if 'trakt' in self.content_provider.capabilities and self.isValidForTrakt(item):
@@ -176,7 +176,7 @@ class FolderItemHandler(ItemHandler):
 			self.content_screen.workingFinished()
 			callback(list_items)
 
-		@AddonExceptionHandler(self.session)
+		@AddonExceptionHandler(self.session, self.content_provider)
 		def open_item_error_cb(failure):
 			self.content_screen.stopLoading()
 			self.content_screen.workingFinished()
