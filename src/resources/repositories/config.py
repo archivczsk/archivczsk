@@ -45,7 +45,7 @@ global_addon_settings = [
 
 def add_global_addon_specific_setting(addon, addon_config, setting):
 	if setting['id'] == 'download_path':
-		download_path = os.path.join(config.plugins.archivCZSK.downloadsPath.getValue(), addon.id)
+		download_path = os.path.join(config.plugins.archivCZSK.downloadsPath.getValue(), addon.get_real_id())
 		#print '[ArchivCZSK] adding download_path %s to %s' % (download_path, addon.id)
 		setattr(addon_config, setting['id'], ConfigDirectory(default=download_path))
 

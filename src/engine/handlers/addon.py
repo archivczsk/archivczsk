@@ -1,4 +1,5 @@
 from Screens.MessageBox import MessageBox
+from Screens.InputBox import InputBox
 import shutil
 import traceback
 import os
@@ -156,6 +157,14 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 	def _init_menu(self, item):
 		self.item = item
 		addon = item.addon
+
+		if addon.is_virtual():
+			item.add_context_menu_item(_("Rename this profile"), action=self._rename_profile, params={'item':item})
+			item.add_context_menu_item(_("Delete this profile"), action=self._remove_profile, params={'item':item})
+		else:
+			item.add_context_menu_item(_("Create new profile"), action=self._create_profile, params={'item':item})
+
+
 		# item.add_context_menu_item(_("Update"), action=item.addon.update)
 		item.add_context_menu_item(_("Settings"),
 								   action=addon.open_settings,
@@ -174,6 +183,41 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 
 	def can_handle(self, item):
 		return item.__class__ in self.handles
+
+	def _remove_profile(self, item):
+		def remove_profile_cbk(answer):
+			if answer == True:
+				self.content_screen.workingStarted()
+				item.addon.repository.remove_virtual_addon(item.addon)
+				item.addon.remove_profile()
+				item.addon.close()
+				self.content_screen.refreshList()
+				self.content_screen.workingFinished()
+
+		message = _("Do you want to remove this profile?")
+		self.session.openWithCallback(remove_profile_cbk, MessageBox, message, type=MessageBox.TYPE_YESNO)
+
+	def _create_profile(self, item):
+		def create_profile_cbk(text):
+			if text:
+				self.content_screen.workingStarted()
+				text = text.replace(',', '').replace(':', '')
+				profile_id = item.addon.add_profile(text)
+				item.addon.repository.add_virtual_addon(item.addon, profile_id, text)
+				self.content_screen.refreshList()
+				self.content_screen.workingFinished()
+		self.session.openWithCallback(create_profile_cbk, InputBox, _("Enter name of new profile"))
+
+	def _rename_profile(self, item):
+		def rename_profile_cbk(text):
+			if text:
+				self.content_screen.workingStarted()
+				text = text.replace(',', '').replace(':', '')
+				item.addon.rename_profile(text)
+				self.content_screen.refreshList()
+				self.content_screen.workingFinished()
+		self.session.openWithCallback(rename_profile_cbk, InputBox, _("Enter new profile name"))
+
 
 
 class VideoAddonItemHandler(VideoAddonItemHandlerTemplate):

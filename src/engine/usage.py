@@ -108,28 +108,30 @@ class UsageStats(object):
 			self.send(in_background)
 
 	def get_addon_stats(self, addon):
-		return self.addon_stats.get(addon.id,{}).get(addon.version,{})
+		return self.addon_stats.get(addon.get_real_id(),{}).get(addon.version,{})
 
 	def set_addon_stats(self, addon, stats):
 		# if this will be uncommented, then stats will be checked by every insert, but we don't need to be so accurate
 		# check_stats is called on start and then every 2 hours, so there will be max. 2 hours of inaccuracy per week
 #		self.check_stats(True)
-		if addon.id not in self.addon_stats:
-			self.addon_stats[addon.id] = {}
+		addon_id = addon.get_real_id()
+		if addon_id not in self.addon_stats:
+			self.addon_stats[addon_id] = {}
 
-		self.addon_stats[addon.id][addon.version] = stats
+		self.addon_stats[addon_id][addon.version] = stats
 		self.need_save = True
 
 	def addon_start(self, addon):
-		self.running[addon.id] = int(time.time())
+		self.running[addon.get_real_id()] = int(time.time())
 
 	def addon_stop(self, addon):
-		if addon.id in self.running:
+		addon_id = addon.get_real_id()
+		if addon_id in self.running:
 			stats = self.get_addon_stats(addon)
 
 			stats['used'] = stats.get('used', 0) + 1
-			stats['time'] = stats.get('time', 0) + (int(time.time()) - self.running[addon.id])
-			del self.running[addon.id]
+			stats['time'] = stats.get('time', 0) + (int(time.time()) - self.running[addon_id])
+			del self.running[addon_id]
 			self.set_addon_stats(addon, stats)
 
 	def addon_http_call(self, addon):
@@ -149,6 +151,15 @@ class UsageStats(object):
 		from hashlib import md5
 		data = json.dumps(data, sort_keys=True, ensure_ascii=True, separators=('','')).encode('ascii')
 		return md5(data).hexdigest()
+
+	def get_addon_profiles_cnt(self, addon_id):
+		from ..archivczsk import ArchivCZSK
+
+		try:
+			addon = ArchivCZSK.get_addon(addon_id)
+			return len(addon.get_profiles())
+		except:
+			return 0
 
 	def send(self, in_background=False):
 		if config.plugins.archivCZSK.send_usage_stats.value:
@@ -203,6 +214,7 @@ class UsageStats(object):
 						'time': stats_data.get('time', 0),
 						'http_calls': stats_data.get('http_calls', 0),
 						'exceptions': stats_data.get('exceptions', 0),
+						'profiles': self.get_addon_profiles_cnt(addon_id),
 					})
 
 			data['checksum'] = self.calc_data_checksum(data)

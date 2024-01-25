@@ -232,6 +232,17 @@ class AddonBackgroundService(object):
 		self.one_shot_timers = []
 		self.name = name
 
+	def stop_all(self):
+		def __stop_timers():
+			for t in self.loop_timers:
+				t['timer'].stop()
+				del t['timer']
+				del t['timer_conn']
+			self.loop_timers = []
+
+		fnc_out_queue.put(__stop_timers)
+		m_pump.send(0)
+
 	def run_task(self, name, finish_cbk, fn, *args, **kwargs):
 		def __run_task():
 			self.__run_task_internal(name, finish_cbk, fn, *args, **kwargs)

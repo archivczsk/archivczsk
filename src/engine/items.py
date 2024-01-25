@@ -115,7 +115,6 @@ class PCategoryVideoAddon(PVideoAddon):
 		PVideoAddon.__init__(self, addon)
 		# self.category_id = category_id
 
-
 class PFolder(PItem):
 	def __init__(self):
 		PItem.__init__(self)

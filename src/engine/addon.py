@@ -8,6 +8,8 @@ import os, traceback
 import gettext
 import importlib
 from Components.config import config, ConfigSubsection, ConfigSelection, ConfigYesNo, ConfigText, ConfigNumber, ConfigIP, ConfigPassword, getConfigListEntry
+import copy
+import uuid
 
 from .tools import util, parser
 from .. import _, log, settings
@@ -15,6 +17,7 @@ from ..resources.repositories import config as addon_config
 from ..gui import menu, info, shortcuts, download
 from .contentprovider import VideoAddonContentProvider
 from .bgservice import AddonBackgroundService
+from .httpserver import archivCZSKHttpServer, AddonHttpRequestHandler
 from ..compat import DMM_IMAGE
 
 from ..py3compat import *
@@ -59,6 +62,9 @@ class Addon(object):
 	def __repr__(self):
 		return "%s(%s-%s)" % (self.__class__.__name__, self.name, self.version)
 
+	def get_real_id(self):
+		# this will return real (physical) addon ID - used to get parent ID on virtual addon
+		return getattr(self, 'real_id', self.id)
 
 	def update(self):
 		if self.__need_update:
@@ -91,6 +97,9 @@ class Addon(object):
 
 	def get_info(self, info):
 		try:
+			# temporary hack
+			if info == 'profile':
+				info = 'data_path'
 			atr = getattr(self.info, '%s' % info)
 		except Exception as e:
 			#traceback.print_exc()
@@ -200,9 +209,80 @@ class VideoAddon(Addon):
 		download.openAddonDownloads(session, self, callback)
 
 	def close(self):
+		self.bgservice.stop_all()
+		archivCZSKHttpServer.unregisterRequestHandler(AddonHttpRequestHandler(self))
 		Addon.close(self)
 		self.provider.close()
 		self.provider = None
+
+	def is_virtual(self):
+		return False
+
+	def init_profile_settings(self):
+		config_addon_id = self.id.replace('.', '_')
+		setattr(config.plugins.archivCZSK.profiles, config_addon_id, ConfigText())
+
+	def get_profiles(self):
+		ret = {}
+		config_addon_id = self.id.replace('.', '_')
+		profile_value = getattr(config.plugins.archivCZSK.profiles, config_addon_id).value
+		if profile_value:
+			for p in profile_value.split(','):
+				pinfo = p.strip().split(':')
+				if len(pinfo) == 2:
+					ret[pinfo[0]] = pinfo[1]
+
+		return ret
+
+	def set_profiles(self, profiles):
+		profiles = [pid + ':' + pname.replace(',', '').replace(':', '') for pid, pname in profiles.items()]
+		profile_setting = getattr(config.plugins.archivCZSK.profiles, self.id.replace('.', '_'))
+		profile_setting.value = ','.join(profiles)
+		profile_setting.save()
+
+	def add_profile(self, name):
+		profiles = self.get_profiles()
+		profile_id = str(uuid.uuid4()).split('-')[4]
+		profiles[profile_id] = name
+		self.set_profiles(profiles)
+		return profile_id
+
+
+class VirtualVideoAddon(VideoAddon):
+	def __init__(self, info, repository, profile_id, profile_name):
+		self.real_id = info.id
+		self.profile_id = profile_id
+		self.profile_name = profile_name
+
+		# modify info dictionary
+		info = copy.copy(info)
+		info.id = info.id + '_' + profile_id
+		info.data_path = info.data_path + '_' + profile_id
+		util.make_path(info.data_path)
+		info.name = info.name + ' - ' + profile_name
+
+		VideoAddon.__init__(self, info, repository)
+
+	def is_virtual(self):
+		return True
+
+	def rename_profile(self, name):
+		addon = self.repository.get_addon(self.real_id)
+		profiles = addon.get_profiles()
+		if self.profile_id in profiles:
+			profiles[self.profile_id] = name
+			addon.set_profiles(profiles)
+			self.profile_name = name
+			self.info.name = addon.name + ' - ' + name
+			self.name = self.info.name
+
+	def remove_profile(self):
+		# get parent addon
+		addon = self.repository.get_addon(self.real_id)
+		profiles = addon.get_profiles()
+		if self.profile_id in profiles:
+			del profiles[self.profile_id]
+			addon.set_profiles(profiles)
 
 
 class DummyGettext(object):
@@ -267,7 +347,7 @@ class AddonLanguage(object):
 	def load_language(self, language_id):
 		if self.use_gettext:
 			if os.path.isdir( os.path.join(self._languages_dir, language_id, 'LC_MESSAGES') ):
-				self.languages[language_id] = gettext.translation(self.addon.id, self._languages_dir, [language_id])
+				self.languages[language_id] = gettext.translation(self.addon.get_real_id(), self._languages_dir, [language_id])
 				log.debug("%s gettext language %s was successfully loaded", (self, language_id))
 			else:
 				log.debug("%s gettext language %s not found - using dummy EN as backup", (self, language_id))
@@ -339,12 +419,12 @@ class AddonSettings(object):
 	def __init__(self, addon, settings_file):
 		log.debug("%s - initializing settings", addon)
 
-
 		# remove dots from addon.id to resolve issue with load/save config of addon
 		addon_id = addon.id.replace('.', '_')
 
 		setattr(config.plugins.archivCZSK.archives, addon_id, ConfigSubsection())
 		self.main = getattr(config.plugins.archivCZSK.archives, addon_id)
+
 		addon_config.add_global_addon_settings(addon, self.main)
 
 		self.main.enabled = ConfigYesNo(default=True)
@@ -568,7 +648,6 @@ class AddonInfo(object):
 		self.shortcuts = addon_dict['shortcuts']
 		self.tmp_path = config.plugins.archivCZSK.tmpPath.value
 		self.data_path = os.path.join(config.plugins.archivCZSK.dataPath.getValue(), self.id)
-		self.profile = self.data_path
 
 		# create data_path(profile folder)
 		util.make_path(self.data_path)

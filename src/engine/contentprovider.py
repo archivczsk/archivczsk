@@ -292,7 +292,7 @@ class DownloadsMixin(object):
 
 				downloadManager = DownloadManager.getInstance()
 				d = downloadManager.createDownload(
-					name=item.name, url=item.url, 
+					name=item.name, url=item.url,
 					stream=item.stream, filename=filename[0],
 					live=item.live, destination=destination[0],
 					startCB=start_cb, finishCB=finish_cb, quiet=False,
@@ -328,7 +328,7 @@ class DownloadsMixin(object):
 				if answer == "yes":
 					do_download()
 				if answer == "change":
-					downloads_path = (self.downloads_path.endswith("/") and 
+					downloads_path = (self.downloads_path.endswith("/") and
 							self.downloads_path or self.downloads_path + "/")
 					session.openWithCallback(change_download_path_callback,
 							LocationBox, _("Select new location"),
@@ -350,7 +350,7 @@ class DownloadsMixin(object):
 					_("Source"), toString(DeleteColors(item.name)), str(size_mbytes),
 					_("Destination"), toString(destination[0]), str(free_mbytes), _("free"),
 					_("Filename"), toString(filename[0]))
-			choices = [ (_("yes"), "yes"), (_("no"), "no"), 
+			choices = [ (_("yes"), "yes"), (_("no"), "no"),
 					(_("Change location"), "change"), (_("Edit filename"), "filename") ]
 
 			session.openWithCallback(ask_if_download_callback,
@@ -483,7 +483,7 @@ class ArchivCZSKContentProvider(ContentProvider):
 	def _get_category_addons(self, category_id, params = None):
 		if category_id in self.default_categories:
 			return self.default_categories[category_id]['call'](params)
-		
+
 		addons = []
 		for addon_id in self._categories_io.get_category(category_id):
 			try:
@@ -491,7 +491,7 @@ class ArchivCZSKContentProvider(ContentProvider):
 			except:
 				# there is unknown addon in categories.xml - ignore it
 				pass
-			
+
 		addons = self._sort_addons(addons)
 		return addons
 
@@ -532,7 +532,7 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		return cls.__resolving_provider.video_addon
 
 	def __init__(self, video_addon, downloads_path, shortcuts_path):
-		allowed_download = True 
+		allowed_download = True
 		if video_addon.setting_exist('!download'):
 			allowed_download = not video_addon.get_setting('!download')
 		self.video_addon = video_addon
@@ -549,16 +549,16 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 
 		self.addon_interface = None
 		self.content_deferred = deque()
-		
+
 	def __repr__(self):
 		return "%s(%s)"%(self.__class__.__name__, self.video_addon)
 
 	def __stats_start(self):
 		usage_stats.addon_start(self.video_addon)
-		
+
 	def __stats_stop(self):
 		usage_stats.addon_stop(self.video_addon)
-		
+
 	def __set_resolving_provider_light(self):
 		VideoAddonContentProvider.__resolving_provider = self
 		self.resolve_dependencies()
@@ -656,7 +656,7 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		content_deferred = defer.Deferred()
 		content_deferred.addCallbacks(successCB, errorCB)
 		self.content_deferred.append(content_deferred)
-		
+
 		# setting timeout for resolving content
 		loading_timeout = int(self.video_addon.get_setting('loading_timeout'))
 		if loading_timeout > 0:
