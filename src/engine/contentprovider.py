@@ -503,15 +503,16 @@ class ArchivCZSKContentProvider(ContentProvider):
 
 
 class DummyAddonInterface:
-	def __init__(self, run, trakt=None, stats=None, search=None, run_silent=None):
-		self.run = run
-		self.run_silent = run_silent if run_silent else run
+	def __init__(self, addon, run, trakt=None, stats=None, search=None, run_silent=None):
+		self.addon = addon
+		self.run = lambda *args, **kwargs: run(self.addon, *args, **kwargs)
+		self.run_silent = lambda *args, **kwargs: run_silent(self.addon, *args, **kwargs) if run_silent else self.run
 		if trakt:
-			self.trakt = trakt
+			self.trakt = lambda *args, **kwargs: trakt(self.addon, *args, **kwargs)
 		if stats:
-			self.stats = stats
+			self.stats = lambda *args, **kwargs: stats(self.addon, *args, **kwargs)
 		if search:
-			self.search = search
+			self.search = lambda *args, **kwargs: search(self.addon, *args, **kwargs)
 
 
 class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, FavoritesMixin):
@@ -596,10 +597,10 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 				log.error("Addon %s doesn't returned interface to mandatory run method" % (self.video_addon))
 				raise AddonError(_("Addon returned not supported communication interface"))
 
-			self.addon_interface = DummyAddonInterface(run=response['run'], trakt=response.get('trakt'), stats=response.get('stats'), search=response.get('search'), run_silent=response.get('run_silent'), run_shortcut=response.get('run_shortcut'))
+			self.addon_interface = DummyAddonInterface(self.video_addon, run=response['run'], trakt=response.get('trakt'), stats=response.get('stats'), search=response.get('search'), run_silent=response.get('run_silent'), run_shortcut=response.get('run_shortcut'))
 		elif callable(response):
 			# only method for get content returned as callable
-			self.addon_interface = DummyAddonInterface(run=response)
+			self.addon_interface = DummyAddonInterface(self.video_addon, run=response)
 		else:
 			# direct interface class returned
 			self.addon_interface = response
@@ -614,7 +615,11 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 			# checking if archivCZSK version is compatible with this plugin
 			if addon_id == 'enigma2.archivczsk':
 				if	not util.check_version(aczsk.version, version, False):
-					log.debug("%s archivCZSK version %s>=%s" , self, aczsk.version, version)
+					#because of API compatibility - check if required version is >= 2.5.0
+					if util.check_version(version, "2.5.0", False):
+						raise AddonError(_("Addon is designed for ArchivCZSK version lower then 2.5.0 and incompatible with installed version. Update ArchivCZSK and addons to latest available versions."))
+					else:
+						log.debug("%s archivCZSK version %s>=%s" , self, aczsk.version, version)
 				else:
 					log.debug("%s archivCZSK version %s<%s" , self, aczsk.version, version)
 					raise AddonError(_("You need to update archivCZSK at least to version {version}").format(version=version))
