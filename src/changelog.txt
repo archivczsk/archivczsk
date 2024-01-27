@@ -1,3 +1,15 @@
+archivCZSK 2.5.0, 27.01.2024
+    - vylepšenie, oprava a rozšírenie štatistík
+    - úprava a vylepšenie inštalačného balíka (malo by vyriešiť zamrznutie pri aktualizácii na OpenATV 7.x)
+    - oprava výberu skinov
+    - pridanie virtuálnych profilov pre doplnky:
+        * profil umožňuje vytvoriť virtuálnu kópiu ľubovoľného doplnku ktorý bude mať samostatné nastavenia
+        * počet profilov nie je obmedzený
+        * je to možné využiť u doplnkov, ktoré vyžadujú prihlásenie a chcete sa prihlásiť do viacerých účtov
+        * taktiež to to je možné využiť ak chcete mať jeden doplnok s rôznymi nastaveniami (napr. SC a nastavenie filtrov)
+        * profil sa vytvára na úvodnej obrazovke so zoznamom doplnkov stlačením MENU a výberom "Vytvoriť nový profil"
+        * po tomto kroku sa vytvorý nový virtuálny doplnok s ktorým je možné pracovať tak ako s "normálnym doplnkom"
+
 archivCZSK 2.4.1, 21.01.2024
     - oprava aktualizácie rozbaľovania aktualizačných zip súborov pre doplnky ak neobsahuju cesty
     - vylepšená detekcia hw na ktorom beží plugin
