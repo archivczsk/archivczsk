@@ -1,3 +1,6 @@
+archivCZSK 2.5.1, 28.01.2024
+    - oprava resetovania štatistík
+
 archivCZSK 2.5.0, 27.01.2024
     - vylepšenie, oprava a rozšírenie štatistík
     - úprava a vylepšenie inštalačného balíka (malo by vyriešiť zamrznutie pri aktualizácii na OpenATV 7.x)
