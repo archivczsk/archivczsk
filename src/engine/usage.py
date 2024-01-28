@@ -94,11 +94,10 @@ class UsageStats(object):
 				log.error(traceback.format_exc())
 
 	def reset(self):
-		if self.addon_stats != {}:
-			self.addon_stats = {}
-			self.need_save = True
+		self.addon_stats = {}
 		self.year, self.week_number = self.get_year_and_week_number()
 		self.counters = {}
+		self.need_save = True
 		self.save()
 
 	def check_stats(self, in_background=False):
@@ -106,6 +105,8 @@ class UsageStats(object):
 
 		if year > self.year or week_number > self.week_number:
 			self.send(in_background)
+		else:
+			self.save()
 
 	def get_addon_stats(self, addon):
 		return self.addon_stats.get(addon.get_real_id(),{}).get(addon.version,{})
@@ -146,6 +147,7 @@ class UsageStats(object):
 
 	def update_counter(self, name):
 		self.counters[name] = self.counters.get(name, 0) + 1
+		self.need_save = True
 
 	def calc_data_checksum(self, data):
 		from hashlib import md5
