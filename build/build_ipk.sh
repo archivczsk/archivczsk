@@ -12,6 +12,7 @@ fi
 
 # ROOT_DIR -> root git directory
 # TMP_DIR -> temp directory where all the packaging "magic" will be done
+mkdir -p tmp
 ROOT_DIR=$(pushd $(dirname $0) &> /dev/null; cd ..; pwd; popd &> /dev/null)
 TMP_DIR=$(pushd $(dirname $0) &> /dev/null; cd tmp; pwd; popd &> /dev/null)
 

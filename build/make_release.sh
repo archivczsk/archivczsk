@@ -66,6 +66,9 @@ IPK_DATE=`echo ${IPK_NAME} | cut -d - -f 2 | cut -d . -f 1`
 echo "IPK with version ${IPK_VER} and date ${IPK_DATE} created"
 
 mv ${IPK_PATH} ipk/
+# remove old released IPKs
+find ipk/ -name 'archivczsk_*.ipk' ! -name ${IPK_NAME} -delete
+
 sed -i "s/\tversion=\".*\"/\tversion=\"$IPK_VER\"/g" ipk/latest.xml
 sed -i "s/\tdate=\".*\">/\tdate=\"$IPK_DATE\">/g" ipk/latest.xml
 
