@@ -1,10 +1,15 @@
-archivczsk
+ArchivCZSK
 ==========
-enigma2 plugin pre prehravanie cz/sk video archivov
+enigma2 plugin pre prehravanie cz/sk video archívov
 
-**Info:** https://github.com/archivczsk/archivczsk/releases
+### Informácie
+Stručnú dokumentáciu a informácie nájdete vo [Wiki](https://github.com/archivczsk/archivczsk/wiki)
 
-**Doplnky:** https://github.com/archivczsk/archivczsk-doplnky
+### Inštalácia
+Postup ako nainštalovať ArchivCZSK nájdete v sekcii [Inštalácia](https://github.com/archivczsk/archivczsk/wiki/Inštalácia)
+
+### Doplnky
+Oficiálne doplnky majú svoj vlastný repozitár https://github.com/archivczsk/archivczsk-doplnky
 
 ## Podpora
-Ak máte problém, tak podporu môžete hľadať na **CS Fórum** https://cs-forum.eu/viewforum.php?f=58
+Ak máte problém, tak podporu môžete hľadať fóre [**CS Fórum**](https://cs-forum.eu/viewforum.php?f=58)
