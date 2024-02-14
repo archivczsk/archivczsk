@@ -680,9 +680,18 @@ def get_ntp_timestamp():
 			t = struct.unpack('!12I', data)[10]
 			t -= 2208988800  # Reference time (1.1.1970)
 	except:
-		pass
+		t = None
 	finally:
 		if client != None:
 			client.close()
+
+	return t
+
+def get_http_timestamp():
+	try:
+		import requests
+		t = requests.get('http://worldtimeapi.org/api/timezone/Europe/London', timeout=3).json()['unixtime']
+	except:
+		t = None
 
 	return t

@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
-import os, time, traceback
+import os, traceback
 import json
 from ..settings import config
 from .. import log
 from .bgservice import AddonBackgroundService
 from datetime import datetime
 from .tools.stbinfo import stbinfo
-from .tools.util import get_ntp_timestamp
+from .tools.util import get_ntp_timestamp, get_http_timestamp
 import requests
 
 try:
@@ -14,8 +14,14 @@ try:
 except:
 	import pickle
 
+try:
+	from .tools.monotonic import monotonic
+except:
+	log.error("This platform doesn't support monotonic time - using system time instead ...")
+	from time import time as monotonic
 
 class UsageStats(object):
+	STATS_VERSION = 1
 
 	def __init__(self, store_as_json=False):
 		if store_as_json:
@@ -26,38 +32,37 @@ class UsageStats(object):
 			self.stats_open_mode = 'b'
 		self.store_as_json = store_as_json
 		self.bgservice = AddonBackgroundService('UsageStats')
-		self.year = None
-		self.week_number = None
+		self.year = 0
+		self.week_number = 0
 		self.counters = {}
 		self.addon_stats = {}
 		self.running = {}
 		self.need_save = False
 		self.load()
-		if self.year == None or self.week_number == None:
-			# year and week number not loaded from cache, so set to actuall
-			self.year, self.week_number = self.get_year_and_week_number()
-
 		self.bgservice.run_in_loop('CheckStats', 7200, self.check_stats)
 
 	def get_year_and_week_number(self):
 		# actual date is in many times inaccurate, so try to get one from internet
-		t = get_ntp_timestamp()
+		year = 0
+		week_number = 0
 
-		if t != None:
-			year, week_number, _ = datetime.fromtimestamp(t).isocalendar()
-			log.debug("Received date info from ntp.org: year = %d, week_number = %d" % (year, week_number))
+		time_source = [
+			(get_ntp_timestamp, 'ntp.org',),
+			(get_http_timestamp, 'worldtimeapi',)
+		]
+
+		for f, name in time_source:
+			t = f()
+
+			if t != None:
+				year, week_number, _ = datetime.fromtimestamp(t).isocalendar()
+				log.debug("Received date info from %s: year = %d, week_number = %d" % (name, year, week_number))
+				break
+			else:
+				log.error("Failed to get date info from %s" % name)
 		else:
-			# NTP not worked - try HTTP instead
-			try:
-				inet_date = requests.get('http://worldtimeapi.org/api/timezone/Europe/London', timeout=3).json()
-
-				week_number = int(inet_date['week_number'])
-				year = int(inet_date['utc_datetime'].split('-')[0])
-				log.debug("Received date info from worldtimeapi: year = %d, week_number = %d" % (year, week_number))
-			except:
-				# failed to get data from net, so use one (untrusted) from local clock
-				year, week_number, _ = datetime.now().isocalendar()
-				log.error("Failed to get date info from internet - using local provided by system: year = %d, week_number = %d" % (year, week_number))
+			# failed to get data from net - give up and don't return local time, because it's untrusted
+			log.error("Failed to get date info from internet ...")
 
 		return year, week_number
 
@@ -93,28 +98,41 @@ class UsageStats(object):
 			except:
 				log.error(traceback.format_exc())
 
-	def reset(self):
+	def reset(self, year=None, week_number=None):
+		if year == None or week_number == None:
+			self.year, self.week_number = self.get_year_and_week_number()
+		else:
+			self.year = year
+			self.week_number = week_number
+
 		self.addon_stats = {}
-		self.year, self.week_number = self.get_year_and_week_number()
 		self.counters = {}
 		self.need_save = True
-		self.save()
 
-	def check_stats(self, in_background=False):
+	def check_stats(self):
 		year, week_number = self.get_year_and_week_number()
 
-		if year > self.year or week_number > self.week_number:
-			self.send(in_background)
-		else:
-			self.save()
+		if year == 0 or week_number == 0:
+			# we don't have accurate time, so give up for now ...
+			return
+
+		# if we don't have stored current year and week number, then set it now
+		if self.year == 0:
+			self.year = year
+
+		if self.week_number == 0:
+			self.week_number = week_number
+
+		if year > self.year or (year == self.year and week_number > self.week_number):
+			self.send()
+			self.reset(year, week_number)
+
+		self.save()
 
 	def get_addon_stats(self, addon):
 		return self.addon_stats.get(addon.get_real_id(),{}).get(addon.version,{})
 
 	def set_addon_stats(self, addon, stats):
-		# if this will be uncommented, then stats will be checked by every insert, but we don't need to be so accurate
-		# check_stats is called on start and then every 2 hours, so there will be max. 2 hours of inaccuracy per week
-#		self.check_stats(True)
 		addon_id = addon.get_real_id()
 		if addon_id not in self.addon_stats:
 			self.addon_stats[addon_id] = {}
@@ -123,7 +141,7 @@ class UsageStats(object):
 		self.need_save = True
 
 	def addon_start(self, addon):
-		self.running[addon.get_real_id()] = int(time.time())
+		self.running[addon.get_real_id()] = int(monotonic())
 
 	def addon_stop(self, addon):
 		addon_id = addon.get_real_id()
@@ -131,7 +149,7 @@ class UsageStats(object):
 			stats = self.get_addon_stats(addon)
 
 			stats['used'] = stats.get('used', 0) + 1
-			stats['time'] = stats.get('time', 0) + (int(time.time()) - self.running[addon_id])
+			stats['time'] = stats.get('time', 0) + (int(monotonic()) - self.running[addon_id])
 			del self.running[addon_id]
 			self.set_addon_stats(addon, stats)
 
@@ -163,7 +181,7 @@ class UsageStats(object):
 		except:
 			return 0
 
-	def send(self, in_background=False):
+	def send(self):
 		if config.plugins.archivCZSK.send_usage_stats.value:
 			from ..version import version
 
@@ -175,7 +193,7 @@ class UsageStats(object):
 				distro_type = 'other'
 
 			data = {
-				'version': 1,
+				'version': self.STATS_VERSION,
 				'year': self.year,
 				'week': self.week_number,
 				'hardware' : {
@@ -220,22 +238,25 @@ class UsageStats(object):
 					})
 
 			data['checksum'] = self.calc_data_checksum(data)
+			self.__send_data(data)
 
-			if in_background:
-				self.bgservice.run_task("SendStats", None, self.__send_data, data, in_background)
-			else:
-				self.__send_data(data)
-		self.reset()
-
-	def __send_data(self, data, in_background=False):
+	def __send_data(self, data, try_cnt=0):
+		s = requests.Session()
 		try:
-			requests.post('http://archivczsk.webredirect.org:15101/stats/send', json=data, timeout=10 if in_background else 3)
-		except Exception as e:
-			log.error("Failed to send stats data: %s" % str(e))
+			config = s.get('http://stats-config.archivczsk.webredirect.org', timeout=10).json()
+			for c in config:
+				if c.get('version') == self.STATS_VERSION:
+					s.post(c['url'], json=data, timeout=10, verify=False)
+					break
 
-		# just dummy debug dump for now
-#		with open('/tmp/%d_stats_to_send.json' % data['week'], 'w') as f:
-#			json.dump(data, f)
-		return
+		except Exception as e:
+			log.error("Failed to send stats data:\n%s" % str(e))
+
+			if try_cnt < 3:
+				# calculate delay based on installadion ID
+				delay = int(''.join(str(ord(x)) for x in data['archivczsk']['id'])) % 900
+				self.bgservice.run_delayed("SendStats", 3600 + delay, None, self.__send_data, data, try_cnt+1)
+		finally:
+			s.close()
 
 usage_stats = UsageStats()
