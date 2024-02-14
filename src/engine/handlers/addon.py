@@ -74,12 +74,7 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 				os.remove(prev_ver_file)
 			return previous_version
 
-		addon = item.addon
-		if addon.get_info('broken'):
-			self._handle_broken_addon(addon)
-		elif addon.get_info('deprecated'):
-			self._handle_deprecated_addon(addon)
-		else:
+		def check_changelog():
 			# check if update from previous version was done
 			prev_ver = get_addon_previous_version(addon.path)
 			log.debug("Addon's previous version: %s" % prev_ver)
@@ -88,6 +83,36 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 				openPartialChangelog(self.session, continue_to_addon, addon.name, addon.changelog_path, prev_ver)
 			else:
 				continue_to_addon()
+
+		def handle_integrity_fail():
+			def handle_integrity_fail_answer(res):
+				if res:
+					addon.check_update(force_update=True)
+					addon.update()
+					from ...archivczsk import ArchivCZSK
+					from Screens.Standby import TryQuitMainloop
+					ArchivCZSK.stop()
+					self.session.open(TryQuitMainloop, 3)
+				else:
+					check_changelog()
+
+			message = _("Addon integrity check failed. Do you want to reinstall addon? Enigma will be automaticaly restarted after reinstall.")
+			self.session.openWithCallback(handle_integrity_fail_answer, MessageBox, message, type=MessageBox.TYPE_YESNO)
+
+		addon = item.addon
+		if addon.get_info('broken'):
+			self._handle_broken_addon(addon)
+		elif addon.get_info('deprecated'):
+			self._handle_deprecated_addon(addon)
+		else:
+			if item.first_open:
+				item.first_open = False
+				if config.plugins.archivCZSK.checkAddonsIntegrity.value and addon.check_addon_integrity() == False:
+					handle_integrity_fail()
+				else:
+					check_changelog()
+			else:
+				check_changelog()
 
 	def open_video_addon(self, addon, list_items):
 		from ...gui.content import ArchivCZSKAddonContentScreenAdvanced
@@ -428,4 +453,3 @@ class ShortcutsContentHandler(ContentHandler):
 
 	def remove_shortcut(self):
 		pass
-

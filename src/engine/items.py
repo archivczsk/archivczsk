@@ -100,6 +100,7 @@ class PVideoAddon(PItem):
 		self.version = self.addon.get_info('version')
 		self.image = self.addon.get_info('image')
 		self.order = 99999
+		self.first_open = True
 		try:
 			self.order = int(self.addon.get_setting('auto_addon_order'))
 		except:

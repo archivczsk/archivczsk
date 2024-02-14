@@ -9,35 +9,35 @@ class XMLParser():
 	def __init__(self, xml_file):
 		xml = util.load_xml(xml_file)
 		self.xml = xml.getroot()
-		
+
 	def parse(self):
 		pass
 
 class XBMCSettingsXMLParser(XMLParser):
-	
+
 	def parse(self):
 		categories = []
 		settings = self.xml
-		
+
 		main_category = {'label':'general', 'subentries':[]}
 		for setting in settings.findall('setting'):
 			main_category['subentries'].append(self.get_setting_entry(setting))
 		categories.append(main_category)
-			
+
 		for category in settings.findall('category'):
 			category_entry = self.get_category_entry(category)
 			categories.append(category_entry)
 
 		return categories
-			
-			
+
+
 	def get_category_entry(self, category):
 		entry = {'label':category.attrib.get('label'), 'subentries':[]}
 		for setting in category.findall('setting'):
 			entry['subentries'].append(self.get_setting_entry(setting))
 		return entry
-		
-		
+
+
 	def get_setting_entry(self, setting):
 		entry = {}
 		entry['label'] = setting.attrib.get('label')
@@ -55,17 +55,17 @@ class XBMCSettingsXMLParser(XMLParser):
 			entry['values'] = setting.attrib.get('values')
 		return entry
 
-	
+
 class XBMCAddonXMLParser(XMLParser):
-		
+
 	def get_addon_id(self, addon):
 		id_addon = addon.attrib.get('id')#.replace('-', '')
 		#id_addon = id_addon.split('.')[-2] if id_addon.split('.')[-1] == 'cz' else id_addon.split('.')[-1]
 		return id_addon
-	
+
 	def parse(self):
 		return self.parse_addon(self.xml)
-	
+
 	def parse_addon(self, addon):
 
 		addon_id = self.get_addon_id(addon)
@@ -77,7 +77,9 @@ class XBMCAddonXMLParser(XMLParser):
 		version = addon.attrib.get('version')
 		if version is None:
 			raise Exception("Parse error: Mandatory atrribute 'version' is missing")
-		
+
+		hash = addon.attrib.get('rhash')
+
 		addon_type = 'unknown'
 		description = {}
 		broken = None
@@ -91,7 +93,7 @@ class XBMCAddonXMLParser(XMLParser):
 		deprecated = False
 		seekers = []
 		shortcuts = []
-		
+
 		req = addon.find('requires')
 		if req:
 			for imp in req.findall('import'):
@@ -100,7 +102,7 @@ class XBMCAddonXMLParser(XMLParser):
 					'version':imp.attrib.get('version'),
 					'optional':imp.attrib.get('optional')
 				})
-			
+
 		for info in addon.findall('extension'):
 			point = info.attrib.get('point')
 
@@ -156,11 +158,12 @@ class XBMCAddonXMLParser(XMLParser):
 			"deprecated": deprecated,
 			"seekers": seekers,
 			"shortcuts": shortcuts,
+			"hash": hash,
 		}
 
 
 class XBMCMultiAddonXMLParser(XBMCAddonXMLParser):
-	
+
 	def parse_addons(self):
 		addons = {}
 		for addon in self.xml.findall('addon'):
@@ -168,8 +171,8 @@ class XBMCMultiAddonXMLParser(XBMCAddonXMLParser):
 			addon_id = addon_dict['id']
 			addons[addon_id] = addon_dict
 		return addons
-	
+
 	def find_addon(self, addon_id):
 		for addon in self.xml.findall('addon'):
 			if addon_id == self.get_addon_id(addon):
-				return self.parse_addon(addon) 
+				return self.parse_addon(addon)

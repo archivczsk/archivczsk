@@ -103,6 +103,7 @@ config.plugins.archivCZSK.updateTimeout = ConfigInteger(default=8, limits=(0,30)
 config.plugins.archivCZSK.preload = ConfigYesNo(default=True)
 config.plugins.archivCZSK.lastIconDShowMessage = ConfigInteger(0)
 config.plugins.archivCZSK.changelogAfterUpdate = ConfigYesNo(default=True)
+config.plugins.archivCZSK.checkAddonsIntegrity = ConfigYesNo(default=True)
 
 def skin_changed(configElement):
 	from .archivczsk import ArchivCZSK
@@ -146,6 +147,7 @@ def get_main_settings():
 		list.append(getConfigListEntry(_("Update repository"), config.plugins.archivCZSK.update_repository))
 	list.append(getConfigListEntry(_("Update channel"), config.plugins.archivCZSK.update_branch))
 	list.append(getConfigListEntry(_("Show changelog after update"), config.plugins.archivCZSK.changelogAfterUpdate))
+	list.append(getConfigListEntry(_("Check addons integrity"), config.plugins.archivCZSK.checkAddonsIntegrity))
 	list.append(MENU_SEPARATOR)
 	list.append(getConfigListEntry(_("Show movie poster"), config.plugins.archivCZSK.downloadPoster))
 	list.append(getConfigListEntry(_("Poster maximum processing size (in kB)"), config.plugins.archivCZSK.posterSizeMax))

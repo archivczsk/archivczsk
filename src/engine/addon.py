@@ -10,6 +10,7 @@ import importlib
 from Components.config import config, ConfigSubsection, ConfigSelection, ConfigYesNo, ConfigText, ConfigNumber, ConfigIP, ConfigPassword, getConfigListEntry
 import copy
 import uuid
+from hashlib import md5
 
 from .tools import util, parser
 from .. import _, log, settings
@@ -41,6 +42,7 @@ class Addon(object):
 
 		self._updater = repository._updater
 		self.__need_update = False
+		self.remote_hash = None
 
 		# load languages
 		self.language = AddonLanguage(self, os.path.join(self.path, self.repository.addon_languages_relpath))
@@ -75,13 +77,14 @@ class Addon(object):
 		else:
 			return False
 
-	def check_update(self, load_xml=True):
+	def check_update(self, load_xml=True, force_update=False):
 		self.__need_update, self.info.broken = self._updater.check_addon(self, load_xml)
+		if force_update:
+			self.__need_update = True
 		return self.__need_update
 
 	def need_update(self):
 		return self.__need_update
-
 
 	def get_localized_string(self, id_language):
 		return self.language.get_localized_string(id_language)
@@ -137,6 +140,48 @@ class Addon(object):
 
 	def add_setting_change_notifier(self, setting_ids, cbk):
 		self.settings.add_change_notifier(setting_ids, cbk)
+
+	def get_addon_files(self):
+		def is_filtered(file):
+			if file.startswith('.') or os.path.basename(file).startswith('.'):
+				return True
+
+			for ext in ('.pyo', '.pyc', '.so'):
+				if file.endswith(ext):
+					return True
+
+			return False
+
+		files = []
+
+		for dirpath, _ ,filenames in os.walk(self.path):
+			if dirpath.endswith('__pycache__'):
+				continue
+
+			for f in filenames:
+				if not is_filtered(f):
+					files.append(os.path.join(dirpath, f))
+
+		return sorted(files)
+
+	def get_addon_data_hash(self):
+		m = md5()
+		for file in self.get_addon_files():
+			with open(file, 'rb') as f:
+				for data in iter(lambda: f.read(8192), b''):
+					m.update(data)
+
+		return m.hexdigest()
+
+	def check_addon_integrity(self):
+		if not self.remote_hash:
+			# remote hash is not known
+			return True
+
+		return self.get_addon_data_hash() == self.remote_hash
+
+	def set_remote_hash(self, hash):
+		self.remote_hash = hash
 
 
 class XBMCAddon(object):
@@ -679,4 +724,3 @@ class AddonInfo(object):
 
 	def close(self):
 		self.addon = None
-
