@@ -178,6 +178,7 @@ class Info(object):
 		self.it = it
 		self.dest = ''
 		self.imagelink = ''
+		it.load_info()
 		if it.image is not None and (it.info.get('adult', False) == False or parental_pin.get_settings('show_posters')):
 			self.imagelink = py2_encode_utf8( it.image )
 			self.dest = os.path.join('/tmp/', self.imagelink.split('/')[-1])
@@ -227,6 +228,7 @@ class ArchivCZSKItemInfoScreen(BaseArchivCZSKScreen):
 		self.year = ''
 
 		self.title = py2_encode_utf8(DeleteColors(self.it.name))
+		it.load_info()
 
 		for key, value in it.info.items():
 			if key == 'plot':

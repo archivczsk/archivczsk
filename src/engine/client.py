@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 #### module for addon creators #####
 
+import traceback
 import twisted.internet.defer as defer
 
 from Components.config import config
@@ -214,6 +215,49 @@ def refresh_screen(restoreLastPosition=True):
 	else:
 		set_command('refreshnow_resetpos')
 
+def __process_info_labels(item, info_labels):
+	# this is really hacky implementation ...
+	def set_info_labels(info_labels, cbk_continue=None):
+		infolabel_uni = {}
+
+		for key, value in info_labels.items():
+			if value != None:
+				if isinstance(value, bool):
+					infolabel_uni[key.lower()] = value
+				else:
+					infolabel_uni[key.lower()] = toUnicode(value)
+
+		if not 'title' in infolabel_uni:
+			infolabel_uni["title"] = DeleteColors(item.name)
+
+		item.info = infolabel_uni
+		if cbk_continue:
+			cbk_continue()
+
+	def load_info(cbk_load_info_labels, cbk_continue=None):
+		if cbk_continue:
+			# call cbk_load_info_labels() in worker thread
+			def handle_result(success, result):
+				if not success:
+					log.error(result.getTraceback())
+					result = {}
+				set_info_labels(result, cbk_continue)
+
+			Task(handle_result, cbk_load_info_labels).run()
+		else:
+			try:
+				# cbk_continue - call cbk_load_info_labels() directly
+				set_info_labels(cbk_load_info_labels())
+			except:
+				log.error(traceback.format_exc())
+
+	if callable(info_labels):
+		# info_labels as callable, that will return real info_labels dictionary
+		item.load_info_cbk = lambda cbk_continue: load_info(info_labels, cbk_continue)
+	else:
+		# info_labels as dictionary - just call function to set it ...
+		set_info_labels(info_labels)
+
 
 def create_directory_it(name, params={}, image=None, infoLabels={}, menuItems={}, search_folder=False, search_item=False, video_item=False, dataItem=None, traktItem=None, download=True):
 	'''
@@ -246,13 +290,7 @@ def create_directory_it(name, params={}, image=None, infoLabels={}, menuItems={}
 	it.params = params
 	it.image = toUnicode(image)
 
-	infolabel_uni = {}
-	for key, value in infoLabels.items():
-		if value != None:
-			if isinstance(value, bool):
-				infolabel_uni[key] = value
-			else:
-				infolabel_uni[key] = toUnicode(value)
+	__process_info_labels(it, infoLabels)
 
 	for key, value in menuItems.items():
 		item_name = decode_string(key)
@@ -277,7 +315,6 @@ def create_directory_it(name, params={}, image=None, infoLabels={}, menuItems={}
 	if hasattr(it, 'download'):
 		it.download = download
 
-	it.info = infolabel_uni
 	return it
 
 
@@ -309,15 +346,7 @@ def create_video_it(name, url, subs=None, image=None, infoLabels={}, menuItems={
 		it.subs = toUnicode(subs)
 	it.image = toUnicode(image)
 
-	infolabel_uni = {}
-	for key, value in infoLabels.items():
-		if value != None:
-			infolabel_uni[key.lower()] = toUnicode(value)
-
-	if not 'title' in infolabel_uni:
-		infolabel_uni["title"] = DeleteColors(it.name)
-
-	it.info = infolabel_uni
+	__process_info_labels(it, infoLabels)
 
 	for key, value in menuItems.items():
 		item_name = decode_string(key)

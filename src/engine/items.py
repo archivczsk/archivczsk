@@ -46,6 +46,8 @@ class PItem(object):
 		self.params = {}
 		# info dict with supported item info (Title,Image,Rating,Genre,Plot)
 		self.info = {}
+		# possible callback used to load info dictionary
+		self.load_info_cbk = None
 		# list with PContextMenuItems for context item menu
 		self.context = []
 		self.enabled = True
@@ -65,6 +67,15 @@ class PItem(object):
 			out += " thumb=" + self.thumb
 		out += '>'
 		return py2_encode_utf8( out )
+
+	def load_info(self, cbk_continue=None):
+		if self.load_info_cbk != None:
+			self.load_info_cbk(cbk_continue)
+			# remove reference to callback function, because it was already called, so self.info is already updated
+			self.load_info_cbk = None
+		else:
+			if cbk_continue:
+				cbk_continue()
 
 	def add_context_menu_item(self, name, thumb=None, action=None, params=None, enabled=True, is_media=False):
 		item = PContextMenuItem(name, thumb, enabled, action, params, is_media)

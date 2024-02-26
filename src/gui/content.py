@@ -502,6 +502,9 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 		# include DownloadList
 		DownloadList.__init__(self)
 
+		self.update_info_items_timer = eTimer()
+		self.update_info_items_timer_conn = eConnectCallback(self.update_info_items_timer.timeout, self.load_info_items)
+
 		self.updateGUITimer = eTimer()
 		self.updateGUITimer_conn = eConnectCallback(self.updateGUITimer.timeout, self.updateAddonGUI)
 		self.onUpdateGUI.append(self.changeAddon)
@@ -553,52 +556,71 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 		self.updateGUITimer.stop()
 		del self.updateGUITimer_conn
 		del self.updateGUITimer
+		self.update_info_items_timer.stop()
+		del self.update_info_items_timer_conn
+		del self.update_info_items_timer
 		del self.poster
 
+	def update_info_items(self, item):
+		idur = ""
+		irat = ""
+		iplot = ""
+
+		try:
+			if 'rating' in item.info:
+				if float(item.info['rating']) > 0:
+					irat = str(info['rating'])
+		except:
+			log.logError("Rating parse failed..\n%s"%traceback.format_exc())
+
+		try:
+			if 'duration' in item.info:
+				durSec = float(item.info['duration'])
+				if durSec > 0:
+					hours = int(durSec/60/60)
+					minutes = int((durSec - hours*60*60)/60)
+					if len(str(minutes)) == 1:
+						if hours > 0:
+							idur = str(hours)+'h'+'0'+str(minutes)+'min'
+						else:
+							idur = '0'+str(minutes)+'min'
+					else:
+						if hours > 0:
+							idur = str(hours)+'h'+str(minutes)+'min'
+						else:
+							idur = str(minutes)+'min'
+		except:
+			log.logError("Duration parse failed..\n%s"%traceback.format_exc())
+
+		try:
+			if 'plot' in item.info:
+				iplot = toString(item.info['plot'])[0:800]
+		except:
+			log.logError("Plot parse failed..\n%s"%traceback.format_exc())
+
+		self["movie_duration"].setText(idur)
+		self["movie_rating"].setText(irat)
+		self["movie_plot"].setText(iplot)
+
+	def load_info_items(self):
+		item = self.getSelectedItem()
+		item.load_info(cbk_continue=lambda: self.update_info_items(item))
 
 	def updateAddonGUI(self):
 		try:
 			item = self.getSelectedItem()
-			idur = ""
-			irat = ""
-			iplot = ""
 
 			if isinstance(item, PExit):
 				self.poster.set_image(item.image)
 			elif isinstance(item, PVideoNotResolved) or isinstance(item, PFolder):
-				try:
-					if 'rating' in item.info:
-						if float(item.info['rating']) > 0:
-							irat = str(item.info['rating'])
-				except:
-					log.logError("Rating parse failed..\n%s"%traceback.format_exc())
-				try:
-					if 'duration' in item.info:
-						durSec = float(item.info['duration'])
-						if durSec > 0:
-							hours = int(durSec/60/60)
-							minutes = int((durSec - hours*60*60)/60)
-							if len(str(minutes)) == 1:
-								if hours > 0:
-									idur = str(hours)+'h'+'0'+str(minutes)+'min'
-								else:
-									idur = '0'+str(minutes)+'min'
-							else:
-								if hours > 0:
-									idur = str(hours)+'h'+str(minutes)+'min'
-								else:
-									idur = str(minutes)+'min'
-				except:
-					log.logError("Duration parse failed..\n%s"%traceback.format_exc())
-				try:
-					if 'plot' in item.info:
-						iplot = toString(item.info['plot'])[0:800]
-				except:
-					log.logError("Plot parse failed..\n%s"%traceback.format_exc())
+				self.update_info_items(item)
+				if item.load_info_cbk:
+					# this needs to be started using timer, because it slows down GUI when user quickly switches items
+					self.update_info_items_timer.start(500, True)
 
 				if self.showImageEnabled:
-					if idur or irat or iplot:
-						no_image_path = os.path.join(settings.IMAGE_PATH, 'no_movie_image.png')
+					if not item.info:
+						no_image_path = self.noImage
 					else:
 						no_image_path = os.path.join(settings.IMAGE_PATH, 'empty.png')
 
@@ -608,16 +630,15 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 					else:
 						self.poster.set_image(item.image, no_image_path)
 
-			self["movie_duration"].setText(idur)
-			self["movie_rating"].setText(irat)
-			self["movie_plot"].setText(iplot)
-
 		except:
 			log.logError("updateAddonGUI fail...\n%s"%traceback.format_exc())
 
 	def changeAddon(self):
 		# musi to ist cez timer pretoze enigma vola onUpdate 3x upne zbytocne
 		# ak by nebolo cez timer tak by sa cakalo na kazde dobehnutie 3x
+		if self.update_info_items_timer.isActive():
+			self.update_info_items_timer.stop()
+
 		self.updateGUITimer.start(100, True)
 
 	def openChangelog(self):
