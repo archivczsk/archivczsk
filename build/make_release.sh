@@ -73,7 +73,7 @@ sed -i "s/\tversion=\".*\"/\tversion=\"$IPK_VER\"/g" ipk/latest.xml
 sed -i "s/\tdate=\".*\">/\tdate=\"$IPK_DATE\">/g" ipk/latest.xml
 
 echo "Updating release commit"
-git add ipk/${IPK_NAME} ipk/latest.xml
+git add ipk
 git commit --amend -m "release version ${IPK_VER}"
 
 echo "Version ${IPK_VER} prepared for release"
