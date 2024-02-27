@@ -1,3 +1,9 @@
+archivCZSK 2.6.0, 27.02.2024
+    - pridaná kontrola integrity doplnkov
+    - informácie o jednolivých položkách môže po novom doplnok dodať až pri ich zobrazení
+        * hodí sa to, ak pri vytváraní zoznamu napr. nie je k dispozícii popis alebo sa popis v čase mení
+    - vylepšenia v spracovávaní štatistík kvôli nespávnemu času na mnohých prijímačoch
+
 archivCZSK 2.5.1, 28.01.2024
     - oprava resetovania štatistík
 
