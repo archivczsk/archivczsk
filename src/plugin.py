@@ -24,6 +24,12 @@ def sessionStart(reason, session):
 	if DownloadManager.getInstance() is None:
 		DownloadManager(session.archivCZSKdownloads)
 
+	try:
+		from .engine.tools.stbinfo import stbinfo
+		log.info('STB info:\n%s' % stbinfo.to_string())
+	except:
+		pass
+
 def main(session, **kwargs):
 	def runArchivCZSK(callback = None):
 		ArchivCZSK(session)
@@ -99,11 +105,11 @@ def Plugins(path, **kwargs):
 	if config.plugins.archivCZSK.extensions_menu.value:
 		#result.append(PluginDescriptor(NAME, where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main))
 		result.append(PluginDescriptor(NAME, description=DESCRIPTION, where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main))
-	
+
 	if config.plugins.archivCZSK.main_menu.value:
 		#result.append(PluginDescriptor(NAME, where=PluginDescriptor.WHERE_MENU, fnc=menu))
 		result.append(PluginDescriptor(NAME, description=DESCRIPTION, where=PluginDescriptor.WHERE_MENU, fnc=menu))
-		
+
 	if config.plugins.archivCZSK.epg_menu.value:
 		result.append(PluginDescriptor(_("Search in ArchivCZSK"), where=PluginDescriptor.WHERE_EVENTINFO, fnc=eventInfo))
 
@@ -117,6 +123,6 @@ archivCZSKHttpServer.start_listening()
 
 if config.plugins.archivCZSK.preload.value:
 	ArchivCZSK.preload_addons()
-	
+
 if config.plugins.archivCZSK.videoPlayer.ydl.value == 'preload':
 	ArchivCZSK.start_ydl()

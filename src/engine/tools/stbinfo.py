@@ -31,6 +31,27 @@ class StbInfo:
 		self.is_vti_image = self._is_vti_image()
 		self.is_dmm_image = self._is_dmm_image()
 
+	def to_string(self):
+		lines = []
+		lines.append('Data source: %s' % 'OpenWebif' if self.boxinfo else 'proc')
+		lines.append('HW Info:')
+		lines.append('Vendor: %s' % self.hw_vendor)
+		lines.append('Model: %s' % self.hw_model)
+		lines.append('Chipset: %s' % self.hw_chipset)
+		lines.append('Architecture: %s' % self.hw_arch)
+		lines.append('SW Info:')
+		lines.append('Installation ID: %s' % self.installation_id)
+		lines.append('Python version: %s' % self.python_version)
+		lines.append('Distro: %s' % self.sw_distro)
+		lines.append('Distro version: %s' % self.sw_distro_ver)
+		lines.append('Enigma version: %s' % self.sw_enigma_ver)
+		lines.append('OE version: %s' % self.sw_oe_ver)
+		lines.append('Is VTi image: %s' % self.is_vti_image)
+		lines.append('Is DMM image: %s' % self.is_dmm_image)
+
+		return '\n'.join(lines)
+
+
 	def get_info_value(self, entry):
 		value = self.boxinfo.get(entry)
 
