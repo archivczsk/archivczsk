@@ -569,7 +569,7 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 		try:
 			if 'rating' in item.info:
 				if float(item.info['rating']) > 0:
-					irat = str(info['rating'])
+					irat = str(item.info['rating'])
 		except:
 			log.logError("Rating parse failed..\n%s"%traceback.format_exc())
 
