@@ -1,3 +1,6 @@
+archivCZSK 2.6.1, 07.03.2024
+    - oprava zobrazenia ratingu u filmov
+
 archivCZSK 2.6.0, 27.02.2024
     - pridaná kontrola integrity doplnkov
     - informácie o jednolivých položkách môže po novom doplnok dodať až pri ich zobrazení
