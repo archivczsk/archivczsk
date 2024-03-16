@@ -2,7 +2,7 @@ import traceback, os
 
 from enigma import eServiceReference, iPlayableService, eTimer
 from Components.ActionMap import ActionMap, HelpableActionMap
-from Components.config import config 
+from Components.config import config
 from Components.Label import Label
 from Components.ServiceEventTracker import InfoBarBase, ServiceEventTracker
 from Components.Sources.List import List
@@ -19,11 +19,11 @@ from Tools.Notifications import AddNotificationWithID, RemovePopup
 
 try:
 	from Plugins.Extensions.SubsSupport import (SubsSupport, SubsSupportStatus, initSubsSettings)
-	
+
 	SubsSupportAvailable = True
 except ImportError as e:
 	SubsSupportAvailable = False
-	
+
 	# SubsSupport plugin not available, so create fake one
 	class SubsSupport():
 		def resetSubs(self, rst):
@@ -35,7 +35,7 @@ except ImportError as e:
 
 	class SubsSupportStatus():
 		pass
-	
+
 	def initSubsSettings():
 		pass
 
@@ -61,7 +61,7 @@ def getPlayPositionPts(session):
 def getPlayPositionInSeconds(session, position=None):
 	if not position:
 		position = getPlayPositionPts(session)
-		
+
 	if position is not None:
 		position = position // 90000
 	return position
@@ -76,7 +76,7 @@ def getDurationPts(session):
 def getDurationInSeconds(session, duration=None):
 	if not duration:
 		duration = getDurationPts(session)
-		
+
 	if duration is not None:
 		duration = duration // 90000
 	return duration
@@ -153,7 +153,7 @@ class Player(object):
 
 		status_msg = _("Player switched to {player}").format(player=videoPlayerInfo.getPlayerNameByStype(stype))
 		self.play_stream(play_item.url, settings, play_item.subs, play_item.name, play_item, status_msg)
-		
+
 	def play_item(self, item = None, idx = None):
 		log.info("play_item(%s, %s)"%(item,toString(idx)))
 		play_item = None
@@ -246,7 +246,7 @@ class Player(object):
 
 		self.current_stype = play_settings.get("stype", self.stype)
 		service_ref = eServiceReference(self.current_stype, 0, toString(play_url))
-		
+
 		if self.video_player is None:
 			self.video_player = self.session.openWithCallback(self.player_exit_callback,
 					ArchivCZSKMoviePlayer, self.player_callback)
@@ -267,11 +267,13 @@ class Player(object):
 			sref_title = DeleteColors(toString(title))
 			service_ref.setName( sref_title )
 			self.video_player.setInfoBarText(sref_title)
-		
+
 		# handle subtitles
 		subtitles_file = download_subtitles(subtitles_url)
 		if subtitles_url != subtitles_file:
 			self.cleanup_files.append(subtitles_file)
+
+		self.video_player.relativeSeekEnabled(play_settings.get('relative_seek_enabled', True))
 
 		tracks_settings = {
 			# list of priority langs used for audio and subtitles - audio will be automatically switched to first available language
@@ -290,7 +292,7 @@ class Player(object):
 			'subs_forced_autostart': play_settings.get('subs_forced_autostart', True)
 		}
 
-		self.video_player.play_service_ref(service_ref, 
+		self.video_player.play_service_ref(service_ref,
 				subtitles_file, play_settings.get("resume_time_sec"), play_settings.get("resume_popup", True), status_msg, tracks_settings, play_settings.get('skip_times'))
 
 	def player_callback(self, callback):
@@ -310,7 +312,7 @@ class Player(object):
 					if self.settings.confirmExit.value:
 						self.session.openWithCallback(
 								lambda x:self.player_callback(("exit", x)),
-								MessageBox, text=_("Stop playing this movie?"), 
+								MessageBox, text=_("Stop playing this movie?"),
 								type=MessageBox.TYPE_YESNO)
 						exit_player = False
 				if exit_player:
@@ -403,7 +405,7 @@ class SkipNotificationScreen(Screen):
 		self.onHide.append(self.__on_hide)
 		self.is_shown = False
 		self.timeout = 5000
-	
+
 	def run_skip(self):
 		self.hide()
 		if self.skip_cbk:
@@ -478,7 +480,7 @@ class InfoBarAspectChange(object):
 		   '4_3_bestfit'		: {'aspect' : '4:3',  'policy'	: 'bestfit', 'policy2'	 : 'policy', 'title' : _("Just scale")}}
 
 	V_MODES = ['16_9_letterbox', '16_9_panscan', '16_9_nonlinear', '16_9_bestfit',
-			'16_9_4_3_pillarbox', '16_9_4_3_panscan', '16_9_4_3_nonlinear', 
+			'16_9_4_3_pillarbox', '16_9_4_3_panscan', '16_9_4_3_nonlinear',
 			'16_9_4_3_bestfit','4_3_letterbox', '4_3_panscan', '4_3_bestfit']
 
 	def __init__(self):
@@ -511,7 +513,7 @@ class InfoBarAspectChange(object):
 	def getAspectString(self):
 		mode = self.V_DICT[self.currentVMode]
 		return "%s: %s\n%s: %s" % (
-				_("Aspect"), mode['aspect'], 
+				_("Aspect"), mode['aspect'],
 				_("Policy"), mode['title'])
 
 	def setAspect(self, aspect, policy, policy2):
@@ -549,7 +551,7 @@ class InfoBarAspectChange(object):
 # pretty much openpli's one but simplified
 class InfoBarSubservicesSupport(object):
 	def __init__(self):
-		self["InfoBarSubservicesActions"] = HelpableActionMap(self, 
+		self["InfoBarSubservicesActions"] = HelpableActionMap(self,
 				"ColorActions", { "green": (self.showSubservices, _("Show subservices"))}, -2)
 		self.__timer = eTimer()
 		self.__timer_conn = (self.__timer.timeout, self.__seekToCurrentPosition)
@@ -575,7 +577,7 @@ class InfoBarSubservicesSupport(object):
 			choice_list.append((subservice_ref.getName(), subservice_ref))
 		if numsubservices > 1:
 			self.session.openWithCallback(self.subserviceSelected, ChoiceBox,
-				title = _("Please select subservice..."), list = choice_list, 
+				title = _("Please select subservice..."), list = choice_list,
 				selection = selection, skin_name="SubserviceSelection")
 
 	def subserviceSelected(self, service_ref):
@@ -640,9 +642,11 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		# disable slowmotion/fastforward
 		self.seekFwd = self.seekFwdManual
 		self.seekBack = self.seekBackManual
+		self.relative_seek_enabled = True
+		self.start_pts = None
 		initSubsSettings()
 		try:
-			SubsSupport.__init__(self, 
+			SubsSupport.__init__(self,
 				defaultPath = config_archivczsk.tmpPath.value,
 				forceDefaultPath = True,
 				searchSupport = True,
@@ -739,7 +743,7 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		def do_skip(skip_id, position):
 			self.auto_skip[skip_id] = True
 			self.doSeek(position * 90000)
-			
+
 		# show window with skip notifiction
 		cur_position = getPlayPositionInSeconds(self.session)
 		log.debug("Going to show skip notification - current position is %d" % cur_position)
@@ -818,7 +822,8 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.player_callback(("watching",))
 
 	def __pts_available(self):
-		if getPlayPositionPts(self.session) is None:
+		self.start_pts = getPlayPositionPts(self.session)
+		if self.start_pts is None:
 			self.__timer.start(500, True)
 		else:
 			self.player_callback(("start",))
@@ -856,7 +861,7 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 			self.session.openWithCallback(service_started_continue, MessageBox, text=_("Resume playback from last play position?"), type=MessageBox.TYPE_YESNO, timeout=10, timeout_default=False)
 		else:
 			service_started_continue(None)
-				
+
 		self.__timer_watching.start(5 * 60 * 1000) # 5 min.
 
 	# inspiration from InforBarGenerics,py and AudioSelection.py
@@ -1061,6 +1066,13 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 			log.logError("Set info bar text failed.\n%s"%traceback.format_exc())
 			pass
 
+	def relativeSeekEnabled(self, enabled):
+		if enabled:
+			log.info("Enabling relative seek")
+		else:
+			log.info("Disabling relative seek. I will use absolute seek instead.")
+		self.relative_seek_enabled = enabled
+
 	def pauseService(self):
 		seekstate = self.seekstate
 		InfoBarSeek.pauseService(self)
@@ -1074,9 +1086,11 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		if seekstate != self.seekstate and self.seekstate == self.SEEK_STATE_PLAY:
 			# call player callback only if seekstate changed and current one is set to play
 			self.player_callback(("unpause",))
-		
+
 	def doSeek(self, pts ):
-		self.old_position = getPlayPositionInSeconds(self.session)
+		current_pts = getPlayPositionPts(self.session)
+		log.debug("do seek absolute: %d, current position: %d" % (pts, current_pts))
+		self.old_position = getPlayPositionInSeconds(self.session, current_pts)
 		InfoBarSeek.doSeek(self, pts )
 		if self.__timer_seek.isActive():
 			self.__timer_seek.stop()
@@ -1090,7 +1104,15 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 			self.__timer_seek_notification.start(1000, True)
 
 	def doSeekRelative(self, pts ):
-		self.old_position = getPlayPositionInSeconds(self.session)
+		current_pts = getPlayPositionPts(self.session)
+		log.debug("do seek relative: %d, current position: %d" % (pts, current_pts))
+		if self.relative_seek_enabled == False:
+			if self.start_pts == None:
+				log.error("No start pts available - can't do absolute seek!")
+			else:
+				return self.doSeek(current_pts - self.start_pts + pts)
+
+		self.old_position = getPlayPositionInSeconds(self.session, current_pts)
 		InfoBarSeek.doSeekRelative(self, pts )
 		if self.__timer_seek.isActive():
 			self.__timer_seek.stop()
