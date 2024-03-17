@@ -1,4 +1,4 @@
-archivCZSK 2.6.1, 07.03.2024
+archivCZSK 2.6.2, 17.03.2024
     - pridanie doplnkom možnosť zakázať relatívny posun v prehrávaných streamoch
 
 archivCZSK 2.6.1, 07.03.2024
