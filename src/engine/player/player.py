@@ -1092,7 +1092,7 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 
 	def doSeek(self, pts ):
 		current_pts = getPlayPositionPts(self.session)
-		log.debug("do seek absolute: %d, current position: %d" % (pts, current_pts))
+		log.debug("do seek absolute: %s, current position: %s" % (pts, current_pts))
 		self.old_position = getPlayPositionInSeconds(self.session, current_pts)
 		InfoBarSeek.doSeek(self, pts )
 		if self.__timer_seek.isActive():
@@ -1108,10 +1108,10 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 
 	def doSeekRelative(self, pts ):
 		current_pts = getPlayPositionPts(self.session)
-		log.debug("do seek relative: %d, current position: %d" % (pts, current_pts))
+		log.debug("do seek relative: %s, current position: %s" % (pts, current_pts))
 		if self.relative_seek_enabled == False:
-			if self.start_pts == None:
-				log.error("No start pts available - can't do absolute seek!")
+			if self.start_pts == None or current_pts == None:
+				log.error("No start pts or current pts available - can't do absolute seek!")
 			else:
 				return self.doSeek(current_pts - self.start_pts + pts)
 
