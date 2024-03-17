@@ -215,6 +215,9 @@ class Player(object):
 					self.play_stream(play_item.url, settings, play_item.subs, play_item.name, play_item)
 				except:
 					log.error(traceback.format_exc())
+				else:
+					if settings.get('playlist_on_start', False):
+						self.player_callback(('playlist', 'show',))
 
 		if isinstance(play_item, PVideoNotResolved):
 			if self.resolve_cbk:
