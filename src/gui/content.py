@@ -604,16 +604,27 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 
 	def load_info_items(self):
 		item = self.getSelectedItem()
-		item.load_info(cbk_continue=lambda: self.update_info_items(item))
+		log.debug("Loading info items for %s" % item)
+
+		def check_item():
+			act_item = self.getSelectedItem()
+			if item == act_item:
+				log.debug("Updating info items for %s" % item)
+				self.update_info_items(item)
+			else:
+				log.debug("Active item changed to %s - not updating info items" % act_item)
+
+		item.load_info(cbk_continue=check_item)
 
 	def updateAddonGUI(self):
 		try:
 			item = self.getSelectedItem()
+			self.update_info_items(item)
 
 			if isinstance(item, PExit):
 				self.poster.set_image(item.image)
+
 			elif isinstance(item, PVideoNotResolved) or isinstance(item, PFolder):
-				self.update_info_items(item)
 				if item.load_info_cbk:
 					# this needs to be started using timer, because it slows down GUI when user quickly switches items
 					self.update_info_items_timer.start(500, True)
