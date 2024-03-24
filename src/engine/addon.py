@@ -100,9 +100,6 @@ class Addon(object):
 
 	def get_info(self, info):
 		try:
-			# temporary hack
-			if info == 'profile':
-				info = 'data_path'
 			atr = getattr(self.info, '%s' % info)
 		except Exception as e:
 			#traceback.print_exc()
