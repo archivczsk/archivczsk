@@ -48,6 +48,10 @@ from ..tools.subtitles import download_subtitles
 from ...colors import DeleteColors
 from .info import videoPlayerInfo
 from ...gui.common import resize
+try:
+    from Screens.InfoBarGenerics import InfoBarSubtitleSupport
+except:
+    pass
 
 config_archivczsk = config.plugins.archivCZSK
 
@@ -614,24 +618,50 @@ class InfoBarAudioSelectionNoSubtitles(InfoBarAudioSelection):
 		# workaround for VTI image which needs access to this attributes :/
 		# TODO use own audioselection screen, to avoid problems with different
 		# images
-		self.selected_subtitle = None
-		self.subtitles_enabled = False
+		try:
+		    self.selected_subtitle = None
+		    self.subtitles_enabled = False
+		except:
+			pass
 		InfoBarAudioSelection.__init__(self)
+		if DMM_IMAGE and InfoBarSubtitleSupport:
+			InfoBarSubtitleSupport.__init__(self)
+
 
 	def audioSelection(self):
 		self.session.open(type(self).AudioSelectionNoSubtitles, infobar=self)
 
 	def getCurrentServiceSubtitle(self):
 		# workaround for DMM which needs access to this method
-		return None
+		try:
+		    service = self.session.nav.getCurrentService()
+		    return service and service.subtitleTracks()
+		except:
+			return None
 
+class InfoBarSubSelectionNoSubtitles(object):
+	try:
+		def __init__(self):
+			self.selected_subtitle = None
+			self.subtitles_enabled = False
+
+		def getCurrentServiceSubtitle(self):
+			# workaround for DMM which needs access to this method
+			return None
+	except:
+		pass
+		
 if SubsSupportAvailable and config_archivczsk.videoPlayer.subtitlesInAudioSelection.value:
 	archivCZSKInfoBarAudioSelection = InfoBarAudioSelection
+	if DMM_IMAGE and InfoBarSubtitleSupport and SubsSupportAvailable:
+		InfoBarSubtitleSupport = InfoBarSubtitleSupport
 else:
 	archivCZSKInfoBarAudioSelection = InfoBarAudioSelectionNoSubtitles
+	if DMM_IMAGE and InfoBarSubtitleSupport and SubsSupportAvailable:
+		InfoBarSubtitleSupport = InfoBarSubSelectionNoSubtitles
 
 class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBarSeek,
-		archivCZSKInfoBarAudioSelection, InfoBarSubservicesSupport, InfoBarNotifications,
+		archivCZSKInfoBarAudioSelection, InfoBarSubtitleSupport, InfoBarSubservicesSupport, InfoBarNotifications,
 		InfoBarShowHide, InfoBarAspectChange, HelpableScreen, Screen):
 
 	RESUME_POPUP_ID = "aczsk_resume_popup"
@@ -656,6 +686,7 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 				embeddedSupport = True,
 				preferEmbedded = True)
 			SubsSupportStatus.__init__(self)
+			InfoBarSubtitleSupport.__init__(self)
 		except:
 			pass
 		archivCZSKInfoBarAudioSelection.__init__(self)
