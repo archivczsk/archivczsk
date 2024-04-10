@@ -596,7 +596,7 @@ class InfoBarSubservicesSupport(object):
 			self.seekToPts(self.session, self.__playpos)
 			del self.__playpos
 
-class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBarSubtitleSupport, InfoBarSeek,
+class ArchivCZSKMoviePlayer(InfoBarBase, InfoBarSubtitleSupport, SubsSupport, SubsSupportStatus, InfoBarSeek,
 		InfoBarAudioSelection, InfoBarSubservicesSupport, InfoBarNotifications,
 		InfoBarShowHide, InfoBarAspectChange, HelpableScreen, Screen):
 
@@ -615,6 +615,7 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.start_pts = None
 		initSubsSettings()
 
+		InfoBarSubtitleSupport.__init__(self)
 		SubsSupport.__init__(self,
 			defaultPath = config_archivczsk.tmpPath.value,
 			forceDefaultPath = True,
@@ -622,7 +623,6 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 			embeddedSupport = True,
 			preferEmbedded = True)
 		SubsSupportStatus.__init__(self)
-		InfoBarSubtitleSupport.__init__(self)
 
 		InfoBarAudioSelection.__init__(self)
 		InfoBarNotifications.__init__(self)
