@@ -12,28 +12,24 @@ from Screens.AudioSelection import AudioSelection
 from Screens.ChoiceBox import ChoiceBox
 from Screens.HelpMenu import HelpableScreen
 from Screens.InfoBarGenerics import (InfoBarShowHide,
-		InfoBarSeek, InfoBarAudioSelection, InfoBarNotifications)
+		InfoBarSeek, InfoBarAudioSelection, InfoBarNotifications, InfoBarSubtitleSupport)
 from Screens.Screen import Screen
 from Tools.BoundFunction import boundFunction
 from Tools.Notifications import AddNotificationWithID, RemovePopup
 
 try:
 	from Plugins.Extensions.SubsSupport import (SubsSupport, SubsSupportStatus, initSubsSettings)
-
-	SubsSupportAvailable = True
-except ImportError as e:
-	SubsSupportAvailable = False
-
+except ImportError:
 	# SubsSupport plugin not available, so create fake one
-	class SubsSupport():
+	class SubsSupport(object):
+		def __init__(self, *args, **kwargs):
+			pass
 		def resetSubs(self, rst):
 			pass
 		def loadSubs(self, fl):
 			pass
-		def enableSubtitle(self,subtitle):
-			pass
 
-	class SubsSupportStatus():
+	class SubsSupportStatus(object):
 		pass
 
 	def initSubsSettings():
@@ -597,41 +593,11 @@ class InfoBarSubservicesSupport(object):
 		if getPlayPositionPts(self.session) is None:
 			self.__timer.start(500, True)
 		else:
-			seekToPts(self.session, self.__playpos)
+			self.seekToPts(self.session, self.__playpos)
 			del self.__playpos
 
-
-class InfoBarAudioSelectionNoSubtitles(InfoBarAudioSelection):
-	class AudioSelectionNoSubtitles(AudioSelection):
-		def __init__(instance, session, infobar):
-			AudioSelection.__init__(instance, session, infobar)
-			instance.skinName = "AudioSelection"
-
-		def getSubtitleList(instance):
-			return []
-
-	def __init__(self):
-		# workaround for VTI image which needs access to this attributes :/
-		# TODO use own audioselection screen, to avoid problems with different
-		# images
-		self.selected_subtitle = None
-		self.subtitles_enabled = False
-		InfoBarAudioSelection.__init__(self)
-
-	def audioSelection(self):
-		self.session.open(type(self).AudioSelectionNoSubtitles, infobar=self)
-
-	def getCurrentServiceSubtitle(self):
-		# workaround for DMM which needs access to this method
-		return None
-
-if SubsSupportAvailable and config_archivczsk.videoPlayer.subtitlesInAudioSelection.value:
-	archivCZSKInfoBarAudioSelection = InfoBarAudioSelection
-else:
-	archivCZSKInfoBarAudioSelection = InfoBarAudioSelectionNoSubtitles
-
-class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBarSeek,
-		archivCZSKInfoBarAudioSelection, InfoBarSubservicesSupport, InfoBarNotifications,
+class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBarSubtitleSupport, InfoBarSeek,
+		InfoBarAudioSelection, InfoBarSubservicesSupport, InfoBarNotifications,
 		InfoBarShowHide, InfoBarAspectChange, HelpableScreen, Screen):
 
 	RESUME_POPUP_ID = "aczsk_resume_popup"
@@ -648,17 +614,17 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.relative_seek_enabled = True
 		self.start_pts = None
 		initSubsSettings()
-		try:
-			SubsSupport.__init__(self,
-				defaultPath = config_archivczsk.tmpPath.value,
-				forceDefaultPath = True,
-				searchSupport = True,
-				embeddedSupport = True,
-				preferEmbedded = True)
-			SubsSupportStatus.__init__(self)
-		except:
-			pass
-		archivCZSKInfoBarAudioSelection.__init__(self)
+
+		SubsSupport.__init__(self,
+			defaultPath = config_archivczsk.tmpPath.value,
+			forceDefaultPath = True,
+			searchSupport = True,
+			embeddedSupport = True,
+			preferEmbedded = True)
+		SubsSupportStatus.__init__(self)
+		InfoBarSubtitleSupport.__init__(self)
+
+		InfoBarAudioSelection.__init__(self)
 		InfoBarNotifications.__init__(self)
 		InfoBarSubservicesSupport.__init__(self)
 		InfoBarAspectChange.__init__(self)
@@ -718,8 +684,10 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 			self.skip_dialog.run_skip()
 		else:
 			# tries to call infobar's toggleShow() - this should be implemented in InfoBarShowHide, but nobody knows ...
+
 			try:
-				InfoBarShowHide.toggleShow(self)
+#				InfoBarShowHide.toggleShow(self)
+				super(ArchivCZSKMoviePlayer, self).toggleShow()
 			except:
 				pass
 
