@@ -640,14 +640,16 @@ class InfoBarAudioSelectionNoSubtitles(InfoBarAudioSelection):
 			return None
 
 class InfoBarSubSelectionNoSubtitles(object):
-	def __init__(self):
-		self.selected_subtitle = None
-		self.subtitles_enabled = False
+	try:
+		def __init__(self):
+			self.selected_subtitle = None
+			self.subtitles_enabled = False
 
-	def getCurrentServiceSubtitle(self):
-		# workaround for DMM which needs access to this method
-		return None
-
+		def getCurrentServiceSubtitle(self):
+			# workaround for DMM which needs access to this method
+			return None
+	except:
+		pass
 
 if SubsSupportAvailable and config_archivczsk.videoPlayer.subtitlesInAudioSelection.value:
 	archivCZSKInfoBarAudioSelection = InfoBarAudioSelection
@@ -656,10 +658,11 @@ else:
 
 if DMM_IMAGE and InfoBarSubtitleSupport and not SubsSupportAvailable and not config_archivczsk.videoPlayer.subtitlesInAudioSelection.value:
 	InfoBarSubtitleSupport = InfoBarSubtitleSupport
-elif DMM_IMAGE and InfoBarSubtitleSupport and SubsSupportAvailable and config_archivczsk.videoPlayer.subtitlesInAudioSelection.value:
-	InfoBarSubtitleSupport = InfoBarSubSelectionNoSubtitles
-else:
+elif DMM_IMAGE and InfoBarSubtitleSupport and SubsSupportAvailable and config_archivczsk.videoPlayer.subtitlesInAudioSelection.value is True:
 	InfoBarSubtitleSupport = InfoBarSubtitleSupport
+else:
+	InfoBarSubtitleSupport = InfoBarSubSelectionNoSubtitles
+
 
 class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBarSeek,
 		archivCZSKInfoBarAudioSelection, InfoBarSubtitleSupport, InfoBarSubservicesSupport, InfoBarNotifications,
