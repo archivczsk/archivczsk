@@ -1,3 +1,7 @@
+archivCZSK 2.6.4, 10.04.2024
+    - oprava a povolenie výberu titulkov v audio menu pre všetky image
+    - podpora pre embedded titulky aj bez SubsSupport (vďaka @durinov za nasmerovanie)
+
 archivCZSK 2.6.3, 23.03.2024
     - doplnky môžu pri spustení prehrávania automaticky vyvolať playlist
     - oprava pádu ak pri prehrávaní videa nie je známe PTS
