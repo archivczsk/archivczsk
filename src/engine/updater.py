@@ -282,6 +282,20 @@ class Updater(object):
 		log.debug("[%s] failed to update to version %s" % (addon.name, addon.version))
 		return False
 
+	def remove_addon(self, addon):
+		"""removes addon"""
+
+		log.debug("[%s] removing addon" % addon.name)
+
+		# real path where addon is installed
+		local_base = os.path.join(self.local_path, addon.relative_path)
+
+		if os.path.isdir(local_base):
+			# remove directory based on dir where addon is installed
+			shutil.rmtree(local_base)
+			log.debug("[%s] removed" % addon.name)
+		else:
+			log.error("[%s] addons local directory not found" % addon.name)
 
 	def check_addons(self, new=True):
 		"""checks every addon in repository, and update its state accordingly"""
@@ -297,9 +311,10 @@ class Updater(object):
 				if local_addon.check_update(False):
 					update_needed.append(local_addon)
 			elif new:
-				log.debug("[%s] not in local repository, adding dummy Addon to update" % remote_addon['name'])
-				new_addon = DummyAddon(self.repository, remote_addon['id'], remote_addon['name'], remote_addon['version'], remote_addon.get('hash'))
-				update_needed.append(new_addon)
+				if not remote_addon['broken']:
+					log.debug("[%s] not in local repository, adding dummy Addon to update" % remote_addon['name'])
+					new_addon = DummyAddon(self.repository, remote_addon['id'], remote_addon['name'], remote_addon['version'], remote_addon.get('hash'))
+					update_needed.append(new_addon)
 			else:
 				log.debug("[%s] downloading of new addons disabled - skipping" % remote_addon['id'])
 

@@ -305,6 +305,7 @@ class ArchivCZSK():
 			self.open_archive_screen()
 		else:
 			updated_string = self._update_addons()
+			self._cleanup_addons()
 			self.session.openWithCallback(self.ask_restart_e2,
 					MessageBox,
 					"%s: (%s/%s):\n\n%s" % (_("Following addons were updated"), len(self.updated_addons), len(self.to_update_addons), toString(updated_string)),
@@ -330,6 +331,12 @@ class ArchivCZSK():
 
 		return update_string
 
+	def _cleanup_addons(self):
+		if config.plugins.archivCZSK.cleanupBrokenAddons.value:
+			for addon in self.get_addons():
+				if addon.info.broken and not addon.supported:
+					log.logInfo("Addon %s is broken and not supported - removing" % addon.id)
+					addon.remove()
 
 	def ask_restart_e2(self, callback=None):
 		ArchivCZSK.__need_restart = True

@@ -86,6 +86,9 @@ class Addon(object):
 	def need_update(self):
 		return self.__need_update
 
+	def remove(self):
+		self._updater.remove_addon(self)
+
 	def get_localized_string(self, id_language):
 		return self.language.get_localized_string(id_language)
 
