@@ -650,6 +650,7 @@ class ArchivCZSKMoviePlayer(InfoBarBase, InfoBarSubtitleSupport, SubsSupport, Su
 		self.__resume_popup = True
 		self.duration_sec = None
 		self.skip_times = None #[(5, 30), (35, 70), (120, 300)]
+		self.skip_running = None
 		self.old_position = -1
 		self.auto_skip = {}
 
@@ -713,21 +714,24 @@ class ArchivCZSKMoviePlayer(InfoBarBase, InfoBarSubtitleSupport, SubsSupport, Su
 	def show_skip_notification(self):
 		def do_skip(skip_id, position):
 			self.auto_skip[skip_id] = True
+			self.skip_running = skip_id
 			self.doSeek(position * 90000)
 
 		# show window with skip notifiction
 		cur_position = getPlayPositionInSeconds(self.session)
 		log.debug("Going to show skip notification - current position is %d" % cur_position)
 
-		i = 0
-		for st in self.skip_times:
+		for i, st in enumerate(self.skip_times):
 			st_end = st[1]
 			if not st_end:
 				st_end = self.duration_sec + 60
 
 			if cur_position >= st[0] and cur_position < st_end:
 				if i != 2 and self.auto_skip.get(i, False):
-					self.doSeek(st_end * 90000)
+					if self.skip_running == i:
+						self.skip_running = None
+					else:
+						self.doSeek(st_end * 90000)
 				else:
 					if i == 0:
 						text = _("Skip intro")
@@ -739,7 +743,6 @@ class ArchivCZSKMoviePlayer(InfoBarBase, InfoBarSubtitleSupport, SubsSupport, Su
 					log.debug("Showing skip notification to seek to position: %d" % st_end)
 					self.skip_dialog.show_skip(text + ' >>>', cbk=lambda: do_skip(i, st_end), timeout=(st_end - cur_position))
 				break
-			i = i + 1
 
 		self.setup_skip_notification(True)
 
