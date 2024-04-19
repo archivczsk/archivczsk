@@ -184,6 +184,12 @@ class UsageStats(object):
 	def send(self):
 		if config.plugins.archivCZSK.send_usage_stats.value:
 			from ..version import version
+			from .player.info import videoPlayerInfo
+
+			if videoPlayerInfo.exteplayer3Available:
+				exteplayer3_ver = videoPlayerInfo.getExteplayer3Version() or 0
+			else:
+				exteplayer3_ver = 0
 
 			if stbinfo.is_dmm_image:
 				distro_type = 'dmm'
@@ -209,6 +215,9 @@ class UsageStats(object):
 					"oe_version": stbinfo.sw_oe_ver,
 					"distro_type": distro_type,
 					"python_ver": stbinfo.python_version,
+					"serviceapp": videoPlayerInfo.serviceappAvailable,
+					"exteplayer3_ver": exteplayer3_ver,
+					"subssupport_ver": videoPlayerInfo.subssupport_version or ''
 				},
 				'archivczsk': {
 					'version': version,

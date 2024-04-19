@@ -3,7 +3,7 @@ Created on 22.12.2012
 
 @author: marko
 '''
-import os
+import os, traceback
 from ... import log
 from ...compat import DMM_IMAGE
 
@@ -20,21 +20,23 @@ class VideoPlayerInfo(object):
 		self.version = 0
 		if os.path.isdir(GSTREAMER10_PATH):
 			print('found gstreamer')
-			log.logDebug('Found gstreamer 1.0')
+			log.logInfo('Found gstreamer 1.0')
 			self.type = 'gstreamer'
 			self.version = '1.0'
 			self.gstPath = GSTREAMER10_PATH
 		elif os.path.isdir(GSTREAMER_PATH):
 			print('found gstreamer')
-			log.logDebug('Found gstreamer 0.10')
+			log.logInfo('Found gstreamer 0.10')
 			self.type = 'gstreamer'
 			self.version = '0.10'
 			self.gstPath = GSTREAMER_PATH
 
 		# check, if there is ServiceApp plugin installed
 		if os.path.isfile( SERVICEAPP_PATH ) or os.path.isfile( SERVICEAPP_PATH + 'o' ) or os.path.isfile( SERVICEAPP_PATH + 'c'):
+			log.logInfo('Found ServiceApp system plugin')
 			self.serviceappAvailable = True
 		else:
+			log.logInfo('ServiceApp system plugin not found')
 			self.serviceappAvailable = False
 
 		# check if there is gstplayer installed
@@ -45,11 +47,52 @@ class VideoPlayerInfo(object):
 		else:
 			self.gstplayerAvailable = False
 
-		# check if there is ExtEplayer3 installed
+		# check if there is Exteplayer3 installed
 		if os.path.isfile( EXTEPLAYER3_PATH ):
 			self.exteplayer3Available = True
+			log.logInfo('Found exteplayer3 with version %s' % self.getExteplayer3Version())
 		else:
 			self.exteplayer3Available = False
+			log.logInfo('exteplayer3 not found')
+
+		# check if there is SubsSupport plugin available
+		self.subssupport_version = self.getSubsSupportVersion()
+		if self.subssupport_version is not None:
+			log.logInfo("Found SubsSupport plugin with version %s" % self.subssupport_version)
+		else:
+			log.logInfo("SubsSupport plugin not found")
+
+	def getExteplayer3Version(self):
+		try:
+			import subprocess, json
+
+			try:
+				data = subprocess.check_output(['exteplayer3'], shell=False, stderr=subprocess.STDOUT)
+			except subprocess.CalledProcessError as ex:
+				data = ex.output
+			data = data.decode('utf-8')
+			if data[-1:] == '\n':
+				data = data[:-1]
+
+			lines = list(map(lambda x: x.strip(), data.splitlines()))
+
+			return json.loads(lines[0])['EPLAYER3_EXTENDED']['version']
+		except:
+			log.log.error(traceback.format_exc())
+			return None
+
+	def getSubsSupportVersion(self):
+		try:
+			from Plugins.Extensions.SubsSupport import __version__
+			return __version__
+		except:
+			try:
+				from Plugins.Extensions.SubsSupport import SubsSupport
+				return "?"
+			except:
+				pass
+
+		return None
 
 	def getName(self):
 		if self.type == 'gstreamer':

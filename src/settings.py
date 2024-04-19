@@ -7,7 +7,6 @@ from Components.config import config, ConfigSubsection, ConfigSelection, \
 from Tools.Directories import SCOPE_PLUGINS, resolveFilename
 
 from . import log, UpdateInfo, _
-from .engine.player.info import videoPlayerInfo
 from .compat import DMM_IMAGE, VTI_IMAGE
 
 try:
