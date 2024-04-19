@@ -10,8 +10,6 @@ from ...compat import DMM_IMAGE
 GSTREAMER_PATH = '/usr/lib/gstreamer-0.10'
 GSTREAMER10_PATH = '/usr/lib/gstreamer-1.0'
 LIB_PATH = '/usr/lib'
-EPLAYER2_PATH = '/lib/libeplayer2.so'
-EPLAYER3_PATH = '/lib/libeplayer3.so'
 GSTPLAYER_PATHS = ('/usr/bin/gstplayer', '/usr/bin/gstplayer_gst-1.0')
 EXTEPLAYER3_PATH = '/usr/bin/exteplayer3'
 SERVICEAPP_PATH = '/usr/lib/enigma2/python/Plugins/SystemPlugins/ServiceApp/__init__.py'
@@ -32,21 +30,13 @@ class VideoPlayerInfo(object):
 			self.type = 'gstreamer'
 			self.version = '0.10'
 			self.gstPath = GSTREAMER_PATH
-		elif os.path.isfile(EPLAYER3_PATH):
-			log.logDebug('Found eplayer3')
-			print('found eplayer3')
-			self.type = 'eplayer3'
-		elif os.path.isfile(EPLAYER2_PATH):
-			log.logDebug('Found eplayer2')
-			print('found eplayer2')
-			self.type = 'eplayer2'
-			
+
 		# check, if there is ServiceApp plugin installed
 		if os.path.isfile( SERVICEAPP_PATH ) or os.path.isfile( SERVICEAPP_PATH + 'o' ) or os.path.isfile( SERVICEAPP_PATH + 'c'):
 			self.serviceappAvailable = True
 		else:
 			self.serviceappAvailable = False
-			
+
 		# check if there is gstplayer installed
 		for bin_name in GSTPLAYER_PATHS:
 			if os.path.isfile( bin_name ):
@@ -66,21 +56,17 @@ class VideoPlayerInfo(object):
 			if self.version == '1.0':
 				return 'Gstreamer 1.0'
 			return 'GStreamer 0.10'
-		if self.type == 'eplayer3':
-			return 'EPlayer3'
-		if self.type == 'eplayer2':
-			return 'Eplayer2'
-	
+
 	def getAvailablePlayers(self, asString=False):
 		ret = [ self.getName() ]
-		
+
 		if self.serviceappAvailable:
 			if self.gstplayerAvailable:
 				ret.append('GstPlayer')
-				
+
 			if self.exteplayer3Available:
 				ret.append('ExtEplayer3')
-		
+
 		if DMM_IMAGE:
 			ret.append('DMM')
 			ret.append('DVB')
@@ -113,7 +99,7 @@ class VideoPlayerInfo(object):
 			8193: 'DMM Player',
 			1: 'DVB',
 		}.get(stype, str(stype))
-			
+
 ######################### Supported protocols ##################################
 
 	def isRTMPSupported(self):
@@ -122,13 +108,13 @@ class VideoPlayerInfo(object):
 		@return: None may be supported
 		@return: False not supported
 		"""
-		
+
 		if self.type == 'gstreamer':
 			rtmplib = os.path.join(self.gstPath, 'libgstrtmp.so')
-			
+
 			librtmp = os.path.join(LIB_PATH, 'librtmp.so.0')
 			librtmp2 = os.path.join(LIB_PATH, 'librtmp.so.1')
-			
+
 			# flv is file container used in rtmp
 			flvlib = os.path.join(self.gstPath, 'libgstflv.so')
 			if os.path.isfile(rtmplib) and (os.path.isfile(librtmp) or os.path.isfile(librtmp2)) and (os.path.isfile(flvlib)):
@@ -145,22 +131,7 @@ class VideoPlayerInfo(object):
 
 			log.logDebug("RTMP not supported (some file missing '%s')...%s" % (self.gstPath, msg))
 			return False
-			
-		elif self.type == 'eplayer2':
-			# dont know any eplayer2 which supports rtmp
-			# also not used anymore so setting to false
-			log.logDebug("RTMP may be supported (eplayer2)...")
-			return False
-		elif self.type == 'eplayer3':
-			rtmplib = '/usr/lib/librtmp.so'
-			log.logDebug("RTMP may be supported (eplayer3)...")
-			if os.path.isfile(rtmplib):
-				log.logDebug("RTMP may be supported (eplayer3)...\n%s"%rtmplib)
-				# some older e2 images not support rtmp
-				# even if there is this library(missing support in servicemp3)
-				return None
-			return False
-			
+
 	def isMMSSupported(self):
 		"""
 		@return: True if its 100% supported
@@ -174,15 +145,7 @@ class VideoPlayerInfo(object):
 				return True
 			log.logDebug("MMS not supported, missing file '%s'" % mmslib)
 			return False
-			
-		elif self.type == 'eplayer3':
-			log.logDebug("MMS may be supported (eplayer3)")
-			return None
-				
-		elif self.type == 'eplayer2':
-			log.logDebug("MMS may be supported (eplayer2)")
-			return None
-		
+
 	def isRTSPSupported(self):
 		"""
 		@return: True if its 100% supported
@@ -207,15 +170,7 @@ class VideoPlayerInfo(object):
 
 			log.logDebug("RTSP may be supported (some file missing '%s')...%s" % (self.gstPath, msg))
 			return False
-			
-		elif self.type == 'eplayer3':
-			log.logDebug("RTSP may be supported (eplayer3)")
-			return None
-				
-		elif self.type == 'eplayer2':
-			log.logDebug("RTSP may be supported (eplayer2)")
-			return None
-		
+
 	def isHTTPSupported(self):
 		"""
 		@return: True if its 100% supported
@@ -229,15 +184,7 @@ class VideoPlayerInfo(object):
 				return True
 			log.logDebug("HTTP not supported, missing file '%s'" % httplib)
 			return False
-			
-		elif self.type == 'eplayer3':
-			log.logDebug("HTTP may be supported (eplayer3)")
-			return True
-				
-		elif self.type == 'eplayer2':
-			log.logDebug("HTTP may be supported (eplayer2)")
-			return True
-		
+
 	def isHLSSupported(self):
 		"""
 		@return: True if its 100% supported
@@ -251,15 +198,7 @@ class VideoPlayerInfo(object):
 				return True
 			log.logDebug("HLS not supported, missing file '%s'" % hlslib)
 			return False
-			
-		elif self.type == 'eplayer3':
-			log.logDebug("HLS may be supported (eplayer3)")
-			return None
-				
-		elif self.type == 'eplayer2':
-			log.logDebug("HLS may be supported (eplayer2)")
-			return None
-		
+
 ##########################################################################
 
 ########################### Supported Video Formats ######################
@@ -277,18 +216,10 @@ class VideoPlayerInfo(object):
 				return True
 			log.logDebug("ASF not supported, missing file '%s'" % asflib )
 			return False
-			
-		elif self.type == 'eplayer3':
-			log.logDebug("ASF may be supported (eplayer3)")
-			return None
-				
-		elif self.type == 'eplayer2':
-			log.logDebug("ASF may be supported (eplayer2)")
-			return None
-		
+
 	def isWMVSupported(self):
 		return self.isASFSupported()
-		
+
 	def isFLVSupported(self):
 		"""
 		@return: True if its 100% supported
@@ -302,15 +233,7 @@ class VideoPlayerInfo(object):
 				return True
 			log.logDebug("FLV not supported, missing file '%s'" % flvlib)
 			return False
-			
-		elif self.type == 'eplayer3':
-			log.logDebug("FLV  supported (eplayer3)")
-			return True
-				
-		elif self.type == 'eplayer2':
-			log.logDebug("FLV may be supported (eplayer2)")
-			return None
-		
+
 	def isMKVSupported(self):
 		"""
 		@return: True if its 100% supported
@@ -324,15 +247,7 @@ class VideoPlayerInfo(object):
 				return True
 			log.logDebug("MKV not supported, missing file '%s'" % mkvlib)
 			return False
-			
-		elif self.type == 'eplayer3':
-			log.logDebug("MKV supported (eplayer3)")
-			return True
-				
-		elif self.type == 'eplayer2':
-			log.logDebug("MKV supported (eplayer2)")
-			return True
-		
+
 	def isAVISupported(self):
 		"""
 		@return: True if its 100% supported
@@ -346,15 +261,7 @@ class VideoPlayerInfo(object):
 				return True
 			log.logDebug("AVI not supported, missing file '%s'" % avilib)
 			return False
-			
-		elif self.type == 'eplayer3':
-			log.logDebug("AVI supported (eplayer3)")
-			return True
-				
-		elif self.type == 'eplayer2':
-			log.logDebug("AVI supported (eplayer2)")
-			return True
-		
+
 	def isMP4Supported(self):
 		"""
 		@return: True if its 100% supported
@@ -368,31 +275,11 @@ class VideoPlayerInfo(object):
 				return True
 			log.logDebug("MP4 not supported, missing file '%s'" % isomp4lib)
 			return False
-			
-		elif self.type == 'eplayer3':
-			log.logDebug("MP4 supported (eplayer3)")
-			return True
-				
-		elif self.type == 'eplayer2':
-			log.logDebug("MP4 supported (eplayer2)")
-			return True
-		
+
 	def is3GPPSupported(self):
 		if self.type == 'gstreamer':
 			return self.isMP4Supported()
-		
-		elif self.type == 'eplayer3':
-			log.logDebug("3GPP may be supported (eplayer3)")
-			return None
-				
-		elif self.type == 'eplayer2':
-			log.logDebug("3GPP may be supported (eplayer2)")
-			return None
-		
-	
 
 #########################################################################
-		
+
 videoPlayerInfo = VideoPlayerInfo()
-			
-			
