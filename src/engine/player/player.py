@@ -786,6 +786,8 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 				self.__timer_skip_notification.start(10, True)
 				break
 
+		self.__timer_seek_notification.start(10000, True)
+
 	def __aspect_changed(self):
 		self.status_dialog.set_status(self.getAspectString(), "#00ff00")
 
