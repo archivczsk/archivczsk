@@ -596,7 +596,7 @@ class InfoBarSubservicesSupport(object):
 			self.seekToPts(self.session, self.__playpos)
 			del self.__playpos
 
-class ArchivCZSKMoviePlayer(InfoBarBase, InfoBarSubtitleSupport, SubsSupport, SubsSupportStatus, InfoBarSeek,
+class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBarSubtitleSupport, InfoBarSeek,
 		InfoBarAudioSelection, InfoBarSubservicesSupport, InfoBarNotifications,
 		InfoBarShowHide, InfoBarAspectChange, HelpableScreen, Screen):
 
