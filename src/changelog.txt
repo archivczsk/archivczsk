@@ -1,3 +1,6 @@
+archivCZSK 2.6.7, 28.04.2024
+    - oprava pádu pri detegovaní verzie exteplayer3
+
 archivCZSK 2.6.6, 19.04.2024
     - oprava posunu ak sú nastavené "skip times" a stream nepodporuje posun na presnú pozíciu
     - oprava nastavovania "skip times" pri použití manuálneho posunu u OpenATV 7.x
