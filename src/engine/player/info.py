@@ -78,7 +78,7 @@ class VideoPlayerInfo(object):
 
 			return json.loads(lines[0])['EPLAYER3_EXTENDED']['version']
 		except:
-			log.log.error(traceback.format_exc())
+			log.logError(traceback.format_exc())
 			return None
 
 	def getSubsSupportVersion(self):
