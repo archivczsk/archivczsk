@@ -117,7 +117,7 @@ class VttToStr:
 			file = open(filename, "w", encoding=encoding_format)
 		except:
 			file = io.open(filename, "w", encoding=encoding_format)
-		
+
 #		file.writelines(data)
 		file.write(data)
 		file.close()
@@ -132,7 +132,7 @@ class VttToStr:
 			file = open(filename, mode="r", encoding=encoding_format)
 		except:
 			file = io.open(filename, mode="r", encoding=encoding_format)
-			
+
 		content = file.read()
 		file.close()
 
@@ -146,10 +146,23 @@ class VttToStr:
 		"""
 		file_contents = self.read_file(filename, encoding_format)
 		str_data = self.convert_content(file_contents)
-		filename = filename.replace(".vtt", ".srt")
+		if filename.endswith('.vtt'):
+			filename = filename.replace(".vtt", ".srt")
+		else:
+			filename = filename + ".srt"
 		self.write_file(filename, str_data, encoding_format)
 		return filename
 
+def is_vtt(file):
+	ret = False
+	try:
+		with open(file, 'r') as f:
+			if 'WEBVTT' in f.readline():
+				ret = True
+	except:
+		pass
+
+	return ret
 
 def download_subtitles(url):
 	if not url or not url.startswith('http'):
@@ -160,15 +173,18 @@ def download_subtitles(url):
 
 	try:
 		download_web_file(url, file_name)
+		log.debug("Subtitles %s downloaded to %s" % (url, file_name))
 	except:
 		log.logError("Handle substitle file failed.\n%s" % traceback.format_exc())
 		return None
 
-	if file_name.endswith('.vtt'):
+	if file_name.endswith('.vtt') or is_vtt(file_name):
+		log.debug("Subtitles are in WEBVTT format - converting to SRT")
 		# VTT subtitles are not supported by SubSupport, so convert it to SRT
 		try:
 			file_name_srt = VttToStr().process(file_name)
-			os.remove(file_name)
+			if file_name != file_name_srt:
+				os.remove(file_name)
 			file_name = file_name_srt
 		except:
 			log.logError("Failed to convert VTT subtitles to SRT.\n%s" % traceback.format_exc())
