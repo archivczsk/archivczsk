@@ -1,3 +1,6 @@
+archivCZSK 2.6.8, 02.05.2024
+    - oprava detekcie a konverzie WEBVTT tituliek
+
 archivCZSK 2.6.7, 28.04.2024
     - oprava pádu pri detegovaní verzie exteplayer3
 
