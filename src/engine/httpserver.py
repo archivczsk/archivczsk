@@ -16,6 +16,10 @@ class AddonHttpRequestHandler(resource.Resource):
 			name = addon_id[13:]
 		elif addon_id.startswith('script.module.'):
 			name = addon_id[14:]
+		elif addon_id.startswith('tools.'):
+			name = addon_id[6:]
+		else:
+			name = addon_id
 
 		return name.replace('.', '-').replace('_', '-')
 
