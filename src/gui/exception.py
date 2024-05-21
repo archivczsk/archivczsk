@@ -73,7 +73,7 @@ class AddonExceptionHandler(GUIExceptionHandler):
 					log.logError("Addon (AddonError) error '%s'.\n%s"%(er.value,traceback.format_exc()))
 					self.errorMessage(er.value)
 				# loading exceptions
-				except (requests.HTTPError, HTTPError) as e:
+				except HTTPError as e:
 					log.logError("Addon (HTTPError) error '%s'.\n%s"%(e.code,traceback.format_exc()))
 					message = "%s: %s %d" % (_("Error in loading"), _("HTTP Error"), e.code)
 					self.errorMessage(message)
@@ -84,6 +84,10 @@ class AddonExceptionHandler(GUIExceptionHandler):
 				except addon.AddonThreadException as er:
 					log.logError("Addon (AddonThreadException) error.\n%s"%(traceback.format_exc()))
 					pass
+				except requests.HTTPError as e:
+					log.logError("Addon (HTTPError) error '%s'.\n%s"%(e.response.status_code,traceback.format_exc()))
+					message = "%s: %s %d" % (_("Error in loading"), _("HTTP Error"), e.response.status_code)
+					self.errorMessage(message)
 				except requests.ConnectTimeout as e:
 					log.logError("Addon (ConnectTimeout) error '%s'.\n%s"%(str(e),traceback.format_exc()))
 					message = "%s: %s" % (_("Error in loading"), _("Connection to server timed out"))
