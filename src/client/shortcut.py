@@ -3,21 +3,17 @@ Created on 11.1.2013
 
 @author: marko
 '''
-#from Plugins.Plugin import PluginDescriptor
-
 import traceback
-import re
-from .. import _, log, removeDiac
+from .. import _, log
 from ..gui.common import showInfoMessage, showErrorMessage
 from ..engine.parental import parental_pin
-from Components.config import config
 
 from ..py3compat import *
 
 
 def run_shortcut(session, addon, shortcut_name, params):
 	"""
-	Runs shortcut with shortcut_name for addon_d
+	Runs shortcut with shortcut_name for addon
 	@param : session - active session
 	@param : search_exp - hladany vyraz
 	@param : addon_id - addon id that should be used
@@ -25,20 +21,17 @@ def run_shortcut(session, addon, shortcut_name, params):
 	"""
 
 	try:
-		if not shortcut_name in addon.get_info('shortcuts'):
-			return
-
 		archivCZSKShortcut = ArchivCZSKShortcut.getInstance(session, searchClose)
 		if archivCZSKShortcut is not None:
 			archivCZSKShortcut.run_shortcut(addon, shortcut_name, params)
 	except:
-		log.logError("Searching failed.\n%s"%traceback.format_exc())
+		log.logError("Shortcut run failed.\n%s" % traceback.format_exc())
 		showInfoMessage(session, _("Run addon fatal error."))
 
 
 def searchClose():
 	"""
-	Uvolni pamat po unkonceni prace s vyhladavacom
+	Uvolni pamat po unkonceni prace so skratkami
 	"""
 	if ArchivCZSKShortcut.instance is not None:
 		ArchivCZSKShortcut.instance.close()
@@ -82,8 +75,7 @@ class ArchivCZSKShortcut():
 		self.session = session
 		self.cb = cb
 		self.archivCZSK, self.contentScreen, self.task = getArchivCZSK()
-		self.addon = None
-		self.searching = False
+		self._cleanup()
 		if not isArchivCZSKRunning(session):
 			self.task.startWorkerThread()
 		ArchivCZSKShortcut.instance = self
@@ -92,10 +84,20 @@ class ArchivCZSKShortcut():
 	def __repr__(self):
 		return '[ArchivCZSKShortcut]'
 
+	def _cleanup(self):
+		self.searching = False
+		self.addon = None
+		self.addons = []
+		self.shortcut_name = None
+		self.params = None
+
 	def _successSearch(self, content):
 		(searchItems, command, args) = content
-		self.session.openWithCallback(self._contentScreenCB, self.contentScreen, self.addon, searchItems)
-
+		if searchItems:
+			self.session.openWithCallback(self._contentScreenCB, self.contentScreen, self.addon, searchItems)
+		else:
+			self.addon.provider.stop()
+			self._run_shortcut_internal()
 
 	def _errorSearch(self, failure):
 		try:
@@ -105,27 +107,44 @@ class ArchivCZSKShortcut():
 
 		showErrorMessage(self.session, _('Error while trying to retrieve content list'), 5)
 		self.addon.provider.stop()
-		self.searching = False
-		self.addon = None
+		self._cleanup()
 		if self.cb:
 			self.cb()
 
 	def _contentScreenCB(self, cp):
 		self.addon.provider.stop()
-		self.searching = False
-		self.addon = None
+		self._cleanup()
 		if self.cb:
 			self.cb()
+
+	def _run_shortcut_internal(self):
+		if self.addons:
+			self.addon = self.addons.pop()
+			self.addon.provider.start()
+			self.addon.provider.run_shortcut(self.session, self.shortcut_name, self.params, self._successSearch, self._errorSearch)
+		else:
+			self._cleanup()
+			if self.cb:
+				self.cb()
+
 
 	def run_shortcut(self, addon, shortcut_name, params):
 		if self.searching:
 			showInfoMessage(self.session, _("You cannot run ArchivCZSK again because it is already running"))
 			return
 
-		self.addon = addon
+		addons = [addon] if addon else self.archivCZSK.get_video_addons()
+		self.addons = [a for a in addons if shortcut_name in (a.get_info('shortcuts') or [])]
+		try:
+			self.addons.sort(key=lambda a: int(a.get_setting('auto_addon_order')), reverse=True)
+		except:
+			log.error(traceback.format_exc())
+
 		self.searching = True
-		addon.provider.start()
-		addon.provider.run_shortcut(self.session, shortcut_name, params, self._successSearch, self._errorSearch)
+		self.shortcut_name = shortcut_name
+		self.params = params
+		self._run_shortcut_internal()
+
 
 	def close(self):
 		if self.searching:
@@ -135,4 +154,3 @@ class ArchivCZSKShortcut():
 			self.task.stopWorkerThread()
 		ArchivCZSKShortcut.instance = None
 		return True
-

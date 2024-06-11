@@ -3,6 +3,7 @@ import time
 
 from Components.config import config
 from Plugins.Plugin import PluginDescriptor
+from ServiceReference import ServiceReference
 
 from . import _, log
 from .archivczsk import ArchivCZSK
@@ -66,30 +67,31 @@ def open_content_by_ref(session, **kwargs):
 	if not ref:
 		return
 
-	ref = ref.toString()
+	ref = ServiceReference(ref)
+	ref_str = str(ref)
+	log.debug("Called with service reference: %s" % ref_str)
 
-	if 'http%3a//' in ref:
+	if 'http%3a//' in ref_str:
 		# extract url from service reference (if there's any)
-		url = ref.split(':')[10].replace('%3a', ':')
+		url = ref_str.split(':')[10].replace('%3a', ':')
+
+		log.debug("Extracted url: %s" % url)
+
+		# extract addon's http endpoint from url
+		endpoint = archivCZSKHttpServer.urlToEndpoint(url)
+		if not endpoint:
+			return None
+
+		log.debug("Addon's endpoint extracted from url: %s" % endpoint)
+		addon = archivCZSKHttpServer.getAddonByEndpoint(endpoint)
+		if not addon:
+			return
+
+		log.debug("Found addon for endpoint: %s" % addon.id)
+		path = url[url.find(endpoint) + len(endpoint) + 1:].split('#')[0]
+		run_shortcut(session, addon, 'archive', {'path': path})
 	else:
-		return
-
-	log.debug("Called with service reference: %s" % ref)
-	log.debug("Extracted url: %s" % url)
-
-	# extract addon's http endpoint from url
-	endpoint = archivCZSKHttpServer.urlToEndpoint(url)
-	if not endpoint:
-		return None
-
-	log.debug("Addon's endpoint extracted from url: %s" % endpoint)
-	addon = archivCZSKHttpServer.getAddonByEndpoint(endpoint)
-	if not addon:
-		return
-
-	log.debug("Found addon for endpoint: %s" % addon.id)
-	path = url[url.find(endpoint) + len(endpoint) + 1:].split('#')[0]
-	run_shortcut(session, addon, 'archive', {'path': path})
+		run_shortcut(session, None, 'archive', {'sref': ref})
 
 
 def Plugins(path, **kwargs):
