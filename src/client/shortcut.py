@@ -7,6 +7,7 @@ import traceback
 from .. import _, log
 from ..gui.common import showInfoMessage, showErrorMessage
 from ..engine.parental import parental_pin
+from ..engine.usage import usage_stats
 
 from ..py3compat import *
 
@@ -120,6 +121,7 @@ class ArchivCZSKShortcut():
 	def _run_shortcut_internal(self):
 		if self.addons:
 			self.addon = self.addons.pop()
+			usage_stats.addon_shortcut(self.addon, self.shortcut_name)
 			self.addon.provider.start()
 			self.addon.provider.run_shortcut(self.session, self.shortcut_name, self.params, self._successSearch, self._errorSearch)
 		else:

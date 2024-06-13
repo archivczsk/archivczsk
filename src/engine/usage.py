@@ -163,6 +163,16 @@ class UsageStats(object):
 		stats['exceptions'] = stats.get('exceptions', 0) + 1
 		self.set_addon_stats(addon, stats)
 
+	def addon_ext_search(self, addon):
+		stats = self.get_addon_stats(addon)
+		stats['ext_search'] = stats.get('ext_search', 0) + 1
+		self.set_addon_stats(addon, stats)
+
+	def addon_shortcut(self, addon, shortcut_name):
+		stats = self.get_addon_stats(addon)
+		stats['shortcut_' + shortcut_name] = stats.get('shortcut_' + shortcut_name, 0) + 1
+		self.set_addon_stats(addon, stats)
+
 	def update_counter(self, name):
 		self.counters[name] = self.counters.get(name, 0) + 1
 		self.need_save = True
@@ -236,7 +246,7 @@ class UsageStats(object):
 
 			for addon_id, versions_data in self.addon_stats.items():
 				for addon_ver, stats_data in versions_data.items():
-					data['addons'].append({
+					astats = {
 						'id': addon_id,
 						'version': addon_ver,
 						'used': stats_data.get('used', 0),
@@ -244,7 +254,11 @@ class UsageStats(object):
 						'http_calls': stats_data.get('http_calls', 0),
 						'exceptions': stats_data.get('exceptions', 0),
 						'profiles': self.get_addon_profiles_cnt(addon_id),
-					})
+						'ext_search': stats_data.get('ext_search', 0),
+					}
+
+					astats.update( {k: v for k, v in stats_data.items() if k.startswith('shortcut_')} )
+					data['addons'].append(astats)
 
 			data['checksum'] = self.calc_data_checksum(data)
 			self.__send_data(data)

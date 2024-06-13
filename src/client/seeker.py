@@ -10,6 +10,7 @@ import re
 from .. import _, log, removeDiac
 from ..gui.common import showInfoMessage, showErrorMessage
 from ..engine.parental import parental_pin
+from ..engine.usage import usage_stats
 from Components.config import config
 
 from ..py3compat import *
@@ -43,6 +44,7 @@ def search(session, search_exp, addon_id, mode=None, cb=None):
 	@param : addon_id - id addonu v ktorom chceme vyhladavat
 	@param : mode - mod vyhladavania podporovany addonom
 	"""
+
 	try:
 		if search_exp is None or search_exp == "":
 			showInfoMessage(session, _("Empty search expression"))
@@ -193,6 +195,7 @@ class Search(object):
 		self.provider.start()
 
 	def search(self, search_exp, mode=None):
+		usage_stats.addon_ext_search(self.addon)
 		self.provider.search(self.session, search_exp, mode, self.succ_cb, self.err_cb)
 
 	def close(self):
