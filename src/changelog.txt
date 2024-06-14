@@ -1,3 +1,10 @@
+archivCZSK 2.6.9, 14.06.2024
+    - oprava vytvárania názvu HTTP endpointu pre neštandardné doplnky
+    - oprava zachytávania chýb z requests knižnice
+    - výrazne vylepšené skratky pre vstup do archívu aktuálneho programu
+        * IPTV doplnkom (AntikTV, O2 TV, OrangeTV, ...) umožní ponúkať archív aj pre DVB-S programy
+        * info o skratkách je popísané na WIKI https://github.com/archivczsk/archivczsk/wiki/
+
 archivCZSK 2.6.8, 02.05.2024
     - oprava detekcie a konverzie WEBVTT tituliek
 
