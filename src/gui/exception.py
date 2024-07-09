@@ -63,6 +63,8 @@ class AddonExceptionHandler(GUIExceptionHandler):
 				try:
 					func(*args, **kwargs)
 				# addon specific exceptions
+				except addon.AddonSilentExit as er:
+					log.logInfo("Addon (AddonSilentExit) '%s'" % er.value)
 				except addon.AddonInfoError as er:
 					log.logError("Addon (AddonInfoError) error '%s'.\n%s"%(er.value,traceback.format_exc()))
 					self.infoMessage(er.value)

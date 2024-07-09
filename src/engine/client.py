@@ -13,7 +13,7 @@ from Screens.InputBox import InputBox
 
 from .. import _, log, removeDiac
 from .contentprovider import VideoAddonContentProvider
-from .exceptions.addon import AddonInfoError, AddonWarningError, AddonError, AddonThreadException
+from .exceptions.addon import AddonInfoError, AddonWarningError, AddonError, AddonThreadException, AddonSilentExit
 from .items import PFolder, PVideoResolved, PVideoNotResolved, PPlaylist, PSearch, PSearchItem
 from .ydl import ydl
 from .parental import parental_pin
@@ -133,6 +133,8 @@ def showError(error, timeout=5):
 def showWarning(warning, timeout=5):
 	raise AddonWarningError(warning)
 
+def silentExit(msg=''):
+	raise AddonSilentExit(msg)
 
 @callFromThread
 def getYesNoInput(session, text):
