@@ -152,7 +152,7 @@ def getYesNoInput(session, text):
 	return d
 
 @callFromThread
-def getListInput(session, choices_list, title=""):
+def getListInput(session, choices_list, title="", selection=0):
 	def getListInputCB(selected=None):
 		loading and loading.start()
 		if selected is not None:
@@ -170,7 +170,7 @@ def getListInput(session, choices_list, title=""):
 	else:
 		newlist = [(DeleteColors(toString(name)),) for name in choices_list]
 
-	session.openWithCallback(getListInputCB, ChoiceBox, toString(title), newlist, skin_name="ArchivCZSKChoiceBox")
+	session.openWithCallback(getListInputCB, ChoiceBox, toString(title), newlist, selection=selection, skin_name="ArchivCZSKChoiceBox")
 	return d
 
 @callFromThread
