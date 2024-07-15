@@ -1,3 +1,9 @@
+archivCZSK 2.7.0, 15.07.2024
+    - vylepšenie API dostupného pre doplnky:
+        * doplnok môže prerušiť načítavanie bez zobrazenia hlášky pre užívateľa
+        * vylepšené dialógove okno so zoznamom
+        * pridaná možnosť vynúteného reloadu predchádzajúcej obrazovky
+
 archivCZSK 2.6.9, 14.06.2024
     - oprava vytvárania názvu HTTP endpointu pre neštandardné doplnky
     - oprava zachytávania chýb z requests knižnice
