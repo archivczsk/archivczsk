@@ -155,6 +155,10 @@ class BaseContentScreen(BaseArchivCZSKListSourceScreen):
 				self.refreshList(restoreLastPosition=False)
 			elif command == 'updatelist':
 				self.refreshing = True
+			elif command == 'refreshparent':
+				parent = self.getParent()
+				if parent:
+					parent["refresh"] = True
 			else:
 				log.debug("unknown command %s" , command)
 

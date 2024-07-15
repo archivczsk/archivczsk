@@ -207,12 +207,15 @@ def set_command(name, **kwargs):
 	for arg in kwargs:
 		GItem_lst[2][arg] = kwargs[arg]
 
-def refresh_screen(restoreLastPosition=True):
+def refresh_screen(restoreLastPosition=True, parent=False):
 	"""
 	Refreshesh active screen
 	restoreLastPosition = if True, then restores position of cursor
 	"""
-	if restoreLastPosition:
+
+	if parent:
+		set_command('refreshparent')
+	elif restoreLastPosition:
 		set_command('refreshnow')
 	else:
 		set_command('refreshnow_resetpos')
