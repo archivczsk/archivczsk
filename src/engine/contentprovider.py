@@ -277,6 +277,9 @@ class DownloadsMixin(object):
 
 	def download(self, session, item, start_callback=None, finish_callback=None,
 			player_callback = None, play_download=False, mode=""):
+
+		self.video_addon.refresh_provider_paths()
+
 		#closure fun :)
 		def do_download():
 			try:
