@@ -227,7 +227,10 @@ def __process_info_labels(item, info_labels):
 
 		for key, value in info_labels.items():
 			if value != None:
-				if isinstance(value, bool):
+				if isinstance(value, (dict, list, set)):
+					if value:
+						infolabel_uni[key.lower()] = value
+				elif isinstance(value, bool):
 					infolabel_uni[key.lower()] = value
 				else:
 					infolabel_uni[key.lower()] = toUnicode(value)

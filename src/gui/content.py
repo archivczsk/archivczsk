@@ -571,9 +571,18 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 		iplot = ""
 
 		try:
-			if 'rating' in item.info:
-				if float(item.info['rating']) > 0:
-					irat = str(item.info['rating'])
+			rating = item.info.get('rating')
+
+			if isinstance(rating, dict):
+				for k, v in rating.items():
+					if isinstance(v, (list, set)):
+						v = v[0]
+#					rating = '{}: {}'.format(k, v)   # TODO: too low space in rating label
+					rating = '{}'.format(v)
+					break
+
+			if rating:
+				irat = str(rating)
 		except:
 			log.logError("Rating parse failed..\n%s"%traceback.format_exc())
 

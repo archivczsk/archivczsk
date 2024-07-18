@@ -78,11 +78,11 @@
   <screen name="ArchivCZSKItemInfoScreen" position="center,center" size="1600,925" title="Info">
     <widget name="genre" position="673,67" size="800,48" font="Regular;40" transparent="1" foregroundColor="yellow"/>
     <widget name="year" position="673,147" size="800,48" font="Regular;40" transparent="1" foregroundColor="yellow"/>
-    <widget name="rating" position="673,227" size="800,48" font="Regular;40" transparent="1" foregroundColor="yellow"/>
+    <widget name="rating" position="673,227" size="800,192" font="Regular;40" transparent="1" foregroundColor="yellow"/>
     <widget name="plot" position="13,680" size="1573,536" font="Regular;40" transparent="1" foregroundColor="white"/>
     <widget name="img" position="13,0" zPosition="2" size="640,640" alphatest="on"/>
   </screen>
-  
+
   <screen name="ArchivCZSKVideoPlayerInfoScreen" position="center,center" size="1971,1120" title="ContentScreen">
     <widget backgroundColor="#009f1313" font="Regular;40" halign="center" name="key_red" position="13,8" shadowColor="black" shadowOffset="-2,-2" size="476,76" valign="center" zPosition="1"/>
     <widget backgroundColor="#001f771f" font="Regular;40" halign="center" name="key_green" position="503,8" shadowColor="black" shadowOffset="-2,-2" size="476,76" valign="center" zPosition="1"/>
@@ -96,20 +96,20 @@
     <widget name="container_list" position="79,744" size="763,352" transparent="1"/>
     <widget name="info_scrolllabel" position="932,136" size="1016,937" font="Regular;37" transparent="1"/>
   </screen>
-  
+
   <screen name="ArchivCZSKContextMenuScreen" position="center,center" size="856,727">
     <widget name="item_pixmap" position="16,20" size="59,43" alphatest="on"/>
     <widget name="item_label" position="89,12" size="759,88" halign="center" foregroundColor="#00e5b243" font="Regular;40" transparent="1"/>
     <eLabel position="7,104" size="843,1" backgroundColor="#00999999"/>
     <widget name="list" position="7,112" scrollbarMode="showOnDemand" size="843,593" transparent="1"/>
   </screen>
-  
+
   <screen name="ArchivCZSKSelectSourceScreen" position="center,center" size="856,727">
     <widget name="item_label" position="7,12" size="843,103" halign="center" foregroundColor="#00e5b243" font="Regular;40" transparent="1"/>
     <eLabel position="7,104" size="843,1" backgroundColor="#00999999"/>
     <widget name="list" position="7,112" scrollbarMode="showOnDemand" size="843,593" transparent="1"/>
   </screen>
-  
+
   <screen name="ArchivCZSKSearchClientScreen" position="center,center" size="869,813">
     <ePixmap name="search_pixmap" position="16,21" size="99,85" alphatest="blend" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/search.png"/>
     <widget name="search" position="137,21" size="687,104" foregroundColor="#00e5b243" halign="center" font="Regular;44"/>
@@ -134,7 +134,7 @@
       </convert>
     </widget>
   </screen>
-  
+
   <screen name="ArchivCZSKConfigScreen" position="center,center" size="1539,987">
     <widget backgroundColor="#009f1313" font="Regular;40" halign="center" name="key_red" position="13,8" shadowColor="black" shadowOffset="-2,-2" size="368,76" valign="center" zPosition="1"/>
     <widget backgroundColor="#001f771f" font="Regular;40" halign="center" name="key_green" position="395,8" shadowColor="black" shadowOffset="-2,-2" size="368,76" valign="center" zPosition="1"/>
@@ -160,7 +160,7 @@
   <screen name="ArchivCZSKChangelogScreen" position="center,center" size="1971,1120" title="Info">
     <widget name="changelog" position="13,13" size="1944,1093" font="Regular;40" transparent="1" foregroundColor="white"/>
   </screen>
-  
+
   <screen name="ArchivCZSKShortcutsScreen" position="center,center" size="1971,1120" title="ShortcutsScreen">
     <widget backgroundColor="#009f1313" font="Regular;40" halign="center" name="key_red" position="13,8" shadowColor="black" shadowOffset="-2,-2" size="476,76" valign="center" zPosition="1"/>
     <widget backgroundColor="#001f771f" font="Regular;40" halign="center" name="key_green" position="503,8" shadowColor="black" shadowOffset="-2,-2" size="476,76" valign="center" zPosition="1"/>
@@ -183,7 +183,7 @@
       </convert>
     </widget>
   </screen>
-  
+
   <screen name="ArchivCZSKDownloadListScreen" position="center,center" size="1971,1120" title="DownloadListScreen">
     <widget backgroundColor="#009f1313" font="Regular;40" halign="center" name="key_red" position="13,8" shadowColor="black" shadowOffset="-2,-2" size="476,76" valign="center" zPosition="1"/>
     <widget backgroundColor="#001f771f" font="Regular;40" halign="center" name="key_green" position="503,8" shadowColor="black" shadowOffset="-2,-2" size="476,76" valign="center" zPosition="1"/>
@@ -191,7 +191,7 @@
     <widget backgroundColor="#0018188b" font="Regular;40" halign="center" name="key_blue" position="1481,8" shadowColor="black" shadowOffset="-2,-2" size="476,76" valign="center" zPosition="1"/>
     <widget name="menu" position="13,93" scrollbarMode="showOnDemand" size="1944,1013" transparent="1"/>
   </screen>
-  
+
   <screen name="ArchivCZSKDownloadsScreen" position="center,center" size="1971,1120" title="DownloadScreen">
     <widget backgroundColor="#009f1313" font="Regular;40" halign="center" name="key_red" position="13,8" shadowColor="black" shadowOffset="-2,-2" size="476,76" valign="center" zPosition="1"/>
     <widget backgroundColor="#001f771f" font="Regular;40" halign="center" name="key_green" position="503,8" shadowColor="black" shadowOffset="-2,-2" size="476,76" valign="center" zPosition="1"/>
@@ -199,7 +199,7 @@
     <widget backgroundColor="#0018188b" font="Regular;40" halign="center" name="key_blue" position="1481,8" shadowColor="black" shadowOffset="-2,-2" size="476,76" valign="center" zPosition="1"/>
     <widget name="menu" position="13,93" scrollbarMode="showOnDemand" size="1944,1013" transparent="1"/>
   </screen>
-  
+
   <screen name="ArchivCZSKDownloadStatusScreen" position="center,center" size="1067,745">
     <widget name="filename" position="16,11" size="1039,75" font="Regular;29" foregroundColor="red" halign="center" transparent="1"/>
     <widget name="path_label" position="16,112" size="203,35" backgroundColor="background" font="Regular;25" foregroundColor="#00e5b243" transparent="1"/>
@@ -216,7 +216,7 @@
     <widget name="state" position="16,495" size="1039,35" foregroundColors="#00b837,#ff2b39,#024dd9" font="Regular;25" transparent="1"/>
     <widget name="status" position="16,565" size="1039,152" font="Console;14" transparent="1"/>
   </screen>
-  
+
   <screen name="ArchivCZSKCaptchaScreen" position="center,center" size="959,788" zPosition="99" title="CaptchaScreen">
     <ePixmap pixmap="skin_default/vkey_text.png" position="15,283" zPosition="-4" size="928,88" alphatest="on"/>
     <widget source="country" render="Pixmap" position="839,0" size="103,68" alphatest="on" borderWidth="2" borderColor="yellow">
@@ -227,7 +227,7 @@
     <widget name="text" position="20,283" size="919,79" font="Regular;79" transparent="1" noWrap="1" halign="right"/>
     <widget name="list" position="16,376" size="925,385" selectionDisabled="1" transparent="1"/>
   </screen>
-  
+
   <screen name="ArchivCZSKPlaylistScreen" position="center,center" size="1543,987" flags="wfNoBorder" backgroundColor="#48080808">
     <widget source="title" render="Label" position="0,0" size="1543,119" valign="center" halign="center" backgroundColor="#28080808" font="Regular;40" foregroundColor="#00e9b253"/>
     <widget source="list" render="Listbox" position="7,153" size="1529,829" scrollbarMode="showOnDemand" backgroundColor="#48080808">
@@ -244,12 +244,12 @@
       </convert>
     </widget>
   </screen>
-  
+
   <screen name="ArchivCZSKChoiceBox" position="center,center" size="1536,864">
     <widget name="text" position="16,16" size="1507,53" foregroundColor="#00e5b243" font="Regular;40" transparent="1"/>
     <widget name="list" position="7,104" size="1523,720" scrollbarMode="showOnDemand" transparent="1"/>
   </screen>
-  
+
   <screen name="ArchivCSFD" position="center,center" size="1971,1120" title="Archiv CSFD">
     <widget backgroundColor="#009f1313" font="Regular;40" halign="center" name="key_red" position="13,8" shadowColor="black" shadowOffset="-2,-2" size="476,76" valign="center" zPosition="1"/>
     <widget backgroundColor="#001f771f" font="Regular;40" halign="center" name="key_green" position="503,8" shadowColor="black" shadowOffset="-2,-2" size="476,76" valign="center" zPosition="1"/>
@@ -281,11 +281,11 @@
     <widget name="detailslabel" position="480,447" size="1480,623" font="Regular;39" transparent="1"/>
     <widget name="statusbar" position="13,1080" size="1173,40" font="Regular;32" foregroundColor="#007a7a52" transparent="1"/>
   </screen>
-  
+
   <screen id="1" name="ArchivCSFDLCDScreen" position="0,0" size="176,85" title="Archiv CSFD">
     <widget name="headline" position="0,37" size="171,33" font="Regular;24"/>
   </screen>
-  
+
   <screen id="3" name="ArchivCSFDLCDScreen" position="0,0" size="533,320" title="Archiv CSFD">
     <widget name="headline" halign="center" position="0,120" size="528,200" font="Regular;72"/>
   </screen>

@@ -25,6 +25,7 @@ from .poster import PosterProcessing, PosterPixmapHandler
 from ..engine.player.info import videoPlayerInfo
 from ..engine.parental import parental_pin
 from ..engine.usage import usage_stats
+from ..engine.tools.util import toUnicode
 from ..colors import DeleteColors
 from ..py3compat import *
 
@@ -230,19 +231,22 @@ class ArchivCZSKItemInfoScreen(BaseArchivCZSKScreen):
 		self.title = py2_encode_utf8(DeleteColors(self.it.name))
 		it.load_info()
 
-		for key, value in it.info.items():
-			if key == 'plot':
-				self.plot = py2_encode_utf8( value )
-			elif key == 'genre':
-				self.genre = py2_encode_utf8( value )
-			elif key == 'rating':
-				self.rating = py2_encode_utf8( value )
-			elif key == 'year':
-				self.year = py2_encode_utf8( value )
-			elif key == 'title':
-				self.title = py2_encode_utf8(value)
-			elif key == 'img':
-				self.image_link = py2_encode_utf8(value)
+		try:
+			for key, value in it.info.items():
+				if key == 'plot':
+					self.plot = py2_encode_utf8( value )
+				elif key == 'genre':
+					self.genre = self.convert_genre(value)
+				elif key == 'rating':
+					self.rating = self.convert_rating(value)
+				elif key == 'year':
+					self.year = py2_encode_utf8( value )
+				elif key == 'title':
+					self.title = py2_encode_utf8(value)
+				elif key == 'img':
+					self.image_link = py2_encode_utf8(value)
+		except:
+			log.error(traceback.format_exc())
 
 		self["img"] = Pixmap()
 		self["genre"] = Label(_("Genre: ") + self.genre)
@@ -268,6 +272,24 @@ class ArchivCZSKItemInfoScreen(BaseArchivCZSKScreen):
 
 		poster_processing = PosterProcessing(1, os.path.join(config.plugins.archivCZSK.posterPath.getValue(), 'archivczsk_poster2'))
 		self.poster = PosterPixmapHandler(self["img"], poster_processing, os.path.join(settings.PLUGIN_PATH, 'gui', 'icon', 'no_movie_image.png'))
+
+	def convert_genre(self, genre):
+		if isinstance(genre, list):
+			genre = ', '.join(toUnicode(g) for g in genre)
+
+		return py2_encode_utf8( genre )
+
+	def convert_rating(self, rating):
+		if isinstance(rating, dict):
+			r = ['']
+			for k, v in rating.items():
+				if isinstance(v, (list, set)):
+					v = ' '.join(toUnicode(x) for x in v)
+				r.append('{}: {}'.format(toUnicode(k), toUnicode(v)))
+
+			rating = '\n'.join(r)
+
+		return py2_encode_utf8( rating )
 
 	def pageUp(self):
 		self["plot"].pageUp()
