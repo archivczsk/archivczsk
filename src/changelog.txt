@@ -1,3 +1,8 @@
+archivCZSK 2.7.1, 18.07.2024
+    - ak sa u doplnku zmení adresár pre sťahovanie, tak už nie je potrebný reštart
+    - vylepšené nastavovanie žánrov a hodnotenia pre zobrazené položky
+        * v info okne sa môže pre hodnotenie zbrazovať zdroj + ďalšie informácie
+
 archivCZSK 2.7.0, 15.07.2024
     - vylepšenie API dostupného pre doplnky:
         * doplnok môže prerušiť načítavanie bez zobrazenia hlášky pre užívateľa
