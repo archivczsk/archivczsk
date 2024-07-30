@@ -1,8 +1,24 @@
 # -*- coding: utf-8 -*-
 import traceback
 from ...py3compat import *
-fileLogger = None
-	
+
+class DummyLogger(object):
+	@staticmethod
+	def debug(*args, **kwargs):
+		pass
+
+	@staticmethod
+	def info(*args, **kwargs):
+		pass
+
+	@staticmethod
+	def error(*args, **kwargs):
+		pass
+
+fileLogger = DummyLogger()
+memLogger = DummyLogger()
+memRingBuff = None
+
 def toString(text):
 	if not is_py3 and isinstance(text, unicode):
 		return str(text.encode('utf-8'))
@@ -25,6 +41,37 @@ def create_rotating_log(path):
 		fileLogger.setLevel(log.DEBUG)
 		fileLogger.addHandler(handler)
 
+	try:
+		import logging
+		from logging import StreamHandler
+		from collections import deque
+	except:
+		pass
+	else:
+		class MemRingBuff(object):
+			def __init__(self, maxlen=200):
+				self.queue = deque(maxlen=maxlen)
+
+			def write(self, msg):
+				self.queue.append(msg)
+
+			def flush(self):
+				pass
+
+			def dump(self):
+				return ''.join(self.queue)
+
+		global memLogger, memRingBuff
+		memLogger = logging.getLogger("archivCZSK-mem")
+		memRingBuff = MemRingBuff(200)
+
+		handler = StreamHandler(stream=memRingBuff)
+		formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
+		handler.setFormatter(formatter)
+		memLogger.setLevel(log.DEBUG)
+		memLogger.addHandler(handler)
+
+
 class log(object):
 	ERROR = 0
 	INFO = 1
@@ -37,8 +84,7 @@ class log(object):
 
 	@staticmethod
 	def logDebug(msg, *args):
-		if log.logDebugEnabled:
-			log.writeLog('DEBUG', msg, *args)
+		log.writeLog('DEBUG', msg, *args)
 
 	@staticmethod
 	def debug(text, *args):
@@ -62,6 +108,8 @@ class log(object):
 
 	@staticmethod
 	def writeLog(log_type, msg, *args):
+		logToStdout = True
+
 		try:
 			if len(args) == 1 and isinstance(args[0], tuple):
 				msg = msg % args[0]
@@ -80,16 +128,22 @@ class log(object):
 
 		if not log.logEnabled:
 			return
-		if fileLogger:
-			if log_type == 'INFO':
-				fileLogger.info(msg)
-			elif log_type == 'ERROR':
-				fileLogger.error(msg)
-			elif log_type == 'DEBUG':
-				fileLogger.debug(msg)
 
-		if not fileLogger or log.logToStdout:
-			print("####ArchivCZSK#### ["+log_type+"] "+ msg)
+		if log_type == 'INFO':
+			fileLogger.info(msg)
+			memLogger.info(msg)
+		elif log_type == 'ERROR':
+			fileLogger.error(msg)
+			memLogger.error(msg)
+		elif log_type == 'DEBUG':
+			memLogger.debug(msg)
+			if log.logDebugEnabled:
+				fileLogger.debug(msg)
+			else:
+				logToStdout = False
+
+		if logToStdout and (isinstance(fileLogger, DummyLogger) or log.logToStdout):
+			print("####ArchivCZSK#### ["+log_type+"] " + msg)
 
 	@staticmethod
 	def changeMode(mode):
