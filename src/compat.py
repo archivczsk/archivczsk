@@ -91,11 +91,10 @@ class MessageBox(OrigMessageBox):
 		except:
 			argspec = inspect.getfullargspec(OrigMessageBox.__init__)
 
-		if kwargs.get('simple') is not None and not 'simple' in argspec.args:
-			del kwargs['simple']
-
-		if kwargs.get('timeout_default') is not None and not 'timeout_default' in argspec.args:
-			del kwargs['timeout_default']
+		# check arguments and remove one if it's not supported by enigma's MessageBox
+		for a in kwargs.keys():
+			if a not in argspec.args:
+				del kwargs[a]
 
 		if kwargs.get('list') is not None and not 'list' in argspec.args:
 			list = kwargs.pop('list')

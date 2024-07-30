@@ -11,9 +11,9 @@ from Components.Label import Label, LabelConditional, MultiColorLabel
 from Components.MenuList import MenuList
 from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixmapAlphaTest
 from Components.Pixmap import Pixmap
-from Screens.MessageBox import MessageBox
 from Screens.Screen import Screen
 from Tools.Directories import fileExists
+from ..compat import MessageBox
 
 from .. import settings, _, log
 from ..compat import eConnectCallback, parseSize, parsePosition
@@ -622,10 +622,5 @@ def showErrorMessage(session, message, timeout=3, cb=None, closeOnAnyKey = False
 	else:
 		session.open(MessageBox, text=toString(message), timeout=timeout, type=MessageBox.TYPE_ERROR, close_on_any_key=closeOnAnyKey, enable_input=enableInput)
 
-def showYesNoDialog(session, message, cb):
-	session.openWithCallback(cb, MessageBox, text=toString(message), type=MessageBox.TYPE_YESNO)
-
-
-
-
-
+def showYesNoDialog(session, message, cb, default=True, timeout=-1, picon=None):
+	session.openWithCallback(cb, MessageBox, text=toString(message), type=MessageBox.TYPE_YESNO, default=default, timeout=timeout, picon=picon)

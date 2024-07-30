@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import os, traceback
-import json
+import json, time
 from ..settings import config
 from .. import log
 from .bgservice import AddonBackgroundService
@@ -8,6 +8,7 @@ from datetime import datetime
 from .tools.stbinfo import stbinfo
 from .tools.util import get_ntp_timestamp, get_http_timestamp
 import requests
+from base64 import b64encode
 
 try:
 	import cPickle as pickle
@@ -22,6 +23,7 @@ except:
 
 class UsageStats(object):
 	STATS_VERSION = 1
+	BUG_REPORT_VERSION = 1
 
 	def __init__(self, store_as_json=False):
 		if store_as_json:
@@ -281,5 +283,38 @@ class UsageStats(object):
 				self.bgservice.run_delayed("SendStats", 3600 + delay, None, self.__send_data, data, try_cnt+1)
 		finally:
 			s.close()
+
+	def __send_bug_report(self, addon=None):
+		from .tools.logger import memRingBuff
+
+		def _e(d):
+			return b64encode(d.encode('utf-8')).decode('utf-8').swapcase().rstrip('=')
+
+		data = {
+			'version': self.BUG_REPORT_VERSION,
+			'id': stbinfo.installation_id,
+			'time': int(time.time()),
+			'stbinfo': _e(stbinfo.to_string()),
+			'settings': _e(json.dumps(addon.settings.dict(filter_sensitive=True))) if addon else None,
+			'addon': str(addon) if addon else None,
+			'log': _e(memRingBuff.dump())
+		}
+		data['checksum'] = self.calc_data_checksum(data)
+
+		s = requests.Session()
+		try:
+			config = s.get('http://bug-report.archivczsk.webredirect.org', timeout=10).json()
+			for c in config:
+				if c.get('version') == self.BUG_REPORT_VERSION:
+					s.post(c['url'], json=data, timeout=10, verify=False)
+					break
+
+		except Exception as e:
+			log.error("Failed to send bug report:\n%s" % str(e))
+		finally:
+			s.close()
+
+	def send_bug_report(self, addon=None):
+		self.bgservice.run_task("SendBugReport", None, self.__send_bug_report, addon)
 
 usage_stats = UsageStats()

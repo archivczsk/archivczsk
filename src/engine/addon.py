@@ -564,6 +564,16 @@ class AddonSettings(object):
 			setting.save()
 			return True
 
+	def dict(self, filter_sensitive=False):
+		ret = {}
+		for s in self.main.dict().keys():
+			if filter_sensitive and isinstance(s, ConfigPassword):
+				continue
+
+			ret[s] = self.get_setting(s)
+
+		return ret
+
 	def _get_label(self, label):
 		return self.addon.get_localized_string(label)
 

@@ -11,10 +11,10 @@ try:
 except:
 	from urllib.error import HTTPError, URLError
 
-from .common import showInfoMessage, showWarningMessage, showErrorMessage
+from .common import showInfoMessage, showWarningMessage, showErrorMessage, showYesNoDialog, MessageBox
 from ..engine.exceptions import addon, download, play
 from ..engine.usage import usage_stats
-from .. import _, log
+from .. import _, log, config
 import requests
 
 class GUIExceptionHandler(object):
@@ -35,6 +35,14 @@ class GUIExceptionHandler(object):
 
 	def warningMessage(self, text):
 		showWarningMessage(self.session, self.messageFormat % (self.__class__.warningName, text), self.timeout)
+
+	def errorMessageAskReport(self, text, **kwargs):
+		def check_resp(r):
+			if r:
+				usage_stats.send_bug_report(**kwargs)
+				self.infoMessage(_("Bug report was send."))
+
+		showYesNoDialog(self.session, self.messageFormat % (self.__class__.errorName, text), cb=check_resp, default=False, timeout=self.timeout, picon=MessageBox.TYPE_ERROR)
 
 	def customMessage(self, messageType, text):
 		if messageType == 'info':
@@ -115,7 +123,10 @@ class AddonExceptionHandler(GUIExceptionHandler):
 					if self.addon:
 						usage_stats.addon_exception(self.addon)
 					log.logError("Addon error.\n%s"%traceback.format_exc())
-					self.errorMessage(_("An unhandled error occurred while calling the addon. Please report a bug so it can be fixed."))
+					if config.plugins.archivCZSK.bugReports.value:
+						self.errorMessageAskReport(_("An unhandled error occurred while calling the addon. Should I send bug report to addon authors?\nReport will contain part of log file, informations about your system and addon settings needed for problem analysis."), addon=self.addon)
+					else:
+						self.errorMessage(_("An unhandled error occurred while calling the addon. Please report a bug so it can be fixed."))
 			except:
 				log.logError("Addon (LOG) error.\n%s"%traceback.format_exc())
 				# this can go to crash because want show modal from screen which is not modal

@@ -274,6 +274,7 @@ def restartHttpServer(configElement):
 
 choicelist = [('1', _("info")), ('2', _("debug"))]
 config.plugins.archivCZSK.debugMode = ConfigSelection(default='1', choices=choicelist)
+config.plugins.archivCZSK.bugReports = ConfigYesNo(default=True)
 config.plugins.archivCZSK.debugMode.addNotifier(changeLogMode)
 config.plugins.archivCZSK.showBrokenAddons = ConfigYesNo(default=True)
 config.plugins.archivCZSK.showNotSupportedAddons = ConfigYesNo(default=True)
@@ -291,6 +292,7 @@ config.plugins.archivCZSK.send_usage_stats = ConfigYesNo(default=True)
 def get_misc_settings():
 	list = []
 	list.append(getConfigListEntry(_("Debug mode"), config.plugins.archivCZSK.debugMode))
+	list.append(getConfigListEntry(_("Allow sending bug reports on addon error"), config.plugins.archivCZSK.bugReports))
 	list.append(getConfigListEntry(_("Allow preloading of addons on start"), config.plugins.archivCZSK.preload))
 	list.append(getConfigListEntry(_("Confirm exit when closing plugin"), config.plugins.archivCZSK.confirmExit))
 	list.append(getConfigListEntry(_("Show broken addons"), config.plugins.archivCZSK.showBrokenAddons))
