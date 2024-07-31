@@ -1,3 +1,8 @@
+archivCZSK 2.7.2, 31.07.2024
+    - pridanie možnosti automaticky odoslať hlásenie o chybe doplnku
+        * ak nastane neošetrená chyba doplnku, plugin sa spýta, či má odoslať hlásenie o chybe
+        * v nastaveniach je možné otázku o nahlásení chyby vypnúť
+
 archivCZSK 2.7.1, 18.07.2024
     - ak sa u doplnku zmení adresár pre sťahovanie, tak už nie je potrebný reštart
     - vylepšené nastavovanie žánrov a hodnotenia pre zobrazené položky
