@@ -91,14 +91,15 @@ class MessageBox(OrigMessageBox):
 		except:
 			argspec = inspect.getfullargspec(OrigMessageBox.__init__)
 
+		if kwargs.get('list') is not None and ('list' not in argspec.args):
+			list = kwargs.pop('list')
+			self.dmm_fix = True
+
 		# check arguments and remove one if it's not supported by enigma's MessageBox
 		for a in kwargs.keys():
 			if a not in argspec.args:
 				del kwargs[a]
 
-		if kwargs.get('list') is not None and not 'list' in argspec.args:
-			list = kwargs.pop('list')
-			self.dmm_fix = True
 		OrigMessageBox.__init__(self, *args, **kwargs)
 		# this is taylored solution for DMM based images, so it might crash elsewhere
 		# or when dreambox changes something in MessageBox
