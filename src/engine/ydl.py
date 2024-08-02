@@ -55,8 +55,8 @@ class YoutubeDl(PythonProcess):
 			if data:
 				formats = data.get('formats')
 				for f in formats:
-					#print "format id", f['format_id'], f['vcodec'], f['acodec'] 
-					if int(f['format_id']) in (18, 22):
+					#print "format id", f['format_id'], f['vcodec'], f['acodec']
+					if str(f['format_id']) in ("18", "22"):
 						h264_formats.append(f)
 				return sorted(h264_formats, key=lambda f: int(f['format_id']))
 
