@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-31 10:23+0200\n"
-"PO-Revision-Date: 2024-07-31 10:24+0200\n"
+"POT-Creation-Date: 2024-08-05 20:36+0200\n"
+"PO-Revision-Date: 2024-08-05 20:40+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -178,17 +178,17 @@ msgstr "Informace o archívu"
 
 #: src/gui/exception.py:88 src/gui/exception.py:92 src/gui/exception.py:99
 #: src/gui/exception.py:103 src/gui/exception.py:107 src/gui/exception.py:111
-#: src/gui/exception.py:115 src/gui/exception.py:119 src/gui/exception.py:152
-#: src/gui/exception.py:155 src/gui/exception.py:169 src/gui/exception.py:172
+#: src/gui/exception.py:115 src/gui/exception.py:119 src/gui/exception.py:156
+#: src/gui/exception.py:159 src/gui/exception.py:173 src/gui/exception.py:176
 msgid "Error in loading"
 msgstr "Chyba načítání"
 
-#: src/gui/exception.py:88 src/gui/exception.py:99 src/gui/exception.py:152
-#: src/gui/exception.py:169
+#: src/gui/exception.py:88 src/gui/exception.py:99 src/gui/exception.py:156
+#: src/gui/exception.py:173
 msgid "HTTP Error"
 msgstr "Chyba HTTP"
 
-#: src/gui/exception.py:92 src/gui/exception.py:155 src/gui/exception.py:172
+#: src/gui/exception.py:92 src/gui/exception.py:159 src/gui/exception.py:176
 msgid "URL Error"
 msgstr "Chyba URL"
 
@@ -217,50 +217,58 @@ msgstr ""
 "Chybové hlášení bude obsahovat část logovacího souboru, informace o vašem systému a nastavení doplňku potřebné pro analýzu problému."
 
 #: src/gui/exception.py:129
+msgid "An unhandled error occurred while calling the addon. Update addon to the latest available version."
+msgstr "Při volání doplňku nastala neošetřená chyba. Zaktualizujte doplněk na poslední dostupní verzi."
+
+#: src/gui/exception.py:131
+msgid "An unhandled error occurred while calling the addon. Enable addons update in plugin settings to get the latest addon version."
+msgstr "Při volání doplňku nastala neošetřená chyba. Povolte v nastaveních pluginu aktualizaci doplňků aby jste dostali poslední dostupnou verzi."
+
+#: src/gui/exception.py:133
 msgid "An unhandled error occurred while calling the addon. Please report a bug so it can be fixed."
 msgstr "Při volání doplňku nastala neošetřená chyba. Prosím nahlaste chybu aby ji bylo možné opravit."
 
-#: src/gui/exception.py:140
+#: src/gui/exception.py:144
 msgid "Download error"
 msgstr "Chyba stahování"
 
-#: src/gui/exception.py:141
+#: src/gui/exception.py:145
 msgid "Download warning"
 msgstr "Upozornění stahování"
 
-#: src/gui/exception.py:142
+#: src/gui/exception.py:146
 msgid "Download info"
 msgstr "Informace o stahování"
 
-#: src/gui/exception.py:149
+#: src/gui/exception.py:153
 msgid "protocol is not supported"
 msgstr "protokol není podporován"
 
-#: src/gui/exception.py:161
+#: src/gui/exception.py:165
 msgid "Updater error"
 msgstr "Chyba aktualizátoru"
 
-#: src/gui/exception.py:162
+#: src/gui/exception.py:166
 msgid "Updater warning"
 msgstr "Upozornění aktualizátoru"
 
-#: src/gui/exception.py:163
+#: src/gui/exception.py:167
 msgid "Updater info"
 msgstr "Informace aktualizátoru"
 
-#: src/gui/exception.py:178
+#: src/gui/exception.py:182
 msgid "Play error"
 msgstr "Chyba přehrávání"
 
-#: src/gui/exception.py:179
+#: src/gui/exception.py:183
 msgid "Play warning"
 msgstr "Varování přehrávání"
 
-#: src/gui/exception.py:180
+#: src/gui/exception.py:184
 msgid "Play info"
 msgstr "Informace o přehrávání"
 
-#: src/gui/exception.py:187
+#: src/gui/exception.py:191
 msgid "Video url doesnt exist"
 msgstr "Adresa videa neexistuje"
 
@@ -669,15 +677,15 @@ msgstr "ArchivCZSK"
 msgid "Playing CZ/SK archives"
 msgstr "Přehrávání CZ/SK archivů"
 
-#: src/compat.py:254
+#: src/compat.py:255
 msgid "List of storage devices"
 msgstr "Seznam úložišť"
 
-#: src/compat.py:256
+#: src/compat.py:257
 msgid "Parent directory"
 msgstr "Nadřízený adresář"
 
-#: src/compat.py:275
+#: src/compat.py:276
 msgid "nothing connected"
 msgstr "nic nepřipojeno"
 
