@@ -291,10 +291,11 @@ def create_directory_it(name, params={}, image=None, infoLabels={}, menuItems={}
 	else:
 		it = PFolder()
 
+	name = toUnicode(name)
 	if not config.plugins.archivCZSK.colored_items.value:
 		name = DeleteColors(name)
 
-	it.name = toUnicode(name)
+	it.name = name
 	it.params = params
 	it.image = toUnicode(image)
 
@@ -345,10 +346,11 @@ def create_video_it(name, url, subs=None, image=None, infoLabels={}, menuItems={
 
 	it = PVideoResolved()
 
+	name = toUnicode(name)
 	if not config.plugins.archivCZSK.colored_items.value:
 		name = DeleteColors(name)
 
-	it.name = toUnicode(name)
+	it.name = name
 	it.url = toUnicode(url)
 	if subs is not None and subs != "":
 		it.subs = toUnicode(subs)
