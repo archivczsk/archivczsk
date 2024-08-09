@@ -645,7 +645,7 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 					log.error("%s required %s addon not found" ,self, addon_id)
 					if not optional:
 						log.error("%s cannot execute %s addon" ,self, self.video_addon)
-						raise Exception("Cannot execute %s, missing dependency %s" % (self.video_addon, addon_id))
+						raise AddonError( _("Cannot execute addon {addon_name}. Missing dependency: {dependency_name}\nCheck free space in receiver, reinstall ArchivCZSK and perform all addons update to fix the problem.".format(addon_name=self.video_addon, dependency_name=addon_id)))
 					else:
 						log.debug("skipping")
 

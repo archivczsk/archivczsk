@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-05 20:36+0200\n"
-"PO-Revision-Date: 2024-08-05 20:40+0200\n"
+"POT-Creation-Date: 2024-08-09 10:47+0200\n"
+"PO-Revision-Date: 2024-08-09 10:52+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -1195,6 +1195,15 @@ msgstr "Musíte aktualizovat archivCZSK alespoň na verzi {version}"
 #, python-brace-format
 msgid "Cannot execute addon {addon_name}. Dependency {dependency_name} version {dependency_version} needs to be at least version {dependency_version_requiered}"
 msgstr "Spuštění doplňku {addon_name} selhalo. Nainstalována závislost {dependency_name} verze {dependency_version} musí být aspoň ve verzi {dependency_version_requiered}"
+
+#: src/engine/contentprovider.py:648
+#, python-brace-format
+msgid ""
+"Cannot execute addon {addon_name}. Missing dependency: {dependency_name}\n"
+"Check free space in receiver, reinstall ArchivCZSK and perform all addons update to fix the problem."
+msgstr ""
+"Spuštění  doplňku {addon_name} selhalo. Závislost nenalezena: {dependency_name}\n"
+"Zkontrolujte volné místo v přijímači, přeinstalujte ArchivCZSK a vykonejte aktualizaci všech doplňků pro vyřešení problému."
 
 #: src/engine/handlers/category.py:41
 msgid "Rename"
