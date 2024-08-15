@@ -125,6 +125,3 @@ archivCZSKHttpServer.start_listening()
 
 if config.plugins.archivCZSK.preload.value:
 	ArchivCZSK.preload_addons()
-
-if config.plugins.archivCZSK.videoPlayer.ydl.value == 'preload':
-	ArchivCZSK.start_ydl()

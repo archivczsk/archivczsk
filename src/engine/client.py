@@ -15,7 +15,6 @@ from .. import _, log, removeDiac
 from .contentprovider import VideoAddonContentProvider
 from .exceptions.addon import AddonInfoError, AddonWarningError, AddonError, AddonThreadException, AddonSilentExit
 from .items import PFolder, PVideoResolved, PVideoNotResolved, PPlaylist, PSearch, PSearchItem
-from .ydl import ydl
 from .parental import parental_pin
 from .tools.task import callFromThread, Task
 from .tools.util import toString, toUnicode
@@ -44,20 +43,11 @@ def decode_string(string):
 		string = unicode(string, 'utf-8', 'ignore')
 		return _(string)
 
-@callFromThread
 def getVideoFormats(url):
-	if config.plugins.archivCZSK.videoPlayer.ydl.value == 'disable':
-		return []
-	def initCallback(initialized):
-		if (initialized):
-			return ydl.getVideoLinks(url)
-		return []
-	if ydl.isAvailable() is not None:
-		if ydl.isAvailable():
-			return ydl.getVideoLinks(url)
-		return []
-	if not ydl.isInitialized():
-		return ydl.init().addCallback(initCallback)
+	'''
+	legacy function used to resolve youtube videos - not working anymore - use direct youtube addon call
+	'''
+	return []
 
 @callFromThread
 def getTextInput(session, title, text=""):

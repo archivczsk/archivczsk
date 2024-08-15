@@ -40,7 +40,6 @@ IMAGE_PATH = os.path.join(PLUGIN_PATH, 'gui/icon')
 SKIN_PATH = os.path.join(PLUGIN_PATH, 'gui/skins')
 REPOSITORY_PATH = os.path.join(PLUGIN_PATH, 'resources/repositories')
 LIBRARIES_PATH = os.path.join(PLUGIN_PATH, 'resources/libraries')
-YDL_SCRIPT_PATH = os.path.join(PLUGIN_PATH, 'resources/libraries/archivczsk_youtubedl.py')
 
 CUSTOM_FONTS_PATH = os.path.join(SKIN_PATH,'font.json')
 CUSTOM_COLORS_PATH = os.path.join(SKIN_PATH,'color.json')
@@ -176,13 +175,6 @@ config.plugins.archivCZSK.videoPlayer.confirmExit = ConfigYesNo(default=False)
 config.plugins.archivCZSK.videoPlayer.subtitlesInAudioSelection = ConfigYesNo(default=True if image_is_openpli() else False)
 config.plugins.archivCZSK.videoPlayer.autoChangeAudio = ConfigYesNo(default=True)
 
-ydl_choicelist = [
-	('preload', _("Preload")),
-	('enable', _("Enable")),
-	('disable', _("Disable")),
-]
-config.plugins.archivCZSK.videoPlayer.ydl = ConfigSelection(default="enable", choices=ydl_choicelist)
-
 choicelist = []
 for i in range(10, 240, 5):
 	choicelist.append(("%d" % i, "%d s" % i))
@@ -200,7 +192,6 @@ def get_player_settings():
 	list.append(getConfigListEntry(_("RTMP Buffer"), config.plugins.archivCZSK.videoPlayer.rtmpBuffer))
 	list.append(getConfigListEntry(_("Confirm exit when closing player"), config.plugins.archivCZSK.videoPlayer.confirmExit))
 	list.append(getConfigListEntry(_("Allow automatically changing audio track"), config.plugins.archivCZSK.videoPlayer.autoChangeAudio))
-	list.append(getConfigListEntry(_("Support for youtube videos"), config.plugins.archivCZSK.videoPlayer.ydl))
 
 	return list
 

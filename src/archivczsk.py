@@ -72,11 +72,6 @@ class ArchivCZSK():
 		log.info("load repositories in {0}".format(diff))
 
 	@staticmethod
-	def start_ydl():
-		from .engine.ydl import ydl
-		ydl.init()
-
-	@staticmethod
 	def load_skin():
 		try:
 			from enigma import getDesktop
