@@ -243,7 +243,7 @@ class Player(object):
 		if headers:
 			play_url += "#" + "&".join("%s=%s"%(k,v) for k,v in headers.items())
 
-		self.current_stype = play_settings.get("stype", self.stype)
+		self.current_stype = play_settings.get('forced_player', play_settings.get("stype", self.stype))
 		service_ref = eServiceReference(self.current_stype, 0, toString(play_url))
 
 		if self.video_player is None:
