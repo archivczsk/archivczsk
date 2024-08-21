@@ -1,3 +1,11 @@
+archivCZSK 2.8.0, 21.08.2024
+    - vylepšené zobrazenie chýb pri chýbajúcich závislostiach modulov
+    - doplnky môžu vynútiť typ použitého prehrávača
+    - odstránený interný youtube_dl pre resolvovanie youtube videí
+        * výrazne sa zníži spotreba pamäte
+        * náhradou je priame volanie yt doplnku
+        * zmena nie je spätne kompatibilná - je nutné zaktualizovať aj doplnky
+
 archivCZSK 2.7.4, 05.08.2024
     - aktualizácia interného youtube_dl
     - oprava pádu pri vypnutom vyfarbovaní položiek (napr. pre VTi)
