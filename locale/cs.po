@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-13 10:31+0200\n"
-"PO-Revision-Date: 2024-09-13 10:33+0200\n"
+"POT-Creation-Date: 2024-09-13 14:49+0200\n"
+"PO-Revision-Date: 2024-09-13 14:50+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -178,17 +178,18 @@ msgstr "Informace o archívu"
 
 #: src/gui/exception.py:88 src/gui/exception.py:92 src/gui/exception.py:99
 #: src/gui/exception.py:103 src/gui/exception.py:107 src/gui/exception.py:111
-#: src/gui/exception.py:115 src/gui/exception.py:119 src/gui/exception.py:160
-#: src/gui/exception.py:163 src/gui/exception.py:177 src/gui/exception.py:180
+#: src/gui/exception.py:115 src/gui/exception.py:119 src/gui/exception.py:123
+#: src/gui/exception.py:127 src/gui/exception.py:168 src/gui/exception.py:171
+#: src/gui/exception.py:185 src/gui/exception.py:188
 msgid "Error in loading"
 msgstr "Chyba načítání"
 
-#: src/gui/exception.py:88 src/gui/exception.py:99 src/gui/exception.py:160
-#: src/gui/exception.py:177
+#: src/gui/exception.py:88 src/gui/exception.py:99 src/gui/exception.py:168
+#: src/gui/exception.py:185
 msgid "HTTP Error"
 msgstr "Chyba HTTP"
 
-#: src/gui/exception.py:92 src/gui/exception.py:163 src/gui/exception.py:180
+#: src/gui/exception.py:92 src/gui/exception.py:171 src/gui/exception.py:188
 msgid "URL Error"
 msgstr "Chyba URL"
 
@@ -200,7 +201,7 @@ msgstr "Časový limit pro připojení na server vypršel"
 msgid "Waiting for data from server timed out"
 msgstr "Časový limit při čekání na data ze serveru vypršel"
 
-#: src/gui/exception.py:111 src/gui/exception.py:119
+#: src/gui/exception.py:111 src/gui/exception.py:119 src/gui/exception.py:123
 msgid "Connection to server failed"
 msgstr "Připojení na server selhalo"
 
@@ -208,11 +209,15 @@ msgstr "Připojení na server selhalo"
 msgid "Unable to establish SSL connection to server"
 msgstr "Nepodařilo se vytvořit SSL připojení na server"
 
-#: src/gui/exception.py:125
+#: src/gui/exception.py:127
+msgid "Timeout was exceeded"
+msgstr "Časový limit byl překročen"
+
+#: src/gui/exception.py:133
 msgid "You reached the limit of concurrent connections to remote server. Restart your receiver to solve the problem."
 msgstr "Dosáhli jste limitu souběžných připojení ke vzdálenému serveru. Problém vyřešíte restartováním přijímače."
 
-#: src/gui/exception.py:131
+#: src/gui/exception.py:139
 msgid ""
 "An unhandled error occurred while calling the addon. Should I send bug report to addon authors?\n"
 "Report will contain part of log file, informations about your system and addon settings needed for problem analysis."
@@ -220,59 +225,59 @@ msgstr ""
 "Při volání doplňku nastala neošetřená chyba. Mám poslat hlášení o chybě autorům doplňku?\n"
 "Chybové hlášení bude obsahovat část logovacího souboru, informace o vašem systému a nastavení doplňku potřebné pro analýzu problému."
 
-#: src/gui/exception.py:133
+#: src/gui/exception.py:141
 msgid "An unhandled error occurred while calling the addon. Update addon to the latest available version."
 msgstr "Při volání doplňku nastala neošetřená chyba. Zaktualizujte doplněk na poslední dostupní verzi."
 
-#: src/gui/exception.py:135
+#: src/gui/exception.py:143
 msgid "An unhandled error occurred while calling the addon. Enable addons update in plugin settings to get the latest addon version."
 msgstr "Při volání doplňku nastala neošetřená chyba. Povolte v nastaveních pluginu aktualizaci doplňků aby jste dostali poslední dostupnou verzi."
 
-#: src/gui/exception.py:137
+#: src/gui/exception.py:145
 msgid "An unhandled error occurred while calling the addon. Please report a bug so it can be fixed."
 msgstr "Při volání doplňku nastala neošetřená chyba. Prosím nahlaste chybu aby ji bylo možné opravit."
 
-#: src/gui/exception.py:148
+#: src/gui/exception.py:156
 msgid "Download error"
 msgstr "Chyba stahování"
 
-#: src/gui/exception.py:149
+#: src/gui/exception.py:157
 msgid "Download warning"
 msgstr "Upozornění stahování"
 
-#: src/gui/exception.py:150
+#: src/gui/exception.py:158
 msgid "Download info"
 msgstr "Informace o stahování"
 
-#: src/gui/exception.py:157
+#: src/gui/exception.py:165
 msgid "protocol is not supported"
 msgstr "protokol není podporován"
 
-#: src/gui/exception.py:169
+#: src/gui/exception.py:177
 msgid "Updater error"
 msgstr "Chyba aktualizátoru"
 
-#: src/gui/exception.py:170
+#: src/gui/exception.py:178
 msgid "Updater warning"
 msgstr "Upozornění aktualizátoru"
 
-#: src/gui/exception.py:171
+#: src/gui/exception.py:179
 msgid "Updater info"
 msgstr "Informace aktualizátoru"
 
-#: src/gui/exception.py:186
+#: src/gui/exception.py:194
 msgid "Play error"
 msgstr "Chyba přehrávání"
 
-#: src/gui/exception.py:187
+#: src/gui/exception.py:195
 msgid "Play warning"
 msgstr "Varování přehrávání"
 
-#: src/gui/exception.py:188
+#: src/gui/exception.py:196
 msgid "Play info"
 msgstr "Informace o přehrávání"
 
-#: src/gui/exception.py:195
+#: src/gui/exception.py:203
 msgid "Video url doesnt exist"
 msgstr "Adresa videa neexistuje"
 

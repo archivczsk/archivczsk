@@ -17,6 +17,20 @@ from ..engine.usage import usage_stats
 from .. import _, log, config
 import requests
 
+# this is needed for compatibility with Python 2.7
+try:
+	ConnectionError
+except:
+	class ConnectionError(OSError):
+		pass
+
+try:
+	TimeoutError
+except:
+	class TimeoutError(OSError):
+		pass
+
+
 class GUIExceptionHandler(object):
 	errorName = _("Unknown Error")
 	warningName = _("Unknown Warning")
@@ -117,6 +131,14 @@ class AddonExceptionHandler(GUIExceptionHandler):
 				except requests.RequestException as e:
 					log.logError("Addon (RequestException) error '%s'.\n%s"%(str(e),traceback.format_exc()))
 					message = "%s: %s\n%s" % (_("Error in loading"), _("Connection to server failed"), str(e))
+					self.errorMessage(message)
+				except ConnectionError as e:
+					log.logError("Addon (ConnectionError) error '%s'.\n%s"%(str(e),traceback.format_exc()))
+					message = "%s: %s\n%s" % (_("Error in loading"), _("Connection to server failed"), str(e))
+					self.errorMessage(message)
+				except TimeoutError as e:
+					log.logError("Addon (TimeoutError) error '%s'.\n%s"%(str(e),traceback.format_exc()))
+					message = "%s: %s\n%s" % (_("Error in loading"), _("Timeout was exceeded"), str(e))
 					self.errorMessage(message)
 				# we handle all possible exceptions since we dont want plugin to crash because of addon error...
 				except Exception as e:
