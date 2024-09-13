@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-08-09 10:47+0200\n"
-"PO-Revision-Date: 2024-08-09 10:50+0200\n"
+"POT-Creation-Date: 2024-09-13 10:31+0200\n"
+"PO-Revision-Date: 2024-09-13 10:33+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: sk\n"
@@ -16,43 +16,43 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.0.1\n"
 
-#: src/archivczsk.py:243
+#: src/archivczsk.py:238
 msgid "Checking for addons updates"
 msgstr "Kontrolujem aktualizácie doplnkov"
 
-#: src/archivczsk.py:300
+#: src/archivczsk.py:295
 msgid "Do you want to update"
 msgstr "Chcete aktualizovať"
 
-#: src/archivczsk.py:300
+#: src/archivczsk.py:295
 msgid "addons"
 msgstr "doplnky"
 
-#: src/archivczsk.py:311
+#: src/archivczsk.py:306
 msgid "Following addons were updated"
 msgstr "Nasledujúce doplnky boli aktualizované"
 
-#: src/archivczsk.py:345
+#: src/archivczsk.py:340
 msgid "You need to restart E2. Do you want to restart it now?"
 msgstr "Zmeny sa prejavia po reštarte E2. Chcete reštartovať E2 teraz?"
 
-#: src/archivczsk.py:372
+#: src/archivczsk.py:367
 msgid "By system check there was no system plugin with name ServiceApp detected. This means, that your system only supports video player integrated in enigma2. Some addons doesn't work properly with internal player or don't work at all. If you will have problem with playing some videos, try to install ServiceApp system plugin from feed of your distribution. Then you can change in addon settings used video player to gstplayer or exteplayer3 that can handle some video formats better."
 msgstr "Pri kontrole systému nebol nájdený systémový plugin s názvom ServiceApp. To znamená, že váš systém podporuje iba video prehrávač integrovaný v enigma2. Niektoré doplnky s interným prehrávačom nefungujú správne alebo nefungujú vôbec. Ak budete mať problém s prehrávaním niektorých videí, skúste si nainštalovať systémový plugin ServiceApp z feedu vašej distribúcie. Potom môžete v nastaveniach doplnku zmeniť použitý video prehrávač na gstplayer alebo exteplayer3, ktorý lepšie zvládne niektoré formáty videa."
 
-#: src/archivczsk.py:374
+#: src/archivczsk.py:369
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3 and gstplayer. These video players are needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer and exteplayer3 from feed of your distribution to be able use all available addons."
 msgstr "Pri kontrole systému bol zistený systémový plugin s názvom ServiceApp, ale chýba vám prehrávač exteplayer3 a gstplayer. Tieto video prehrávače sú potrebné na spracovanie niektorých formátov videa, ktoré integrovaný video prehrávač v enigma2 nedokáže. Odporúča sa nainštalovať gstplayer a exteplayer3 z feedu vašej distribúcie, aby ste mohli využívať všetky dostupné doplnky."
 
-#: src/archivczsk.py:376
+#: src/archivczsk.py:371
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install exteplayer3 from feed of your distribution to be able use all available addons."
 msgstr "Pri kontrole systému bol zistený systémový plugin s názvom ServiceApp, ale chýba vám prehrávač exteplayer3. Tento video prehrávač je potrebný na spracovanie niektorých formátov videa, ktoré integrovaný video prehrávač v enigma2 nedokáže. Odporúča sa nainštalovať exteplayer3 z feedu vašej distribúcie, aby ste mohli využívať všetky dostupné doplnky."
 
-#: src/archivczsk.py:378
+#: src/archivczsk.py:373
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss gstplayer. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer from feed of your distribution to be able use all available addons."
 msgstr "Pri kontrole systému bol zistený systémový plugin s názvom ServiceApp, ale chýba vám prehrávač gstplayer. Tento video prehrávač je potrebný na spracovanie niektorých formátov videa, ktoré integrovaný video prehrávač v enigma2 nedokáže. Odporúča sa nainštalovať gstplayer z feedu vašej distribúcie, aby ste mohli využívať všetky dostupné doplnky."
 
-#: src/archivczsk.py:386
+#: src/archivczsk.py:381
 msgid "You are using outdated image in your receiver without updated SSL certificates used for HTTPS communication. This can cause problems connecting to some sites or services. Outdated images are not supported and errors related to SSL communication will not be fixed. Update your image to latest version or switch to other image if current one doesn't get updates anymore."
 msgstr "Vo svojom prijímači používate zastarané image bez aktualizovaných SSL certifikátov používaných pre HTTPS komunikáciu. Môže to spôsobiť problémy s pripojením k niektorým stránkam alebo službám. Zastarané image nie sú podporované a chyby súvisiace s SSL komunikáciou nebudú opravené. Aktualizujte svoje image na najnovšiu verziu alebo prejdite na iné, ak už vaše aktuálne nedostáva ďalšie aktualizácie."
 
@@ -178,17 +178,17 @@ msgstr "Informácia doplnku"
 
 #: src/gui/exception.py:88 src/gui/exception.py:92 src/gui/exception.py:99
 #: src/gui/exception.py:103 src/gui/exception.py:107 src/gui/exception.py:111
-#: src/gui/exception.py:115 src/gui/exception.py:119 src/gui/exception.py:156
-#: src/gui/exception.py:159 src/gui/exception.py:173 src/gui/exception.py:176
+#: src/gui/exception.py:115 src/gui/exception.py:119 src/gui/exception.py:160
+#: src/gui/exception.py:163 src/gui/exception.py:177 src/gui/exception.py:180
 msgid "Error in loading"
 msgstr "Chyba v načítavaní"
 
-#: src/gui/exception.py:88 src/gui/exception.py:99 src/gui/exception.py:156
-#: src/gui/exception.py:173
+#: src/gui/exception.py:88 src/gui/exception.py:99 src/gui/exception.py:160
+#: src/gui/exception.py:177
 msgid "HTTP Error"
 msgstr "HTTP Chyba"
 
-#: src/gui/exception.py:92 src/gui/exception.py:159 src/gui/exception.py:176
+#: src/gui/exception.py:92 src/gui/exception.py:163 src/gui/exception.py:180
 msgid "URL Error"
 msgstr "URL Chyba"
 
@@ -208,7 +208,11 @@ msgstr "Pripojenie na server zlyhalo"
 msgid "Unable to establish SSL connection to server"
 msgstr "Nepodarilo sa vytvoriť SSL spojenie na server"
 
-#: src/gui/exception.py:127
+#: src/gui/exception.py:125
+msgid "You reached the limit of concurrent connections to remote server. Restart your receiver to solve the problem."
+msgstr "Dosiahli ste limit súbežných pripojení k vzdialenému serveru. Reštartujte prijímač pre vyriešenie problému."
+
+#: src/gui/exception.py:131
 msgid ""
 "An unhandled error occurred while calling the addon. Should I send bug report to addon authors?\n"
 "Report will contain part of log file, informations about your system and addon settings needed for problem analysis."
@@ -216,59 +220,59 @@ msgstr ""
 "Pri volaní doplnku nastala neošetrená chyba. Mám poslať chybové hlásenie autorom doplnku?\n"
 "Hlásenie bude obsahovať časť logovacieho súboru, informácie o vašom systéme a nastavenia doplnku potrebné pre analýzu problému."
 
-#: src/gui/exception.py:129
+#: src/gui/exception.py:133
 msgid "An unhandled error occurred while calling the addon. Update addon to the latest available version."
 msgstr "Pri volaní doplnku nastala neošetrená chyba. Zaktualizujte doplnok na poslednú dostupnú verziu."
 
-#: src/gui/exception.py:131
+#: src/gui/exception.py:135
 msgid "An unhandled error occurred while calling the addon. Enable addons update in plugin settings to get the latest addon version."
 msgstr "Pri volaní doplnku nastala neošetrená chyba. Povoľte v nastaveniach pluginu aktualizácie doplnkov aby ste dostali poslednú dostupnú verziu."
 
-#: src/gui/exception.py:133
+#: src/gui/exception.py:137
 msgid "An unhandled error occurred while calling the addon. Please report a bug so it can be fixed."
 msgstr "Pri volaní doplnku nastala neošetrená chyba. Prosím nahláste chybu aby ju bolo možné opraviť."
 
-#: src/gui/exception.py:144
+#: src/gui/exception.py:148
 msgid "Download error"
 msgstr "Chyba sťahovania"
 
-#: src/gui/exception.py:145
+#: src/gui/exception.py:149
 msgid "Download warning"
 msgstr "Upoznenie sťahovania"
 
-#: src/gui/exception.py:146
+#: src/gui/exception.py:150
 msgid "Download info"
 msgstr "Informácia o sťahovaní"
 
-#: src/gui/exception.py:153
+#: src/gui/exception.py:157
 msgid "protocol is not supported"
 msgstr "prokol nie je podporovaný"
 
-#: src/gui/exception.py:165
+#: src/gui/exception.py:169
 msgid "Updater error"
 msgstr "Chyba aktualizácie"
 
-#: src/gui/exception.py:166
+#: src/gui/exception.py:170
 msgid "Updater warning"
 msgstr "Upozornenie aktualizacii"
 
-#: src/gui/exception.py:167
+#: src/gui/exception.py:171
 msgid "Updater info"
 msgstr "Informácia aktualizácii"
 
-#: src/gui/exception.py:182
+#: src/gui/exception.py:186
 msgid "Play error"
 msgstr "Chyba prehrávania"
 
-#: src/gui/exception.py:183
+#: src/gui/exception.py:187
 msgid "Play warning"
 msgstr "Upozornenie prehŕavania"
 
-#: src/gui/exception.py:184
+#: src/gui/exception.py:188
 msgid "Play info"
 msgstr "Informácia o prehrávaní"
 
-#: src/gui/exception.py:191
+#: src/gui/exception.py:195
 msgid "Video url doesnt exist"
 msgstr "Video adresa, ktorú chcete prehrať neexistuje"
 
@@ -689,251 +693,235 @@ msgstr "Predchádzajúci adresár"
 msgid "nothing connected"
 msgstr "nič nepripojené"
 
-#: src/settings.py:97
+#: src/settings.py:96
 msgid "Stable"
 msgstr "Stabilný"
 
-#: src/settings.py:97
+#: src/settings.py:96
 msgid "Testing"
 msgstr "Testovací"
 
-#: src/settings.py:118
+#: src/settings.py:117
 msgid "Default"
 msgstr "Predvolený"
 
-#: src/settings.py:119
+#: src/settings.py:118
 msgid "Default transparent"
 msgstr "Predvolený transparentný"
 
-#: src/settings.py:134
+#: src/settings.py:133
 msgid "Internal"
 msgstr "Interný"
 
-#: src/settings.py:134
+#: src/settings.py:133
 msgid "CSFD"
 msgstr "CSFD"
 
-#: src/settings.py:134
+#: src/settings.py:133
 msgid "CSFDLite"
 msgstr "CSFDLite"
 
-#: src/settings.py:139
+#: src/settings.py:138
 msgid "Skin"
 msgstr "Skin"
 
-#: src/settings.py:140
+#: src/settings.py:139
 msgid "Enable colored items"
 msgstr "Povoliť vyfarbovanie jednotlivých položiek v zozname"
 
-#: src/settings.py:141
+#: src/settings.py:140
 msgid "Default category"
 msgstr "Predvolená kategória"
 
-#: src/settings.py:142
+#: src/settings.py:141
 msgid "Allow archivCZSK auto update"
 msgstr "Povoliť kontrolu aktualizácií archívuCZSK"
 
-#: src/settings.py:143
+#: src/settings.py:142
 msgid "Allow addons auto update"
 msgstr "Povoliť kontrolu aktualizácií doplnkov"
 
-#: src/settings.py:144
+#: src/settings.py:143
 msgid "Update timeout"
 msgstr "Časový limit aktualizácie"
 
-#: src/settings.py:146
+#: src/settings.py:145
 msgid "Update repository"
 msgstr "Aktualizačný repozitár"
 
-#: src/settings.py:147
+#: src/settings.py:146
 msgid "Update channel"
 msgstr "Aktualizačný kanál"
 
-#: src/settings.py:148
+#: src/settings.py:147
 msgid "Show changelog after update"
 msgstr "Po aktualizácii zobraziť zoznam zmien"
 
-#: src/settings.py:149
+#: src/settings.py:148
 msgid "Check addons integrity"
 msgstr "Kontrolovať integritu doplnkov"
 
-#: src/settings.py:151
+#: src/settings.py:150
 msgid "Show movie poster"
 msgstr "Zobraziť plagát filmu"
 
-#: src/settings.py:152
+#: src/settings.py:151
 msgid "Poster maximum processing size (in kB)"
 msgstr "Maximálna veľkosť plagátu pre spracovanie (v kB)"
 
-#: src/settings.py:153
+#: src/settings.py:152
 msgid "Max posters on HDD"
 msgstr "Max počet plagátov na disku"
 
-#: src/settings.py:155
+#: src/settings.py:154
 msgid "Add to extensions menu"
 msgstr "Pridať do menu rozšírení"
 
-#: src/settings.py:156
+#: src/settings.py:155
 msgid "Add to main menu"
 msgstr "Pridať do hlavného menu"
 
-#: src/settings.py:157
+#: src/settings.py:156
 msgid "Add search option in epg menu"
 msgstr "Pridať vyhľadávanie v archivCZSK na dlhé stlačenie EPG/INFO"
 
-#: src/settings.py:158
+#: src/settings.py:157
 msgid "Add archive enter shortcut to extensions menu"
 msgstr "Pridať skratku pre vstup do archívu do menu rozšírení"
 
-#: src/settings.py:160
+#: src/settings.py:159
 msgid "CSFD plugin"
 msgstr "CSFD plugin"
 
-#: src/settings.py:171
+#: src/settings.py:170
 msgid "standard player"
 msgstr "štandardný prehrávač"
 
-#: src/settings.py:172
+#: src/settings.py:171
 msgid "custom player (subtitle support)"
 msgstr "upravený prehrávač (podpora tituliek)"
 
-#: src/settings.py:180
-msgid "Preload"
-msgstr "Prednačítať"
-
-#: src/settings.py:181 src/engine/handlers/addon.py:300
-msgid "Enable"
-msgstr "Zapnúť"
-
-#: src/settings.py:182 src/engine/handlers/addon.py:304
-msgid "Disable"
-msgstr "Vypnúť"
-
-#: src/settings.py:198
+#: src/settings.py:190
 msgid "Show more info about player"
 msgstr "Zobraziť informácie o prehrávači"
 
-#: src/settings.py:199
+#: src/settings.py:191
 msgid "RTMP Timeout"
 msgstr "RTMP Timeout"
 
-#: src/settings.py:200
+#: src/settings.py:192
 msgid "RTMP Buffer"
 msgstr "RTMP Buffer"
 
-#: src/settings.py:201
+#: src/settings.py:193
 msgid "Confirm exit when closing player"
 msgstr "Potvrdiť ukončenie prehrávania"
 
-#: src/settings.py:202
+#: src/settings.py:194
 msgid "Allow automatically changing audio track"
 msgstr "Povoliť automatickú zmenu zvukovej stopy"
 
-#: src/settings.py:203
-msgid "Support for youtube videos"
-msgstr "Podpora pre youtube videa"
-
-#: src/settings.py:226
+#: src/settings.py:217
 msgid "Change parental control settings"
 msgstr "Zmeniť nastavenie rodičovskej kontroly"
 
-#: src/settings.py:228
+#: src/settings.py:219
 msgid "Your PIN code is set to default 0000. Please change it to your own value."
 msgstr "Váš PIN kód je nastavený na predvolený 0000. Prosím zmeňte si ho na vlastnú hodnotu."
 
-#: src/settings.py:230
+#: src/settings.py:221
 msgid "Enable parental control"
 msgstr "Povoliť rodičovskú kontrolu"
 
-#: src/settings.py:231
+#: src/settings.py:222
 msgid "Change parental control PIN"
 msgstr "Zmeniť PIN pre rodičovskú kontrolu"
 
-#: src/settings.py:232
+#: src/settings.py:223
 msgid "Show adult content"
 msgstr "Zobrazovať obsah pre dospelých"
 
-#: src/settings.py:233
+#: src/settings.py:224
 msgid "Show posters for adult content"
 msgstr "U obsahu pre dospelých zobrazovať postery"
 
-#: src/settings.py:253
+#: src/settings.py:244
 msgid "Data path"
 msgstr "Adresár pre dáta"
 
-#: src/settings.py:254
+#: src/settings.py:245
 msgid "Temp path"
 msgstr "Dočasný adresár"
 
-#: src/settings.py:255
+#: src/settings.py:246
 msgid "Downloads path"
 msgstr "Sťahovať do"
 
-#: src/settings.py:256
+#: src/settings.py:247
 msgid "Posters path"
 msgstr "Plagáty sťahovať do"
 
-#: src/settings.py:258
+#: src/settings.py:249
 msgid "Log path"
 msgstr "Logovať do"
 
-#: src/settings.py:275
+#: src/settings.py:266
 msgid "info"
 msgstr "info"
 
-#: src/settings.py:275
+#: src/settings.py:266
 msgid "debug"
 msgstr "debug"
 
-#: src/settings.py:294
+#: src/settings.py:285
 msgid "Debug mode"
 msgstr "Debug mód"
 
-#: src/settings.py:295
+#: src/settings.py:286
 msgid "Allow sending bug reports on addon error"
 msgstr "Povoliť posielanie chybových hlásení pri chybe doplnku"
 
-#: src/settings.py:296
+#: src/settings.py:287
 msgid "Allow preloading of addons on start"
 msgstr "Povoliť prednačítavanie doplnkov pri štarte"
 
-#: src/settings.py:297
+#: src/settings.py:288
 msgid "Confirm exit when closing plugin"
 msgstr "Potvrdiť ukončenie archívuCZSK"
 
-#: src/settings.py:298
+#: src/settings.py:289
 msgid "Show broken addons"
 msgstr "Zobraziť nefunkčné doplnky"
 
-#: src/settings.py:299
+#: src/settings.py:290
 msgid "Show not supported addons"
 msgstr "Zobraziť nepodporované doplnky"
 
-#: src/settings.py:300
+#: src/settings.py:291
 msgid "On update remove broken and not supported addons"
 msgstr "Pri aktualizácii odstrániť nefunkčné a nepodporované doplnky"
 
-#: src/settings.py:301
+#: src/settings.py:292
 msgid "Show video source selection"
 msgstr "Zobraziť výber zdroju videa"
 
-#: src/settings.py:302
+#: src/settings.py:293
 msgid "Convert captcha images to 8bit"
 msgstr "Konvertovať captcha obrázky"
 
-#: src/settings.py:303
+#: src/settings.py:294
 msgid "Drop caches on exit"
 msgstr "Vymazať medzipamäť po ukončení"
 
-#: src/settings.py:304
+#: src/settings.py:295
 msgid "Internal HTTP server listen port"
 msgstr "Port interného HTTP servera"
 
-#: src/settings.py:305
+#: src/settings.py:296
 msgid "Run HTTP only for internal addons usage"
 msgstr "Spustiť HTTP server iba pre interné použitie doplnkami"
 
-#: src/settings.py:309
+#: src/settings.py:300
 msgid "Allow sending anonymous usage statistics"
 msgstr "Povoliť posielanie anonymných štatistík používania pluginu"
 
@@ -1336,6 +1324,14 @@ msgstr "Pridať do kategórie"
 msgid "Remove from category"
 msgstr "Zmazať z kategórie"
 
+#: src/engine/handlers/addon.py:300
+msgid "Enable"
+msgstr "Zapnúť"
+
+#: src/engine/handlers/addon.py:304
+msgid "Disable"
+msgstr "Vypnúť"
+
 #: src/engine/trakttv.py:492
 #, python-brace-format
 msgid "Trakt.tv operation {action} ended successfuly"
@@ -1401,7 +1397,7 @@ msgstr ""
 "Aktivačná URL: {url}\n"
 "Aktivačný kód: {code}"
 
-#: src/engine/client.py:98
+#: src/engine/client.py:88
 msgid "Please set your search expression"
 msgstr "Prosím vložte hľadaný výraz"
 
@@ -1520,6 +1516,12 @@ msgstr "Ak je aktuálny kanál spravovaný doplnkom pre ArchivCZSK, potom otvor�
 #: src/plugin.py:116
 msgid "Search in ArchivCZSK"
 msgstr "Vyhľadávanie v ArchivCZSK"
+
+#~ msgid "Preload"
+#~ msgstr "Prednačítať"
+
+#~ msgid "Support for youtube videos"
+#~ msgstr "Podpora pre youtube videa"
 
 #~ msgid "Bug report will be automatically send in the background."
 #~ msgstr "Chybové hlásenie bude automaticky odoslané na pozadí."

@@ -120,17 +120,21 @@ class AddonExceptionHandler(GUIExceptionHandler):
 					self.errorMessage(message)
 				# we handle all possible exceptions since we dont want plugin to crash because of addon error...
 				except Exception as e:
-					if self.addon:
-						usage_stats.addon_exception(self.addon)
-					log.logError("Addon error.\n%s"%traceback.format_exc())
-					if config.plugins.archivCZSK.bugReports.value and config.plugins.archivCZSK.autoUpdate.value and (not self.addon or not self.addon.need_update()):
-						self.errorMessageAskReport(_("An unhandled error occurred while calling the addon. Should I send bug report to addon authors?\nReport will contain part of log file, informations about your system and addon settings needed for problem analysis."), addon=self.addon)
-					elif (self.addon and self.addon.need_update()):
-						self.errorMessage(_("An unhandled error occurred while calling the addon. Update addon to the latest available version."))
-					elif not config.plugins.archivCZSK.autoUpdate.value:
-						self.errorMessage(_("An unhandled error occurred while calling the addon. Enable addons update in plugin settings to get the latest addon version."))
+					if isinstance(e, ValueError) and str(e) == 'filedescriptor out of range in select()':
+						log.logError("Addon error.\n%s"%traceback.format_exc())
+						self.errorMessage(_("You reached the limit of concurrent connections to remote server. Restart your receiver to solve the problem."))
 					else:
-						self.errorMessage(_("An unhandled error occurred while calling the addon. Please report a bug so it can be fixed."))
+						if self.addon:
+							usage_stats.addon_exception(self.addon)
+						log.logError("Addon error.\n%s"%traceback.format_exc())
+						if config.plugins.archivCZSK.bugReports.value and config.plugins.archivCZSK.autoUpdate.value and (not self.addon or not self.addon.need_update()):
+							self.errorMessageAskReport(_("An unhandled error occurred while calling the addon. Should I send bug report to addon authors?\nReport will contain part of log file, informations about your system and addon settings needed for problem analysis."), addon=self.addon)
+						elif (self.addon and self.addon.need_update()):
+							self.errorMessage(_("An unhandled error occurred while calling the addon. Update addon to the latest available version."))
+						elif not config.plugins.archivCZSK.autoUpdate.value:
+							self.errorMessage(_("An unhandled error occurred while calling the addon. Enable addons update in plugin settings to get the latest addon version."))
+						else:
+							self.errorMessage(_("An unhandled error occurred while calling the addon. Please report a bug so it can be fixed."))
 			except:
 				log.logError("Addon (LOG) error.\n%s"%traceback.format_exc())
 				# this can go to crash because want show modal from screen which is not modal
