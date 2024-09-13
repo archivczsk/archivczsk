@@ -1,3 +1,7 @@
+archivCZSK 2.8.1, 13.09.2024
+    - presnejšie zobrazenie chýb pri problémoch so spojením na vzdialený server
+    - info o potrebe reštartu prijímača ak sa prekročí max. limit spojení
+
 archivCZSK 2.8.0, 21.08.2024
     - vylepšené zobrazenie chýb pri chýbajúcich závislostiach modulov
     - doplnky môžu vynútiť typ použitého prehrávača
