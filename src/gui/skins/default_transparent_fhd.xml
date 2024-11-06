@@ -135,6 +135,17 @@
     </widget>
   </screen>
 
+  <screen name="ArchivCZSKSimpleConfigScreen" position="center,center" backgroundColor="#0a000000" size="1154,683">
+    <widget backgroundColor="#009f1313" font="Regular;30" halign="center" name="key_red" position="10,6" shadowColor="black" shadowOffset="-2,-2" size="276,57" valign="center" zPosition="1"/>
+    <widget backgroundColor="#001f771f" font="Regular;30" halign="center" name="key_green" position="296,6" shadowColor="black" shadowOffset="-2,-2" size="276,57" valign="center" zPosition="1"/>
+    <widget backgroundColor="#00a08500" font="Regular;30" halign="center" name="key_yellow" position="582,6" shadowColor="black" shadowOffset="-2,-2" size="276,57" valign="center" zPosition="1"/>
+    <widget backgroundColor="#0018188b" font="Regular;30" halign="center" name="key_blue" position="868,6" shadowColor="black" shadowOffset="-2,-2" size="276,57" valign="center" zPosition="1"/>
+    <eLabel position="10,67" size="1134,1" backgroundColor="#00ffffff"/>
+    <widget name="config" position="10,71" font="Regular;26" size="1135,539" itemHeight="32" transparent="1" scrollbarMode="showOnDemand"/>
+    <eLabel position="10,647" size="1134,1" backgroundColor="#00ffffff"/>
+    <widget font="Regular;25" foregroundColor="white" name="tooltip" position="10,649" size="1134,32" transparent="1"/>
+  </screen>
+
   <screen name="ArchivCZSKConfigScreen" position="center,center" backgroundColor="#0a000000" size="1154,740">
     <widget backgroundColor="#009f1313" font="Regular;30" halign="center" name="key_red" position="10,6" shadowColor="black" shadowOffset="-2,-2" size="276,57" valign="center" zPosition="1"/>
     <widget backgroundColor="#001f771f" font="Regular;30" halign="center" name="key_green" position="296,6" shadowColor="black" shadowOffset="-2,-2" size="276,57" valign="center" zPosition="1"/>

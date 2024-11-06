@@ -20,6 +20,7 @@ from .tools.task import callFromThread, Task
 from .tools.util import toString, toUnicode
 from ..gui.captcha import Captcha
 from ..gui.common import LoadingScreen
+from ..gui.config import ArchivCZSKSimpleConfigScreen
 from ..colors import DeleteColors, ConvertColors
 from ..py3compat import *
 GItem_lst = VideoAddonContentProvider.get_shared_itemlist()
@@ -48,6 +49,19 @@ def getVideoFormats(url):
 	legacy function used to resolve youtube videos - not working anymore - use direct youtube addon call
 	'''
 	return []
+
+@callFromThread
+def openSimpleConfig(session, config_entries, title=None):
+	def simpleConfigCB(result):
+		loading and loading.start()
+		d.callback(result)
+
+	loading = LoadingScreen.get_running_instance()
+	loading and loading.stop()
+
+	d = defer.Deferred()
+	session.openWithCallback(simpleConfigCB, ArchivCZSKSimpleConfigScreen, config_entries=config_entries, title=title)
+	return d
 
 @callFromThread
 def getTextInput(session, title, text=""):
