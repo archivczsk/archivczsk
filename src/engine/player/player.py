@@ -645,6 +645,7 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.__timer_tracks_setup_conn = eConnectCallback(self.__timer_tracks_setup.timeout, self.setup_tracks)
 		self.__timer_skip_notification = eTimer()
 		self.__timer_skip_notification_conn = eConnectCallback(self.__timer_skip_notification.timeout, self.show_skip_notification)
+		self.only_future_skip_notifications = False
 		self.__subtitles_url = None
 		self.__resume_time_sec = None
 		self.__resume_popup = True
@@ -744,9 +745,10 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 					self.skip_dialog.show_skip(text + ' >>>', cbk=lambda: do_skip(i, st_end), timeout=(st_end - cur_position))
 				break
 
-		self.setup_skip_notification(True)
+		self.only_future_skip_notifications = True
+		self.setup_skip_notification()
 
-	def setup_skip_notification(self, only_future=False):
+	def setup_skip_notification(self):
 		if self.__timer_skip_notification.isActive():
 			self.__timer_skip_notification.stop()
 
@@ -780,7 +782,7 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 			if not st_end:
 				st_end = self.duration_sec
 
-			if not self.skip_dialog.is_shown and not only_future and cur_position >= st[0] and cur_position < st_end and (st_end - cur_position) > 3:
+			if not self.skip_dialog.is_shown and not self.only_future_skip_notifications and cur_position >= st[0] and cur_position < st_end and (st_end - cur_position) > 3:
 				# show notification now (using timer)
 				log.debug("Showing skip notification now")
 				self.__timer_skip_notification.start(10, True)
@@ -1074,6 +1076,7 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.__timer_seek.start(5000, True)
 
 		if self.skip_times:
+			self.only_future_skip_notifications = False
 			if self.__timer_seek_notification.isActive():
 				self.__timer_seek_notification.stop()
 
@@ -1097,6 +1100,7 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.__timer_seek.start(5000, True)
 
 		if self.skip_times:
+			self.only_future_skip_notifications = False
 			if self.__timer_seek_notification.isActive():
 				self.__timer_seek_notification.stop()
 
