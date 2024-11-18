@@ -160,11 +160,6 @@ class ArchivCZSKConfigScreen(BaseArchivCZSKConfigScreen):
 		]
 
 		BaseArchivCZSKConfigScreen.__init__(self, session, categories=categories)
-
-		if DMM_IMAGE:
-			# DMM needs specific skin for config screen
-			self.skinName = ["ArchivCZSKConfigScreenDMM", "ArchivCZSKConfigScreen"]
-
 		self.onLayoutFinish.append(self.layoutFinished)
 		self.onShown.append(self.buildMenu)
 		self.onClose.append(self.restore_pin_state)
@@ -213,11 +208,7 @@ class ArchivCZSKAddonConfigScreen(BaseArchivCZSKConfigScreen):
 		categories = addon_config.getArchiveConfigList(addon)
 
 		BaseArchivCZSKConfigScreen.__init__(self, session, categories=categories)
-
-		if DMM_IMAGE:
-			self.skinName = ["ArchivCZSKConfigScreenDMM", "ArchivCZSKConfigScreen"]
-		else:
-			self.skinName = "ArchivCZSKConfigScreen"
+		self.skinName = "ArchivCZSKConfigScreen"
 
 		self.onShown.append(self.buildMenu)
 		self.onLayoutFinish.append(self.layoutFinished)

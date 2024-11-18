@@ -72,30 +72,95 @@ class ArchivCZSK():
 		log.info("load repositories in {0}".format(diff))
 
 	@staticmethod
+	def process_skin(skin_path_orig, skin_path_new):
+		import re
+		from enigma import getDesktop
+		desktop_width = getDesktop(0).size().width()
+		desktop_height = getDesktop(0).size().height()
+		log.logDebug("Screen resolution: {}x{} px".format(desktop_width, desktop_height))
+
+		r = float(desktop_width) / 1920.0 # we assume, that skin is prepared for FullHD resolution
+
+		log.logDebug("Ratio used for skin processing: {:.4f}".format(r))
+
+		def apply_skin_ratio(skin_data):
+			# Define the pattern to search for *[-]number*
+			pattern = r'\*(-?\d+)\*'
+
+			# Function to replace the matched pattern
+			def multiply_and_replace(match):
+				number = int(match.group(1))
+				result = int(round(number * r))
+				return str(result)
+
+			# Use re.sub to replace all occurrences of the pattern
+			return re.sub(pattern, multiply_and_replace, skin_data)
+
+		def fix_dmm_params(match):
+			if DMM_IMAGE:
+				return ''
+			else:
+				return match.group(1)
+
+		def btscale_skin_fix(skin_data):
+			# flags parameter in MultiContentEntryPixmapAlphaTest is totaly incompatible between images
+			# OpenXXX images use flags with BT_* values
+			# dreambox uses scale_flags with SCALE_* (default is SCALE_RATIO, which is OK for us)
+			# VTi uses options with only mumeric values
+			try:
+				from Components.MultiContent import MultiContentEntryPixmapAlphaTest
+
+				try:
+					from enigma import BT_SCALE
+					scale_flags = str(BT_SCALE)
+				except:
+					scale_flags = "0"
+
+				try:
+					# try OpenXXX images, but for sure replace BT_SCALE with numeric value
+					MultiContentEntryPixmapAlphaTest(flags=0)
+					skin_data = skin_data.replace('flags=BT_SCALE', 'flags='+scale_flags)
+				except:
+					try:
+						# try VTi images and replace BT_SCALE with numeric value
+						MultiContentEntryPixmapAlphaTest(options=0)
+						skin_data = skin_data.replace('flags=BT_SCALE', 'options='+scale_flags)
+					except:
+						# other images without flags support + dreambox with SCALE_RATIO default
+						skin_data = skin_data.replace(', flags=BT_SCALE', '')
+			except:
+				log.error(traceback.format_exc())
+
+			return skin_data
+
+		with open(skin_path_orig, 'r') as f:
+			skin_data = re.sub(r'!(font=.+?)!', fix_dmm_params, f.read())
+			skin_data = apply_skin_ratio(skin_data)
+			skin_data = btscale_skin_fix(skin_data)
+
+			# apply transparency setting - we assume, that default skin transparency is 0a000000 and this value isn't used for anything else
+			skin_data = skin_data.replace('"#0a000000"', '"#{:02x}000000"'.format(int(config.plugins.archivCZSK.skin_transparency.value)))
+
+		with open(skin_path_new, 'w') as f:
+			f.write(skin_data)
+
+
+	@staticmethod
 	def load_skin():
 		try:
-			from enigma import getDesktop
-			desktop_width = getDesktop(0).size().width()
-			log.logDebug("Screen width %s px" % desktop_width)
+			skin_path = os.path.join(settings.SKIN_PATH, config.plugins.archivCZSK.skin.value + ".xml")
 
-			if desktop_width >= 2560:
-				default_skin_name = "default_uni_wqhd"
-			elif desktop_width >= 1920:
-				default_skin_name = "default_uni_fhd"
-			else:
-				default_skin_name = "default_uni_hd"
+			if not os.path.isfile(skin_path):
+				skin_path = os.path.join(settings.SKIN_PATH, 'default.xml')
 
-			skin_name = config.plugins.archivCZSK.skin.value
-			skin_path = os.path.join(settings.SKIN_PATH, skin_name + ".xml")
+			tmp_skin_path = '/tmp/archivczsk_skin.xml'
 
-			if skin_name in ('auto', 'auto_transparent') or not os.path.isfile(skin_path):
-				if skin_name == 'auto_transparent':
-					default_skin_name = default_skin_name.replace('_uni_', '_transparent_')
-
-				skin_path = os.path.join(settings.SKIN_PATH, default_skin_name + ".xml")
+			log.info("Processing skin %s" % skin_path)
+			ArchivCZSK.process_skin(skin_path, tmp_skin_path)
 
 			log.info("Loading skin %s" % skin_path)
-			loadSkin(skin_path)
+			loadSkin(tmp_skin_path)
+			os.remove(tmp_skin_path)
 		except:
 			log.logError("Load plugin skin failed.\n%s" % traceback.format_exc())
 

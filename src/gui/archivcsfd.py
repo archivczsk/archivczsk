@@ -36,11 +36,6 @@ class ArchivCSFD(Screen):
 	def __init__(self, session, eventName, year, args = None):
 		try:
 			Screen.__init__(self, session)
-
-			if DMM_IMAGE:
-				# DMM needs specific skin for this
-				self.skinName = ["ArchivCSFDDMM", "ArchivCSFD"]
-
 			self.eventName = eventName
 			self["poster"] = Pixmap()
 			self.picload = ePicLoad()
@@ -52,7 +47,7 @@ class ArchivCSFD(Screen):
 			self["stars"].hide()
 			self["starsbg"].hide()
 			self["poster"].hide()
-			
+
 			self.ratingstars = -1
 			#self["titlelabel"] = Label("CSFD Lite")
 			self["detailslabel"] = ScrollLabel("")
@@ -70,7 +65,7 @@ class ArchivCSFD(Screen):
 			self["key_green"] = Button("")
 			self["key_yellow"] = Button("")
 			self["key_blue"] = Button("")
-		
+
 			# 0 = multiple query selection menu page
 			# 1 = movie info page
 			# 2 = extra infos page
@@ -95,7 +90,7 @@ class ArchivCSFD(Screen):
 			}, -1)
 
 			self.rokEPG = year
-		
+
 			self.getCSFD()
 		except:
 			log.logError("Init ArchivCSFD failed.\n%s"%traceback.format_exc())
@@ -161,7 +156,7 @@ class ArchivCSFD(Screen):
 			self["detailslabel"].pageUp()
 		if self.Page == 2:
 			self["extralabel"].pageUp()
-	
+
 	def pageDown(self):
 		if self.Page == 0:
 			self["menu"].instance.moveSelection(self["menu"].instance.moveDown)
@@ -281,13 +276,13 @@ class ArchivCSFD(Screen):
 				self.eventName = quote(self.eventName)
 			except:
 				self.eventName = quote(self.eventName.decode('utf8').encode('ascii','ignore'))
-			
+
 			self.nazeveventu = self.eventName
 			jineznaky = list(set(self.hledejVse('(%[0-9A-F][0-9A-F])', self.nazeveventu)))
 			for jinyznak in jineznaky:
 				desitkove = int(jinyznak[1:3], 16)
 				if desitkove > 31 and desitkove < 128:
-					self.nazeveventu = self.nazeveventu.replace(jinyznak, chr(desitkove)) 
+					self.nazeveventu = self.nazeveventu.replace(jinyznak, chr(desitkove))
 				elif desitkove > 127:
 					self.nazeveventu = self.nazeveventu.replace(jinyznak, jinyznak.lower())
 			self.nazeveventu = self.nazeveventu.replace('%', '\\x')
@@ -325,7 +320,7 @@ class ArchivCSFD(Screen):
 			seznamfilmu = self.najdi('<h2>Filmy(.*?)<h2>Seri', self.inhtml)
 			seznamserialu = self.najdi('<h2>Seri(.*?)</section>', self.inhtml)
 			seznamcely = seznamfilmu + seznamserialu
-			
+
 			self.resultlist = []
 			for odkaz, filmnazev, filminfo in self.hledejVse('<h3.*?<a href="/film/(.*?)".*?"film-title-name">(.*?)</a>(.*?)</h3>', seznamcely):
 				hlavninazev = filmnazev
@@ -337,7 +332,7 @@ class ArchivCSFD(Screen):
 				if typnazev != "":
 					celynazev += ' (' + typnazev + ')'
 				self.resultlist += [(celynazev, odkaz, hlavninazev, rok)]
-			
+
 			shoda = []
 			for nazevinfo, odkaz, nazevfilmu, rok in self.resultlist:
 				log.logDebug("ArchivCSFD nazevinfo=%s, odkaz=%s, nazevfilmu=%s, rok=%s || compare=%s"%(nazevinfo, odkaz, nazevfilmu, rok, self.nazeveventu))
@@ -382,7 +377,7 @@ class ArchivCSFD(Screen):
 			#self["detailslabel"].setText("Not found for '%s'" % (self.nazeveventuproskin))
 			self["statusbar"].setText("Not found for '%s'" % (self.nazeveventuproskin))
 
-	
+
 
 	def CSFDquery2(self,string):
 		self["statusbar"].setText("Download movie info complete for '%s'" % (self.nazevkomplet))
@@ -444,7 +439,7 @@ class ArchivCSFD(Screen):
 			posterurl = ""
 			if not 'class="empty-image"' in self.inhtml:
 				posterurl = self.najdi('class="film-posters".*?src="(.*?)"', self.inhtml)
-				
+
 			if posterurl != "":
 				if not "https:" in posterurl:
 					posterurl = "https:" + posterurl
@@ -491,7 +486,7 @@ class ArchivCSFD(Screen):
 			for obsah in self.hledejVse('<div class="plots-item">\s+<p>\s+(.*?)\s+</p>', obsahy):
 				if obsah:
 					Detailstext += self.odstraneniTagu(obsah).replace("\t", "").replace("\n\n\n", "    ")
-					Detailstext += '\n' 
+					Detailstext += '\n'
 			Detailstext = self.odstraneniTagu(Detailstext)
 
 			Extratext = ""
@@ -511,7 +506,7 @@ class ArchivCSFD(Screen):
 
 		self["baseFilmInfo"].setText(baseInfo)
 		self["detailslabel"].setText(Detailstext)
-	
+
 	def CSFDPoster(self, noPoster = False):
 		self["statusbar"].setText(_("Csfd info for") + (" '%s'" % self.nazevkomplet))
 		if not noPoster:
@@ -529,7 +524,7 @@ class ArchivCSFD(Screen):
 			self["poster"].show()
 
 	def createSummary(self):
-		return ArchivCSFDLCDScreen	  
+		return ArchivCSFDLCDScreen
 
 
 class ArchivCSFDLCDScreen(Screen):

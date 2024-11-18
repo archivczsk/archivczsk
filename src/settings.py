@@ -107,17 +107,9 @@ def skin_changed(configElement):
 	from .archivczsk import ArchivCZSK
 	ArchivCZSK.force_skin_reload = True
 
-if config.plugins.archivCZSK.allow_custom_update.value or config.plugins.archivCZSK.update_branch.value == 'testing':
-	# when custom update or testing repo is enabled, then allow explicitly setting any of default skins
-	skinChoices = [os.path.splitext(fname)[0] for fname in os.listdir(SKIN_PATH) if fname.endswith('.xml') ]
-else:
-	# don't allow to choose default skins directly for normal users - they are only able to select default skins usin auto or auto_transparent
-	skinChoices = [os.path.splitext(fname)[0] for fname in os.listdir(SKIN_PATH) if fname.endswith('.xml') and not fname.startswith('default_') ]
-
-skinChoices.append(('auto', _("Default"),))
-skinChoices.append(('auto_transparent', _("Default transparent"),))
-config.plugins.archivCZSK.skin = ConfigSelection(default="auto", choices=skinChoices)
-config.plugins.archivCZSK.skin.addNotifier(skin_changed, initial_call=False)
+config.plugins.archivCZSK.skin = ConfigText(default="default")
+config.plugins.archivCZSK.skin_transparency = ConfigSelection(default="5", choices=[(str(i), str(i),) for i in range(0, 100)])
+config.plugins.archivCZSK.skin_transparency.addNotifier(skin_changed, initial_call=False)
 config.plugins.archivCZSK.colored_items = ConfigYesNo(default=False if colorFixNeeded == None else True)
 config.plugins.archivCZSK.downloadPoster = ConfigYesNo(default=True)
 choicelist = []
@@ -135,7 +127,7 @@ config.plugins.archivCZSK.csfdMode = ConfigSelection(default='1', choices=choice
 
 def get_main_settings():
 	list = []
-	list.append(getConfigListEntry(_("Skin"), config.plugins.archivCZSK.skin))
+	list.append(getConfigListEntry(_("Background transparency (in %)"), config.plugins.archivCZSK.skin_transparency))
 	list.append(getConfigListEntry(_("Enable colored items"), config.plugins.archivCZSK.colored_items))
 	list.append(getConfigListEntry(_("Default category"), config.plugins.archivCZSK.defaultCategory))
 	list.append(getConfigListEntry(_("Allow archivCZSK auto update"), config.plugins.archivCZSK.archivAutoUpdate))
