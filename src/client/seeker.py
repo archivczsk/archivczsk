@@ -25,10 +25,16 @@ def getCapabilities():
 	for addon in ArchivCZSK.get_video_addons():
 		for seeker in addon.get_info('seekers'):
 			# seeker is touple ("Search name", search_id) - it's defined in addon's xml in archivczsk.addon.seeker point
-			title = _('Search in') + ' ' + seeker[0]
+			title = seeker[0]
+			if addon.is_virtual():
+				if config.plugins.archivCZSK.colored_items.value:
+					title = '{} [B][{}][/B]'.format(title, addon.profile_name)
+				else:
+					title = '{} [{}]'.format(title, addon.profile_name)
+
 			cap_list.append((title, addon.id, seeker[1],))
 
-	cap_list.append((_('Search in') + ' CSFD', 'csfd', None))
+	cap_list.append(('CSFD', 'csfd', None))
 	return cap_list
 
 #	 Napriklad:
