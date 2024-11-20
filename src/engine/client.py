@@ -446,3 +446,7 @@ def add_playlist(name, media_list=[], variant=False):
 		playlist.add(media)
 	GItem_lst[0].append(playlist)
 	return playlist
+
+@abortTask
+def clear_items():
+	del GItem_lst[0][:]
