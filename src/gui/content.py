@@ -159,6 +159,15 @@ class BaseContentScreen(BaseArchivCZSKListSourceScreen):
 				parent = self.getParent()
 				if parent:
 					parent["refresh"] = True
+			elif command == 'exit':
+				self.contentHandler.exit_item()
+				self.stopLoading()
+				self.showList()
+				self.workingFinished()
+			elif command == 'reload':
+				self.stopLoading()
+				self.showList()
+				self.workingFinished()
 			else:
 				log.debug("unknown command %s" , command)
 
