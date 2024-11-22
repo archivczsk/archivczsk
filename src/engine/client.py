@@ -18,6 +18,7 @@ from .items import PFolder, PVideoResolved, PVideoNotResolved, PPlaylist, PSearc
 from .parental import parental_pin
 from .tools.task import callFromThread, Task
 from .tools.util import toString, toUnicode
+from .license import license
 from ..gui.captcha import Captcha
 from ..gui.common import LoadingScreen
 from ..gui.config import ArchivCZSKSimpleConfigScreen
@@ -51,8 +52,23 @@ def getVideoFormats(url):
 	return []
 
 @callFromThread
-def openSimpleConfig(session, config_entries, title=None):
+def openSimpleConfig(session, config_entries, title=None, s=True):
 	def simpleConfigCB(result):
+		if s and result and not license.check_level(license.LEVEL_SUPPORTER):
+			def mbox_cbk(result):
+				if result:
+					def close_cbk(result2):
+						loading and loading.start()
+						d.callback(AddonSilentExit(''))
+
+					from ..gui.icon import ArchivCZSKDonateScreen
+					session.openWithCallback(close_cbk, ArchivCZSKDonateScreen)
+				else:
+					loading and loading.start()
+					d.callback(AddonSilentExit(''))
+
+			return session.openWithCallback(mbox_cbk, MessageBox, text=toString(_('This is bonus functionality available only for product supporters. Do you want to know, how to get "Supporter" status?')), type=MessageBox.TYPE_YESNO)
+
 		loading and loading.start()
 		d.callback(result)
 
@@ -223,6 +239,28 @@ def refresh_screen(restoreLastPosition=True, parent=False):
 		set_command('refreshnow')
 	else:
 		set_command('refreshnow_resetpos')
+
+@callFromThread
+def open_donate_dialog(session):
+	from ..gui.icon import ArchivCZSKDonateScreen
+	def close_cbk(result):
+		loading and loading.start()
+		d.callback(None)
+
+	loading = LoadingScreen.get_running_instance()
+	loading and loading.stop()
+	d = defer.Deferred()
+	session.openWithCallback(close_cbk, ArchivCZSKDonateScreen)
+	return d
+
+def ensure_supporter(session):
+	if license.check_level(license.LEVEL_SUPPORTER):
+		return
+
+	if getYesNoInput(session, _('This is bonus functionality available only for product supporters. Do you want to know, how to get "Supporter" status?')) == True:
+		open_donate_dialog(session)
+
+	raise AddonSilentExit('')
 
 def __process_info_labels(item, info_labels):
 	# this is really hacky implementation ...

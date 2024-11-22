@@ -9,9 +9,10 @@ from . import _, log
 from .archivczsk import ArchivCZSK
 from .gsession import GlobalSession
 from .gui.search import ArchivCZSKSearchClientScreen
-from .gui.icon import IconD
+from .gui.icon import ArchivCZSKDonateScreen
 from .engine.downloader import DownloadManager
 from .engine.httpserver import archivCZSKHttpServer
+from .engine.license import license
 from .client.shortcut import run_shortcut
 
 NAME = _("ArchivCZSK")
@@ -38,10 +39,10 @@ def main(session, **kwargs):
 	lastIconDUtcCfg = config.plugins.archivCZSK.lastIconDShowMessage
 
 	monthSeconds = 60 * 60 * 24 * 30
-	if lastIconDUtcCfg.value == 0 or (int(time.time()) - lastIconDUtcCfg.value > monthSeconds):
+	if license.is_valid() == False and (lastIconDUtcCfg.value == 0 or (int(time.time()) - lastIconDUtcCfg.value > monthSeconds)):
 		lastIconDUtcCfg.value = int(time.time())
 		lastIconDUtcCfg.save()
-		session.openWithCallback(runArchivCZSK, IconD)
+		session.openWithCallback(runArchivCZSK, ArchivCZSKDonateScreen, countdown=10)
 	else:
 		runArchivCZSK()
 

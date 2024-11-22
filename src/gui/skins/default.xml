@@ -320,4 +320,62 @@
 	<screen id="3" name="ArchivCSFDLCDScreen" position="0,0" size="400,240" title="Archiv CSFD">
 		<widget name="headline" halign="center" position="0,90" size="396,150" font="Regular;54"/>
 	</screen>
+
+	<screen name="ArchivCZSKDonateScreen" position="center,center" backgroundColor="#0a000000" size="*1478*,*840*">
+		<widget name="info_title" position="*10*,*10*" size="*1458*,*40*" halign="center" foregroundColor="#00e5b243" font="Regular;*35*" transparent="1"/>
+
+		<widget name="info_label_h1" position="*10*,*60*" size="*1458*,*35*" font="Regular;*30*" foregroundColor="#00fce083" halign="top" transparent="1"/>
+		<widget name="info_label1" position="*10*,*95*" size="*1458*,*70*" font="Regular;*28*" halign="top" transparent="1"/>
+
+		<widget name="info_label_h2" position="*10*,*170*" size="*1458*,*35*" font="Regular;*30*" foregroundColor="#00fce083" halign="top" transparent="1"/>
+		<widget name="info_label2" position="*10*,*205*" size="*1458*,*70*" font="Regular;*28*" halign="top" transparent="1"/>
+
+		<widget name="info_label_h3" position="*10*,*280*" size="*1458*,*35*" font="Regular;*30*" foregroundColor="#00fce083" halign="top" transparent="1"/>
+		<widget name="info_label3" position="*10*,*315*" size="*1458*,*70*" font="Regular;*28*" halign="top" transparent="1"/>
+
+		<widget name="info_label_h4" position="*10*,*390*" size="*1458*,*35*" font="Regular;*30*" foregroundColor="#00fce083" halign="top" transparent="1"/>
+		<widget name="info_label4" position="*10*,*425*" size="*1458*,*70*" font="Regular;*28*" halign="top" transparent="1"/>
+
+		<eLabel position="*10*,*535*" size="*1458*,1" backgroundColor="#00ffffff"/>
+
+		<widget name="donate_status_label" position="*10*,*540*" size="*350*,*40*" halign="left" font="Regular;*32*" transparent="1"/>
+		<widget name="donate_result_yes" position="*360*,*540*" size="*200*,*40*" halign="left" font="Regular;*35*" foregroundColor="#0007fa20" transparent="1"/>
+		<widget name="donate_validity" position="*510*,*540*" size="*700*,*40*" halign="left" font="Regular;*32*" transparent="1"/>
+		<widget name="donate_result_no" position="*360*,*540*" size="*200*,*40*" halign="left" font="Regular;*35*" foregroundColor="#00fa0707" transparent="1"/>
+
+		<eLabel position="*10*,*585*" size="*1458*,1" backgroundColor="#00ffffff"/>
+		<widget name="donate_menu_title" position="*10*,*600*" size="*1458*,*40*" halign="center" foregroundColor="#00e5b243" font="Regular;*30*" transparent="1"/>
+		<widget source="menu" render="Listbox" position="*10*,*640*" size="*1458*,*190*" transparent="1">
+			<convert type="ACZSKKodiToE2List">Index:1,ColorCodes,Bold:FCE083,Italic:FCE083</convert>
+			<convert type="TemplatedMultiContent">
+			{
+				"templates": {
+					"default": (
+						*60*,
+						[
+							MultiContentEntryPixmapAlphaTest(pos=(*10*, *5*), size=(*160*, *50*), png=0, flags=BT_SCALE),
+							MultiContentEntryText(pos=(*200*, *5*), size=(*1248*, *50*), font=0, flags=RT_VALIGN_CENTER | RT_HALIGN_LEFT, text=1)
+						],
+						True,
+						"showOnDemand"
+					),
+				},
+				"fonts": [
+					gFont("Regular", *32*)
+				],
+				"itemHeight": *60*
+			}
+			</convert>
+		</widget>
+	</screen>
+
+	<screen name="ArchivCZSKPaymentScreen" position="center,center" backgroundColor="#0a000000" size="*1478*,*840*">
+		<widget name="info_title1" position="*10*,*10*" size="*1458*,*50*" halign="center" foregroundColor="#00e5b243" font="Regular;*35*" transparent="1"/>
+		<widget name="info_title2" position="*10*,*60*" size="*1458*,*38*" halign="center" font="Regular;*30*" transparent="1"/>
+		<eLabel position="*10*,*110*" size="*1458*,1" backgroundColor="#00ffffff"/>
+		<widget alphatest="on" name="qrimage" scale="1" position="*454*,*120*" size="*570*,*570*" zPosition="2"/>
+		<eLabel position="*10*,*700*" size="*1458*,1" backgroundColor="#00ffffff"/>
+		<widget name="footer" position="*10*,*710*" size="*1458*,*120*" halign="center" font="Regular;*30*" transparent="1"/>
+	</screen>
+
 </skin>

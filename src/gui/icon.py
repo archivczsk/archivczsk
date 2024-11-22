@@ -1,69 +1,219 @@
+# -*- coding: UTF-8 -*-
 import os
 
-from Screens.Screen import Screen
+from .. import _, log
 from Components.ActionMap import ActionMap
 from Components.Pixmap import Pixmap
+from enigma import eTimer, ePicLoad
+from Components.Label import Label
+from Tools.LoadPixmap import LoadPixmap
+from Components.config import config
+from Components.AVSwitch import AVSwitch
+from .base import BaseArchivCZSKListSourceScreen, BaseArchivCZSKScreen
+from .common import toString
 from ..settings import IMAGE_PATH
 from ..compat import eConnectCallback
-from enigma import ePicLoad, getDesktop
+from ..engine.tools import util
+from ..engine.tools.stbinfo import stbinfo
+from ..engine.license import license
+try:
+	from ..engine.tools.monotonic import monotonic
+except:
+	from time import time as monotonic
 
-class IconD(Screen):
-	def __init__(self, session):
-		whatWidth = getDesktop(0).size().width()
+class ArchivCZSKDonateScreen(BaseArchivCZSKListSourceScreen):
+	def __init__(self, session, countdown=0):
+		BaseArchivCZSKListSourceScreen.__init__(self, session)
+		self.session = session
+		self.countdown = countdown
 
-		if whatWidth >= 3000:
-			self.skin = """
-				<screen position="center,center" size="3840,2160" backgroundColor="#002C2C39">
-					<widget name="myPic" position="center,center" size="3000,1860" zPosition="11" alphatest="on" />
-				</screen>"""
-			self.picPath = os.path.join(IMAGE_PATH, 'icon4k.png')
-		elif whatWidth >= 2500:
-			self.skin = """
-				<screen position="center,center" size="2560,1440" backgroundColor="#002C2C39">
-					<widget name="myPic" position="center,center" size="2000,1240" zPosition="11" alphatest="on" />
-				</screen>"""
-			self.picPath = os.path.join(IMAGE_PATH, 'icon3k.png')
-		elif whatWidth >= 1900:
-			self.skin = """
-				<screen position="center,center" size="1920,1080" backgroundColor="#002C2C39">
-					<widget name="myPic" position="center,center" size="1500,930" zPosition="11" alphatest="on" />
-				</screen>"""
-			self.picPath = os.path.join(IMAGE_PATH, 'icon2k.png')
+		self.countdown_tick_timer = eTimer()
+		self.countdown_tick_timer_conn = eConnectCallback(self.countdown_tick_timer.timeout, self.countdown_tick)
+
+		self.price = {
+			'czk': (25, ' CZK'),
+			'eur': (1, '€'),
+		}
+
+		if config.plugins.archivCZSK.colored_items.value:
+			price_fmt = '[B]{}{}[/B]'
 		else:
-			self.skin = """
-				<screen position="center,center" size="1280,720" backgroundColor="#002C2C39">
-					<widget name="myPic" position="center,center" size="1000,620" zPosition="11" alphatest="on" />
-				</screen>"""
-			self.picPath = os.path.join(IMAGE_PATH, 'icon.png')
+			price_fmt = '{}{}'
 
-		Screen.__init__(self, session)
+		self.pay_choices_list = [
+			('cz', _('Send donation {price} from Czechia').format(price=price_fmt.format(*self.price['czk']))),
+			('sk', _('Send donation {price} from Slovakia').format(price=price_fmt.format(*self.price['eur']))),
+			('eu', _('Send donation {price} from EU').format(price=price_fmt.format(*self.price['eur']))),
+		]
+
+		self["info_title"] = Label(_('Donation for ArchivCZSK project'))
+
+		self["info_label_h1"] = Label(_('Why donate?'))
+		self["info_label1"] = Label(_('Development, maintenance and addons functionality improvement is very time consuming process. Your donation allows project continuation.'))
+
+		self["info_label_h2"] = Label(_('How much to donate?'))
+		self["info_label2"] = Label(_('For the symbolic sum {sum_czk}/{sum_eur} a month you will get "Supporter" status for your receiver.').format(sum_czk='{}{}'.format(*self.price['czk']), sum_eur='{}{}'.format(*self.price['eur'])))
+
+		self["info_label_h3"] = Label(_('Will I get any bonus?'))
+		self["info_label3"] = Label(_('Basic functionality is available for free. Supporters will get bonus functionality and addons, which will gradually expand.'))
+
+		self["info_label_h4"] = Label(_('I am interested. How to donate?'))
+		self["info_label4"] = Label(_('Using the menu bellow, display unique payment QR code for your receiver. "Supporter" status will be automatically activated after crediting the payment to the bank account.'))
+
+		self["donate_menu_title"] = Label(_("Select how do you want to send donation"))
+
+		self["donate_status_label"] = Label(_('"Supporter" status:'))
+		self["donate_result_yes"] = Label(_("Active"))
+		self["donate_validity"] = Label(_("(Bonuses activated until {date})").format(date=license.valid_to()))
+		self["donate_result_no"] = Label(_("Inactive"))
+
+		if license.is_valid():
+			self["donate_result_no"].hide()
+		else:
+			self["donate_validity"].hide()
+			self["donate_result_yes"].hide()
+
+
+		self["actions"] = ActionMap(["archivCZSKActions"],
+				{
+				"ok": self.ok,
+				"cancel": self.cancel,
+				"up": self.up,
+				"down": self.down,
+				"left": self.home,
+				"right": self.end,
+				}, -2)
+
+		self.onShown.append(self.updateTitle)
+		self.onShown.append(self.setup_countdown)
+		self.onClose.append(self.__onClose)
+
+	def updateTitle(self):
+		if self.countdown > 0:
+			self.title = _("ArchivCZSK Donate") + ' ({})'.format(self.countdown)
+		else:
+			self.title = _("ArchivCZSK Donate")
+
+	def updateMenuList(self, index=0):
+		self["menu"].list = [
+			(
+				LoadPixmap(os.path.join(IMAGE_PATH, item[0] + 'qr_small.png')),
+				toString(item[1])
+			) for item in self.pay_choices_list
+		]
+
+		self["menu"].index = index
+
+	def setup_countdown(self):
+		if self.countdown > 0:
+			self.countdown_tick_timer.start(1000, True)
+
+	def countdown_tick(self):
+		self.countdown = self.countdown - 1
+		self.updateTitle()
+		self.setup_countdown()
+
+	def ok(self):
+		pay_type = self.pay_choices_list[self["menu"].index][0]
+		log.debug("Pay type selected: %s" % pay_type)
+		self.session.open(ArchivCZSKPaymentScreen, pay_type=pay_type)
+
+	def cancel(self):
+		if self.countdown <= 0:
+			self.close(None)
+
+	def __onClose(self):
+		self.countdown_tick_timer.stop()
+		del self.countdown_tick_timer_conn
+		del self.countdown_tick_timer
+
+
+class ArchivCZSKPaymentScreen(BaseArchivCZSKScreen):
+	def __init__(self, session, pay_type):
+		BaseArchivCZSKScreen.__init__(self, session)
+		self.session = session
+		self.pay_type = pay_type
+		self.screen_time = None
+
+		if pay_type == 'sk':
+			title2 = _("It is compatible with Slovak bank applications.")
+		elif pay_type == 'cz':
+			title2 = _("It is compatible with Czech bank applications.")
+		elif pay_type == 'eu':
+			title2 = _("It is compatible bank applications supporting EPC/GiroCode format.")
+
+		self["info_title1"] = Label(_('Scan this QR code using your bank application on your mobile phone.'))
+		self["info_title2"] = Label(title2)
+		self["footer"] = Label(_('Supporter status will be automatically activated after receiving payment. If you send instant payment, it will be activated within an hour. If you send standard transfer, it will be activated on next business day.'))
+
+		self["qrimage"] = Pixmap()
 		self.PicLoad = ePicLoad()
-		self["myPic"] = Pixmap()
+		self.picLoad_conn = eConnectCallback(self.PicLoad.PictureData, self.DecodePicture)
+
 		self["actions"] = ActionMap(["OkCancelActions"], {
 			"ok": self.close,
 			"cancel": self.close
 		}, -1)
-		self.picLoad_conn = eConnectCallback(self.PicLoad.PictureData, self.DecodePicture)
-		self.onLayoutFinish.append(self.ShowPicture)
-		self.onClose.append(self.__onClose)
 
-	def ShowPicture(self):
-		if self.picPath is not None:
-			self.PicLoad.setPara([
-						self["myPic"].instance.size().width(),
-						self["myPic"].instance.size().height(),
-						100,
-						100,
-						0,
-						1,
-						"#002C2C39"])
-			self.PicLoad.startDecode(self.picPath)
+		self.onLayoutFinish.append(self.download_qr)
+		self.onShown.append(self.updateTitle)
+		self.onShown.append(self.windowShown)
+		self.onClose.append(self.windowClosed)
 
-	def DecodePicture(self, PicInfo = ""):
-		if self.picPath is not None:
-			ptr = self.PicLoad.getData()
-			self["myPic"].instance.setPixmap(ptr)
+	def windowShown(self):
+		self.screen_time = int(monotonic())
 
-	def __onClose(self):
+	def windowClosed(self):
+		if self.screen_time != None:
+			payment_screen_time = int(monotonic()) - self.screen_time
+			if payment_screen_time > 10:
+				log.info("Payment screen time was {}s - enabling extra license checks for next 24 hours".format(payment_screen_time))
+				license.enable_extra_checks()
+
 		del self.picLoad_conn
 		del self.PicLoad
+
+
+	def updateTitle(self):
+		self.title = _("Payment information")
+
+	def cancel(self):
+		self.close(None)
+
+	def DecodePicture(self, PicInfo = ""):
+		ptr = self.PicLoad.getData()
+		self["qrimage"].instance.setPixmap(ptr)
+
+	def ShowPicture(self, picPath):
+		self["qrimage"].instance.setPixmap(LoadPixmap(picPath))
+
+	def _image_downloaded(self, url, path):
+		if path is None:
+			return
+
+		# OpenPLi, OpenATV, ... can directly show downloaded PNG. They also support 1-bit PNG. But we have also VTi where it doesn't show anything and 1-bit PNGs are not supported.
+		# So ePicload() is a must here ...
+#		self.ShowPicture(path)
+		sc = AVSwitch().getFramebufferScale()
+		self.PicLoad.setPara([
+					self["qrimage"].instance.size().width(),
+					self["qrimage"].instance.size().height(),
+					sc[0],
+					sc[1],
+					False,
+					1,
+					"#FF000000"])
+		self.PicLoad.startDecode(path)
+
+	def download_qr(self):
+		png_file = os.path.join(config.plugins.archivCZSK.tmpPath.value, 'archivczsk_pay_{}.png'.format(self.pay_type))
+
+		if os.path.isfile(png_file):
+			return self._image_downloaded(None, png_file)
+
+		png_url = 'http://archivczsk.webredirect.org/qr/{}/{}.png'.format(self.pay_type, stbinfo.installation_id)
+
+		from ..version import version
+		headers = {"User-Agent": 'ArchivCZSK/' + version }
+		util.download_to_file_async(toString(png_url), png_file, self._image_downloaded, headers=headers, timeout=5)
+		return None
