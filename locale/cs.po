@@ -6,218 +6,359 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-13 14:49+0200\n"
-"PO-Revision-Date: 2024-09-13 14:50+0200\n"
+"POT-Creation-Date: 2024-11-28 19:46+0100\n"
+"PO-Revision-Date: 2024-11-28 19:46+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.0.1\n"
+"X-Generator: Poedit 3.5\n"
 
-#: src/archivczsk.py:238
-msgid "Checking for addons updates"
-msgstr "Kontrola aktualizací doplňků"
+#: src/gui/archivcsfd.py:172
+msgid "Search results for"
+msgstr "Výsledky hledání pro"
 
-#: src/archivczsk.py:295
-msgid "Do you want to update"
-msgstr "Chcete aktualizovat"
+#: src/gui/archivcsfd.py:183
+msgid "List"
+msgstr "Seznam"
 
-#: src/archivczsk.py:295
-msgid "addons"
-msgstr "doplňky"
+#: src/gui/archivcsfd.py:184 src/gui/archivcsfd.py:414
+msgid "Film info"
+msgstr "Info o filmu"
 
-#: src/archivczsk.py:306
-msgid "Following addons were updated"
-msgstr "Následující doplňky byly aktualizovány"
+#: src/gui/archivcsfd.py:290
+msgid "Searching for"
+msgstr "Hledám"
 
-#: src/archivczsk.py:340
-msgid "You need to restart E2. Do you want to restart it now?"
-msgstr "Změny se projeví po restartu E2. Chcete nyní restartovat E2?"
+#: src/gui/archivcsfd.py:308
+msgid "Download complete for"
+msgstr "Stahování dokončeno pro"
 
-#: src/archivczsk.py:367
-msgid "By system check there was no system plugin with name ServiceApp detected. This means, that your system only supports video player integrated in enigma2. Some addons doesn't work properly with internal player or don't work at all. If you will have problem with playing some videos, try to install ServiceApp system plugin from feed of your distribution. Then you can change in addon settings used video player to gstplayer or exteplayer3 that can handle some video formats better."
-msgstr "Při kontrole systému nebyl detekován systémový plugin s názvem ServiceApp. To znamená, že váš systém podporuje pouze video přehrávač integrovaný v enigma2. Některé doplňky nefungují správně s interním přehrávačem nebo nefungují vůbec. Pokud budete mít problém s přehráváním některých videí, zkuste si nainstalovat systémový plugin ServiceApp z feedu vaší distribuce. Poté můžete v nastavení doplňku změnit použitý video přehrávač na gstplayer nebo exteplayer3, který si lépe poradí s některými formáty videa."
+#: src/gui/archivcsfd.py:505
+msgid "Comments"
+msgstr "Komentáře"
 
-#: src/archivczsk.py:369
-msgid "By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3 and gstplayer. These video players are needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer and exteplayer3 from feed of your distribution to be able use all available addons."
-msgstr "Při kontrole systému byl zjištěn systémový plugin s názvem ServiceApp, ale chybí vám přehrávače exteplayer3 a gstplayer. Tyto videopřehrávače jsou potřeba ke zpracování některých video formátů, které interní videopřehrávač zabudovaný do enigma2 zpracovat nedokáže. Doporučuje se nainstalovat gstplayer a exteplayer3 z feedu vaší distribuce, abyste mohli používat všechny dostupné doplňky."
+#: src/gui/archivcsfd.py:511
+msgid "Csfd info for"
+msgstr "Csfd info pro"
 
-#: src/archivczsk.py:371
-msgid "By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install exteplayer3 from feed of your distribution to be able use all available addons."
-msgstr "Při kontrole systému byl zjištěn systémový plugin s názvem ServiceApp, ale chybí vám přehrávač exteplayer3. Tento videopřehrávač je potřeba ke zpracování některých video formátů, které interní videopřehrávač zabudovaný do enigma2 zpracovat nedokáže. Doporučuje se nainstalovat exteplayer3 z feedu vaší distribuce, abyste mohli používat všechny dostupné doplňky."
+#: src/gui/download.py:48 src/gui/download.py:52 src/gui/download.py:58
+msgid "ArchivCZSK - Download:"
+msgstr "ArchivCZSK - Stahování:"
 
-#: src/archivczsk.py:373
-msgid "By system check there was system plugin with name ServiceApp detected, but you miss gstplayer. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer from feed of your distribution to be able use all available addons."
-msgstr "Při kontrole systému byl zjištěn systémový plugin s názvem ServiceApp, ale chybí vám přehrávač gstplayer. Tento videopřehrávač je potřeba ke zpracování některých video formátů, které interní videopřehrávač zabudovaný do enigma2 zpracovat nedokáže. Doporučuje se nainstalovat gstplayer z feedu vaší distribuce, abyste mohli používat všechny dostupné doplňky."
+#: src/gui/download.py:49
+msgid "successfully finished."
+msgstr "úspěšně dokončeno."
 
-#: src/archivczsk.py:381
-msgid "You are using outdated image in your receiver without updated SSL certificates used for HTTPS communication. This can cause problems connecting to some sites or services. Outdated images are not supported and errors related to SSL communication will not be fixed. Update your image to latest version or switch to other image if current one doesn't get updates anymore."
-msgstr "Ve svém přijímači používáte zastaralé image bez aktualizovaných SSL certifikátů používaných pro HTTPS komunikaci. Může to způsobit problémy s připojením k některým stránkám nebo službám. Zastaralé image nejsou podporované a chyby souvisící s SSL komunikaci nebudou opravené. Aktualizujte své image na nejnovější verzi nebo přejděte na jiné, pokud už vaše aktuální nedostává další aktualizace."
+#: src/gui/download.py:53
+msgid "finished with errors."
+msgstr "dokončeno s chybami."
+
+#: src/gui/download.py:59
+msgid "started."
+msgstr "začalo."
+
+#: src/gui/download.py:76
+msgid "You've to change download filename. Try again.."
+msgstr "Musíte změnit jméno stahovaného souboru. Zkuste to znovu.."
+
+#: src/gui/download.py:78 src/gui/download.py:105 src/gui/download.py:357
+msgid "The file"
+msgstr "Soubor"
+
+#: src/gui/download.py:78
+msgid "already exists"
+msgstr "již existuje"
+
+#: src/gui/download.py:78
+msgid "Try to use another name..."
+msgstr "Zkuste použít jiné jméno..."
+
+#: src/gui/download.py:97
+msgid "Rename filename"
+msgstr "Přejmenujte soubor"
+
+#: src/gui/download.py:101
+msgid "Download is already running"
+msgstr "Stahování již probíhá"
+
+#: src/gui/download.py:105
+msgid "already exist"
+msgstr "již existuje"
+
+#: src/gui/download.py:106
+msgid "Override existing file"
+msgstr "Přepsat stávající soubor"
+
+#: src/gui/download.py:107
+msgid "Rename file"
+msgstr "Přejmenovat soubor"
+
+#: src/gui/download.py:115
+msgid "Download progress"
+msgstr "Průběh stahování"
+
+#: src/gui/download.py:118 src/gui/common.py:195
+msgid "Size:"
+msgstr "Velikost:"
+
+#: src/gui/download.py:120
+msgid "Path:"
+msgstr "Cesta:"
+
+#: src/gui/download.py:122
+msgid "Start time:"
+msgstr "Začátek stahování:"
+
+#: src/gui/download.py:124
+msgid "Finish time:"
+msgstr "Konec stahování:"
+
+#: src/gui/download.py:126
+msgid "State:"
+msgstr "Stav:"
+
+#: src/gui/download.py:128
+msgid "Speed:"
+msgstr "Rychlost:"
+
+#: src/gui/download.py:206
+msgid "not finished"
+msgstr "nedokončeno"
+
+#: src/gui/download.py:231 src/engine/downloader.py:231
+#: src/engine/downloader.py:259
+msgid "unknown"
+msgstr "neznámý"
+
+#: src/gui/download.py:231 src/gui/download.py:233
+msgid "downloaded"
+msgstr "staženo"
+
+#: src/gui/download.py:265
+msgid "Show recent downloads"
+msgstr "Zobrazit stahované soubory"
+
+#: src/gui/download.py:266
+msgid "ArchivCZSK changelog"
+msgstr "ArchivCZSK změny"
+
+#: src/gui/download.py:271
+msgid "show download list"
+msgstr "zobrazit aktuálně stahované soubory"
+
+#: src/gui/download.py:289 src/gui/menu.py:44 src/gui/config.py:30
+#: src/gui/config.py:206
+msgid "Cancel"
+msgstr "Zrušit"
+
+#: src/gui/download.py:290 src/engine/handlers/media.py:281
+#: src/engine/handlers/media.py:496
+msgid "Play"
+msgstr "Přehrát"
+
+#: src/gui/download.py:291 src/gui/download.py:403
+#: src/engine/handlers/category.py:44 src/engine/handlers/addon.py:315
+msgid "Remove"
+msgstr "Odstranit"
+
+#: src/gui/download.py:298
+msgid "Recent downloads"
+msgstr "Nejnovější stahování"
+
+#: src/gui/download.py:329
+msgid "Do you want to cancel"
+msgstr "Chcete zrušit"
+
+#: src/gui/download.py:341 src/gui/download.py:433
+#: src/engine/handlers/category.py:61 src/engine/handlers/addon.py:353
+msgid "Do you want to remove"
+msgstr "Chcete odstranit"
+
+#: src/gui/download.py:342
+msgid "from disk"
+msgstr "z disku"
+
+#: src/gui/download.py:357
+msgid "is not downloaded yet. Do you want to play it anyway?"
+msgstr "zatím není stažen. Chcete i přesto spustit přehrávání?"
+
+#: src/gui/download.py:395
+msgid "Sort alphabetically"
+msgstr "Podle abecedy"
+
+#: src/gui/download.py:396
+msgid "Sort by date"
+msgstr "Podle data"
+
+#: src/gui/download.py:397
+msgid "Sort by size"
+msgstr "Podle velikosti"
+
+#: src/gui/download.py:398
+msgid "Sort by state"
+msgstr "Podle stavu"
+
+#: src/gui/download.py:407 src/gui/content.py:536
+#: src/engine/handlers/addon.py:200
+msgid "Downloads"
+msgstr "Stažené soubory"
 
 #: src/gui/content.py:60
 msgid "Unlock protected content"
 msgstr "Odemknout chráněný obsah"
 
-#: src/gui/content.py:67 src/gui/content.py:472
+#: src/gui/content.py:67 src/gui/content.py:481
 msgid "Loading..."
 msgstr "Načítám..."
 
-#: src/gui/content.py:193 src/gui/content.py:301
+#: src/gui/content.py:202 src/gui/content.py:310
 msgid "show menu of current addon"
 msgstr "zobrazí informace o doplňku"
 
-#: src/gui/content.py:237 src/gui/content.py:258
+#: src/gui/content.py:246 src/gui/content.py:267
 msgid "enabled"
 msgstr "zapnuto"
 
-#: src/gui/content.py:243
+#: src/gui/content.py:252
 msgid "broken"
 msgstr "nefunkční"
 
-#: src/gui/content.py:246
+#: src/gui/content.py:255
 msgid "deprecated"
 msgstr "zastarané"
 
-#: src/gui/content.py:252
+#: src/gui/content.py:261
 msgid "disabled"
 msgstr "vypnutý"
 
-#: src/gui/content.py:283 src/gui/content.py:457
+#: src/gui/content.py:292 src/gui/content.py:466
 msgid "Version: "
 msgstr "Verze: "
 
-#: src/gui/content.py:327
+#: src/gui/content.py:336
 msgid "Add Category"
 msgstr "Přidat kategorii"
 
-#: src/gui/content.py:347
+#: src/gui/content.py:356
 msgid "Manager"
 msgstr "Manažér"
 
-#: src/gui/content.py:348
+#: src/gui/content.py:357
 msgid "Support us"
 msgstr "Podpořte nás"
 
-#: src/gui/content.py:349 src/gui/content.py:526 src/gui/menu.py:42
+#: src/gui/content.py:358 src/gui/content.py:535 src/gui/menu.py:42
 #: src/engine/handlers/addon.py:197 src/engine/handlers/addon.py:311
 msgid "Changelog"
 msgstr "Změny"
 
-#: src/gui/content.py:350 src/gui/content.py:529 src/gui/menu.py:227
+#: src/gui/content.py:359 src/gui/content.py:538 src/gui/menu.py:218
 #: src/engine/handlers/addon.py:194 src/engine/handlers/addon.py:308
 msgid "Settings"
 msgstr "Nastavení"
 
-#: src/gui/content.py:420
+#: src/gui/content.py:429
 msgid "Set category name"
 msgstr "Zvolte jméno kategorie"
 
-#: src/gui/content.py:468
+#: src/gui/content.py:477
 msgid "Canceling..."
 msgstr "Ruší se načítání..."
 
-#: src/gui/content.py:483
+#: src/gui/content.py:492
 msgid "Do you want to exit ArchivCZSK?"
 msgstr "Chcete ukončit archivCZSK?"
 
-#: src/gui/content.py:497
+#: src/gui/content.py:506
 msgid "show info in CSFD"
 msgstr "zobrazit informace v CSFD doplňku"
 
-#: src/gui/content.py:498
+#: src/gui/content.py:507
 msgid "show additional info"
 msgstr "zobrazit informace"
 
-#: src/gui/content.py:499
+#: src/gui/content.py:508
 msgid "show menu of current item"
 msgstr "zobrazí informace o vybrané položce"
 
-#: src/gui/content.py:527 src/gui/download.py:407
-#: src/engine/handlers/addon.py:200
-msgid "Downloads"
-msgstr "Stažené soubory"
-
-#: src/gui/content.py:528 src/gui/shortcuts.py:27
+#: src/gui/content.py:537 src/gui/shortcuts.py:27
 #: src/engine/handlers/addon.py:204
 msgid "Shortcuts"
 msgstr "Záložky"
 
-#: src/gui/captcha.py:54
-msgid "Type text of picture"
-msgstr "Opište text obrázku"
-
-#: src/gui/exception.py:21
+#: src/gui/exception.py:35
 msgid "Unknown Error"
 msgstr "Neznámá chyba"
 
-#: src/gui/exception.py:22
+#: src/gui/exception.py:36
 msgid "Unknown Warning"
 msgstr "Upozornění stahování"
 
-#: src/gui/exception.py:23
+#: src/gui/exception.py:37
 msgid "Unknown Info"
 msgstr "Neznámá chyba"
 
-#: src/gui/exception.py:43
+#: src/gui/exception.py:57
 msgid "Bug report was send."
 msgstr "Chybové hlášení bylo odesláno."
 
-#: src/gui/exception.py:57
+#: src/gui/exception.py:71
 msgid "Addon error"
 msgstr "Chyba archívu"
 
-#: src/gui/exception.py:58
+#: src/gui/exception.py:72
 msgid "Addon warning"
 msgstr "Upozornění doplňku"
 
-#: src/gui/exception.py:59
+#: src/gui/exception.py:73
 msgid "Addon info"
 msgstr "Informace o archívu"
 
-#: src/gui/exception.py:88 src/gui/exception.py:92 src/gui/exception.py:99
-#: src/gui/exception.py:103 src/gui/exception.py:107 src/gui/exception.py:111
-#: src/gui/exception.py:115 src/gui/exception.py:119 src/gui/exception.py:123
-#: src/gui/exception.py:127 src/gui/exception.py:168 src/gui/exception.py:171
-#: src/gui/exception.py:185 src/gui/exception.py:188
+#: src/gui/exception.py:102 src/gui/exception.py:106 src/gui/exception.py:113
+#: src/gui/exception.py:117 src/gui/exception.py:121 src/gui/exception.py:125
+#: src/gui/exception.py:129 src/gui/exception.py:133 src/gui/exception.py:137
+#: src/gui/exception.py:141 src/gui/exception.py:182 src/gui/exception.py:185
+#: src/gui/exception.py:199 src/gui/exception.py:202
 msgid "Error in loading"
 msgstr "Chyba načítání"
 
-#: src/gui/exception.py:88 src/gui/exception.py:99 src/gui/exception.py:168
-#: src/gui/exception.py:185
+#: src/gui/exception.py:102 src/gui/exception.py:113 src/gui/exception.py:182
+#: src/gui/exception.py:199
 msgid "HTTP Error"
 msgstr "Chyba HTTP"
 
-#: src/gui/exception.py:92 src/gui/exception.py:171 src/gui/exception.py:188
+#: src/gui/exception.py:106 src/gui/exception.py:185 src/gui/exception.py:202
 msgid "URL Error"
 msgstr "Chyba URL"
 
-#: src/gui/exception.py:103
+#: src/gui/exception.py:117
 msgid "Connection to server timed out"
 msgstr "Časový limit pro připojení na server vypršel"
 
-#: src/gui/exception.py:107
+#: src/gui/exception.py:121
 msgid "Waiting for data from server timed out"
 msgstr "Časový limit při čekání na data ze serveru vypršel"
 
-#: src/gui/exception.py:111 src/gui/exception.py:119 src/gui/exception.py:123
+#: src/gui/exception.py:125 src/gui/exception.py:133 src/gui/exception.py:137
 msgid "Connection to server failed"
 msgstr "Připojení na server selhalo"
 
-#: src/gui/exception.py:115
+#: src/gui/exception.py:129
 msgid "Unable to establish SSL connection to server"
 msgstr "Nepodařilo se vytvořit SSL připojení na server"
 
-#: src/gui/exception.py:127
+#: src/gui/exception.py:141
 msgid "Timeout was exceeded"
 msgstr "Časový limit byl překročen"
 
-#: src/gui/exception.py:133
+#: src/gui/exception.py:147
 msgid "You reached the limit of concurrent connections to remote server. Restart your receiver to solve the problem."
 msgstr "Dosáhli jste limitu souběžných připojení ke vzdálenému serveru. Problém vyřešíte restartováním přijímače."
 
-#: src/gui/exception.py:139
+#: src/gui/exception.py:153
 msgid ""
 "An unhandled error occurred while calling the addon. Should I send bug report to addon authors?\n"
 "Report will contain part of log file, informations about your system and addon settings needed for problem analysis."
@@ -225,61 +366,174 @@ msgstr ""
 "Při volání doplňku nastala neošetřená chyba. Mám poslat hlášení o chybě autorům doplňku?\n"
 "Chybové hlášení bude obsahovat část logovacího souboru, informace o vašem systému a nastavení doplňku potřebné pro analýzu problému."
 
-#: src/gui/exception.py:141
+#: src/gui/exception.py:155
 msgid "An unhandled error occurred while calling the addon. Update addon to the latest available version."
 msgstr "Při volání doplňku nastala neošetřená chyba. Zaktualizujte doplněk na poslední dostupní verzi."
 
-#: src/gui/exception.py:143
+#: src/gui/exception.py:157
 msgid "An unhandled error occurred while calling the addon. Enable addons update in plugin settings to get the latest addon version."
 msgstr "Při volání doplňku nastala neošetřená chyba. Povolte v nastaveních pluginu aktualizaci doplňků aby jste dostali poslední dostupnou verzi."
 
-#: src/gui/exception.py:145
+#: src/gui/exception.py:159
 msgid "An unhandled error occurred while calling the addon. Please report a bug so it can be fixed."
 msgstr "Při volání doplňku nastala neošetřená chyba. Prosím nahlaste chybu aby ji bylo možné opravit."
 
-#: src/gui/exception.py:156
+#: src/gui/exception.py:170
 msgid "Download error"
 msgstr "Chyba stahování"
 
-#: src/gui/exception.py:157
+#: src/gui/exception.py:171
 msgid "Download warning"
 msgstr "Upozornění stahování"
 
-#: src/gui/exception.py:158
+#: src/gui/exception.py:172
 msgid "Download info"
 msgstr "Informace o stahování"
 
-#: src/gui/exception.py:165
+#: src/gui/exception.py:179
 msgid "protocol is not supported"
 msgstr "protokol není podporován"
 
-#: src/gui/exception.py:177
+#: src/gui/exception.py:191
 msgid "Updater error"
 msgstr "Chyba aktualizátoru"
 
-#: src/gui/exception.py:178
+#: src/gui/exception.py:192
 msgid "Updater warning"
 msgstr "Upozornění aktualizátoru"
 
-#: src/gui/exception.py:179
+#: src/gui/exception.py:193
 msgid "Updater info"
 msgstr "Informace aktualizátoru"
 
-#: src/gui/exception.py:194
+#: src/gui/exception.py:208
 msgid "Play error"
 msgstr "Chyba přehrávání"
 
-#: src/gui/exception.py:195
+#: src/gui/exception.py:209
 msgid "Play warning"
 msgstr "Varování přehrávání"
 
-#: src/gui/exception.py:196
+#: src/gui/exception.py:210
 msgid "Play info"
 msgstr "Informace o přehrávání"
 
-#: src/gui/exception.py:203
+#: src/gui/exception.py:217
 msgid "Video url doesnt exist"
 msgstr "Adresa videa neexistuje"
+
+#: src/gui/icon.py:43
+#, python-brace-format
+msgid "Send donation {price} from Czech republic"
+msgstr "Odeslat příspěvek {price} z České republiky"
+
+#: src/gui/icon.py:44
+#, python-brace-format
+msgid "Send donation {price} from Slovakia"
+msgstr "Odeslat příspěvek {price} ze Slovenska"
+
+#: src/gui/icon.py:45
+#, python-brace-format
+msgid "Send donation {price} from EU"
+msgstr "Odeslat příspěvek {price} z EU"
+
+#: src/gui/icon.py:48
+msgid "Donation for ArchivCZSK project"
+msgstr "Příspěvek pro projekt ArchivCZSK"
+
+#: src/gui/icon.py:50
+msgid "Why donate?"
+msgstr "Proč přispět?"
+
+#: src/gui/icon.py:51
+msgid "Development, maintenance and addons functionality improvement is very time consuming process. Your donation allows project continuation."
+msgstr "Vývoj, údržba a zlepšování funkčnosti jednotlivých doplňků je časově náročný proces. Váš příspěvek umožní pokračování projektu."
+
+#: src/gui/icon.py:53
+msgid "How much to donate?"
+msgstr "Kolik přispět?"
+
+#: src/gui/icon.py:54
+#, python-brace-format
+msgid "For the symbolic sum {sum_czk}/{sum_eur} a month you will get \"Supporter\" status for your receiver."
+msgstr "Za symbolickou částku {sum_czk}/{sum_eur} měsíčně získáte pro svůj přijímač status \"Podporovatel\"."
+
+#: src/gui/icon.py:56
+msgid "Will I get any bonus?"
+msgstr "Dostanu nějaký bonus?"
+
+#: src/gui/icon.py:57
+msgid "Basic functionality is available for free. Supporters will get bonus functionality and addons, which will gradually expand."
+msgstr "Základní funkcionalita je k dispozici zdarma. Podporovatelé získají bonusové funkce a doplňky, které se budou postupně rozšiřovat."
+
+#: src/gui/icon.py:59
+msgid "I am interested. How to donate?"
+msgstr "Mám zájem. Jak přispět?"
+
+#: src/gui/icon.py:60
+msgid "Using the menu bellow, display unique payment QR code for your receiver. \"Supporter\" status will be automatically activated after crediting the payment to the bank account."
+msgstr "Pomocí menu níže zobrazíte unikátni QR kód pro váš přijímač. Po připsání platby vám bude automaticky aktivován status \"Podporovatel\"."
+
+#: src/gui/icon.py:62
+msgid "Select how do you want to send donation"
+msgstr "Vyberte jak chcete poslat příspěvek"
+
+#: src/gui/icon.py:64
+msgid "\"Supporter\" status:"
+msgstr "Stav \"Podporovatel\":"
+
+#: src/gui/icon.py:65
+msgid "Active"
+msgstr "Aktivní"
+
+#: src/gui/icon.py:66
+#, python-brace-format
+msgid "(Bonuses activated until {date})"
+msgstr "(Bonusy aktivovány do {date})"
+
+#: src/gui/icon.py:67
+msgid "Inactive"
+msgstr "Neaktivní"
+
+#: src/gui/icon.py:92 src/gui/icon.py:94
+msgid "ArchivCZSK Donate"
+msgstr "Přispět ArchivCZSK"
+
+#: src/gui/icon.py:138
+msgid "It is compatible with slovak bank applications."
+msgstr "Je kompatibilní se slovenskými bankovými aplikacemi."
+
+#: src/gui/icon.py:140
+msgid "It is compatible with czech bank applications."
+msgstr "Je kompatibilní s českými bankovými aplikacemi."
+
+#: src/gui/icon.py:142
+msgid "It is compatible bank applications supporting EPC/GiroCode format."
+msgstr "Je kompatibilní s bankovými aplikacemi, které podporuji EPC/GiroCode format."
+
+#: src/gui/icon.py:144
+msgid "Scan this QR code using your bank application on your mobile phone."
+msgstr "Naskenujte tento QR kód pomocí vaši bankovní aplikace ve vašem mobilním telefonu."
+
+#: src/gui/icon.py:146
+msgid "Supporter status will be automatically activated after receiving payment. If you send instant payment, it will be activated within an hour. If you send standard transfer, it will be activated on next business day."
+msgstr "Stav podporovatel bude automaticky aktivován po připsáni platby. Když odešlete platbu jako okamžitou, bude aktivován do jedné hodiny. Pokud odešlete standardní platbu, bude aktivován v nasledujíci pracovní den."
+
+#: src/gui/icon.py:171
+msgid "Payment information"
+msgstr "Informace o platbě"
+
+#: src/gui/captcha.py:54
+msgid "Type text of picture"
+msgstr "Opište text obrázku"
+
+#: src/gui/context.py:190
+msgid "Select category"
+msgstr "Vyberte kategorii"
+
+#: src/gui/common.py:183
+msgid "Finished:"
+msgstr "Dokončeno:"
 
 #: src/gui/search.py:30
 msgid "Change search expression"
@@ -293,15 +547,64 @@ msgstr "Odstranit diakritiku"
 msgid "Choose from EPG"
 msgstr "Vybrat z EPG"
 
-#: src/gui/search.py:49
+#: src/gui/search.py:34
+msgid "Search in addon:"
+msgstr "Vyhledat v doplňku:"
+
+#: src/gui/search.py:50
 msgid "ArchivCZSK Search"
 msgstr "Vyhledávání v ArchivCZSK"
 
-#: src/gui/search.py:78
+#: src/gui/search.py:79
 msgid "Set your search expression"
 msgstr "Prosím vložte hledaný výraz"
 
-#: src/gui/info.py:124 src/client/seeker.py:249
+#: src/gui/menu.py:43 src/gui/config.py:31
+msgid "Save"
+msgstr "Uložit"
+
+#: src/gui/menu.py:45
+msgid "Next"
+msgstr "Další strana"
+
+#: src/gui/menu.py:155
+msgid "Main"
+msgstr "Obecné"
+
+#: src/gui/menu.py:156
+msgid "Player"
+msgstr "Přehrávač"
+
+#: src/gui/menu.py:157
+msgid "Protection"
+msgstr "Ochrana"
+
+#: src/gui/menu.py:158
+msgid "Path"
+msgstr "Cesta"
+
+#: src/gui/menu.py:159
+msgid "Misc"
+msgstr "Různé"
+
+#: src/gui/menu.py:176
+msgid "Configuration"
+msgstr "Konfigurace"
+
+#: src/gui/menu.py:189
+#, python-brace-format
+msgid "Please enter PIN code ({ramaining_tries})"
+msgstr "Prosím zadejte PIN kód ({ramaining_tries})"
+
+#: src/gui/shortcuts.py:28
+msgid "Remove shortcut"
+msgstr "Odstranit záložku"
+
+#: src/gui/shortcuts.py:47
+msgid "Do you want to delete"
+msgstr "Chcete smazat"
+
+#: src/gui/info.py:124 src/client/seeker.py:255
 msgid "Show CSFD info failed."
 msgstr "Zobrazení CSFD informací selhalo."
 
@@ -441,248 +744,283 @@ msgstr "OK"
 msgid "FAIL"
 msgstr "FAIL"
 
-#: src/gui/download.py:48 src/gui/download.py:52 src/gui/download.py:58
-msgid "ArchivCZSK - Download:"
-msgstr "ArchivCZSK - Stahování:"
+#: src/gui/config.py:32
+msgid "Sort by"
+msgstr "Zoradit podle"
 
-#: src/gui/download.py:49
-msgid "successfully finished."
-msgstr "úspěšně dokončeno."
+#: src/gui/config.py:33
+msgid "Toggle selection"
+msgstr "Přepnout výběr"
 
-#: src/gui/download.py:53
-msgid "finished with errors."
-msgstr "dokončeno s chybami."
+#: src/gui/config.py:35
+msgid "Press OK to toggle the selection"
+msgstr "Stiskněte OK pro změnu výbětu"
 
-#: src/gui/download.py:59
-msgid "started."
-msgstr "začalo."
+#: src/gui/config.py:47
+msgid "Select values"
+msgstr "Vyberte hodnoty"
 
-#: src/gui/download.py:76
-msgid "You've to change download filename. Try again.."
-msgstr "Musíte změnit jméno stahovaného souboru. Zkuste to znovu.."
+#: src/gui/config.py:65
+msgid "Alphabet"
+msgstr "Abecedně"
 
-#: src/gui/download.py:78 src/gui/download.py:105 src/gui/download.py:357
-msgid "The file"
-msgstr "Soubor"
+#: src/gui/config.py:65
+msgid "Reverse list"
+msgstr "Obrácený seznam"
 
-#: src/gui/download.py:78
-msgid "already exists"
-msgstr "již existuje"
+#: src/gui/config.py:65
+msgid "Standard list"
+msgstr "Standardní seznam"
 
-#: src/gui/download.py:78
-msgid "Try to use another name..."
-msgstr "Zkuste použít jiné jméno..."
+#: src/gui/config.py:77
+msgid "Select sort method:"
+msgstr "Vyberte způsom řazení:"
 
-#: src/gui/download.py:97
-msgid "Rename filename"
-msgstr "Přejmenujte soubor"
+#: src/gui/config.py:82 src/gui/config.py:184
+msgid "Use LEFT/RIGHT keys to change the value"
+msgstr "Použijte VLEVO/VPRAVO pro změnu hodnoty"
 
-#: src/gui/download.py:101
-msgid "Download is already running"
-msgstr "Stahování již probíhá"
+#: src/gui/config.py:142
+msgid "Press OK to open selection"
+msgstr "Stiskněte OK pro otevření výběru"
 
-#: src/gui/download.py:105
-msgid "already exist"
-msgstr "již existuje"
+#: src/gui/config.py:162
+msgid "Use number keys to enter value"
+msgstr "Použijte číselné klávesy pro zadání hodnoty"
 
-#: src/gui/download.py:106
-msgid "Override existing file"
-msgstr "Přepsat stávající soubor"
+#: src/gui/config.py:205
+msgid "Apply"
+msgstr "Použít"
 
-#: src/gui/download.py:107
-msgid "Rename file"
-msgstr "Přejmenovat soubor"
+#: src/settings.py:96
+msgid "Stable"
+msgstr "Stabilní"
 
-#: src/gui/download.py:115
-msgid "Download progress"
-msgstr "Průběh stahování"
+#: src/settings.py:96
+msgid "Testing"
+msgstr "Testovací"
 
-#: src/gui/download.py:118 src/gui/common.py:195
-msgid "Size:"
-msgstr "Velikost:"
+#: src/settings.py:125
+msgid "Internal"
+msgstr "Vnitřní"
 
-#: src/gui/download.py:120
-msgid "Path:"
-msgstr "Cesta:"
+#: src/settings.py:125
+msgid "CSFD"
+msgstr "CSFD"
 
-#: src/gui/download.py:122
-msgid "Start time:"
-msgstr "Začátek stahování:"
+#: src/settings.py:125
+msgid "CSFDLite"
+msgstr "CSFDLite"
 
-#: src/gui/download.py:124
-msgid "Finish time:"
-msgstr "Konec stahování:"
+#: src/settings.py:130
+msgid "Background transparency (in %)"
+msgstr "Průhlednost pozadí (v %)"
 
-#: src/gui/download.py:126
-msgid "State:"
-msgstr "Stav:"
+#: src/settings.py:131
+msgid "Enable colored items"
+msgstr "Povolit vyfarbování jednotlivých položek v seznamu"
 
-#: src/gui/download.py:128
-msgid "Speed:"
-msgstr "Rychlost:"
+#: src/settings.py:132
+msgid "Default category"
+msgstr "Předvolená kategorie"
 
-#: src/gui/download.py:206
-msgid "not finished"
-msgstr "nedokončeno"
+#: src/settings.py:133
+msgid "Allow archivCZSK auto update"
+msgstr "Povolit kontrolu aktualizací archivuCZSK"
 
-#: src/gui/download.py:231 src/engine/downloader.py:231
-#: src/engine/downloader.py:259
-msgid "unknown"
-msgstr "neznámý"
+#: src/settings.py:134
+msgid "Allow addons auto update"
+msgstr "Povolit kontrolu aktualizací doplňků"
 
-#: src/gui/download.py:231 src/gui/download.py:233
-msgid "downloaded"
-msgstr "staženo"
+#: src/settings.py:135
+msgid "Update timeout"
+msgstr "Časový limit kontroly aktualizace"
 
-#: src/gui/download.py:265
-msgid "Show recent downloads"
-msgstr "Zobrazit stahované soubory"
+#: src/settings.py:137
+msgid "Update repository"
+msgstr "Aktualizační repozitář"
 
-#: src/gui/download.py:266
-msgid "ArchivCZSK changelog"
-msgstr "ArchivCZSK změny"
+#: src/settings.py:138
+msgid "Update channel"
+msgstr "Aktualizační kanál"
 
-#: src/gui/download.py:271
-msgid "show download list"
-msgstr "zobrazit aktuálně stahované soubory"
+#: src/settings.py:139
+msgid "Show changelog after update"
+msgstr "Po aktualizaci zobrazit seznam změn"
 
-#: src/gui/download.py:289 src/gui/menu.py:44
-msgid "Cancel"
-msgstr "Zrušit"
+#: src/settings.py:140
+msgid "Check addons integrity"
+msgstr "Kontrolovat integritu doplňků"
 
-#: src/gui/download.py:290 src/engine/handlers/media.py:281
-#: src/engine/handlers/media.py:496
-msgid "Play"
-msgstr "Přehrát"
+#: src/settings.py:142
+msgid "Show movie poster"
+msgstr "Zobrazit plakát filmu"
 
-#: src/gui/download.py:291 src/gui/download.py:403
-#: src/engine/handlers/category.py:44 src/engine/handlers/addon.py:315
-msgid "Remove"
-msgstr "Odstranit"
+#: src/settings.py:143
+msgid "Poster maximum processing size (in kB)"
+msgstr "Maximální velikost plakátu pro zpracování (v kB)"
 
-#: src/gui/download.py:298
-msgid "Recent downloads"
-msgstr "Nejnovější stahování"
+#: src/settings.py:144
+msgid "Max posters on HDD"
+msgstr "Max počet plakátů na disku"
 
-#: src/gui/download.py:329
-msgid "Do you want to cancel"
-msgstr "Chcete zrušit"
+#: src/settings.py:146
+msgid "Add to extensions menu"
+msgstr "Přidat do menu rozšíření"
 
-#: src/gui/download.py:341 src/gui/download.py:433
-#: src/engine/handlers/category.py:61 src/engine/handlers/addon.py:353
-msgid "Do you want to remove"
-msgstr "Chcete odstranit"
+#: src/settings.py:147
+msgid "Add to main menu"
+msgstr "Přidat do hlavního menu"
 
-#: src/gui/download.py:342
-msgid "from disk"
-msgstr "z disku"
+#: src/settings.py:148
+msgid "Add search option in epg menu"
+msgstr "Přidat vyhledávání v archivu na dlouhé stisknutí EPG/INFO"
 
-#: src/gui/download.py:357
-msgid "is not downloaded yet. Do you want to play it anyway?"
-msgstr "zatím není stažen. Chcete i přesto spustit přehrávání?"
+#: src/settings.py:149
+msgid "Add archive enter shortcut to extensions menu"
+msgstr "Přidat zkratku pro vstup do archívu do menu rozšíření"
 
-#: src/gui/download.py:395
-msgid "Sort alphabetically"
-msgstr "Podle abecedy"
+#: src/settings.py:151
+msgid "CSFD plugin"
+msgstr "CSFD plugin"
 
-#: src/gui/download.py:396
-msgid "Sort by date"
-msgstr "Podle data"
+#: src/settings.py:162
+msgid "standard player"
+msgstr "standardní přehrávač"
 
-#: src/gui/download.py:397
-msgid "Sort by size"
-msgstr "Podle velikosti"
+#: src/settings.py:163
+msgid "custom player (subtitle support)"
+msgstr "upravený přehrávač (podpora titulků)"
 
-#: src/gui/download.py:398
-msgid "Sort by state"
-msgstr "Podle stavu"
+#: src/settings.py:182
+msgid "Show more info about player"
+msgstr "Informace o video přehrávači"
 
-#: src/gui/common.py:183
-msgid "Finished:"
-msgstr "Dokončeno:"
+#: src/settings.py:183
+msgid "RTMP Timeout"
+msgstr "Časový limit RTMP"
 
-#: src/gui/shortcuts.py:28
-msgid "Remove shortcut"
-msgstr "Odstranit záložku"
+#: src/settings.py:184
+msgid "RTMP Buffer"
+msgstr "RTMP zásobník"
 
-#: src/gui/shortcuts.py:47
-msgid "Do you want to delete"
-msgstr "Chcete smazat"
+#: src/settings.py:185
+msgid "Confirm exit when closing player"
+msgstr "Potvrdit ukončení při opouštění přehrávače"
 
-#: src/gui/archivcsfd.py:177
-msgid "Search results for"
-msgstr "Výsledky hledání pro"
+#: src/settings.py:186
+msgid "Allow automatically changing audio track"
+msgstr "Povolit automatickou změnu zvukové stopy"
 
-#: src/gui/archivcsfd.py:188
-msgid "List"
-msgstr "Seznam"
+#: src/settings.py:209
+msgid "Change parental control settings"
+msgstr "Změnit nastavení rodičovské kontroly"
 
-#: src/gui/archivcsfd.py:189 src/gui/archivcsfd.py:419
-msgid "Film info"
-msgstr "Info o filmu"
+#: src/settings.py:211
+msgid "Your PIN code is set to default 0000. Please change it to your own value."
+msgstr "Váš PIN kód je nastaven na předvolený 0000. Prosím změňte ho na vaši vlastní hodnotu."
 
-#: src/gui/archivcsfd.py:295
-msgid "Searching for"
-msgstr "Hledám"
+#: src/settings.py:213
+msgid "Enable parental control"
+msgstr "Povolit rodičovskou kontrolu"
 
-#: src/gui/archivcsfd.py:313
-msgid "Download complete for"
-msgstr "Stahování dokončeno pro"
+#: src/settings.py:214
+msgid "Change parental control PIN"
+msgstr "Změnit PIN pro rodičovskou kontrolu"
 
-#: src/gui/archivcsfd.py:510
-msgid "Comments"
-msgstr "Komentáře"
+#: src/settings.py:215
+msgid "Show adult content"
+msgstr "Zobrazovat obsah pro dospělé"
 
-#: src/gui/archivcsfd.py:516
-msgid "Csfd info for"
-msgstr "Csfd info pro"
+#: src/settings.py:216
+msgid "Show posters for adult content"
+msgstr "U obsahu pro dospělé zobrazovat postery"
 
-#: src/gui/menu.py:43
-msgid "Save"
-msgstr "Uložit"
+#: src/settings.py:236
+msgid "Data path"
+msgstr "Adresář pro data"
 
-#: src/gui/menu.py:45
-msgid "Next"
-msgstr "Další strana"
+#: src/settings.py:237
+msgid "Temp path"
+msgstr "Dočasný adresář"
 
-#: src/gui/menu.py:155
-msgid "Main"
-msgstr "Obecné"
+#: src/settings.py:238
+msgid "Downloads path"
+msgstr "Stahovat do"
 
-#: src/gui/menu.py:156
-msgid "Player"
-msgstr "Přehrávač"
+#: src/settings.py:239
+msgid "Posters path"
+msgstr "Plakáty stahovat do"
 
-#: src/gui/menu.py:157
-msgid "Protection"
-msgstr "Ochrana"
+#: src/settings.py:241
+msgid "Log path"
+msgstr "Logovat do"
 
-#: src/gui/menu.py:158
-msgid "Path"
-msgstr "Cesta"
+#: src/settings.py:258
+msgid "info"
+msgstr "info"
 
-#: src/gui/menu.py:159
-msgid "Misc"
-msgstr "Různé"
+#: src/settings.py:258
+msgid "debug"
+msgstr "debug"
 
-#: src/gui/menu.py:181
-msgid "Configuration"
-msgstr "Konfigurace"
+#: src/settings.py:277
+msgid "Debug mode"
+msgstr "Režim ladění"
 
-#: src/gui/menu.py:194
-#, python-brace-format
-msgid "Please enter PIN code ({ramaining_tries})"
-msgstr "Prosím zadejte PIN kód ({ramaining_tries})"
+#: src/settings.py:278
+msgid "Allow sending bug reports on addon error"
+msgstr "Povolit posílání chybových hlášení při chybě doplňku"
 
-#: src/gui/context.py:190
-msgid "Select category"
-msgstr "Vyberte kategorii"
+#: src/settings.py:279
+msgid "Allow preloading of addons on start"
+msgstr "Povolit přednačtení doplňků při startu"
 
-#: src/version.py:3 src/plugin.py:17
+#: src/settings.py:280
+msgid "Confirm exit when closing plugin"
+msgstr "Potvrdit ukončení při opouštění modulu"
+
+#: src/settings.py:281
+msgid "Show broken addons"
+msgstr "Zobrazit nefunkční doplňky"
+
+#: src/settings.py:282
+msgid "Show not supported addons"
+msgstr "Zobrazit nepodporované doplňky"
+
+#: src/settings.py:283
+msgid "On update remove broken and not supported addons"
+msgstr "Při aktualizaci odstranit nefunkční a nepodporované doplňky"
+
+#: src/settings.py:284
+msgid "Show video source selection"
+msgstr "Zobrazit výběr zdroje videa"
+
+#: src/settings.py:285
+msgid "Convert captcha images to 8bit"
+msgstr "Konvertovat captcha obrázky na 8bitové"
+
+#: src/settings.py:286
+msgid "Drop caches on exit"
+msgstr "Vymazat mezipamět po ukončení pluginu"
+
+#: src/settings.py:287
+msgid "Internal HTTP server listen port"
+msgstr "Port interního HTTP serveru"
+
+#: src/settings.py:288
+msgid "Run HTTP only for internal addons usage"
+msgstr "Spustit HTTP server jen pro interní použití doplňkami"
+
+#: src/settings.py:292
+msgid "Allow sending anonymous usage statistics"
+msgstr "Povolit posílání anonymních statistik používání pluginu"
+
+#: src/version.py:3 src/plugin.py:18
 msgid "ArchivCZSK"
 msgstr "ArchivCZSK"
 
-#: src/version.py:6 src/plugin.py:18
+#: src/version.py:6 src/plugin.py:19
 msgid "Playing CZ/SK archives"
 msgstr "Přehrávání CZ/SK archivů"
 
@@ -698,396 +1036,178 @@ msgstr "Nadřízený adresář"
 msgid "nothing connected"
 msgstr "nic nepřipojeno"
 
-#: src/settings.py:96
-msgid "Stable"
-msgstr "Stabilní"
+#: src/engine/items.py:205 src/engine/downloader.py:250
+msgid "succesfully finished"
+msgstr "úspěšně dokončeno"
 
-#: src/settings.py:96
-msgid "Testing"
-msgstr "Testovací"
+#: src/engine/client.py:70 src/engine/client.py:260
+msgid "This is bonus functionality available only for product supporters. Do you want to know, how to get \"Supporter\" status?"
+msgstr "Toto je bonusová funkcionalita dostupná pouze pro podporovatelé produktu. Chcete vědět, jak získat status \"Podporovatel\"?"
 
-#: src/settings.py:117
-msgid "Default"
-msgstr "Předvolený"
+#: src/engine/client.py:118
+msgid "Please set your search expression"
+msgstr "Prosím vložte hledaný výraz"
 
-#: src/settings.py:118
-msgid "Default transparent"
-msgstr "Předvolený transpatentní"
+#: src/engine/handlers/category.py:41
+msgid "Rename"
+msgstr "Přejmenovat"
 
-#: src/settings.py:133
-msgid "Internal"
-msgstr "Vnitřní"
+#: src/engine/handlers/category.py:50
+msgid "Set new category name:"
+msgstr "Zadejte nové jméno kategorie:"
 
-#: src/settings.py:133
-msgid "CSFD"
-msgstr "CSFD"
+#: src/engine/handlers/category.py:61
+msgid "category"
+msgstr "kategorii"
 
-#: src/settings.py:133
-msgid "CSFDLite"
-msgstr "CSFDLite"
+#: src/engine/handlers/addon.py:99
+msgid "Addon integrity check failed. Do you want to reinstall addon? Enigma will be automaticaly restarted after reinstall."
+msgstr "Kontrola integrity doplňku selhala. Chcete doplňek přeinstalovat? Enigma bude po reinstalaci automaticky restartováná."
 
-#: src/settings.py:138
-msgid "Skin"
-msgstr "Skin"
+#: src/engine/handlers/addon.py:139
+msgid "Addon is broken"
+msgstr "Doplněk je nefunkční"
 
-#: src/settings.py:139
-msgid "Enable colored items"
-msgstr "Povolit vyfarbování jednotlivých položek v seznamu"
+#: src/engine/handlers/addon.py:140
+msgid "Reason"
+msgstr "Důvod"
 
-#: src/settings.py:140
-msgid "Default category"
-msgstr "Předvolená kategorie"
+#: src/engine/handlers/addon.py:141 src/engine/handlers/addon.py:173
+msgid "Do you want to disable this addon?"
+msgstr "Chcete vypnout tento doplněk?"
 
-#: src/settings.py:141
-msgid "Allow archivCZSK auto update"
-msgstr "Povolit kontrolu aktualizací archivuCZSK"
+#: src/engine/handlers/addon.py:171
+msgid "Addon is created for archivCZSK 1.x.x version and will not work anymore in this version. Author of the addon need to adopt it for this version."
+msgstr "Doplněk je vytvořen pro verzi archivCZSK 1.x.x a v této verzi už není funkční. Autor doplňku jej pro tuto verzi musí přizpůsobit."
 
-#: src/settings.py:142
-msgid "Allow addons auto update"
-msgstr "Povolit kontrolu aktualizací doplňků"
+#: src/engine/handlers/addon.py:176
+msgid "Do you want to remove this addon?"
+msgstr "Chcete vymazat tento doplněk?"
 
-#: src/settings.py:143
-msgid "Update timeout"
-msgstr "Časový limit kontroly aktualizace"
+#: src/engine/handlers/addon.py:187
+msgid "Rename this profile"
+msgstr "Přejmenovat tento profil"
 
-#: src/settings.py:145
-msgid "Update repository"
-msgstr "Aktualizační repozitář"
+#: src/engine/handlers/addon.py:188
+msgid "Delete this profile"
+msgstr "Vymazat tento profil"
 
-#: src/settings.py:146
-msgid "Update channel"
-msgstr "Aktualizační kanál"
+#: src/engine/handlers/addon.py:190
+msgid "Create new profile"
+msgstr "Vytvořit nový profil"
 
-#: src/settings.py:147
-msgid "Show changelog after update"
-msgstr "Po aktualizaci zobrazit seznam změn"
+#: src/engine/handlers/addon.py:222
+msgid "Do you want to remove this profile?"
+msgstr "Opravdu chcete odstranit tento profil?"
 
-#: src/settings.py:148
-msgid "Check addons integrity"
-msgstr "Kontrolovat integritu doplňků"
+#: src/engine/handlers/addon.py:234
+msgid "Enter name of new profile"
+msgstr "Zadejte jméno nového profilu"
 
-#: src/settings.py:150
-msgid "Show movie poster"
-msgstr "Zobrazit plakát filmu"
+#: src/engine/handlers/addon.py:244
+msgid "Enter new profile name"
+msgstr "Zadejte nové jméno profilu"
 
-#: src/settings.py:151
-msgid "Poster maximum processing size (in kB)"
-msgstr "Maximální velikost plakátu pro zpracování (v kB)"
+#: src/engine/handlers/addon.py:252
+msgid "Add to category"
+msgstr "Přidat do kategorie"
 
-#: src/settings.py:152
-msgid "Max posters on HDD"
-msgstr "Max počet plakátů na disku"
+#: src/engine/handlers/addon.py:278
+msgid "Remove from category"
+msgstr "Zmazat z kategorie"
 
-#: src/settings.py:154
-msgid "Add to extensions menu"
-msgstr "Přidat do menu rozšíření"
+#: src/engine/handlers/addon.py:300
+msgid "Enable"
+msgstr "Zapnout"
 
-#: src/settings.py:155
-msgid "Add to main menu"
-msgstr "Přidat do hlavního menu"
+#: src/engine/handlers/addon.py:304
+msgid "Disable"
+msgstr "Vypnout"
 
-#: src/settings.py:156
-msgid "Add search option in epg menu"
-msgstr "Přidat vyhledávání v archivu na dlouhé stisknutí EPG/INFO"
+#: src/engine/handlers/media.py:241
+msgid "Automatically generated"
+msgstr "Automaticky generován"
 
-#: src/settings.py:157
-msgid "Add archive enter shortcut to extensions menu"
-msgstr "Přidat zkratku pro vstup do archívu do menu rozšíření"
+#: src/engine/handlers/media.py:272 src/engine/handlers/folder.py:133
+msgid "Trakt.tv action"
+msgstr "Trakt.tv akce"
 
-#: src/settings.py:159
-msgid "CSFD plugin"
-msgstr "CSFD plugin"
+#: src/engine/handlers/media.py:274 src/engine/handlers/folder.py:135
+msgid "Pair device with Trakt.tv"
+msgstr "Spárovat toto zařízení s Trakt.tv"
 
-#: src/settings.py:170
-msgid "standard player"
-msgstr "standardní přehrávač"
-
-#: src/settings.py:171
-msgid "custom player (subtitle support)"
-msgstr "upravený přehrávač (podpora titulků)"
-
-#: src/settings.py:190
-msgid "Show more info about player"
-msgstr "Informace o video přehrávači"
-
-#: src/settings.py:191
-msgid "RTMP Timeout"
-msgstr "Časový limit RTMP"
-
-#: src/settings.py:192
-msgid "RTMP Buffer"
-msgstr "RTMP zásobník"
-
-#: src/settings.py:193
-msgid "Confirm exit when closing player"
-msgstr "Potvrdit ukončení při opouštění přehrávače"
-
-#: src/settings.py:194
-msgid "Allow automatically changing audio track"
-msgstr "Povolit automatickou změnu zvukové stopy"
-
-#: src/settings.py:217
-msgid "Change parental control settings"
-msgstr "Změnit nastavení rodičovské kontroly"
-
-#: src/settings.py:219
-msgid "Your PIN code is set to default 0000. Please change it to your own value."
-msgstr "Váš PIN kód je nastaven na předvolený 0000. Prosím změňte ho na vaši vlastní hodnotu."
-
-#: src/settings.py:221
-msgid "Enable parental control"
-msgstr "Povolit rodičovskou kontrolu"
-
-#: src/settings.py:222
-msgid "Change parental control PIN"
-msgstr "Změnit PIN pro rodičovskou kontrolu"
-
-#: src/settings.py:223
-msgid "Show adult content"
-msgstr "Zobrazovat obsah pro dospělé"
-
-#: src/settings.py:224
-msgid "Show posters for adult content"
-msgstr "U obsahu pro dospělé zobrazovat postery"
-
-#: src/settings.py:244
-msgid "Data path"
-msgstr "Adresář pro data"
-
-#: src/settings.py:245
-msgid "Temp path"
-msgstr "Dočasný adresář"
-
-#: src/settings.py:246
-msgid "Downloads path"
-msgstr "Stahovat do"
-
-#: src/settings.py:247
-msgid "Posters path"
-msgstr "Plakáty stahovat do"
-
-#: src/settings.py:249
-msgid "Log path"
-msgstr "Logovat do"
-
-#: src/settings.py:266
-msgid "info"
-msgstr "info"
-
-#: src/settings.py:266
-msgid "debug"
-msgstr "debug"
-
-#: src/settings.py:285
-msgid "Debug mode"
-msgstr "Režim ladění"
-
-#: src/settings.py:286
-msgid "Allow sending bug reports on addon error"
-msgstr "Povolit posílání chybových hlášení při chybě doplňku"
-
-#: src/settings.py:287
-msgid "Allow preloading of addons on start"
-msgstr "Povolit přednačtení doplňků při startu"
-
-#: src/settings.py:288
-msgid "Confirm exit when closing plugin"
-msgstr "Potvrdit ukončení při opouštění modulu"
-
-#: src/settings.py:289
-msgid "Show broken addons"
-msgstr "Zobrazit nefunkční doplňky"
-
-#: src/settings.py:290
-msgid "Show not supported addons"
-msgstr "Zobrazit nepodporované doplňky"
-
-#: src/settings.py:291
-msgid "On update remove broken and not supported addons"
-msgstr "Při aktualizaci odstranit nefunkční a nepodporované doplňky"
-
-#: src/settings.py:292
-msgid "Show video source selection"
-msgstr "Zobrazit výběr zdroje videa"
-
-#: src/settings.py:293
-msgid "Convert captcha images to 8bit"
-msgstr "Konvertovat captcha obrázky na 8bitové"
-
-#: src/settings.py:294
-msgid "Drop caches on exit"
-msgstr "Vymazat mezipamět po ukončení pluginu"
-
-#: src/settings.py:295
-msgid "Internal HTTP server listen port"
-msgstr "Port interního HTTP serveru"
-
-#: src/settings.py:296
-msgid "Run HTTP only for internal addons usage"
-msgstr "Spustit HTTP server jen pro interní použití doplňkami"
-
-#: src/settings.py:300
-msgid "Allow sending anonymous usage statistics"
-msgstr "Povolit posílání anonymních statistik používání pluginu"
-
-#: src/resources/repositories/config.py:20 src/engine/handlers/media.py:279
+#: src/engine/handlers/media.py:279 src/resources/repositories/config.py:20
 msgid "Download"
 msgstr "Stáhnout"
 
-#: src/resources/repositories/config.py:23
-msgid "Download path"
-msgstr "Adresář pro stahování"
+#: src/engine/handlers/media.py:282
+msgid "Play all"
+msgstr "Přehrát všechno"
 
-#: src/resources/repositories/config.py:29
-msgid "Loading"
-msgstr "Načítání"
+#: src/engine/handlers/media.py:285
+msgid "Play using gstplayer"
+msgstr "Přehrát pomocí gstplayer"
 
-#: src/resources/repositories/config.py:32
-msgid "Timeout"
-msgstr "Časový limit"
+#: src/engine/handlers/media.py:288
+msgid "Play using exteplayer3"
+msgstr "Přehrát pomocí exteplayer3"
 
-#: src/resources/repositories/config.py:37
-msgid "Verify SSL certificates"
-msgstr "Kontrolovat SSL certifikáty"
+#: src/engine/handlers/media.py:290
+msgid "Play and Download"
+msgstr "Přehraj a stahuj"
 
-#: src/client/shortcut.py:30
-msgid "Run addon fatal error."
-msgstr "Při spuštěni doplňku nastala chyba."
+#: src/engine/handlers/media.py:360
+msgid "Resolve videos"
+msgstr "Načítej videa"
 
-#: src/client/shortcut.py:65
-msgid "Cannot run shortcut, archivCZSK is not installed"
-msgstr "Nelze spustit zkratku, ArchivCZSK není nainstalován"
+#: src/engine/handlers/media.py:364 src/engine/handlers/media.py:368
+#: src/engine/handlers/folder.py:140 src/engine/handlers/folder.py:142
+msgid "Add Shortcut"
+msgstr "Přidat záložku"
 
-#: src/client/shortcut.py:71 src/client/seeker.py:99
-msgid "Unknown error"
-msgstr "Neznáma chyba"
+#: src/engine/handlers/media.py:375 src/engine/handlers/folder.py:147
+msgid "Do you want to add"
+msgstr "Chcete přidat"
 
-#: src/client/shortcut.py:109
-msgid "Error while trying to retrieve content list"
-msgstr "Vyskytla se chyba při získávaní obsahu dat"
+#: src/engine/handlers/media.py:375 src/engine/handlers/folder.py:147
+msgid "shortcut?"
+msgstr "záložku?"
 
-#: src/client/shortcut.py:135
-msgid "You cannot run ArchivCZSK again because it is already running"
-msgstr "Nemůžete spustit ArchivCZSK znovu protože už je aktuálně spuštěn"
+#: src/engine/handlers/media.py:429
+msgid "Please select source"
+msgstr "Prosím zvolte zdroj"
 
-#: src/client/seeker.py:28 src/client/seeker.py:31
-msgid "Search in"
-msgstr "Vyhledávat v"
-
-#: src/client/seeker.py:50
-msgid "Empty search expression"
-msgstr "Žádný hledaný výraz"
-
-#: src/client/seeker.py:58
-msgid "Search fatal error."
-msgstr "Při vyhledávání nastala chyba."
-
-#: src/client/seeker.py:93
-msgid "Cannot search, archivCZSK is not installed"
-msgstr "Nelze vyhledávat, ArchivCZSK není nainstalován"
-
-#: src/client/seeker.py:129
-msgid "Error while trying to retrieve search list"
-msgstr "Chyba při pokusu o načtení seznamu hledání"
-
-#: src/client/seeker.py:150
-msgid "You cannot search, archivCZSK Search is already running"
-msgstr "Nyní nemůžete vyhledávat, vyhledávání právě probíhá"
-
-#: src/client/seeker.py:165
-msgid "Cannot find searcher"
-msgstr "Nelze najít vyhledávač"
-
-#: src/engine/player/player.py:150
-#, python-brace-format
-msgid "Player switched to {player}"
-msgstr "Přehrávač změněn na {player}"
-
-#: src/engine/player/player.py:314
-msgid "Stop playing this movie?"
-msgstr "Ukončit přehrávání videa?"
-
-#: src/engine/player/player.py:469 src/engine/player/player.py:477
-msgid "Letterbox"
-msgstr "Letterbox"
-
-#: src/engine/player/player.py:470 src/engine/player/player.py:474
-#: src/engine/player/player.py:478
-msgid "Pan&scan"
-msgstr "Pan&scan"
-
-#: src/engine/player/player.py:471 src/engine/player/player.py:475
-msgid "Nonlinear"
-msgstr "Nonlinear"
-
-#: src/engine/player/player.py:472 src/engine/player/player.py:476
-#: src/engine/player/player.py:479
-msgid "Just scale"
-msgstr "Just scale"
-
-#: src/engine/player/player.py:473
-msgid "PillarBox"
-msgstr "PillarBox"
-
-#: src/engine/player/player.py:515
-msgid "Aspect"
-msgstr "Poměr"
-
-#: src/engine/player/player.py:516
-msgid "Policy"
-msgstr "Policy"
-
-#: src/engine/player/player.py:554
-msgid "Show subservices"
-msgstr "Zobrazit titulky"
-
-#: src/engine/player/player.py:579
-msgid "Please select subservice..."
-msgstr "Prosím zvolte subservice..."
-
-#: src/engine/player/player.py:658 src/engine/handlers/media.py:500
+#: src/engine/handlers/media.py:500 src/engine/player/player.py:659
 msgid "Show playlist"
 msgstr "Zobrazit playlist"
 
-#: src/engine/player/player.py:659
-msgid "Play next entry in playlist"
-msgstr "Přehrát následující záznam v playlistu"
+#: src/engine/handlers/folder.py:137
+msgid "Open"
+msgstr "Otevřít položku"
 
-#: src/engine/player/player.py:660
-msgid "Play previous entry in playlist"
-msgstr "Přehrát předcházející záznam v playlistu"
+#: src/engine/handlers/folder.py:138
+msgid "Play all videos"
+msgstr "Přehrát všechny videa"
 
-#: src/engine/player/player.py:661
-msgid "Exit player"
-msgstr "Ukončit přehrávač"
+#: src/engine/handlers/folder.py:158
+msgid "Playlist of"
+msgstr "Playlist z"
 
-#: src/engine/player/player.py:662
-msgid "Show/hide infobar"
-msgstr "Zobrazit/skrýt infobar"
+#: src/engine/handlers/folder.py:166
+msgid "No playable videos were found"
+msgstr "Nenašli se žádné přehratelné videa"
 
-#: src/engine/player/player.py:663
-msgid "Switch player type"
-msgstr "Změnit typ přehrávače"
+#: src/engine/addon.py:491
+msgid "Addon order"
+msgstr "Pořadí doplňku"
 
-#: src/engine/player/player.py:737
-msgid "Skip intro"
-msgstr "Přeskočit úvod"
+#: src/engine/addon.py:495
+msgid "Used player"
+msgstr "Používat přehrávač"
 
-#: src/engine/player/player.py:739
-msgid "Skip credits"
-msgstr "Přeskočit titulky"
-
-#: src/engine/player/player.py:741
-msgid "Skip this part"
-msgstr "Přeskočit tuhle část"
-
-#: src/engine/player/player.py:828
-msgid "Resuming playback"
-msgstr "Obnovuji přehrávání"
-
-#: src/engine/player/player.py:837
-msgid "Resume playback from last play position?"
-msgstr "Obnovit přehrávání od poslední pozice?"
+#: src/engine/addon.py:520
+msgid "General"
+msgstr "Všeobecné"
 
 #: src/engine/contentprovider.py:167
 msgid "Please wait until enough data is downloaded for fluent playback"
@@ -1198,146 +1318,93 @@ msgstr ""
 "Spuštění  doplňku {addon_name} selhalo. Závislost nenalezena: {dependency_name}\n"
 "Zkontrolujte volné místo v přijímači, přeinstalujte ArchivCZSK a vykonejte aktualizaci všech doplňků pro vyřešení problému."
 
-#: src/engine/handlers/category.py:41
-msgid "Rename"
-msgstr "Přejmenovat"
+#: src/engine/downloader.py:253
+msgid "not succesfully finished"
+msgstr "neúspěšně dokončeno"
 
-#: src/engine/handlers/category.py:50
-msgid "Set new category name:"
-msgstr "Zadejte nové jméno kategorie:"
+#: src/engine/downloader.py:256
+msgid "downloading"
+msgstr "stahuji"
 
-#: src/engine/handlers/category.py:61
-msgid "category"
-msgstr "kategorii"
+#: src/engine/parental.py:84 src/engine/parental.py:86
+msgid "seconds"
+msgstr "sekund"
 
-#: src/engine/handlers/folder.py:133 src/engine/handlers/media.py:272
-msgid "Trakt.tv action"
-msgstr "Trakt.tv akce"
+#: src/engine/parental.py:89
+msgid "minutes"
+msgstr "minut"
 
-#: src/engine/handlers/folder.py:135 src/engine/handlers/media.py:274
-msgid "Pair device with Trakt.tv"
-msgstr "Spárovat toto zařízení s Trakt.tv"
+#: src/engine/parental.py:94
+#, python-brace-format
+msgid "You entered {max_tries} times wrong PIN. Wait {remaining_time} and try again."
+msgstr "Zadali jste {max_tries} krát nesprávný PIN kód. Čekejte {remaining_time} a zkuste to znovu."
 
-#: src/engine/handlers/folder.py:137
-msgid "Open"
-msgstr "Otevřít položku"
+#: src/engine/parental.py:99
+msgid "Entered parental PIN code is not correct"
+msgstr "Zadaný PIN kód je nesprávný"
 
-#: src/engine/handlers/folder.py:138
-msgid "Play all videos"
-msgstr "Přehrát všechny videa"
+#: src/engine/parental.py:104
+msgid "Entered PIN code must be at least 4 characters long"
+msgstr "Zadaný PIN kód musí mít alespoň 4 znaky"
 
-#: src/engine/handlers/folder.py:140 src/engine/handlers/folder.py:142
-#: src/engine/handlers/media.py:364 src/engine/handlers/media.py:368
-msgid "Add Shortcut"
-msgstr "Přidat záložku"
+#: src/engine/parental.py:129
+#, python-brace-format
+msgid "To show this content you need to enter parental PIN ({ramaining_tries})"
+msgstr "Pro zobrazení tohoto obsahu musíte zadat rodičovský PIN kód ({ramaining_tries})"
 
-#: src/engine/handlers/folder.py:147 src/engine/handlers/media.py:375
-msgid "Do you want to add"
-msgstr "Chcete přidat"
+#: src/engine/parental.py:145
+msgid "Entered PIN codes are different"
+msgstr "Zadané PIN kódy se liší"
 
-#: src/engine/handlers/folder.py:147 src/engine/handlers/media.py:375
-msgid "shortcut?"
-msgstr "záložku?"
+#: src/engine/parental.py:148
+msgid "PIN code successfuly changed"
+msgstr "PIN kód byl úspěšně změněn"
 
-#: src/engine/handlers/folder.py:158
-msgid "Playlist of"
-msgstr "Playlist z"
+#: src/engine/parental.py:157
+msgid "Repeat new PIN"
+msgstr "Zadejte znovu nový PIN"
 
-#: src/engine/handlers/folder.py:166
-msgid "No playable videos were found"
-msgstr "Nenašli se žádné přehratelné videa"
+#: src/engine/parental.py:164
+msgid "Enter new PIN"
+msgstr "Zadejte nový PIN"
 
-#: src/engine/handlers/media.py:241
-msgid "Automatically generated"
-msgstr "Automaticky generován"
+#: src/engine/parental.py:169
+#, python-brace-format
+msgid "Enter current PIN ({ramaining_tries})"
+msgstr "Zadejte aktuální PIN ({ramaining_tries})"
 
-#: src/engine/handlers/media.py:282
-msgid "Play all"
-msgstr "Přehrát všechno"
+#: src/engine/updater.py:52
+msgid "Checking for updates"
+msgstr "Kontroluji aktualizace"
 
-#: src/engine/handlers/media.py:285
-msgid "Play using gstplayer"
-msgstr "Přehrát pomocí gstplayer"
+#: src/engine/updater.py:94
+msgid "Do you want to update archivCZSK to version"
+msgstr "Přejete si aktualizovat archivCZSK na verzi"
 
-#: src/engine/handlers/media.py:288
-msgid "Play using exteplayer3"
-msgstr "Přehrát pomocí exteplayer3"
+#: src/engine/updater.py:109
+msgid "Downloading update package"
+msgstr "Stahuji aktualizační balík"
 
-#: src/engine/handlers/media.py:290
-msgid "Play and Download"
-msgstr "Přehraj a stahuj"
+#: src/engine/updater.py:122
+msgid "Updating archivCZSK using package manager"
+msgstr "Aktualizuji archivCZSK pomocí správce balíku"
 
-#: src/engine/handlers/media.py:360
-msgid "Resolve videos"
-msgstr "Načítej videa"
+#: src/engine/updater.py:135
+msgid "Failed to download archivCZSK update package"
+msgstr "Selhalo stažení balíku s aktualizaci archivCZSK"
 
-#: src/engine/handlers/media.py:429
-msgid "Please select source"
-msgstr "Prosím zvolte zdroj"
+#: src/engine/updater.py:153
+msgid "Update archivCZSK complete."
+msgstr "Aktualizace archivCZSK proběhla úspěšně."
 
-#: src/engine/handlers/addon.py:99
-msgid "Addon integrity check failed. Do you want to reinstall addon? Enigma will be automaticaly restarted after reinstall."
-msgstr "Kontrola integrity doplňku selhala. Chcete doplňek přeinstalovat? Enigma bude po reinstalaci automaticky restartováná."
-
-#: src/engine/handlers/addon.py:139
-msgid "Addon is broken"
-msgstr "Doplněk je nefunkční"
-
-#: src/engine/handlers/addon.py:140
-msgid "Reason"
-msgstr "Důvod"
-
-#: src/engine/handlers/addon.py:141 src/engine/handlers/addon.py:173
-msgid "Do you want to disable this addon?"
-msgstr "Chcete vypnout tento doplněk?"
-
-#: src/engine/handlers/addon.py:171
-msgid "Addon is created for archivCZSK 1.x.x version and will not work anymore in this version. Author of the addon need to adopt it for this version."
-msgstr "Doplněk je vytvořen pro verzi archivCZSK 1.x.x a v této verzi už není funkční. Autor doplňku jej pro tuto verzi musí přizpůsobit."
-
-#: src/engine/handlers/addon.py:176
-msgid "Do you want to remove this addon?"
-msgstr "Chcete vymazat tento doplněk?"
-
-#: src/engine/handlers/addon.py:187
-msgid "Rename this profile"
-msgstr "Přejmenovat tento profil"
-
-#: src/engine/handlers/addon.py:188
-msgid "Delete this profile"
-msgstr "Vymazat tento profil"
-
-#: src/engine/handlers/addon.py:190
-msgid "Create new profile"
-msgstr "Vytvořit nový profil"
-
-#: src/engine/handlers/addon.py:222
-msgid "Do you want to remove this profile?"
-msgstr "Opravdu chcete odstranit tento profil?"
-
-#: src/engine/handlers/addon.py:234
-msgid "Enter name of new profile"
-msgstr "Zadejte jméno nového profilu"
-
-#: src/engine/handlers/addon.py:244
-msgid "Enter new profile name"
-msgstr "Zadejte nové jméno profilu"
-
-#: src/engine/handlers/addon.py:252
-msgid "Add to category"
-msgstr "Přidat do kategorie"
-
-#: src/engine/handlers/addon.py:278
-msgid "Remove from category"
-msgstr "Zmazat z kategorie"
-
-#: src/engine/handlers/addon.py:300
-msgid "Enable"
-msgstr "Zapnout"
-
-#: src/engine/handlers/addon.py:304
-msgid "Disable"
-msgstr "Vypnout"
+#: src/engine/updater.py:162
+#, python-brace-format
+msgid ""
+"Update archivCZSK failed. {cmd} returned error\n"
+"{msg}"
+msgstr ""
+"Aktualizace archivCZSK selhala. {cmd} skončilo chybou\n"
+"{msg}"
 
 #: src/engine/trakttv.py:492
 #, python-brace-format
@@ -1404,125 +1471,222 @@ msgstr ""
 "Aktivační URL: {url}\n"
 "Aktivační kód: {code}"
 
-#: src/engine/client.py:88
-msgid "Please set your search expression"
-msgstr "Prosím vložte hledaný výraz"
-
-#: src/engine/items.py:205 src/engine/downloader.py:250
-msgid "succesfully finished"
-msgstr "úspěšně dokončeno"
-
-#: src/engine/parental.py:84 src/engine/parental.py:86
-msgid "seconds"
-msgstr "sekund"
-
-#: src/engine/parental.py:89
-msgid "minutes"
-msgstr "minut"
-
-#: src/engine/parental.py:94
+#: src/engine/player/player.py:150
 #, python-brace-format
-msgid "You entered {max_tries} times wrong PIN. Wait {remaining_time} and try again."
-msgstr "Zadali jste {max_tries} krát nesprávný PIN kód. Čekejte {remaining_time} a zkuste to znovu."
+msgid "Player switched to {player}"
+msgstr "Přehrávač změněn na {player}"
 
-#: src/engine/parental.py:99
-msgid "Entered parental PIN code is not correct"
-msgstr "Zadaný PIN kód je nesprávný"
+#: src/engine/player/player.py:314
+msgid "Stop playing this movie?"
+msgstr "Ukončit přehrávání videa?"
 
-#: src/engine/parental.py:104
-msgid "Entered PIN code must be at least 4 characters long"
-msgstr "Zadaný PIN kód musí mít alespoň 4 znaky"
+#: src/engine/player/player.py:469 src/engine/player/player.py:477
+msgid "Letterbox"
+msgstr "Letterbox"
 
-#: src/engine/parental.py:129
-#, python-brace-format
-msgid "To show this content you need to enter parental PIN ({ramaining_tries})"
-msgstr "Pro zobrazení tohoto obsahu musíte zadat rodičovský PIN kód ({ramaining_tries})"
+#: src/engine/player/player.py:470 src/engine/player/player.py:474
+#: src/engine/player/player.py:478
+msgid "Pan&scan"
+msgstr "Pan&scan"
 
-#: src/engine/parental.py:145
-msgid "Entered PIN codes are different"
-msgstr "Zadané PIN kódy se liší"
+#: src/engine/player/player.py:471 src/engine/player/player.py:475
+msgid "Nonlinear"
+msgstr "Nonlinear"
 
-#: src/engine/parental.py:148
-msgid "PIN code successfuly changed"
-msgstr "PIN kód byl úspěšně změněn"
+#: src/engine/player/player.py:472 src/engine/player/player.py:476
+#: src/engine/player/player.py:479
+msgid "Just scale"
+msgstr "Just scale"
 
-#: src/engine/parental.py:157
-msgid "Repeat new PIN"
-msgstr "Zadejte znovu nový PIN"
+#: src/engine/player/player.py:473
+msgid "PillarBox"
+msgstr "PillarBox"
 
-#: src/engine/parental.py:164
-msgid "Enter new PIN"
-msgstr "Zadejte nový PIN"
+#: src/engine/player/player.py:515
+msgid "Aspect"
+msgstr "Poměr"
 
-#: src/engine/parental.py:169
-#, python-brace-format
-msgid "Enter current PIN ({ramaining_tries})"
-msgstr "Zadejte aktuální PIN ({ramaining_tries})"
+#: src/engine/player/player.py:516
+msgid "Policy"
+msgstr "Policy"
 
-#: src/engine/addon.py:491
-msgid "Addon order"
-msgstr "Pořadí doplňku"
+#: src/engine/player/player.py:554
+msgid "Show subservices"
+msgstr "Zobrazit titulky"
 
-#: src/engine/addon.py:495
-msgid "Used player"
-msgstr "Používat přehrávač"
+#: src/engine/player/player.py:579
+msgid "Please select subservice..."
+msgstr "Prosím zvolte subservice..."
 
-#: src/engine/addon.py:520
-msgid "General"
-msgstr "Všeobecné"
+#: src/engine/player/player.py:660
+msgid "Play next entry in playlist"
+msgstr "Přehrát následující záznam v playlistu"
 
-#: src/engine/updater.py:52
-msgid "Checking for updates"
-msgstr "Kontroluji aktualizace"
+#: src/engine/player/player.py:661
+msgid "Play previous entry in playlist"
+msgstr "Přehrát předcházející záznam v playlistu"
 
-#: src/engine/updater.py:94
-msgid "Do you want to update archivCZSK to version"
-msgstr "Přejete si aktualizovat archivCZSK na verzi"
+#: src/engine/player/player.py:662
+msgid "Exit player"
+msgstr "Ukončit přehrávač"
 
-#: src/engine/updater.py:109
-msgid "Downloading update package"
-msgstr "Stahuji aktualizační balík"
+#: src/engine/player/player.py:663
+msgid "Show/hide infobar"
+msgstr "Zobrazit/skrýt infobar"
 
-#: src/engine/updater.py:122
-msgid "Updating archivCZSK using package manager"
-msgstr "Aktualizuji archivCZSK pomocí správce balíku"
+#: src/engine/player/player.py:664
+msgid "Switch player type"
+msgstr "Změnit typ přehrávače"
 
-#: src/engine/updater.py:135
-msgid "Failed to download archivCZSK update package"
-msgstr "Selhalo stažení balíku s aktualizaci archivCZSK"
+#: src/engine/player/player.py:738
+msgid "Skip intro"
+msgstr "Přeskočit úvod"
 
-#: src/engine/updater.py:153
-msgid "Update archivCZSK complete."
-msgstr "Aktualizace archivCZSK proběhla úspěšně."
+#: src/engine/player/player.py:740
+msgid "Skip credits"
+msgstr "Přeskočit titulky"
 
-#: src/engine/updater.py:162
-#, python-brace-format
-msgid ""
-"Update archivCZSK failed. {cmd} returned error\n"
-"{msg}"
-msgstr ""
-"Aktualizace archivCZSK selhala. {cmd} skončilo chybou\n"
-"{msg}"
+#: src/engine/player/player.py:742
+msgid "Skip this part"
+msgstr "Přeskočit tuhle část"
 
-#: src/engine/downloader.py:253
-msgid "not succesfully finished"
-msgstr "neúspěšně dokončeno"
+#: src/engine/player/player.py:830
+msgid "Resuming playback"
+msgstr "Obnovuji přehrávání"
 
-#: src/engine/downloader.py:256
-msgid "downloading"
-msgstr "stahuji"
+#: src/engine/player/player.py:839
+msgid "Resume playback from last play position?"
+msgstr "Obnovit přehrávání od poslední pozice?"
 
-#: src/plugin.py:105
+#: src/archivczsk.py:271
+msgid "Checking for addons updates"
+msgstr "Kontrola aktualizací doplňků"
+
+#: src/archivczsk.py:328
+msgid "Do you want to update"
+msgstr "Chcete aktualizovat"
+
+#: src/archivczsk.py:328
+msgid "addons"
+msgstr "doplňky"
+
+#: src/archivczsk.py:339
+msgid "Following addons were updated"
+msgstr "Následující doplňky byly aktualizovány"
+
+#: src/archivczsk.py:373
+msgid "You need to restart E2. Do you want to restart it now?"
+msgstr "Změny se projeví po restartu E2. Chcete nyní restartovat E2?"
+
+#: src/archivczsk.py:400
+msgid "By system check there was no system plugin with name ServiceApp detected. This means, that your system only supports video player integrated in enigma2. Some addons doesn't work properly with internal player or don't work at all. If you will have problem with playing some videos, try to install ServiceApp system plugin from feed of your distribution. Then you can change in addon settings used video player to gstplayer or exteplayer3 that can handle some video formats better."
+msgstr "Při kontrole systému nebyl detekován systémový plugin s názvem ServiceApp. To znamená, že váš systém podporuje pouze video přehrávač integrovaný v enigma2. Některé doplňky nefungují správně s interním přehrávačem nebo nefungují vůbec. Pokud budete mít problém s přehráváním některých videí, zkuste si nainstalovat systémový plugin ServiceApp z feedu vaší distribuce. Poté můžete v nastavení doplňku změnit použitý video přehrávač na gstplayer nebo exteplayer3, který si lépe poradí s některými formáty videa."
+
+#: src/archivczsk.py:402
+msgid "By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3 and gstplayer. These video players are needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer and exteplayer3 from feed of your distribution to be able use all available addons."
+msgstr "Při kontrole systému byl zjištěn systémový plugin s názvem ServiceApp, ale chybí vám přehrávače exteplayer3 a gstplayer. Tyto videopřehrávače jsou potřeba ke zpracování některých video formátů, které interní videopřehrávač zabudovaný do enigma2 zpracovat nedokáže. Doporučuje se nainstalovat gstplayer a exteplayer3 z feedu vaší distribuce, abyste mohli používat všechny dostupné doplňky."
+
+#: src/archivczsk.py:404
+msgid "By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install exteplayer3 from feed of your distribution to be able use all available addons."
+msgstr "Při kontrole systému byl zjištěn systémový plugin s názvem ServiceApp, ale chybí vám přehrávač exteplayer3. Tento videopřehrávač je potřeba ke zpracování některých video formátů, které interní videopřehrávač zabudovaný do enigma2 zpracovat nedokáže. Doporučuje se nainstalovat exteplayer3 z feedu vaší distribuce, abyste mohli používat všechny dostupné doplňky."
+
+#: src/archivczsk.py:406
+msgid "By system check there was system plugin with name ServiceApp detected, but you miss gstplayer. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer from feed of your distribution to be able use all available addons."
+msgstr "Při kontrole systému byl zjištěn systémový plugin s názvem ServiceApp, ale chybí vám přehrávač gstplayer. Tento videopřehrávač je potřeba ke zpracování některých video formátů, které interní videopřehrávač zabudovaný do enigma2 zpracovat nedokáže. Doporučuje se nainstalovat gstplayer z feedu vaší distribuce, abyste mohli používat všechny dostupné doplňky."
+
+#: src/archivczsk.py:414
+msgid "You are using outdated image in your receiver without updated SSL certificates used for HTTPS communication. This can cause problems connecting to some sites or services. Outdated images are not supported and errors related to SSL communication will not be fixed. Update your image to latest version or switch to other image if current one doesn't get updates anymore."
+msgstr "Ve svém přijímači používáte zastaralé image bez aktualizovaných SSL certifikátů používaných pro HTTPS komunikaci. Může to způsobit problémy s připojením k některým stránkám nebo službám. Zastaralé image nejsou podporované a chyby souvisící s SSL komunikaci nebudou opravené. Aktualizujte své image na nejnovější verzi nebo přejděte na jiné, pokud už vaše aktuální nedostává další aktualizace."
+
+#: src/resources/repositories/config.py:23
+msgid "Download path"
+msgstr "Adresář pro stahování"
+
+#: src/resources/repositories/config.py:29
+msgid "Loading"
+msgstr "Načítání"
+
+#: src/resources/repositories/config.py:32
+msgid "Timeout"
+msgstr "Časový limit"
+
+#: src/resources/repositories/config.py:37
+msgid "Verify SSL certificates"
+msgstr "Kontrolovat SSL certifikáty"
+
+#: src/client/shortcut.py:30
+msgid "Run addon fatal error."
+msgstr "Při spuštěni doplňku nastala chyba."
+
+#: src/client/shortcut.py:65
+msgid "Cannot run shortcut, archivCZSK is not installed"
+msgstr "Nelze spustit zkratku, ArchivCZSK není nainstalován"
+
+#: src/client/shortcut.py:71 src/client/seeker.py:105
+msgid "Unknown error"
+msgstr "Neznáma chyba"
+
+#: src/client/shortcut.py:109
+msgid "Error while trying to retrieve content list"
+msgstr "Vyskytla se chyba při získávaní obsahu dat"
+
+#: src/client/shortcut.py:135
+msgid "You cannot run ArchivCZSK again because it is already running"
+msgstr "Nemůžete spustit ArchivCZSK znovu protože už je aktuálně spuštěn"
+
+#: src/client/seeker.py:56
+msgid "Empty search expression"
+msgstr "Žádný hledaný výraz"
+
+#: src/client/seeker.py:64
+msgid "Search fatal error."
+msgstr "Při vyhledávání nastala chyba."
+
+#: src/client/seeker.py:99
+msgid "Cannot search, archivCZSK is not installed"
+msgstr "Nelze vyhledávat, ArchivCZSK není nainstalován"
+
+#: src/client/seeker.py:135
+msgid "Error while trying to retrieve search list"
+msgstr "Chyba při pokusu o načtení seznamu hledání"
+
+#: src/client/seeker.py:156
+msgid "You cannot search, archivCZSK Search is already running"
+msgstr "Nyní nemůžete vyhledávat, vyhledávání právě probíhá"
+
+#: src/client/seeker.py:171
+msgid "Cannot find searcher"
+msgstr "Nelze najít vyhledávač"
+
+#: src/plugin.py:106
 msgid "Open archive for current channel using ArchivCZSK addon"
 msgstr "Otevřít archív aktuálního kanálů pomocí ArchivCZSK doplňku"
 
-#: src/plugin.py:105
+#: src/plugin.py:106
 msgid "When current channel is managed by ArchivCZSK addon, then it opens archive for it"
 msgstr "Pokud je aktuální kanál spravován doplňkem pro ArchivCZSK, potom pro něj otevře archív"
 
-#: src/plugin.py:116
+#: src/plugin.py:117
 msgid "Search in ArchivCZSK"
 msgstr "Vyhledávání v Archivu CZSK"
+
+#~ msgid "Skin transparency"
+#~ msgstr "Transparentnost skinu"
+
+#~ msgid "Select all"
+#~ msgstr "Vybrat všechno"
+
+#~ msgid "Default"
+#~ msgstr "Předvolený"
+
+#~ msgid "Default transparent"
+#~ msgstr "Předvolený transpatentní"
+
+#~ msgid "Skin"
+#~ msgstr "Skin"
+
+#~ msgid "Search in"
+#~ msgstr "Vyhledávat v"
 
 #~ msgid "Preload"
 #~ msgstr "Přednačíst"

@@ -41,7 +41,7 @@ class ArchivCZSKDonateScreen(BaseArchivCZSKListSourceScreen):
 			price_fmt = '{}{}'
 
 		self.pay_choices_list = [
-			('cz', _('Send donation {price} from Czechia').format(price=price_fmt.format(*self.price['czk']))),
+			('cz', _('Send donation {price} from Czech republic').format(price=price_fmt.format(*self.price['czk']))),
 			('sk', _('Send donation {price} from Slovakia').format(price=price_fmt.format(*self.price['eur']))),
 			('eu', _('Send donation {price} from EU').format(price=price_fmt.format(*self.price['eur']))),
 		]
@@ -136,9 +136,9 @@ class ArchivCZSKPaymentScreen(BaseArchivCZSKScreen):
 		self.screen_time = None
 
 		if pay_type == 'sk':
-			title2 = _("It is compatible with Slovak bank applications.")
+			title2 = _("It is compatible with slovak bank applications.")
 		elif pay_type == 'cz':
-			title2 = _("It is compatible with Czech bank applications.")
+			title2 = _("It is compatible with czech bank applications.")
 		elif pay_type == 'eu':
 			title2 = _("It is compatible bank applications supporting EPC/GiroCode format.")
 

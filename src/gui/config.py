@@ -201,10 +201,10 @@ class ArchivCZSKSimpleConfigScreen(BaseArchivCZSKScreen, ConfigListScreen):
 		self.config_list_entries = self.create_config_list(config_entries)
 		self['config'].list = self.config_list_entries
 		self['config'].setList(self.config_list_entries)
-		self["key_yellow"] = Label(_(" "))
+		self["key_yellow"] = Label(" ")
 		self["key_green"] = Label(_("Apply"))
 		self["key_red"] = Label(_("Cancel"))
-		self["key_blue"] = Label(_(" "))
+		self["key_blue"] = Label(" ")
 		self["tooltip"] = Label(" ")
 
 		self["actions"] = ActionMap(["SetupActions", "ColorActions", "DirectionActions"],
