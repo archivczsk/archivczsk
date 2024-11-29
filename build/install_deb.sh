@@ -16,7 +16,7 @@ IPK_NAME=$(basename $IPK_PATH)
 DEB_NAME=$(basename $IPK_PATH .ipk).deb
 
 echo "uploading deb to $E2_HOST..."
-scp $IPK_NAME $E2_HOST:/tmp/${DEB_NAME}
+scp -O $IPK_NAME $E2_HOST:/tmp/${DEB_NAME}
 
 echo "installing archivCZSK on $E2_HOST"
 ssh $E2_HOST << EOFSSH
