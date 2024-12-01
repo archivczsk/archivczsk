@@ -5,13 +5,17 @@
 	</screen>
 
 	<screen name="ArchivCZSKContentScreen" position="center,center" size="*1478*,*840*" backgroundColor="#0a000000" title="ArchivCZSK">
-		<widget backgroundColor="#009f1313" font="Regular;*30*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#001f771f" font="Regular;*30*" halign="center" name="key_green" position="*377*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#00a08500" font="Regular;*30*" halign="center" name="key_yellow" position="*744*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#0018188b" font="Regular;*30*" halign="center" name="key_blue" position="*1111*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_green" position="*377*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_yellow" position="*744*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_blue" position="*1111*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<ePixmap name="red_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/red.png" position="*10*,*6*" size="*357*,*57*" zPosition="1"/>
+		<ePixmap name="green_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/green.png" position="*377*,*6*" size="*357*,*57*" zPosition="1"/>
+		<ePixmap name="yellow_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/yellow.png" position="*744*,*6*" size="*357*,*57*" zPosition="1"/>
+		<ePixmap name="blue_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/blue.png" position="*1111*,*6*" size="*357*,*57*" zPosition="1"/>
 		<widget name="path_label" position="*12*,*83*" size="*1454*,*32*" font="Regular;*28*" transparent="1" foregroundColor="#00c4c4c4"/>
 		<eLabel position="*12*,*117*" size="*1454*,1" zPosition="1" backgroundColor="#00c4c4c4"/>
-		<eLabel position="*915*,*117*" size="1,*716*" zPosition="1" backgroundColor="#00c4c4c4"/>
+		<eLabel position="*915*,*117*" size="*1*,*716*" zPosition="1" backgroundColor="#00c4c4c4"/>
 		<widget source="menu" render="Listbox" position="*12*,*137*" size="*890*,*656*" transparent="1">
 			<convert type="TemplatedMultiContent">
 			{
@@ -51,10 +55,14 @@
 	</screen>
 
 	<screen name="ArchivCZSKAddonContentScreenAdvanced" position="center,center" size="*1800*,*840*" backgroundColor="#0a000000" title="ContentMenuScreen">
-		<widget backgroundColor="#009f1313" font="Regular;*30*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*437*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#001f771f" font="Regular;*30*" halign="center" name="key_green" position="*457*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*437*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#00a08500" font="Regular;*30*" halign="center" name="key_yellow" position="*904*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*437*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#0018188b" font="Regular;*30*" halign="center" name="key_blue" position="*1351*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*437*,*57*" valign="center" zPosition="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*437*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget  font="Regular;*30*" halign="center" name="key_green" position="*457*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*437*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_yellow" position="*904*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*437*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_blue" position="*1351*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*437*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<ePixmap name="red_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/red.png" position="*10*,*6*" size="*437*,*57*" zPosition="1"/>
+		<ePixmap name="green_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/green.png" position="*457*,*6*" size="*437*,*57*" zPosition="1"/>
+		<ePixmap name="yellow_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/yellow.png" position="*904*,*6*" size="*437*,*57*" zPosition="1"/>
+		<ePixmap name="blue_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/blue.png" position="*1351*,*6*" size="*437*,*57*" zPosition="1"/>
 		<widget name="path_label" position="*12*,*83*" size="*1776*,*32*" font="Regular;*28*" transparent="1" foregroundColor="#00c4c4c4"/>
 		<eLabel position="*12*,*117*" size="*1776*,1" zPosition="1" backgroundColor="#00c4c4c4"/>
 		<eLabel position="*1237*,*117*" size="1,*716*" zPosition="1" backgroundColor="#00c4c4c4"/>
@@ -98,10 +106,14 @@
 	</screen>
 
 	<screen name="ArchivCZSKVideoPlayerInfoScreen" position="center,center" size="*1478*,*840*" backgroundColor="#0a000000" title="ContentScreen">
-		<widget backgroundColor="#009f1313" font="Regular;*30*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#001f771f" font="Regular;*30*" halign="center" name="key_green" position="*377*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#00a08500" font="Regular;*30*" halign="center" name="key_yellow" position="*744*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#0018188b" font="Regular;*30*" halign="center" name="key_blue" position="*1111*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_green" position="*377*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_yellow" position="*744*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_blue" position="*1111*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<ePixmap name="red_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/red.png" position="*10*,*6*" size="*357*,*57*" zPosition="1"/>
+		<ePixmap name="green_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/green.png" position="*377*,*6*" size="*357*,*57*" zPosition="1"/>
+		<ePixmap name="yellow_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/yellow.png" position="*744*,*6*" size="*357*,*57*" zPosition="1"/>
+		<ePixmap name="blue_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/blue.png" position="*1111*,*6*" size="*357*,*57*" zPosition="1"/>
 		<widget name="detected player" position="*30*,*104*" size="*285*,*39*" font="Regular;*30*" transparent="1"/>
 		<widget name="detected player_val" position="*339*,*104*" size="*285*,*39*" font="Regular;*30*" transparent="1"/>
 		<widget name="protocol" position="*42*,*173*" size="*588*,*38*" foregroundColor="#00e5b243" font="Regular;*28*" transparent="1"/>
@@ -127,11 +139,11 @@
 	<screen name="ArchivCZSKSearchClientScreen" position="center,center" backgroundColor="#0a000000" size="*752*,*610*">
 		<ePixmap name="search_pixmap" position="*12*,*16*" size="*64*,*64*" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/search.png"/>
 		<widget name="search" position="*103*,*16*" size="*615*,*78*" foregroundColor="#00e5b243" valign="center" halign="center" transparent="1" font="Regular;*33*"/>
-		<ePixmap name="red_pixmap" position="*12*,*115*" size="*44*,*34*" alphatest="blend" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/red.png"/>
+		<ePixmap name="red_pixmap" position="*12*,*115*" size="*44*,*34*" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/red.png"/>
 		<widget source="red_label" render="Label" position="*64*,*115*" size="*424*,*35*" font="Regular;*29*" backgroundColor="background" transparent="1"/>
-		<ePixmap name="green_pixmap" position="*12*,*154*" size="*44*,*34*" alphatest="blend" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/green.png"/>
+		<ePixmap name="green_pixmap" position="*12*,*154*" size="*44*,*34*" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/green.png"/>
 		<widget source="green_label" render="Label" position="*64*,*154*" size="*524*,*35*" font="Regular;*29*" backgroundColor="background" transparent="1"/>
-		<ePixmap name="blue_pixmap" position="*12*,*192*" size="*44*,*34*" alphatest="blend" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/blue.png"/>
+		<ePixmap name="blue_pixmap" position="*12*,*192*" size="*44*,*34*" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/blue.png"/>
 		<widget source="blue_label" render="Label" position="*64*,*192*" size="*524*,*35*" font="Regular;*29*" backgroundColor="background" transparent="1"/>
 		<widget name="search_label" position="*10*,*246*" size="*732*,*40*" foregroundColor="#00e5b243" font="Regular;*32*" transparent="1"/>
 		<widget source="menu" render="Listbox" position="*10*,*306*" size="*732*,*290*" transparent="1">
@@ -158,10 +170,14 @@
 	</screen>
 
 	<screen name="ArchivCZSKSelectMultiScreen" position="center,center" backgroundColor="#0a000000" size="*850*,*654*" >
-		<widget backgroundColor="#009f1313" font="Regular;*24*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*200*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#001f771f" font="Regular;*24*" halign="center" name="key_green" position="*220*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*200*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#00a08500" font="Regular;*24*" halign="center" name="key_yellow" position="*430*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*200*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#0018188b" font="Regular;*24*" halign="center" name="key_blue" position="*640*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*200*,*57*" valign="center" zPosition="1"/>
+		<widget font="Regular;*24*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*200*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*24*" halign="center" name="key_green" position="*220*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*200*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*24*" halign="center" name="key_yellow" position="*430*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*200*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*24*" halign="center" name="key_blue" position="*640*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*200*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<ePixmap name="red_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/red.png" position="*10*,*6*" size="*200*,*57*" zPosition="1"/>
+		<ePixmap name="green_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/green.png" position="*220*,*6*" size="*200*,*57*" zPosition="1"/>
+		<ePixmap name="yellow_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/yellow.png" position="*430*,*6*" size="*200*,*57*" zPosition="1"/>
+		<ePixmap name="blue_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/blue.png" position="*640*,*6*" size="*200*,*57*" zPosition="1"/>
 		<eLabel position="*10*,*67*" size="*830*,1" backgroundColor="#00ffffff"/>
 		<widget name="list" position="*10*,*71*" size="*830*,*543*" scrollbarMode="showOnDemand" transparent="1"/>
 		<eLabel position="*10*,*617*" size="*830*,1" backgroundColor="#00ffffff"/>
@@ -169,10 +185,14 @@
 	</screen>
 
 	<screen name="ArchivCZSKSimpleConfigScreen" position="center,center" backgroundColor="#0a000000" size="*1154*,*683*">
-		<widget backgroundColor="#009f1313" font="Regular;*30*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*276*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#001f771f" font="Regular;*30*" halign="center" name="key_green" position="*296*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*276*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#00a08500" font="Regular;*30*" halign="center" name="key_yellow" position="*582*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*276*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#0018188b" font="Regular;*30*" halign="center" name="key_blue" position="*868*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*276*,*57*" valign="center" zPosition="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*276*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_green" position="*296*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*276*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_yellow" position="*582*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*276*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_blue" position="*868*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*276*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<ePixmap name="red_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/red.png" position="*10*,*6*" size="*276*,*57*" zPosition="1"/>
+		<ePixmap name="green_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/green.png" position="*296*,*6*" size="*276*,*57*" zPosition="1"/>
+		<ePixmap name="yellow_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/yellow.png" position="*582*,*6*" size="*276*,*57*" zPosition="1"/>
+		<ePixmap name="blue_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/blue.png" position="*868*,*6*" size="*276*,*57*" zPosition="1"/>
 		<eLabel position="*10*,*67*" size="*1134*,1" backgroundColor="#00ffffff"/>
 		<widget name="config" position="*10*,*71*" !font="Regular;*26*"! size="*1135*,*567*" itemHeight="*32*" transparent="1" scrollbarMode="showOnDemand"/>
 		<eLabel position="*10*,*643*" size="*1134*,1" backgroundColor="#00ffffff"/>
@@ -180,10 +200,14 @@
 	</screen>
 
 	<screen name="ArchivCZSKConfigScreen" position="center,center" backgroundColor="#0a000000" size="*1154*,*740*">
-		<widget backgroundColor="#009f1313" font="Regular;*30*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*276*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#001f771f" font="Regular;*30*" halign="center" name="key_green" position="*296*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*276*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#00a08500" font="Regular;*30*" halign="center" name="key_yellow" position="*582*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*276*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#0018188b" font="Regular;*30*" halign="center" name="key_blue" position="*868*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*276*,*57*" valign="center" zPosition="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*276*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_green" position="*296*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*276*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_yellow" position="*582*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*276*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_blue" position="*868*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*276*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<ePixmap name="red_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/red.png" position="*10*,*6*" size="*276*,*57*" zPosition="1"/>
+		<ePixmap name="green_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/green.png" position="*296*,*6*" size="*276*,*57*" zPosition="1"/>
+		<ePixmap name="yellow_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/yellow.png" position="*582*,*6*" size="*276*,*57*" zPosition="1"/>
+		<ePixmap name="blue_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/blue.png" position="*868*,*6*" size="*276*,*57*" zPosition="1"/>
 		<eLabel position="*10*,*67*" size="*1134*,1" backgroundColor="#00ffffff"/>
 		<widget name="categories" position="*10*,*71*" size="*1134*,*57*" tab_size="*275*,*57*" spaceWidth="*11*" tab_fontInactive="Regular;*28*" tab_fontActive="Regular;*30*" tab_backgroundColorActive="#0a202020" tab_backgroundColorInactive="#0a000000"/>
 		<eLabel position="*10*,*134*" size="*1134*,1" backgroundColor="#00c4c4c4"/>
@@ -195,10 +219,14 @@
 	</screen>
 
 	<screen name="ArchivCZSKShortcutsScreen" position="center,center" size="*1478*,*840*" backgroundColor="#0a000000" title="ShortcutsScreen">
-		<widget backgroundColor="#009f1313" font="Regular;*30*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#001f771f" font="Regular;*30*" halign="center" name="key_green" position="*377*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#00a08500" font="Regular;*30*" halign="center" name="key_yellow" position="*744*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#0018188b" font="Regular;*30*" halign="center" name="key_blue" position="*1111*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_green" position="*377*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_yellow" position="*744*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_blue" position="*1111*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<ePixmap name="red_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/red.png" position="*10*,*6*" size="*357*,*57*" zPosition="1"/>
+		<ePixmap name="green_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/green.png" position="*377*,*6*" size="*357*,*57*" zPosition="1"/>
+		<ePixmap name="yellow_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/yellow.png" position="*744*,*6*" size="*357*,*57*" zPosition="1"/>
+		<ePixmap name="blue_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/blue.png" position="*1111*,*6*" size="*357*,*57*" zPosition="1"/>
 		<widget source="menu" render="Listbox" position="*8*,*70*" size="*1458*,*748*" transparent="1">
 			<convert type="ACZSKKodiToE2List">Index:1,ColorCodes,Bold:FCE083,Italic:FCE083</convert>
 			<convert type="TemplatedMultiContent">
@@ -224,18 +252,26 @@
 	</screen>
 
 	<screen name="ArchivCZSKDownloadListScreen" position="center,center" size="*1478*,*840*" backgroundColor="#0a000000" title="DownloadListScreen">
-		<widget backgroundColor="#009f1313" font="Regular;*30*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#001f771f" font="Regular;*30*" halign="center" name="key_green" position="*377*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#00a08500" font="Regular;*30*" halign="center" name="key_yellow" position="*744*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#0018188b" font="Regular;*30*" halign="center" name="key_blue" position="*1111*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_green" position="*377*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_yellow" position="*744*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_blue" position="*1111*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<ePixmap name="red_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/red.png" position="*10*,*6*" size="*357*,*57*" zPosition="1"/>
+		<ePixmap name="green_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/green.png" position="*377*,*6*" size="*357*,*57*" zPosition="1"/>
+		<ePixmap name="yellow_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/yellow.png" position="*744*,*6*" size="*357*,*57*" zPosition="1"/>
+		<ePixmap name="blue_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/blue.png" position="*1111*,*6*" size="*357*,*57*" zPosition="1"/>
 		<widget name="menu" position="*10*,*70*" scrollbarMode="showOnDemand" size="*1458*,*760*" transparent="1"/>
 	</screen>
 
 	<screen name="ArchivCZSKDownloadsScreen" position="center,center" size="*1478*,*840*" backgroundColor="#0a000000" title="DownloadScreen">
-		<widget backgroundColor="#009f1313" font="Regular;*30*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#001f771f" font="Regular;*30*" halign="center" name="key_green" position="*377*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#00a08500" font="Regular;*30*" halign="center" name="key_yellow" position="*744*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#0018188b" font="Regular;*30*" halign="center" name="key_blue" position="*1111*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_green" position="*377*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_yellow" position="*744*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_blue" position="*1111*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<ePixmap name="red_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/red.png" position="*10*,*6*" size="*357*,*57*" zPosition="1"/>
+		<ePixmap name="green_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/green.png" position="*377*,*6*" size="*357*,*57*" zPosition="1"/>
+		<ePixmap name="yellow_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/yellow.png" position="*744*,*6*" size="*357*,*57*" zPosition="1"/>
+		<ePixmap name="blue_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/blue.png" position="*1111*,*6*" size="*357*,*57*" zPosition="1"/>
 		<widget name="menu" position="*10*,*70*" scrollbarMode="showOnDemand" size="*1458*,*760*" transparent="1"/>
 	</screen>
 
@@ -298,10 +334,14 @@
 	</screen>
 
 	<screen name="ArchivCSFD" position="center,center" size="*1478*,*840*" backgroundColor="#0a000000" title="Archiv CSFD">
-		<widget backgroundColor="#009f1313" font="Regular;*30*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#001f771f" font="Regular;*30*" halign="center" name="key_green" position="*377*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#00a08500" font="Regular;*30*" halign="center" name="key_yellow" position="*744*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
-		<widget backgroundColor="#0018188b" font="Regular;*30*" halign="center" name="key_blue" position="*1111*,*6*" shadowColor="black" shadowOffset="-2,-2" size="*357*,*57*" valign="center" zPosition="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_green" position="*377*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_yellow" position="*744*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<widget font="Regular;*30*" halign="center" name="key_blue" position="*1111*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
+		<ePixmap name="red_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/red.png" position="*10*,*6*" size="*357*,*57*" zPosition="1"/>
+		<ePixmap name="green_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/green.png" position="*377*,*6*" size="*357*,*57*" zPosition="1"/>
+		<ePixmap name="yellow_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/yellow.png" position="*744*,*6*" size="*357*,*57*" zPosition="1"/>
+		<ePixmap name="blue_pixmap" alphatest="blend" scale="1" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/blue.png" position="*1111*,*6*" size="*357*,*57*" zPosition="1"/>
 		<widget name="starsbg" position="*70*,*530*" size="*240*,*41*" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/csfd_starsbar_empty.png" transparent="1" alphatest="on"/>
 		<widget name="stars" position="*70*,*530*" size="*240*,*41*" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/csfd_starsbar_filled.png" transparent="1"/>
 		<widget name="ratinglabel" position="*135*,*580*" zPosition="10" size="*90*,*45*" halign="center" font="Regular;*38*" foregroundColor="#00f0b400" transparent="1"/>
