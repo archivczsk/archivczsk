@@ -1,3 +1,14 @@
+archivCZSK 3.0.0, 01.12.2024
+    - oprava tlačidla "Preskočiť" vo video prehrávači
+    - pridané simple config API pre doplnky
+        * umožňuje doplnkom jednoducho vytvárať komplexné dialógové okná s nastaveniami
+    - vylepšené GUI pre vyhľadávanie prostredníctvom EPG
+    - rozšírenie dostupného API pre doplnky
+    - kompletne prerobený spôsob posielania príspevkov na vývoj
+        * umožňuje pridať bonusovú funkcionalitu len pre podporovateľov
+    - kompletne prerobená práca so skinom
+        * už existuje len jeden univerzálny skin pre všetky image a rozlíšenia
+
 archivCZSK 2.8.1, 13.09.2024
     - presnejšie zobrazenie chýb pri problémoch so spojením na vzdialený server
     - info o potrebe reštartu prijímača ak sa prekročí max. limit spojení
