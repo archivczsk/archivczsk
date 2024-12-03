@@ -149,8 +149,9 @@ class ArchivCZSK():
 	def load_skin():
 		try:
 			skin_path = os.path.join(settings.SKIN_PATH, config.plugins.archivCZSK.skin.value + ".xml")
+			from .engine.license import license
 
-			if not os.path.isfile(skin_path):
+			if (not license.check_level(license.LEVEL_DEVELOPER)) or (not os.path.isfile(skin_path)):
 				skin_path = os.path.join(settings.SKIN_PATH, 'default.xml')
 
 			tmp_skin_path = '/tmp/archivczsk_skin.xml'
