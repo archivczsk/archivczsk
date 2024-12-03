@@ -82,7 +82,7 @@ class ArchivCZSKLicense(object):
 			'archivczsk_version': version,
 			'system_time': act_time,
 			'periodic_check': self.online_check != 0,
-			'extra_check': self.extra_online_check != 0 and self.extra_online_check < act_time
+			'extra_check': self.extra_online_check != 0 and self.extra_online_check > act_time
 		}
 		data['checksum'] = self.calc_data_checksum(data)
 
