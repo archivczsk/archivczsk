@@ -1,3 +1,6 @@
+archivCZSK 3.0.1, 03.12.2024
+    - pridaná ochrana pred načítaním neaktuálneho skinu
+
 archivCZSK 3.0.0, 01.12.2024
     - oprava tlačidla "Preskočiť" vo video prehrávači
     - pridané simple config API pre doplnky
