@@ -1,3 +1,12 @@
+archivCZSK 3.0.2, 05.12.2024
+    - zmena spôsobu práce s doplnkom označeným ako "nefunkčný"
+    - opravy a vylepšenia skinu:
+        * možnosť nastavenia vlastnej farby pozadia
+        * možnosť použiť farbu pozadia a transparentnosť podľa nastavení systému
+        * možnosť zmeny veľkosti písma v zoznamoch
+        * načítanie zmien v skine vo VTi a DMM bez reštartu GUI
+        * opravy skinu pre DMM
+
 archivCZSK 3.0.1, 03.12.2024
     - pridaná ochrana pred načítaním neaktuálneho skinu
 
