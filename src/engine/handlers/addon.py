@@ -128,18 +128,10 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 			self.open_item(self.item, params=sc_item.params)
 
 	def _handle_broken_addon(self, addon):
-		def disable_addon(cb):
-			if cb:
-				addon.set_enabled(False)
-				self.content_screen.workingStarted()
-				self.content_screen.refreshList()
-				self.content_screen.workingFinished()
-
 		reason = py2_encode_utf8( addon.get_info('broken') )
 		message = _("Addon is broken") + '\n'
-		message += _("Reason") + ' : ' + reason +'\n\n'
-		message += _("Do you want to disable this addon?")
-		self.session.openWithCallback(disable_addon,MessageBox, message, type=MessageBox.TYPE_YESNO)
+		message += _("Reason") + ':\n' + reason
+		self.session.open(MessageBox, message, type=MessageBox.TYPE_INFO)
 
 	def _handle_deprecated_addon(self, addon):
 		def disable_addon(cb):
