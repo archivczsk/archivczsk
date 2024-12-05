@@ -16,7 +16,7 @@ from .engine.tools.task import Task
 from .gui.content import ArchivCZSKContentScreen
 from .gui.info import openPartialChangelog
 from .engine.parental import parental_pin
-from .compat import DMM_IMAGE, eConnectCallback
+from .compat import DMM_IMAGE, VTI_IMAGE, eConnectCallback
 from .engine.updater import ArchivUpdater
 from .engine.bgservice import BGServiceTask
 from .engine.usage import usage_stats
@@ -96,6 +96,20 @@ class ArchivCZSK():
 			# Use re.sub to replace all occurrences of the pattern
 			return re.sub(pattern, multiply_and_replace, skin_data)
 
+		def apply_font_ratio(skin_data):
+			f = r * (float(config.plugins.archivCZSK.font_size.value) / 100)
+			# Define the pattern to search for *fnumber*
+			pattern = r'\*f(\d+)\*'
+
+			# Function to replace the matched pattern
+			def multiply_and_replace(match):
+				number = int(match.group(1))
+				result = int(round(number * f))
+				return str(result)
+
+			# Use re.sub to replace all occurrences of the pattern
+			return re.sub(pattern, multiply_and_replace, skin_data)
+
 		def fix_dmm_params(match):
 			if DMM_IMAGE:
 				return ''
@@ -136,10 +150,28 @@ class ArchivCZSK():
 		with open(skin_path_orig, 'r') as f:
 			skin_data = re.sub(r'!(font=.+?)!', fix_dmm_params, f.read())
 			skin_data = apply_skin_ratio(skin_data)
+			skin_data = apply_font_ratio(skin_data)
 			skin_data = btscale_skin_fix(skin_data)
 
-			# apply transparency setting - we assume, that default skin transparency is 0a000000 and this value isn't used for anything else
-			skin_data = skin_data.replace('"#0a000000"', '"#{:02x}000000"'.format(int(config.plugins.archivCZSK.skin_transparency.value)))
+			if not DMM_IMAGE:
+				# values of scale flags are incompatible between images
+				skin_data = skin_data.replace('scale="stretch"', 'scale="scale"')
+
+			if config.plugins.archivCZSK.skin_from_system.value:
+				log.debug("Setting skin background color to system default")
+				skin_data = skin_data.replace('backgroundColor="#0a000000"', '')
+			else:
+				bgc = '{:02x}{:02x}{:02x}'.format(*config.plugins.archivCZSK.skin_background_color.value)
+				if len(bgc) != 6:
+					bgc = '000000'
+				log.debug("Setting skin background color to: %s" % bgc)
+				bgt = '{:02x}'.format(int(float(255 * int(config.plugins.archivCZSK.skin_transparency.value)) / 100.0 ))
+				if len(bgt) != 2:
+					bgt = '00'
+				log.debug("Setting skin background transparency to: %s" % bgt)
+
+				# apply transparency setting - we assume, that default skin transparency is 0a000000 and this value isn't used for anything else
+				skin_data = skin_data.replace('"#0a000000"', '"#{}{}"'.format(bgt, bgc))
 
 		with open(skin_path_new, 'w') as f:
 			f.write(skin_data)
@@ -160,7 +192,29 @@ class ArchivCZSK():
 			ArchivCZSK.process_skin(skin_path, tmp_skin_path)
 
 			log.info("Loading skin %s" % skin_path)
+			if VTI_IMAGE or DMM_IMAGE:
+				try:
+					# workaround for VTi and DMM - allows updating skin without gui restart
+					from skin import dom_skins
+
+					for i, s in enumerate(dom_skins):
+						if s[0] == '/tmp/' and s[1].find('screen').attrib.get('name','').startswith('ArchivCZSK'):
+							log.debug("Removing ArchivCZSK skin from dom_skins")
+							dom_skins.pop(i)
+							break
+
+					if VTI_IMAGE:
+						# for VTi also this is needed ...
+						from skin import dom_screens
+						for s in list(dom_screens.keys()):
+							if s.startswith('ArchivCZSK'):
+								log.debug("Removing screen %s from dom cache" % s)
+								del dom_screens[s]
+				except:
+					log.error(traceback.format_exc())
+
 			loadSkin(tmp_skin_path)
+
 			os.remove(tmp_skin_path)
 		except:
 			log.logError("Load plugin skin failed.\n%s" % traceback.format_exc())

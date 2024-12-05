@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-11-28 19:46+0100\n"
-"PO-Revision-Date: 2024-11-28 19:46+0100\n"
+"POT-Creation-Date: 2024-12-05 10:22+0100\n"
+"PO-Revision-Date: 2024-12-05 10:24+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -255,7 +255,7 @@ msgstr "Podpořte nás"
 msgid "Changelog"
 msgstr "Změny"
 
-#: src/gui/content.py:359 src/gui/content.py:538 src/gui/menu.py:218
+#: src/gui/content.py:359 src/gui/content.py:538 src/gui/menu.py:221
 #: src/engine/handlers/addon.py:194 src/engine/handlers/addon.py:308
 msgid "Settings"
 msgstr "Nastavení"
@@ -422,104 +422,104 @@ msgstr "Informace o přehrávání"
 msgid "Video url doesnt exist"
 msgstr "Adresa videa neexistuje"
 
-#: src/gui/icon.py:43
+#: src/gui/icon.py:44
 #, python-brace-format
 msgid "Send donation {price} from Czech republic"
 msgstr "Odeslat příspěvek {price} z České republiky"
 
-#: src/gui/icon.py:44
+#: src/gui/icon.py:45
 #, python-brace-format
 msgid "Send donation {price} from Slovakia"
 msgstr "Odeslat příspěvek {price} ze Slovenska"
 
-#: src/gui/icon.py:45
+#: src/gui/icon.py:46
 #, python-brace-format
 msgid "Send donation {price} from EU"
 msgstr "Odeslat příspěvek {price} z EU"
 
-#: src/gui/icon.py:48
+#: src/gui/icon.py:49
 msgid "Donation for ArchivCZSK project"
 msgstr "Příspěvek pro projekt ArchivCZSK"
 
-#: src/gui/icon.py:50
+#: src/gui/icon.py:51
 msgid "Why donate?"
 msgstr "Proč přispět?"
 
-#: src/gui/icon.py:51
+#: src/gui/icon.py:52
 msgid "Development, maintenance and addons functionality improvement is very time consuming process. Your donation allows project continuation."
 msgstr "Vývoj, údržba a zlepšování funkčnosti jednotlivých doplňků je časově náročný proces. Váš příspěvek umožní pokračování projektu."
 
-#: src/gui/icon.py:53
+#: src/gui/icon.py:54
 msgid "How much to donate?"
 msgstr "Kolik přispět?"
 
-#: src/gui/icon.py:54
+#: src/gui/icon.py:55
 #, python-brace-format
 msgid "For the symbolic sum {sum_czk}/{sum_eur} a month you will get \"Supporter\" status for your receiver."
 msgstr "Za symbolickou částku {sum_czk}/{sum_eur} měsíčně získáte pro svůj přijímač status \"Podporovatel\"."
 
-#: src/gui/icon.py:56
+#: src/gui/icon.py:57
 msgid "Will I get any bonus?"
 msgstr "Dostanu nějaký bonus?"
 
-#: src/gui/icon.py:57
+#: src/gui/icon.py:58
 msgid "Basic functionality is available for free. Supporters will get bonus functionality and addons, which will gradually expand."
 msgstr "Základní funkcionalita je k dispozici zdarma. Podporovatelé získají bonusové funkce a doplňky, které se budou postupně rozšiřovat."
 
-#: src/gui/icon.py:59
+#: src/gui/icon.py:60
 msgid "I am interested. How to donate?"
 msgstr "Mám zájem. Jak přispět?"
 
-#: src/gui/icon.py:60
+#: src/gui/icon.py:61
 msgid "Using the menu bellow, display unique payment QR code for your receiver. \"Supporter\" status will be automatically activated after crediting the payment to the bank account."
 msgstr "Pomocí menu níže zobrazíte unikátni QR kód pro váš přijímač. Po připsání platby vám bude automaticky aktivován status \"Podporovatel\"."
 
-#: src/gui/icon.py:62
+#: src/gui/icon.py:63
 msgid "Select how do you want to send donation"
 msgstr "Vyberte jak chcete poslat příspěvek"
 
-#: src/gui/icon.py:64
+#: src/gui/icon.py:65
 msgid "\"Supporter\" status:"
 msgstr "Stav \"Podporovatel\":"
 
-#: src/gui/icon.py:65
+#: src/gui/icon.py:66
 msgid "Active"
 msgstr "Aktivní"
 
-#: src/gui/icon.py:66
+#: src/gui/icon.py:67
 #, python-brace-format
 msgid "(Bonuses activated until {date})"
 msgstr "(Bonusy aktivovány do {date})"
 
-#: src/gui/icon.py:67
+#: src/gui/icon.py:68
 msgid "Inactive"
 msgstr "Neaktivní"
 
-#: src/gui/icon.py:92 src/gui/icon.py:94
+#: src/gui/icon.py:93 src/gui/icon.py:95
 msgid "ArchivCZSK Donate"
 msgstr "Přispět ArchivCZSK"
 
-#: src/gui/icon.py:138
+#: src/gui/icon.py:139
 msgid "It is compatible with slovak bank applications."
 msgstr "Je kompatibilní se slovenskými bankovými aplikacemi."
 
-#: src/gui/icon.py:140
+#: src/gui/icon.py:141
 msgid "It is compatible with czech bank applications."
 msgstr "Je kompatibilní s českými bankovými aplikacemi."
 
-#: src/gui/icon.py:142
+#: src/gui/icon.py:143
 msgid "It is compatible bank applications supporting EPC/GiroCode format."
 msgstr "Je kompatibilní s bankovými aplikacemi, které podporuji EPC/GiroCode format."
 
-#: src/gui/icon.py:144
+#: src/gui/icon.py:145
 msgid "Scan this QR code using your bank application on your mobile phone."
 msgstr "Naskenujte tento QR kód pomocí vaši bankovní aplikace ve vašem mobilním telefonu."
 
-#: src/gui/icon.py:146
+#: src/gui/icon.py:147
 msgid "Supporter status will be automatically activated after receiving payment. If you send instant payment, it will be activated within an hour. If you send standard transfer, it will be activated on next business day."
 msgstr "Stav podporovatel bude automaticky aktivován po připsáni platby. Když odešlete platbu jako okamžitou, bude aktivován do jedné hodiny. Pokud odešlete standardní platbu, bude aktivován v nasledujíci pracovní den."
 
-#: src/gui/icon.py:171
+#: src/gui/icon.py:178
 msgid "Payment information"
 msgstr "Informace o platbě"
 
@@ -527,7 +527,7 @@ msgstr "Informace o platbě"
 msgid "Type text of picture"
 msgstr "Opište text obrázku"
 
-#: src/gui/context.py:190
+#: src/gui/context.py:194
 msgid "Select category"
 msgstr "Vyberte kategorii"
 
@@ -567,31 +567,31 @@ msgstr "Uložit"
 msgid "Next"
 msgstr "Další strana"
 
-#: src/gui/menu.py:155
+#: src/gui/menu.py:158
 msgid "Main"
 msgstr "Obecné"
 
-#: src/gui/menu.py:156
+#: src/gui/menu.py:159
 msgid "Player"
 msgstr "Přehrávač"
 
-#: src/gui/menu.py:157
+#: src/gui/menu.py:160
 msgid "Protection"
 msgstr "Ochrana"
 
-#: src/gui/menu.py:158
+#: src/gui/menu.py:161
 msgid "Path"
 msgstr "Cesta"
 
-#: src/gui/menu.py:159
+#: src/gui/menu.py:162
 msgid "Misc"
 msgstr "Různé"
 
-#: src/gui/menu.py:176
+#: src/gui/menu.py:179
 msgid "Configuration"
 msgstr "Konfigurace"
 
-#: src/gui/menu.py:189
+#: src/gui/menu.py:192
 #, python-brace-format
 msgid "Please enter PIN code ({ramaining_tries})"
 msgstr "Prosím zadejte PIN kód ({ramaining_tries})"
@@ -800,219 +800,231 @@ msgstr "Stabilní"
 msgid "Testing"
 msgstr "Testovací"
 
-#: src/settings.py:125
+#: src/settings.py:131
 msgid "Internal"
 msgstr "Vnitřní"
 
-#: src/settings.py:125
+#: src/settings.py:131
 msgid "CSFD"
 msgstr "CSFD"
 
-#: src/settings.py:125
+#: src/settings.py:131
 msgid "CSFDLite"
 msgstr "CSFDLite"
 
-#: src/settings.py:130
+#: src/settings.py:136
+msgid "Use background color and transparency from system"
+msgstr "Použít barvu pozadí a průhlednost ze systému"
+
+#: src/settings.py:138
 msgid "Background transparency (in %)"
 msgstr "Průhlednost pozadí (v %)"
 
-#: src/settings.py:131
+#: src/settings.py:139
+msgid "Background color (RGB format)"
+msgstr "Barva pozadí (formát RGB)"
+
+#: src/settings.py:140
+msgid "Font size in lists (in %)"
+msgstr "Velikost písma v seznamech (v %)"
+
+#: src/settings.py:141
 msgid "Enable colored items"
 msgstr "Povolit vyfarbování jednotlivých položek v seznamu"
 
-#: src/settings.py:132
+#: src/settings.py:142
 msgid "Default category"
 msgstr "Předvolená kategorie"
 
-#: src/settings.py:133
+#: src/settings.py:143
 msgid "Allow archivCZSK auto update"
 msgstr "Povolit kontrolu aktualizací archivuCZSK"
 
-#: src/settings.py:134
+#: src/settings.py:144
 msgid "Allow addons auto update"
 msgstr "Povolit kontrolu aktualizací doplňků"
 
-#: src/settings.py:135
+#: src/settings.py:146
 msgid "Update timeout"
 msgstr "Časový limit kontroly aktualizace"
 
-#: src/settings.py:137
+#: src/settings.py:148
 msgid "Update repository"
 msgstr "Aktualizační repozitář"
 
-#: src/settings.py:138
+#: src/settings.py:149
 msgid "Update channel"
 msgstr "Aktualizační kanál"
 
-#: src/settings.py:139
+#: src/settings.py:150
 msgid "Show changelog after update"
 msgstr "Po aktualizaci zobrazit seznam změn"
 
-#: src/settings.py:140
+#: src/settings.py:151
 msgid "Check addons integrity"
 msgstr "Kontrolovat integritu doplňků"
 
-#: src/settings.py:142
+#: src/settings.py:153
 msgid "Show movie poster"
 msgstr "Zobrazit plakát filmu"
 
-#: src/settings.py:143
+#: src/settings.py:155
 msgid "Poster maximum processing size (in kB)"
 msgstr "Maximální velikost plakátu pro zpracování (v kB)"
 
-#: src/settings.py:144
+#: src/settings.py:156
 msgid "Max posters on HDD"
 msgstr "Max počet plakátů na disku"
 
-#: src/settings.py:146
+#: src/settings.py:158
 msgid "Add to extensions menu"
 msgstr "Přidat do menu rozšíření"
 
-#: src/settings.py:147
+#: src/settings.py:159
 msgid "Add to main menu"
 msgstr "Přidat do hlavního menu"
 
-#: src/settings.py:148
+#: src/settings.py:160
 msgid "Add search option in epg menu"
 msgstr "Přidat vyhledávání v archivu na dlouhé stisknutí EPG/INFO"
 
-#: src/settings.py:149
+#: src/settings.py:161
 msgid "Add archive enter shortcut to extensions menu"
 msgstr "Přidat zkratku pro vstup do archívu do menu rozšíření"
 
-#: src/settings.py:151
+#: src/settings.py:163
 msgid "CSFD plugin"
 msgstr "CSFD plugin"
 
-#: src/settings.py:162
+#: src/settings.py:174
 msgid "standard player"
 msgstr "standardní přehrávač"
 
-#: src/settings.py:163
+#: src/settings.py:175
 msgid "custom player (subtitle support)"
 msgstr "upravený přehrávač (podpora titulků)"
 
-#: src/settings.py:182
+#: src/settings.py:194
 msgid "Show more info about player"
 msgstr "Informace o video přehrávači"
 
-#: src/settings.py:183
+#: src/settings.py:195
 msgid "RTMP Timeout"
 msgstr "Časový limit RTMP"
 
-#: src/settings.py:184
+#: src/settings.py:196
 msgid "RTMP Buffer"
 msgstr "RTMP zásobník"
 
-#: src/settings.py:185
+#: src/settings.py:197
 msgid "Confirm exit when closing player"
 msgstr "Potvrdit ukončení při opouštění přehrávače"
 
-#: src/settings.py:186
+#: src/settings.py:198
 msgid "Allow automatically changing audio track"
 msgstr "Povolit automatickou změnu zvukové stopy"
 
-#: src/settings.py:209
+#: src/settings.py:221
 msgid "Change parental control settings"
 msgstr "Změnit nastavení rodičovské kontroly"
 
-#: src/settings.py:211
+#: src/settings.py:223
 msgid "Your PIN code is set to default 0000. Please change it to your own value."
 msgstr "Váš PIN kód je nastaven na předvolený 0000. Prosím změňte ho na vaši vlastní hodnotu."
 
-#: src/settings.py:213
+#: src/settings.py:225
 msgid "Enable parental control"
 msgstr "Povolit rodičovskou kontrolu"
 
-#: src/settings.py:214
+#: src/settings.py:226
 msgid "Change parental control PIN"
 msgstr "Změnit PIN pro rodičovskou kontrolu"
 
-#: src/settings.py:215
+#: src/settings.py:227
 msgid "Show adult content"
 msgstr "Zobrazovat obsah pro dospělé"
 
-#: src/settings.py:216
+#: src/settings.py:228
 msgid "Show posters for adult content"
 msgstr "U obsahu pro dospělé zobrazovat postery"
 
-#: src/settings.py:236
+#: src/settings.py:248
 msgid "Data path"
 msgstr "Adresář pro data"
 
-#: src/settings.py:237
+#: src/settings.py:249
 msgid "Temp path"
 msgstr "Dočasný adresář"
 
-#: src/settings.py:238
+#: src/settings.py:250
 msgid "Downloads path"
 msgstr "Stahovat do"
 
-#: src/settings.py:239
+#: src/settings.py:251
 msgid "Posters path"
 msgstr "Plakáty stahovat do"
 
-#: src/settings.py:241
+#: src/settings.py:253
 msgid "Log path"
 msgstr "Logovat do"
 
-#: src/settings.py:258
+#: src/settings.py:270
 msgid "info"
 msgstr "info"
 
-#: src/settings.py:258
+#: src/settings.py:270
 msgid "debug"
 msgstr "debug"
 
-#: src/settings.py:277
+#: src/settings.py:289
 msgid "Debug mode"
 msgstr "Režim ladění"
 
-#: src/settings.py:278
+#: src/settings.py:290
 msgid "Allow sending bug reports on addon error"
 msgstr "Povolit posílání chybových hlášení při chybě doplňku"
 
-#: src/settings.py:279
+#: src/settings.py:291
 msgid "Allow preloading of addons on start"
 msgstr "Povolit přednačtení doplňků při startu"
 
-#: src/settings.py:280
+#: src/settings.py:292
 msgid "Confirm exit when closing plugin"
 msgstr "Potvrdit ukončení při opouštění modulu"
 
-#: src/settings.py:281
+#: src/settings.py:293
 msgid "Show broken addons"
 msgstr "Zobrazit nefunkční doplňky"
 
-#: src/settings.py:282
+#: src/settings.py:294
 msgid "Show not supported addons"
 msgstr "Zobrazit nepodporované doplňky"
 
-#: src/settings.py:283
+#: src/settings.py:295
 msgid "On update remove broken and not supported addons"
 msgstr "Při aktualizaci odstranit nefunkční a nepodporované doplňky"
 
-#: src/settings.py:284
+#: src/settings.py:296
 msgid "Show video source selection"
 msgstr "Zobrazit výběr zdroje videa"
 
-#: src/settings.py:285
+#: src/settings.py:297
 msgid "Convert captcha images to 8bit"
 msgstr "Konvertovat captcha obrázky na 8bitové"
 
-#: src/settings.py:286
+#: src/settings.py:298
 msgid "Drop caches on exit"
 msgstr "Vymazat mezipamět po ukončení pluginu"
 
-#: src/settings.py:287
+#: src/settings.py:299
 msgid "Internal HTTP server listen port"
 msgstr "Port interního HTTP serveru"
 
-#: src/settings.py:288
+#: src/settings.py:300
 msgid "Run HTTP only for internal addons usage"
 msgstr "Spustit HTTP server jen pro interní použití doplňkami"
 
-#: src/settings.py:292
+#: src/settings.py:304
 msgid "Allow sending anonymous usage statistics"
 msgstr "Povolit posílání anonymních statistik používání pluginu"
 
@@ -1558,43 +1570,43 @@ msgstr "Obnovuji přehrávání"
 msgid "Resume playback from last play position?"
 msgstr "Obnovit přehrávání od poslední pozice?"
 
-#: src/archivczsk.py:271
+#: src/archivczsk.py:351
 msgid "Checking for addons updates"
 msgstr "Kontrola aktualizací doplňků"
 
-#: src/archivczsk.py:328
+#: src/archivczsk.py:408
 msgid "Do you want to update"
 msgstr "Chcete aktualizovat"
 
-#: src/archivczsk.py:328
+#: src/archivczsk.py:408
 msgid "addons"
 msgstr "doplňky"
 
-#: src/archivczsk.py:339
+#: src/archivczsk.py:419
 msgid "Following addons were updated"
 msgstr "Následující doplňky byly aktualizovány"
 
-#: src/archivczsk.py:373
+#: src/archivczsk.py:453
 msgid "You need to restart E2. Do you want to restart it now?"
 msgstr "Změny se projeví po restartu E2. Chcete nyní restartovat E2?"
 
-#: src/archivczsk.py:400
+#: src/archivczsk.py:480
 msgid "By system check there was no system plugin with name ServiceApp detected. This means, that your system only supports video player integrated in enigma2. Some addons doesn't work properly with internal player or don't work at all. If you will have problem with playing some videos, try to install ServiceApp system plugin from feed of your distribution. Then you can change in addon settings used video player to gstplayer or exteplayer3 that can handle some video formats better."
 msgstr "Při kontrole systému nebyl detekován systémový plugin s názvem ServiceApp. To znamená, že váš systém podporuje pouze video přehrávač integrovaný v enigma2. Některé doplňky nefungují správně s interním přehrávačem nebo nefungují vůbec. Pokud budete mít problém s přehráváním některých videí, zkuste si nainstalovat systémový plugin ServiceApp z feedu vaší distribuce. Poté můžete v nastavení doplňku změnit použitý video přehrávač na gstplayer nebo exteplayer3, který si lépe poradí s některými formáty videa."
 
-#: src/archivczsk.py:402
+#: src/archivczsk.py:482
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3 and gstplayer. These video players are needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer and exteplayer3 from feed of your distribution to be able use all available addons."
 msgstr "Při kontrole systému byl zjištěn systémový plugin s názvem ServiceApp, ale chybí vám přehrávače exteplayer3 a gstplayer. Tyto videopřehrávače jsou potřeba ke zpracování některých video formátů, které interní videopřehrávač zabudovaný do enigma2 zpracovat nedokáže. Doporučuje se nainstalovat gstplayer a exteplayer3 z feedu vaší distribuce, abyste mohli používat všechny dostupné doplňky."
 
-#: src/archivczsk.py:404
+#: src/archivczsk.py:484
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install exteplayer3 from feed of your distribution to be able use all available addons."
 msgstr "Při kontrole systému byl zjištěn systémový plugin s názvem ServiceApp, ale chybí vám přehrávač exteplayer3. Tento videopřehrávač je potřeba ke zpracování některých video formátů, které interní videopřehrávač zabudovaný do enigma2 zpracovat nedokáže. Doporučuje se nainstalovat exteplayer3 z feedu vaší distribuce, abyste mohli používat všechny dostupné doplňky."
 
-#: src/archivczsk.py:406
+#: src/archivczsk.py:486
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss gstplayer. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer from feed of your distribution to be able use all available addons."
 msgstr "Při kontrole systému byl zjištěn systémový plugin s názvem ServiceApp, ale chybí vám přehrávač gstplayer. Tento videopřehrávač je potřeba ke zpracování některých video formátů, které interní videopřehrávač zabudovaný do enigma2 zpracovat nedokáže. Doporučuje se nainstalovat gstplayer z feedu vaší distribuce, abyste mohli používat všechny dostupné doplňky."
 
-#: src/archivczsk.py:414
+#: src/archivczsk.py:494
 msgid "You are using outdated image in your receiver without updated SSL certificates used for HTTPS communication. This can cause problems connecting to some sites or services. Outdated images are not supported and errors related to SSL communication will not be fixed. Update your image to latest version or switch to other image if current one doesn't get updates anymore."
 msgstr "Ve svém přijímači používáte zastaralé image bez aktualizovaných SSL certifikátů používaných pro HTTPS komunikaci. Může to způsobit problémy s připojením k některým stránkám nebo službám. Zastaralé image nejsou podporované a chyby souvisící s SSL komunikaci nebudou opravené. Aktualizujte své image na nejnovější verzi nebo přejděte na jiné, pokud už vaše aktuální nedostává další aktualizace."
 

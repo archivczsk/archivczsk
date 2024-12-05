@@ -3,7 +3,7 @@ import traceback
 from Components.Language import language
 from Components.config import config, ConfigSubsection, ConfigSelection, \
 	ConfigDirectory, ConfigYesNo, ConfigText, ConfigNumber, ConfigNothing, getConfigListEntry, \
-	NoSave, ConfigInteger
+	NoSave, ConfigInteger, ConfigSequence
 from Tools.Directories import SCOPE_PLUGINS, resolveFilename
 
 from . import log, UpdateInfo, _
@@ -108,8 +108,14 @@ def skin_changed(configElement):
 	ArchivCZSK.force_skin_reload = True
 
 config.plugins.archivCZSK.skin = ConfigText(default="default")
+config.plugins.archivCZSK.skin_from_system = ConfigYesNo(default=False)
+config.plugins.archivCZSK.skin_from_system.addNotifier(skin_changed, initial_call=False)
 config.plugins.archivCZSK.skin_transparency = ConfigSelection(default="5", choices=[(str(i), str(i),) for i in range(0, 100)])
 config.plugins.archivCZSK.skin_transparency.addNotifier(skin_changed, initial_call=False)
+config.plugins.archivCZSK.skin_background_color=ConfigSequence(seperator=" ", limits=[(0,255),(0,255),(0,255)], default=[0,0,0])
+config.plugins.archivCZSK.skin_background_color.addNotifier(skin_changed, initial_call=False)
+config.plugins.archivCZSK.font_size = ConfigSelection(default="100", choices=[(str(i), str(i),) for i in range(50, 151)])
+config.plugins.archivCZSK.font_size.addNotifier(skin_changed, initial_call=False)
 config.plugins.archivCZSK.colored_items = ConfigYesNo(default=False if colorFixNeeded == None else True)
 config.plugins.archivCZSK.downloadPoster = ConfigYesNo(default=True)
 choicelist = []
@@ -127,21 +133,27 @@ config.plugins.archivCZSK.csfdMode = ConfigSelection(default='1', choices=choice
 
 def get_main_settings():
 	list = []
-	list.append(getConfigListEntry(_("Background transparency (in %)"), config.plugins.archivCZSK.skin_transparency))
+	list.append(getConfigListEntry(_("Use background color and transparency from system"), config.plugins.archivCZSK.skin_from_system))
+	if not config.plugins.archivCZSK.skin_from_system.value:
+		list.append(getConfigListEntry(_("Background transparency (in %)"), config.plugins.archivCZSK.skin_transparency))
+		list.append(getConfigListEntry(_("Background color (RGB format)"), config.plugins.archivCZSK.skin_background_color))
+	list.append(getConfigListEntry(_("Font size in lists (in %)"), config.plugins.archivCZSK.font_size))
 	list.append(getConfigListEntry(_("Enable colored items"), config.plugins.archivCZSK.colored_items))
 	list.append(getConfigListEntry(_("Default category"), config.plugins.archivCZSK.defaultCategory))
 	list.append(getConfigListEntry(_("Allow archivCZSK auto update"), config.plugins.archivCZSK.archivAutoUpdate))
 	list.append(getConfigListEntry(_("Allow addons auto update"), config.plugins.archivCZSK.autoUpdate))
-	list.append(getConfigListEntry(_("Update timeout"), config.plugins.archivCZSK.updateTimeout))
-	if config.plugins.archivCZSK.allow_custom_update.value:
-		list.append(getConfigListEntry(_("Update repository"), config.plugins.archivCZSK.update_repository))
-	list.append(getConfigListEntry(_("Update channel"), config.plugins.archivCZSK.update_branch))
+	if config.plugins.archivCZSK.archivAutoUpdate.value or config.plugins.archivCZSK.autoUpdate.value:
+		list.append(getConfigListEntry(_("Update timeout"), config.plugins.archivCZSK.updateTimeout))
+		if config.plugins.archivCZSK.allow_custom_update.value:
+			list.append(getConfigListEntry(_("Update repository"), config.plugins.archivCZSK.update_repository))
+		list.append(getConfigListEntry(_("Update channel"), config.plugins.archivCZSK.update_branch))
 	list.append(getConfigListEntry(_("Show changelog after update"), config.plugins.archivCZSK.changelogAfterUpdate))
 	list.append(getConfigListEntry(_("Check addons integrity"), config.plugins.archivCZSK.checkAddonsIntegrity))
 	list.append(MENU_SEPARATOR)
 	list.append(getConfigListEntry(_("Show movie poster"), config.plugins.archivCZSK.downloadPoster))
-	list.append(getConfigListEntry(_("Poster maximum processing size (in kB)"), config.plugins.archivCZSK.posterSizeMax))
-	list.append(getConfigListEntry(_("Max posters on HDD"), config.plugins.archivCZSK.posterImageMax))
+	if config.plugins.archivCZSK.downloadPoster.value:
+		list.append(getConfigListEntry(_("Poster maximum processing size (in kB)"), config.plugins.archivCZSK.posterSizeMax))
+		list.append(getConfigListEntry(_("Max posters on HDD"), config.plugins.archivCZSK.posterImageMax))
 	list.append(MENU_SEPARATOR)
 	list.append(getConfigListEntry(_("Add to extensions menu"), config.plugins.archivCZSK.extensions_menu))
 	list.append(getConfigListEntry(_("Add to main menu"), config.plugins.archivCZSK.main_menu))

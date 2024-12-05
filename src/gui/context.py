@@ -12,6 +12,7 @@ from Components.Label import Label
 from Components.MenuList import MenuList
 from Components.MultiContent import MultiContentEntryText, MultiContentEntryPixmapAlphaTest
 from Components.Pixmap import Pixmap
+from Components.config import config
 from Tools.Directories import fileExists
 from Tools.LoadPixmap import LoadPixmap
 
@@ -33,6 +34,9 @@ except:
 def resize(t):
 	return int(t*RATIO)
 
+def fresize(t):
+	return int(t * RATIO * (float(config.plugins.archivCZSK.font_size.value) / 100))
+
 
 from .base import  BaseArchivCZSKScreen
 def showContextMenu(session, name, img, items, globalItems, cb):
@@ -42,17 +46,17 @@ def showContextMenu(session, name, img, items, globalItems, cb):
 class ContextMenuList(MenuList):
 	def __init__(self):
 		MenuList.__init__(self, [], False, eListboxPythonMultiContent)
-		self.l.setItemHeight(resize(24))
-		self.l.setFont(0, gFont("Regular", resize(19)))
+		self.l.setItemHeight(fresize(24))
+		self.l.setFont(0, gFont("Regular", fresize(19)))
 
 
 def ContextEntry(name, idx, png=''):
 	res = [(name, idx)]
 	if fileExists(png):
-		res.append(MultiContentEntryPixmapAlphaTest(pos=(resize(5), 0), size=(resize(24), resize(24)), png=loadPNG(png)))
-		res.append(MultiContentEntryText(pos=(resize(40), 0), size=(resize(455), resize(24)), font=0, flags=RT_VALIGN_CENTER, text=name))
+		res.append(MultiContentEntryPixmapAlphaTest(pos=(resize(5), 0), size=(resize(24), fresize(24)), png=loadPNG(png)))
+		res.append(MultiContentEntryText(pos=(resize(40), 0), size=(resize(455), fresize(24)), font=0, flags=RT_VALIGN_CENTER, text=name))
 	else:
-		res.append(MultiContentEntryText(pos=(resize(5), 0), size=(resize(490), resize(24)), font=0, flags=RT_VALIGN_CENTER, text=name))
+		res.append(MultiContentEntryText(pos=(resize(5), 0), size=(resize(490), fresize(24)), font=0, flags=RT_VALIGN_CENTER, text=name))
 	return res
 
 def ContextEntryDisabled(name, idx, png='', separator=False):
@@ -60,10 +64,10 @@ def ContextEntryDisabled(name, idx, png='', separator=False):
 	if separator:
 		res.append(MultiContentEntryText(pos=(resize(5), resize(12)), size=(resize(490), resize(1)), font=0, flags=RT_VALIGN_CENTER, text=name, backcolor=0xffffff))
 	elif fileExists(png):
-		res.append(MultiContentEntryPixmapAlphaTest(pos=(resize(5), 0), size=(resize(24), resize(24)), png=loadPNG(png)))
-		res.append(MultiContentEntryText(pos=(resize(40), 0), size=(resize(455), resize(24)), font=0, flags=RT_VALIGN_CENTER, text=name, color=0x696969))
+		res.append(MultiContentEntryPixmapAlphaTest(pos=(resize(5), 0), size=(resize(24), fresize(24)), png=loadPNG(png)))
+		res.append(MultiContentEntryText(pos=(resize(40), 0), size=(resize(455), fresize(24)), font=0, flags=RT_VALIGN_CENTER, text=name, color=0x696969))
 	else:
-		res.append(MultiContentEntryText(pos=(resize(5), 0), size=(resize(490), resize(24)), font=0, flags=RT_VALIGN_CENTER, text=name, color=0x696969))
+		res.append(MultiContentEntryText(pos=(resize(5), 0), size=(resize(490), fresize(24)), font=0, flags=RT_VALIGN_CENTER, text=name, color=0x696969))
 	return res
 
 
