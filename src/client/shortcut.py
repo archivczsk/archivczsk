@@ -12,7 +12,7 @@ from ..engine.usage import usage_stats
 from ..py3compat import *
 
 
-def run_shortcut(session, addon, shortcut_name, params):
+def run_shortcut(session, addon, shortcut_name, params, autorun=False):
 	"""
 	Runs shortcut with shortcut_name for addon
 	@param : session - active session
@@ -24,7 +24,7 @@ def run_shortcut(session, addon, shortcut_name, params):
 	try:
 		archivCZSKShortcut = ArchivCZSKShortcut.getInstance(session, searchClose)
 		if archivCZSKShortcut is not None:
-			archivCZSKShortcut.run_shortcut(addon, shortcut_name, params)
+			archivCZSKShortcut.run_shortcut(addon, shortcut_name, params, autorun)
 	except:
 		log.logError("Shortcut run failed.\n%s" % traceback.format_exc())
 		showInfoMessage(session, _("Run addon fatal error."))
@@ -73,6 +73,7 @@ class ArchivCZSKShortcut():
 		return ArchivCZSKShortcut.instance
 
 	def __init__(self, session, cb=None):
+		self.autorun = False
 		self.session = session
 		self.cb = cb
 		self.archivCZSK, self.contentScreen, self.task = getArchivCZSK()
@@ -95,7 +96,7 @@ class ArchivCZSKShortcut():
 	def _successSearch(self, content):
 		(searchItems, command, args) = content
 		if searchItems:
-			self.session.openWithCallback(self._contentScreenCB, self.contentScreen, self.addon, searchItems)
+			self.session.openWithCallback(self._contentScreenCB, self.contentScreen, self.addon, searchItems, self.autorun)
 		else:
 			self.addon.provider.stop()
 			self._run_shortcut_internal()
@@ -130,7 +131,7 @@ class ArchivCZSKShortcut():
 				self.cb()
 
 
-	def run_shortcut(self, addon, shortcut_name, params):
+	def run_shortcut(self, addon, shortcut_name, params, autorun=False):
 		if self.searching:
 			showInfoMessage(self.session, _("You cannot run ArchivCZSK again because it is already running"))
 			return
@@ -145,6 +146,7 @@ class ArchivCZSKShortcut():
 		self.searching = True
 		self.shortcut_name = shortcut_name
 		self.params = params
+		self.autorun = autorun
 		self._run_shortcut_internal()
 
 

@@ -507,8 +507,9 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 	INFO_TIP = (KEY_INFO_IMG, _("show additional info"))
 	CONTEXT_TIP = (KEY_MENU_IMG, _("show menu of current item"))
 
-	def __init__(self, session, addon, lst_items):
+	def __init__(self, session, addon, lst_items, autorun=False):
 		self.addon = addon
+		self.autorun = 1 if autorun else 0
 		contentHandler = VideoAddonContentHandler(session, self, addon.provider)
 		BaseContentScreen.__init__(self, session, contentHandler, lst_items)
 
@@ -564,6 +565,16 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 			}, -2)
 		#self.onUpdateGUI.append(self.updateFullTitle)
 		self.onLayoutFinish.append(self.setWindowTitle)
+		self.onShow.append(self.handleAutorun)
+
+	def handleAutorun(self):
+		log.debug("Handling autorun: %d / %d" % (self.autorun, len(self.lst_items)) )
+		if self.autorun == 1 and len(self.lst_items) == 1:
+			self.autorun = 2
+			self.ok()
+		elif self.autorun == 2:
+			self.contentHandler.exit_item()
+#			self.cancel()
 
 	def __onClose(self):
 		self.updateGUITimer.stop()
