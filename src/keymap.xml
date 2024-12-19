@@ -65,4 +65,8 @@
 		<key id="KEY_TEXT" mapto="subtitles" flags="m" />
 	</map>
 
+	<map context="ArchivCZSKArchivePlayActions">
+		<key id="KEY_PLAY" mapto="play" flags="m" />
+		<key id="KEY_PLAYPAUSE" mapto="play" flags="m" />
+	</map>
 </keymap>

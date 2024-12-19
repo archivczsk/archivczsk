@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-05 10:22+0100\n"
-"PO-Revision-Date: 2024-12-05 10:23+0100\n"
+"POT-Creation-Date: 2024-12-23 09:58+0100\n"
+"PO-Revision-Date: 2024-12-23 10:00+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: sk\n"
@@ -160,7 +160,7 @@ msgid "Play"
 msgstr "Prehrať"
 
 #: src/gui/download.py:291 src/gui/download.py:403
-#: src/engine/handlers/category.py:44 src/engine/handlers/addon.py:315
+#: src/engine/handlers/category.py:44 src/engine/handlers/addon.py:307
 msgid "Remove"
 msgstr "Zmazať"
 
@@ -173,7 +173,7 @@ msgid "Do you want to cancel"
 msgstr "Chcete prerušiť"
 
 #: src/gui/download.py:341 src/gui/download.py:433
-#: src/engine/handlers/category.py:61 src/engine/handlers/addon.py:353
+#: src/engine/handlers/category.py:61 src/engine/handlers/addon.py:345
 msgid "Do you want to remove"
 msgstr "Chcete zmazať"
 
@@ -201,8 +201,8 @@ msgstr "Podľa velkosťi"
 msgid "Sort by state"
 msgstr "Podľa stavu"
 
-#: src/gui/download.py:407 src/gui/content.py:536
-#: src/engine/handlers/addon.py:200
+#: src/gui/download.py:407 src/gui/content.py:537
+#: src/engine/handlers/addon.py:192
 msgid "Downloads"
 msgstr "Stiahnuté súbory"
 
@@ -250,13 +250,13 @@ msgstr "Manažér doplnkov"
 msgid "Support us"
 msgstr "Podporte nás"
 
-#: src/gui/content.py:358 src/gui/content.py:535 src/gui/menu.py:42
-#: src/engine/handlers/addon.py:197 src/engine/handlers/addon.py:311
+#: src/gui/content.py:358 src/gui/content.py:536 src/gui/menu.py:42
+#: src/engine/handlers/addon.py:189 src/engine/handlers/addon.py:303
 msgid "Changelog"
 msgstr "Zmeny"
 
-#: src/gui/content.py:359 src/gui/content.py:538 src/gui/menu.py:221
-#: src/engine/handlers/addon.py:194 src/engine/handlers/addon.py:308
+#: src/gui/content.py:359 src/gui/content.py:539 src/gui/menu.py:221
+#: src/engine/handlers/addon.py:186 src/engine/handlers/addon.py:300
 msgid "Settings"
 msgstr "Nastavenia"
 
@@ -284,8 +284,8 @@ msgstr "zobrazí dodatočné informácie o vybranej položke"
 msgid "show menu of current item"
 msgstr "zobrazí možnosti vybranej položky"
 
-#: src/gui/content.py:537 src/gui/shortcuts.py:27
-#: src/engine/handlers/addon.py:204
+#: src/gui/content.py:538 src/gui/shortcuts.py:27
+#: src/engine/handlers/addon.py:196
 msgid "Shortcuts"
 msgstr "Záložky"
 
@@ -792,239 +792,251 @@ msgstr "Použite numerické klávesy pre zadanie hodnoty"
 msgid "Apply"
 msgstr "Použiť"
 
-#: src/settings.py:96
+#: src/settings.py:88
+msgid "Don't change"
+msgstr "Nemeniť"
+
+#: src/settings.py:102
 msgid "Stable"
 msgstr "Stabilný"
 
-#: src/settings.py:96
+#: src/settings.py:102
 msgid "Testing"
 msgstr "Testovací"
 
-#: src/settings.py:131
+#: src/settings.py:137
 msgid "Internal"
 msgstr "Interný"
 
-#: src/settings.py:131
+#: src/settings.py:137
 msgid "CSFD"
 msgstr "CSFD"
 
-#: src/settings.py:131
+#: src/settings.py:137
 msgid "CSFDLite"
 msgstr "CSFDLite"
 
-#: src/settings.py:136
+#: src/settings.py:142
 msgid "Use background color and transparency from system"
 msgstr "Použiť farbu pozadia a transparentnosť zo systému"
 
-#: src/settings.py:138
+#: src/settings.py:144
 msgid "Background transparency (in %)"
 msgstr "Priehľadnosť pozadia (v %)"
 
-#: src/settings.py:139
+#: src/settings.py:145
 msgid "Background color (RGB format)"
 msgstr "Farba pozadia (formát RGB)"
 
-#: src/settings.py:140
+#: src/settings.py:146
 msgid "Font size in lists (in %)"
 msgstr "Veľkosť písma v zoznamoch (v %)"
 
-#: src/settings.py:141
+#: src/settings.py:147
 msgid "Enable colored items"
 msgstr "Povoliť vyfarbovanie jednotlivých položiek v zozname"
 
-#: src/settings.py:142
+#: src/settings.py:148
 msgid "Default category"
 msgstr "Predvolená kategória"
 
-#: src/settings.py:143
+#: src/settings.py:149
 msgid "Allow archivCZSK auto update"
 msgstr "Povoliť kontrolu aktualizácií archívuCZSK"
 
-#: src/settings.py:144
+#: src/settings.py:150
 msgid "Allow addons auto update"
 msgstr "Povoliť kontrolu aktualizácií doplnkov"
 
-#: src/settings.py:146
+#: src/settings.py:152
 msgid "Update timeout"
 msgstr "Časový limit aktualizácie"
 
-#: src/settings.py:148
+#: src/settings.py:154
 msgid "Update repository"
 msgstr "Aktualizačný repozitár"
 
-#: src/settings.py:149
+#: src/settings.py:155
 msgid "Update channel"
 msgstr "Aktualizačný kanál"
 
-#: src/settings.py:150
+#: src/settings.py:156
 msgid "Show changelog after update"
 msgstr "Po aktualizácii zobraziť zoznam zmien"
 
-#: src/settings.py:151
+#: src/settings.py:157
 msgid "Check addons integrity"
 msgstr "Kontrolovať integritu doplnkov"
 
-#: src/settings.py:153
+#: src/settings.py:161
 msgid "Show movie poster"
 msgstr "Zobraziť plagát filmu"
 
-#: src/settings.py:155
+#: src/settings.py:163
 msgid "Poster maximum processing size (in kB)"
 msgstr "Maximálna veľkosť plagátu pre spracovanie (v kB)"
 
-#: src/settings.py:156
+#: src/settings.py:164
 msgid "Max posters on HDD"
 msgstr "Max počet plagátov na disku"
 
-#: src/settings.py:158
+#: src/settings.py:168
 msgid "Add to extensions menu"
 msgstr "Pridať do menu rozšírení"
 
-#: src/settings.py:159
+#: src/settings.py:169
 msgid "Add to main menu"
 msgstr "Pridať do hlavného menu"
 
-#: src/settings.py:160
-msgid "Add search option in epg menu"
-msgstr "Pridať vyhľadávanie v archivCZSK na dlhé stlačenie EPG/INFO"
-
-#: src/settings.py:161
+#: src/settings.py:170
 msgid "Add archive enter shortcut to extensions menu"
 msgstr "Pridať skratku pre vstup do archívu do menu rozšírení"
 
-#: src/settings.py:163
+#: src/settings.py:171
+msgid "Add search option in epg menu"
+msgstr "Pridať vyhľadávanie v archivCZSK na dlhé stlačenie EPG/INFO"
+
+#: src/settings.py:172
+msgid "Integrate into EPG viewer (need restart)"
+msgstr "Integrácia do prehliadača EPG (potrebný reštart)"
+
+#: src/settings.py:174
+msgid "Number of history days in EPG viewer (need restart)"
+msgstr "Počet dní histórie v prehliadači EPG (potrebný reštart)"
+
+#: src/settings.py:178
 msgid "CSFD plugin"
 msgstr "CSFD plugin"
 
-#: src/settings.py:174
+#: src/settings.py:189
 msgid "standard player"
 msgstr "štandardný prehrávač"
 
-#: src/settings.py:175
+#: src/settings.py:190
 msgid "custom player (subtitle support)"
 msgstr "upravený prehrávač (podpora tituliek)"
 
-#: src/settings.py:194
+#: src/settings.py:209
 msgid "Show more info about player"
 msgstr "Zobraziť informácie o prehrávači"
 
-#: src/settings.py:195
+#: src/settings.py:210
 msgid "RTMP Timeout"
 msgstr "RTMP Timeout"
 
-#: src/settings.py:196
+#: src/settings.py:211
 msgid "RTMP Buffer"
 msgstr "RTMP Buffer"
 
-#: src/settings.py:197
+#: src/settings.py:212
 msgid "Confirm exit when closing player"
 msgstr "Potvrdiť ukončenie prehrávania"
 
-#: src/settings.py:198
+#: src/settings.py:213
 msgid "Allow automatically changing audio track"
 msgstr "Povoliť automatickú zmenu zvukovej stopy"
 
-#: src/settings.py:221
+#: src/settings.py:236
 msgid "Change parental control settings"
 msgstr "Zmeniť nastavenie rodičovskej kontroly"
 
-#: src/settings.py:223
+#: src/settings.py:238
 msgid "Your PIN code is set to default 0000. Please change it to your own value."
 msgstr "Váš PIN kód je nastavený na predvolený 0000. Prosím zmeňte si ho na vlastnú hodnotu."
 
-#: src/settings.py:225
+#: src/settings.py:240
 msgid "Enable parental control"
 msgstr "Povoliť rodičovskú kontrolu"
 
-#: src/settings.py:226
+#: src/settings.py:241
 msgid "Change parental control PIN"
 msgstr "Zmeniť PIN pre rodičovskú kontrolu"
 
-#: src/settings.py:227
+#: src/settings.py:242
 msgid "Show adult content"
 msgstr "Zobrazovať obsah pre dospelých"
 
-#: src/settings.py:228
+#: src/settings.py:243
 msgid "Show posters for adult content"
 msgstr "U obsahu pre dospelých zobrazovať postery"
 
-#: src/settings.py:248
+#: src/settings.py:263
 msgid "Data path"
 msgstr "Adresár pre dáta"
 
-#: src/settings.py:249
+#: src/settings.py:264
 msgid "Temp path"
 msgstr "Dočasný adresár"
 
-#: src/settings.py:250
+#: src/settings.py:265
 msgid "Downloads path"
 msgstr "Sťahovať do"
 
-#: src/settings.py:251
+#: src/settings.py:266
 msgid "Posters path"
 msgstr "Plagáty sťahovať do"
 
-#: src/settings.py:253
+#: src/settings.py:268
 msgid "Log path"
 msgstr "Logovať do"
 
-#: src/settings.py:270
+#: src/settings.py:285
 msgid "info"
 msgstr "info"
 
-#: src/settings.py:270
+#: src/settings.py:285
 msgid "debug"
 msgstr "debug"
 
-#: src/settings.py:289
+#: src/settings.py:304
 msgid "Debug mode"
 msgstr "Debug mód"
 
-#: src/settings.py:290
+#: src/settings.py:305
 msgid "Allow sending bug reports on addon error"
 msgstr "Povoliť posielanie chybových hlásení pri chybe doplnku"
 
-#: src/settings.py:291
+#: src/settings.py:306
 msgid "Allow preloading of addons on start"
 msgstr "Povoliť prednačítavanie doplnkov pri štarte"
 
-#: src/settings.py:292
+#: src/settings.py:307
 msgid "Confirm exit when closing plugin"
 msgstr "Potvrdiť ukončenie archívuCZSK"
 
-#: src/settings.py:293
+#: src/settings.py:308
 msgid "Show broken addons"
 msgstr "Zobraziť nefunkčné doplnky"
 
-#: src/settings.py:294
+#: src/settings.py:309
 msgid "Show not supported addons"
 msgstr "Zobraziť nepodporované doplnky"
 
-#: src/settings.py:295
+#: src/settings.py:310
 msgid "On update remove broken and not supported addons"
 msgstr "Pri aktualizácii odstrániť nefunkčné a nepodporované doplnky"
 
-#: src/settings.py:296
+#: src/settings.py:311
 msgid "Show video source selection"
 msgstr "Zobraziť výber zdroju videa"
 
-#: src/settings.py:297
+#: src/settings.py:312
 msgid "Convert captcha images to 8bit"
 msgstr "Konvertovať captcha obrázky"
 
-#: src/settings.py:298
+#: src/settings.py:313
 msgid "Drop caches on exit"
 msgstr "Vymazať medzipamäť po ukončení"
 
-#: src/settings.py:299
+#: src/settings.py:314
 msgid "Internal HTTP server listen port"
 msgstr "Port interného HTTP servera"
 
-#: src/settings.py:300
+#: src/settings.py:315
 msgid "Run HTTP only for internal addons usage"
 msgstr "Spustiť HTTP server iba pre interné použitie doplnkami"
 
-#: src/settings.py:304
+#: src/settings.py:319
 msgid "Allow sending anonymous usage statistics"
 msgstr "Povoliť posielanie anonymných štatistík používania pluginu"
 
@@ -1052,7 +1064,12 @@ msgstr "nič nepripojené"
 msgid "succesfully finished"
 msgstr "úspešne skončilo"
 
-#: src/engine/client.py:70 src/engine/client.py:260
+#: src/engine/epg_integrator.py:127
+msgid "Play Archive"
+msgstr "Prehrať z archívu"
+
+#: src/engine/epg_integrator.py:197 src/engine/client.py:70
+#: src/engine/client.py:260
 msgid "This is bonus functionality available only for product supporters. Do you want to know, how to get \"Supporter\" status?"
 msgstr "Toto je bonusová funkcionalita dostupná len pre podporovateľov produktu. Chcete vedieť ako získať status \"Podporovateľ\"?"
 
@@ -1076,63 +1093,63 @@ msgstr "kategóriu"
 msgid "Addon integrity check failed. Do you want to reinstall addon? Enigma will be automaticaly restarted after reinstall."
 msgstr "Kontrola integrity doplnku zlyhala. Chcete doplnok preinštalovať? Enigma bude po preinštalovaní automaticky reštartovaná."
 
-#: src/engine/handlers/addon.py:139
+#: src/engine/handlers/addon.py:132
 msgid "Addon is broken"
 msgstr "Doplnok je nefunkčný"
 
-#: src/engine/handlers/addon.py:140
+#: src/engine/handlers/addon.py:133
 msgid "Reason"
 msgstr "Dôvod"
 
-#: src/engine/handlers/addon.py:141 src/engine/handlers/addon.py:173
-msgid "Do you want to disable this addon?"
-msgstr "Chcete vypnúť tento doplnok?"
-
-#: src/engine/handlers/addon.py:171
+#: src/engine/handlers/addon.py:163
 msgid "Addon is created for archivCZSK 1.x.x version and will not work anymore in this version. Author of the addon need to adopt it for this version."
 msgstr "Doplnok je vytvorený pre verziu archivCZSK 1.x.x a v tejto verzii už viac nie je funkčný. Autor doplnku ho musí pre túto verziu prispôsobiť."
 
-#: src/engine/handlers/addon.py:176
+#: src/engine/handlers/addon.py:165
+msgid "Do you want to disable this addon?"
+msgstr "Chcete vypnúť tento doplnok?"
+
+#: src/engine/handlers/addon.py:168
 msgid "Do you want to remove this addon?"
 msgstr "Chcete vymazať tento doplnok?"
 
-#: src/engine/handlers/addon.py:187
+#: src/engine/handlers/addon.py:179
 msgid "Rename this profile"
 msgstr "Premenovať tento profil"
 
-#: src/engine/handlers/addon.py:188
+#: src/engine/handlers/addon.py:180
 msgid "Delete this profile"
 msgstr "Vymazať tento profil"
 
-#: src/engine/handlers/addon.py:190
+#: src/engine/handlers/addon.py:182
 msgid "Create new profile"
 msgstr "Vytvoriť nový profil"
 
-#: src/engine/handlers/addon.py:222
+#: src/engine/handlers/addon.py:214
 msgid "Do you want to remove this profile?"
 msgstr "Naozaj chcete odstrániť tento profil?"
 
-#: src/engine/handlers/addon.py:234
+#: src/engine/handlers/addon.py:226
 msgid "Enter name of new profile"
 msgstr "Zadajte meno nového profilu"
 
-#: src/engine/handlers/addon.py:244
+#: src/engine/handlers/addon.py:236
 msgid "Enter new profile name"
 msgstr "Zadajte nové meno profilu"
 
-#: src/engine/handlers/addon.py:252
+#: src/engine/handlers/addon.py:244
 msgid "Add to category"
 msgstr "Pridať do kategórie"
 
-#: src/engine/handlers/addon.py:278
+#: src/engine/handlers/addon.py:270
 msgid "Remove from category"
 msgstr "Zmazať z kategórie"
 
-#: src/engine/handlers/addon.py:300
+#: src/engine/handlers/addon.py:292
 msgid "Enable"
 msgstr "Zapnúť"
 
-#: src/engine/handlers/addon.py:304
+#: src/engine/handlers/addon.py:296
 msgid "Disable"
 msgstr "Vypnúť"
 
@@ -1568,43 +1585,43 @@ msgstr "Obnovujem prehrávanie"
 msgid "Resume playback from last play position?"
 msgstr "Obnoviť prehrávanie od poslednej pozície?"
 
-#: src/archivczsk.py:351
+#: src/archivczsk.py:358
 msgid "Checking for addons updates"
 msgstr "Kontrolujem aktualizácie doplnkov"
 
-#: src/archivczsk.py:408
+#: src/archivczsk.py:415
 msgid "Do you want to update"
 msgstr "Chcete aktualizovať"
 
-#: src/archivczsk.py:408
+#: src/archivczsk.py:415
 msgid "addons"
 msgstr "doplnky"
 
-#: src/archivczsk.py:419
+#: src/archivczsk.py:426
 msgid "Following addons were updated"
 msgstr "Nasledujúce doplnky boli aktualizované"
 
-#: src/archivczsk.py:453
+#: src/archivczsk.py:460
 msgid "You need to restart E2. Do you want to restart it now?"
 msgstr "Zmeny sa prejavia po reštarte E2. Chcete reštartovať E2 teraz?"
 
-#: src/archivczsk.py:480
+#: src/archivczsk.py:487
 msgid "By system check there was no system plugin with name ServiceApp detected. This means, that your system only supports video player integrated in enigma2. Some addons doesn't work properly with internal player or don't work at all. If you will have problem with playing some videos, try to install ServiceApp system plugin from feed of your distribution. Then you can change in addon settings used video player to gstplayer or exteplayer3 that can handle some video formats better."
 msgstr "Pri kontrole systému nebol nájdený systémový plugin s názvom ServiceApp. To znamená, že váš systém podporuje iba video prehrávač integrovaný v enigma2. Niektoré doplnky s interným prehrávačom nefungujú správne alebo nefungujú vôbec. Ak budete mať problém s prehrávaním niektorých videí, skúste si nainštalovať systémový plugin ServiceApp z feedu vašej distribúcie. Potom môžete v nastaveniach doplnku zmeniť použitý video prehrávač na gstplayer alebo exteplayer3, ktorý lepšie zvládne niektoré formáty videa."
 
-#: src/archivczsk.py:482
+#: src/archivczsk.py:489
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3 and gstplayer. These video players are needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer and exteplayer3 from feed of your distribution to be able use all available addons."
 msgstr "Pri kontrole systému bol zistený systémový plugin s názvom ServiceApp, ale chýba vám prehrávač exteplayer3 a gstplayer. Tieto video prehrávače sú potrebné na spracovanie niektorých formátov videa, ktoré integrovaný video prehrávač v enigma2 nedokáže. Odporúča sa nainštalovať gstplayer a exteplayer3 z feedu vašej distribúcie, aby ste mohli využívať všetky dostupné doplnky."
 
-#: src/archivczsk.py:484
+#: src/archivczsk.py:491
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install exteplayer3 from feed of your distribution to be able use all available addons."
 msgstr "Pri kontrole systému bol zistený systémový plugin s názvom ServiceApp, ale chýba vám prehrávač exteplayer3. Tento video prehrávač je potrebný na spracovanie niektorých formátov videa, ktoré integrovaný video prehrávač v enigma2 nedokáže. Odporúča sa nainštalovať exteplayer3 z feedu vašej distribúcie, aby ste mohli využívať všetky dostupné doplnky."
 
-#: src/archivczsk.py:486
+#: src/archivczsk.py:493
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss gstplayer. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer from feed of your distribution to be able use all available addons."
 msgstr "Pri kontrole systému bol zistený systémový plugin s názvom ServiceApp, ale chýba vám prehrávač gstplayer. Tento video prehrávač je potrebný na spracovanie niektorých formátov videa, ktoré integrovaný video prehrávač v enigma2 nedokáže. Odporúča sa nainštalovať gstplayer z feedu vašej distribúcie, aby ste mohli využívať všetky dostupné doplnky."
 
-#: src/archivczsk.py:494
+#: src/archivczsk.py:501
 msgid "You are using outdated image in your receiver without updated SSL certificates used for HTTPS communication. This can cause problems connecting to some sites or services. Outdated images are not supported and errors related to SSL communication will not be fixed. Update your image to latest version or switch to other image if current one doesn't get updates anymore."
 msgstr "Vo svojom prijímači používate zastarané image bez aktualizovaných SSL certifikátov používaných pre HTTPS komunikáciu. Môže to spôsobiť problémy s pripojením k niektorým stránkam alebo službám. Zastarané image nie sú podporované a chyby súvisiace s SSL komunikáciou nebudú opravené. Aktualizujte svoje image na najnovšiu verziu alebo prejdite na iné, ak už vaše aktuálne nedostáva ďalšie aktualizácie."
 
@@ -1636,11 +1653,11 @@ msgstr "Nemôžem spustiť skratku, ArchivCZSK nie je nainštalovaný"
 msgid "Unknown error"
 msgstr "Neznáma chyba"
 
-#: src/client/shortcut.py:109
+#: src/client/shortcut.py:110
 msgid "Error while trying to retrieve content list"
 msgstr "Nastala chyba pri získavaní obsahu"
 
-#: src/client/shortcut.py:135
+#: src/client/shortcut.py:136
 msgid "You cannot run ArchivCZSK again because it is already running"
 msgstr "Nemôžete spustiť ArchivCZSK znovu, pretože už je aktuálne spustený"
 
@@ -1668,17 +1685,20 @@ msgstr "Nemôžete vyhľadávať, ArchivCZSK vyhľadávanie práve prebieha"
 msgid "Cannot find searcher"
 msgstr "Nemôžem nájsť vyhľadávač"
 
-#: src/plugin.py:106
+#: src/plugin.py:114
 msgid "Open archive for current channel using ArchivCZSK addon"
 msgstr "Otvoriť archív aktuálneho kanálu pomocou doplnku pre  ArchivuCZSK"
 
-#: src/plugin.py:106
+#: src/plugin.py:114
 msgid "When current channel is managed by ArchivCZSK addon, then it opens archive for it"
 msgstr "Ak je aktuálny kanál spravovaný doplnkom pre ArchivCZSK, potom otvorí pre neho archív"
 
-#: src/plugin.py:117
+#: src/plugin.py:125
 msgid "Search in ArchivCZSK"
 msgstr "Vyhľadávanie v ArchivCZSK"
+
+#~ msgid "Integrate into EPG viewer"
+#~ msgstr "Integrácia do prehliadača EPG"
 
 #~ msgid "Skin transparency"
 #~ msgstr "Transparentnosť skinu"

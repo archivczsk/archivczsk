@@ -84,6 +84,12 @@ def changeAutoUpdate(configElement):
 config.plugins.archivCZSK.main_menu = ConfigYesNo(default=True)
 config.plugins.archivCZSK.extensions_menu = ConfigYesNo(default=False)
 config.plugins.archivCZSK.epg_menu = ConfigYesNo(default=True)
+config.plugins.archivCZSK.epg_viewer = ConfigYesNo(default=True)
+choicelist = [ ('-1', _("Don't change"),) ]
+for i in range(1, 8):
+	choicelist.append( (str(i), str(i),) )
+
+config.plugins.archivCZSK.epg_viewer_history = ConfigSelection(default='7',  choices=choicelist)
 config.plugins.archivCZSK.archivAutoUpdate = ConfigYesNo(default=True)
 config.plugins.archivCZSK.archivAutoUpdate.addNotifier(changeAutoUpdate)
 config.plugins.archivCZSK.allow_custom_update = ConfigYesNo(default=False)
@@ -149,17 +155,26 @@ def get_main_settings():
 		list.append(getConfigListEntry(_("Update channel"), config.plugins.archivCZSK.update_branch))
 	list.append(getConfigListEntry(_("Show changelog after update"), config.plugins.archivCZSK.changelogAfterUpdate))
 	list.append(getConfigListEntry(_("Check addons integrity"), config.plugins.archivCZSK.checkAddonsIntegrity))
+
 	list.append(MENU_SEPARATOR)
+
 	list.append(getConfigListEntry(_("Show movie poster"), config.plugins.archivCZSK.downloadPoster))
 	if config.plugins.archivCZSK.downloadPoster.value:
 		list.append(getConfigListEntry(_("Poster maximum processing size (in kB)"), config.plugins.archivCZSK.posterSizeMax))
 		list.append(getConfigListEntry(_("Max posters on HDD"), config.plugins.archivCZSK.posterImageMax))
+
 	list.append(MENU_SEPARATOR)
+
 	list.append(getConfigListEntry(_("Add to extensions menu"), config.plugins.archivCZSK.extensions_menu))
 	list.append(getConfigListEntry(_("Add to main menu"), config.plugins.archivCZSK.main_menu))
-	list.append(getConfigListEntry(_("Add search option in epg menu"), config.plugins.archivCZSK.epg_menu))
 	list.append(getConfigListEntry(_("Add archive enter shortcut to extensions menu"), config.plugins.archivCZSK.shortcuts.archive))
+	list.append(getConfigListEntry(_("Add search option in epg menu"), config.plugins.archivCZSK.epg_menu))
+	list.append(getConfigListEntry(_("Integrate into EPG viewer (need restart)"), config.plugins.archivCZSK.epg_viewer))
+	if (not DMM_IMAGE) and config.plugins.archivCZSK.epg_viewer.value:
+		list.append(getConfigListEntry(_("Number of history days in EPG viewer (need restart)"), config.plugins.archivCZSK.epg_viewer_history))
+
 	list.append(MENU_SEPARATOR)
+
 	list.append(getConfigListEntry(_("CSFD plugin"), config.plugins.archivCZSK.csfdMode))
 
 	return list

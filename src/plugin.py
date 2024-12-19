@@ -1,5 +1,5 @@
 # -*- coding: UTF-8 -*-
-import time
+import time, traceback
 
 from Components.config import config
 from Plugins.Plugin import PluginDescriptor
@@ -19,6 +19,14 @@ NAME = _("ArchivCZSK")
 DESCRIPTION = _("Playing CZ/SK archives")
 
 def sessionStart(reason, session):
+	if config.plugins.archivCZSK.epg_viewer.value:
+		try:
+			log.debug("Going to inject archivczsk into system's EPG")
+			from .engine.epg_integrator import inject_archive_into_epg
+			inject_archive_into_epg()
+		except:
+			log.error(traceback.format_exc())
+
 	GlobalSession.setSession(session)
 	# saving active downloads to session
 	if not hasattr(session, 'archivCZSKdownloads'):
