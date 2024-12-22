@@ -191,7 +191,7 @@ class ArchivCZSKPaymentScreen(BaseArchivCZSKScreen):
 		if path is None:
 			return
 
-		# OpenPLi, OpenATV, ... can directly show downloaded PNG. They also support 1-bit PNG. But we have also VTi where it doesn't show anything and 1-bit PNGs are not supported.
+		# OpenPLi, OpenATV, ... can directly show downloaded PNG using LoadPixmap(). They also support 1-bit PNG. But we have also VTi where it doesn't show anything and 1-bit PNGs are not supported.
 		# So ePicload() is a must here ...
 #		self.ShowPicture(path)
 		sc = AVSwitch().getFramebufferScale()
