@@ -50,16 +50,20 @@ class UsageStats(object):
 
 		time_source = [
 			(get_ntp_timestamp, 'ntp.org',),
-			(get_http_timestamp, 'worldtimeapi',)
+			(get_http_timestamp, 'google',)
 		]
 
 		for f, name in time_source:
 			t = f()
 
 			if t != None:
-				year, week_number, _ = datetime.fromtimestamp(t).isocalendar()
-				log.debug("Received date info from %s: year = %d, week_number = %d" % (name, year, week_number))
-				break
+				try:
+					year, week_number, _ = datetime.fromtimestamp(t).isocalendar()
+					log.debug("Received date info from %s: year = %d, week_number = %d" % (name, year, week_number))
+					break
+				except:
+					log.error("Failed to get date info from %s" % name)
+					log.error(traceback.format_exc())
 			else:
 				log.error("Failed to get date info from %s" % name)
 		else:

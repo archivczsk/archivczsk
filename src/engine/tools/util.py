@@ -690,7 +690,13 @@ def get_ntp_timestamp():
 def get_http_timestamp():
 	try:
 		import requests
-		t = requests.get('http://worldtimeapi.org/api/timezone/Europe/London', timeout=3).json()['unixtime']
+		from datetime import datetime
+		import time
+
+		resp = requests.get('http://google.com', timeout=3, allow_redirects=False)
+		t = int( time.mktime(datetime.strptime(resp.headers['date'], '%a, %d %b %Y %H:%M:%S %Z').timetuple()) )
+		offset = datetime.fromtimestamp(t) - datetime.utcfromtimestamp(t)
+		t = t + offset.total_seconds()
 	except:
 		t = None
 
