@@ -1,3 +1,11 @@
+archivCZSK 3.1.0, 23.12.2024
+    - pridaná integrácia priamo do systémového EPG prehliadača
+        * pridá doplnkom možnosť spustenia archívu priamo z EPG v enigme
+        * spustenie sa robí stlačením tlačidla PLAY na diaľkovom ovládači
+        * podporuje single EPG zoznam, grafický EPG plugin a CoolTV Guide ver 8.0
+        * integráciu a počet zobrazených dní je možné nastaviť v nastaveniach
+        * integrácia je predvolene zapnutá
+
 archivCZSK 3.0.2, 05.12.2024
     - zmena spôsobu práce s doplnkom označeným ako "nefunkčný"
     - opravy a vylepšenia skinu:
