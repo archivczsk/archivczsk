@@ -1,3 +1,9 @@
+archivCZSK 3.1.1, 29.12.2024
+    - oprava EPG pre OpenATV a VTi image (automaticky nastaví väčšiu históriu)
+    - nastavenie histórie EPG pre DMM
+    - oprava možného pádu pri získavaní zoznamu titulkov
+    - zobrazenie stavového okna pri spustení archívu cez skratku
+
 archivCZSK 3.1.0, 23.12.2024
     - pridaná integrácia priamo do systémového EPG prehliadača
         * pridá doplnkom možnosť spustenia archívu priamo z EPG v enigme
