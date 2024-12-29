@@ -82,6 +82,13 @@ def patch_show_old_epg():
 		config.usage.show_old_epg.value = str(new_history)
 		log.info("New show_old_epg value: %d" % int(config.usage.show_old_epg.value))
 
+		try:
+			if int(config.usage.epg_buffer.value) <= epg_viewer_history:
+				config.usage.epg_buffer.value = int(config.usage.epg_buffer.value) + epg_viewer_history
+
+			log.info("EPG buffer history is set to %d days" % int(config.usage.epg_buffer.value))
+		except:
+			pass
 
 # #################################################################################################
 
@@ -99,6 +106,14 @@ def inject_archive_into_epg():
 		log.debug("This image has not config.usage.show_old_epg option")
 	else:
 		patch_show_old_epg()
+
+	try:
+		if int(config.misc.epgcache_outdated_timespan.value) == 0:
+			config.misc.epgcache_outdated_timespan.value = 96
+
+		log.info("epgcache_outdated_timespan value: %d" % int(config.misc.epgcache_outdated_timespan.value))
+	except:
+		log.debug("This image has not config.misc.epgcache_outdated_timespan option")
 
 	inject_play_button(EPGSelectionGrid)
 	inject_play_button(EPGSelectionSingle)
