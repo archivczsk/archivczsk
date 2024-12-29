@@ -57,6 +57,14 @@ def patch_histminutes():
 
 		log.info("New histminutes value: %d" % int(config.epg.histminutes.value))
 
+		try:
+			if int(config.epg.maxdays.value) <= epg_viewer_history:
+				config.epg.maxdays.value = int(config.epg.maxdays.value) + epg_viewer_history
+
+			log.info("EPG maxdays is set to %d days" % int(config.epg.maxdays.value))
+		except:
+			pass
+
 # #################################################################################################
 
 def patch_show_old_epg():
