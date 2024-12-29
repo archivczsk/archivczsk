@@ -51,6 +51,24 @@ def getArchivCZSK():
 	from ..gui.content import ArchivCZSKAddonContentScreenAdvanced
 	return ArchivCZSK, ArchivCZSKAddonContentScreenAdvanced, Task
 
+from Components.Label import Label
+from ..engine.tools.util import toString
+from Screens.Screen import Screen
+
+class ArchivCZSKShortcutRunScreen(Screen):
+	def __init__(self, session, text=None, shortcut_name=None):
+		Screen.__init__(self, session)
+		self["status"] = Label()
+
+		if text:
+			self['status'].setText(toString(text))
+
+		if shortcut_name:
+			self.setTitle(_("Running shortcut: {shortcut_name}").format(shortcut_name=shortcut_name))
+
+	def set_status(self, text):
+		self['status'].setText(toString(text))
+
 
 class ArchivCZSKShortcut():
 	instance = None
@@ -77,6 +95,7 @@ class ArchivCZSKShortcut():
 		self.session = session
 		self.cb = cb
 		self.archivCZSK, self.contentScreen, self.task = getArchivCZSK()
+		self.status_dialog = None
 		self._cleanup()
 		if not isArchivCZSKRunning(session):
 			self.task.startWorkerThread()
@@ -92,6 +111,9 @@ class ArchivCZSKShortcut():
 		self.addons = []
 		self.shortcut_name = None
 		self.params = None
+		if self.status_dialog:
+			self.session.close(self.status_dialog)
+			self.status_dialog = None
 
 	def _successSearch(self, content):
 		(searchItems, command, args) = content
@@ -122,6 +144,14 @@ class ArchivCZSKShortcut():
 	def _run_shortcut_internal(self):
 		if self.addons:
 			self.addon = self.addons.pop()
+
+			status_text = _("Running shortcut using {addon_name} addon ...").format(addon_name=self.addon.name)
+
+			if self.status_dialog:
+				self.status_dialog.set_status(status_text)
+			else:
+				self.status_dialog = self.session.open(ArchivCZSKShortcutRunScreen, text=status_text, shortcut_name=self.shortcut_name)
+
 			usage_stats.addon_shortcut(self.addon, self.shortcut_name)
 			self.addon.provider.start()
 			self.addon.provider.run_shortcut(self.session, self.shortcut_name, self.params, self._successSearch, self._errorSearch)
@@ -138,10 +168,13 @@ class ArchivCZSKShortcut():
 
 		addons = [addon] if addon else self.archivCZSK.get_video_addons()
 		self.addons = [a for a in addons if shortcut_name in (a.get_info('shortcuts') or [])]
+
 		try:
-			self.addons.sort(key=lambda a: int(a.get_setting('auto_addon_order')), reverse=True)
+			self.addons.sort(key=lambda a: (int(a.get_setting('auto_addon_order')), a.name,), reverse=True)
 		except:
 			log.error(traceback.format_exc())
+
+		log.debug("Sorted addons for running shortcut: %s" % str(self.addons))
 
 		self.searching = True
 		self.shortcut_name = shortcut_name

@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-23 09:58+0100\n"
-"PO-Revision-Date: 2024-12-23 10:00+0100\n"
+"POT-Creation-Date: 2024-12-29 14:35+0100\n"
+"PO-Revision-Date: 2024-12-29 14:38+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -1064,11 +1064,11 @@ msgstr "nic nepřipojeno"
 msgid "succesfully finished"
 msgstr "úspěšně dokončeno"
 
-#: src/engine/epg_integrator.py:127
+#: src/engine/epg_integrator.py:136
 msgid "Play Archive"
 msgstr "Přehrát z archívu"
 
-#: src/engine/epg_integrator.py:197 src/engine/client.py:70
+#: src/engine/epg_integrator.py:206 src/engine/client.py:70
 #: src/engine/client.py:260
 msgid "This is bonus functionality available only for product supporters. Do you want to know, how to get \"Supporter\" status?"
 msgstr "Toto je bonusová funkcionalita dostupná pouze pro podporovatelé produktu. Chcete vědět, jak získat status \"Podporovatel\"?"
@@ -1647,19 +1647,29 @@ msgstr "Kontrolovat SSL certifikáty"
 msgid "Run addon fatal error."
 msgstr "Při spuštěni doplňku nastala chyba."
 
-#: src/client/shortcut.py:65
+#: src/client/shortcut.py:67
+#, python-brace-format
+msgid "Running shortcut: {shortcut_name}"
+msgstr "Spouštení zkratky: {shortcut_name}"
+
+#: src/client/shortcut.py:83
 msgid "Cannot run shortcut, archivCZSK is not installed"
 msgstr "Nelze spustit zkratku, ArchivCZSK není nainstalován"
 
-#: src/client/shortcut.py:71 src/client/seeker.py:105
+#: src/client/shortcut.py:89 src/client/seeker.py:105
 msgid "Unknown error"
 msgstr "Neznáma chyba"
 
-#: src/client/shortcut.py:110
+#: src/client/shortcut.py:132
 msgid "Error while trying to retrieve content list"
 msgstr "Vyskytla se chyba při získávaní obsahu dat"
 
-#: src/client/shortcut.py:136
+#: src/client/shortcut.py:148
+#, python-brace-format
+msgid "Running shortcut using {addon_name} addon ..."
+msgstr "Spouštim zkratku pomocí {addon_name} doplňku ..."
+
+#: src/client/shortcut.py:166
 msgid "You cannot run ArchivCZSK again because it is already running"
 msgstr "Nemůžete spustit ArchivCZSK znovu protože už je aktuálně spuštěn"
 
