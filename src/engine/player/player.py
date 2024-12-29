@@ -874,13 +874,16 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 				})
 		else:
 			# the rest of the world
-			subs_service = service and service.subtitle()
-			for s in subs_service.getSubtitleList():
-				subs_list.append({
-					'idx': s[1],
-					'forced': None,
-					'lang': s[4]
-				})
+			try:
+				subs_service = service and service.subtitle()
+				for s in subs_service.getSubtitleList():
+					subs_list.append({
+						'idx': s[1],
+						'forced': None,
+						'lang': s[4]
+					})
+			except:
+				log.error(traceback.format_exc())
 
 		return subs_list
 
