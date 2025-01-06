@@ -1,3 +1,6 @@
+archivCZSK 3.1.2, 06.01.2025
+    - aktualizácia API pre doplnky
+
 archivCZSK 3.1.1, 29.12.2024
     - oprava EPG pre OpenATV a VTi image (automaticky nastaví väčšiu históriu)
     - nastavenie histórie EPG pre DMM
