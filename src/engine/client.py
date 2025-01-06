@@ -253,14 +253,22 @@ def open_donate_dialog(session):
 	session.openWithCallback(close_cbk, ArchivCZSKDonateScreen)
 	return d
 
-def ensure_supporter(session):
+def ensure_supporter(session, msg=None):
 	if license.check_level(license.LEVEL_SUPPORTER):
 		return
 
-	if getYesNoInput(session, _('This is bonus functionality available only for product supporters. Do you want to know, how to get "Supporter" status?')) == True:
+	if msg:
+		msg = msg + '\n'
+	else:
+		msg = ''
+
+	if getYesNoInput(session, msg + _('This is bonus functionality available only for product supporters. Do you want to know, how to get "Supporter" status?')) == True:
 		open_donate_dialog(session)
 
 	raise AddonSilentExit('')
+
+def is_supporter():
+	return license.check_level(license.LEVEL_SUPPORTER)
 
 def __process_info_labels(item, info_labels):
 	# this is really hacky implementation ...
