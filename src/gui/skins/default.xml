@@ -364,17 +364,17 @@
 	<screen name="ArchivCZSKDonateScreen" position="center,center" backgroundColor="#0a000000" size="*1478*,*840*">
 		<widget name="info_title" position="*10*,*10*" size="*1458*,*40*" halign="center" foregroundColor="#00e5b243" font="Regular;*35*" transparent="1"/>
 
-		<widget name="info_label_h1" position="*10*,*60*" size="*1458*,*35*" font="Regular;*30*" foregroundColor="#00fce083" halign="top" transparent="1"/>
-		<widget name="info_label1" position="*10*,*95*" size="*1458*,*70*" font="Regular;*28*" halign="top" transparent="1"/>
+		<widget name="info_label_h1" position="*10*,*60*" size="*1458*,*35*" font="Regular;*30*" foregroundColor="#00fce083" transparent="1"/>
+		<widget name="info_label1" position="*10*,*95*" size="*1458*,*70*" font="Regular;*28*" transparent="1"/>
 
-		<widget name="info_label_h2" position="*10*,*170*" size="*1458*,*35*" font="Regular;*30*" foregroundColor="#00fce083" halign="top" transparent="1"/>
-		<widget name="info_label2" position="*10*,*205*" size="*1458*,*70*" font="Regular;*28*" halign="top" transparent="1"/>
+		<widget name="info_label_h2" position="*10*,*170*" size="*1458*,*35*" font="Regular;*30*" foregroundColor="#00fce083" transparent="1"/>
+		<widget name="info_label2" position="*10*,*205*" size="*1458*,*70*" font="Regular;*28*" transparent="1"/>
 
-		<widget name="info_label_h3" position="*10*,*280*" size="*1458*,*35*" font="Regular;*30*" foregroundColor="#00fce083" halign="top" transparent="1"/>
-		<widget name="info_label3" position="*10*,*315*" size="*1458*,*70*" font="Regular;*28*" halign="top" transparent="1"/>
+		<widget name="info_label_h3" position="*10*,*280*" size="*1458*,*35*" font="Regular;*30*" foregroundColor="#00fce083" transparent="1"/>
+		<widget name="info_label3" position="*10*,*315*" size="*1458*,*70*" font="Regular;*28*" transparent="1"/>
 
-		<widget name="info_label_h4" position="*10*,*390*" size="*1458*,*35*" font="Regular;*30*" foregroundColor="#00fce083" halign="top" transparent="1"/>
-		<widget name="info_label4" position="*10*,*425*" size="*1458*,*70*" font="Regular;*28*" halign="top" transparent="1"/>
+		<widget name="info_label_h4" position="*10*,*390*" size="*1458*,*35*" font="Regular;*30*" foregroundColor="#00fce083" transparent="1"/>
+		<widget name="info_label4" position="*10*,*425*" size="*1458*,*70*" font="Regular;*28*" transparent="1"/>
 
 		<eLabel position="*10*,*535*" size="*1458*,1" backgroundColor="#00ffffff"/>
 
