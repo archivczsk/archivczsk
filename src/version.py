@@ -1,7 +1,7 @@
 from . import _
 
 title = _("ArchivCZSK")
-version = "3.1.2"
+version = "3.1.3"
 author = "archivczsk"
 description = _("Playing CZ/SK archives")
 url = "https://github.com/archivczsk/archivczsk/"
