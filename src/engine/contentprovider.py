@@ -608,11 +608,24 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 			# direct interface class returned
 			self.addon_interface = response
 
-	def resolve_dependencies(self):
-		log.info("%s trying to resolve dependencies for %s" , self, self.video_addon)
+	def resolve_dependencies(self, addon=None, checked_ids=None):
+		if addon:
+			log_prefix = str(addon)
+		else:
+			log_prefix = str(self)
+			addon = self.video_addon
+
+		if checked_ids == None:
+			checked_ids = []
+
+		if addon.dependencies_checked or addon.id in checked_ids:
+			log.debug("%s Not checking dependencies for %s - already checked" % (log_prefix, addon))
+			return
+
+		log.info("%s trying to resolve dependencies for %s" , log_prefix, addon)
 		from ..archivczsk import ArchivCZSK
 
-		for dependency in self.video_addon.requires:
+		for dependency in addon.requires:
 			addon_id, version, optional = dependency['addon'], dependency['version'], dependency['optional']
 
 			# checking if archivCZSK version is compatible with this plugin
@@ -622,32 +635,40 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 					if util.check_version(version, "2.5.0", False):
 						raise AddonError(_("Addon is designed for ArchivCZSK version lower then 2.5.0 and incompatible with installed version. Update ArchivCZSK and addons to latest available versions."))
 					else:
-						log.debug("%s archivCZSK version %s>=%s" , self, aczsk.version, version)
+						log.debug("%s archivCZSK version %s>=%s" , log_prefix, aczsk.version, version)
 				else:
-					log.debug("%s archivCZSK version %s<%s" , self, aczsk.version, version)
+					log.debug("%s archivCZSK version %s<%s" , log_prefix, aczsk.version, version)
 					raise AddonError(_("You need to update archivCZSK at least to version {version}").format(version=version))
 			else:
-				log.info("%s requires %s addon, version %s" , self, addon_id, version)
+				log.info("%s requires %s addon, version %s" , log_prefix, addon_id, version)
 				if ArchivCZSK.has_addon(addon_id):
 					tools_addon = ArchivCZSK.get_addon(addon_id)
-					log.debug("%s required %s found" , self, tools_addon)
+					log.debug("%s required %s found" , log_prefix, tools_addon)
 					if	not util.check_version(tools_addon.version, version, False):
-						log.debug("%s version %s>=%s" , self, tools_addon.version, version)
+						log.debug("%s version %s>=%s" , log_prefix, tools_addon.version, version)
 					else:
-						log.debug("%s version %s<%s" , self, tools_addon.version, version)
+						log.debug("%s version %s<%s" , log_prefix, tools_addon.version, version)
 						if not optional:
-							log.error("%s cannot execute", self)
-							raise AddonError( _("Cannot execute addon {addon_name}. Dependency {dependency_name} version {dependency_version} needs to be at least version {dependency_version_requiered}".format(addon_name=self.video_addon, dependency_name=tools_addon.id, dependency_version=tools_addon.version, dependency_version_requiered=version)))
+							log.error("%s cannot execute", log_prefix)
+							raise AddonError( _("Cannot execute addon {addon_name}. Dependency {dependency_name} version {dependency_version} needs to be at least version {dependency_version_requiered}".format(addon_name=addon, dependency_name=tools_addon.id, dependency_version=tools_addon.version, dependency_version_requiered=version)))
 						else:
 							log.debug("%s skipping")
 							continue
 				else:
-					log.error("%s required %s addon not found" ,self, addon_id)
+					log.error("%s required %s addon not found" ,log_prefix, addon_id)
 					if not optional:
-						log.error("%s cannot execute %s addon" ,self, self.video_addon)
-						raise AddonError( _("Cannot execute addon {addon_name}. Missing dependency: {dependency_name}\nCheck free space in receiver, reinstall ArchivCZSK and perform all addons update to fix the problem.".format(addon_name=self.video_addon, dependency_name=addon_id)))
+						log.error("%s cannot execute %s addon" ,log_prefix, addon)
+						raise AddonError( _("Cannot execute addon {addon_name}. Missing dependency: {dependency_name}\nCheck free space in receiver, reinstall ArchivCZSK and perform all addons update to fix the problem.".format(addon_name=addon, dependency_name=addon_id)))
 					else:
 						log.debug("skipping")
+
+		checked_ids.append(addon.id)
+
+		for dependency in addon.requires:
+			if ArchivCZSK.has_addon(dependency['addon']):
+				self.resolve_dependencies(ArchivCZSK.get_addon(dependency['addon']), checked_ids)
+
+		addon.dependencies_checked = True
 
 	def get_content(self, session, params, successCB, errorCB, silent=False):
 		log.info('%s get_content - params: %s' % (self, str(params)))

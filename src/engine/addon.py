@@ -37,6 +37,7 @@ class Addon(object):
 		self.path = info.path
 		self.relative_path = os.path.relpath(self.path, repository.path)
 		self.supported = True
+		self.dependencies_checked = False
 
 		log.info("%s - initializing", self)
 
@@ -214,6 +215,7 @@ class ToolsAddon(Addon):
 	def __init__(self, info, repository):
 		Addon.__init__(self, info, repository)
 		self.import_package = os.path.basename(info.path)
+		self.requires = info.requires
 
 	def init(self):
 		importlib.import_module(self.import_package)
