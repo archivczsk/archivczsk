@@ -126,7 +126,7 @@ def Plugins(path, **kwargs):
 
 	return result
 
-
+#ArchivCZSK.check_dependencies()
 ArchivCZSK.load_skin()
 ArchivCZSK.load_repositories()
 ArchivCZSK.init_addons()

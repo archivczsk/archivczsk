@@ -8,7 +8,7 @@ import time
 from Components.config import config, configfile
 from Screens.MessageBox import MessageBox
 from skin import loadSkin
-from enigma import eTimer
+from enigma import eTimer, eConsoleAppContainer
 from . import _, log, toString, settings, UpdateInfo
 from .engine.addon import ToolsAddon, VideoAddon, XBMCAddon
 from .engine.exceptions.updater import UpdateXMLVersionError, UpdateXMLNoUpdateUrl
@@ -292,6 +292,32 @@ class ArchivCZSK():
 			log.error(traceback.format_exc())
 		return
 
+	@staticmethod
+	def check_dependencies(force=False):
+		if force or ArchivCZSK.was_upgraded() != None:
+			try:
+				from .settings import PLUGIN_PATH
+				eConsoleAppContainer().execute(os.path.join( PLUGIN_PATH, 'script', 'install_dependencies.sh'))
+			except:
+				log.error(traceback.format_exc())
+
+	@staticmethod
+	def was_upgraded(clear_upgrade_flag=False):
+		from .settings import PLUGIN_PATH
+		first_start_file = os.path.join( PLUGIN_PATH, '.first_start')
+		prev_ver = None
+
+		if os.path.isfile( first_start_file ):
+			try:
+				prev_ver = open(first_start_file).readline().strip()
+			except:
+				prev_ver = ''
+
+			if clear_upgrade_flag:
+				os.remove( first_start_file )
+
+		return prev_ver
+
 	def __init__(self, session):
 		self.session = session
 		self.to_update_addons = []
@@ -504,7 +530,6 @@ class ArchivCZSK():
 
 			return msg
 
-
 		def run_first_start_actions(actions, prev_ver):
 			if len(actions) > 0:
 				a = actions[0]
@@ -520,16 +545,10 @@ class ArchivCZSK():
 				openPartialChangelog(self.session, first_start_handled, "ArchivCZSK", changelog_path, prev_ver)
 
 		# check if this is first start after update
-		from .settings import PLUGIN_PATH
-		first_start_file = os.path.join( PLUGIN_PATH, '.first_start')
+		prev_ver = self.was_upgraded(True)
 
-		if os.path.isfile( first_start_file ):
-			try:
-				prev_ver = open(first_start_file).readline().strip()
-			except:
-				prev_ver = ''
-			os.remove( first_start_file )
-
+		if prev_ver != None:
+			self.check_dependencies(True)
 			run_first_start_actions( [check_player, check_ssl_certificates], prev_ver )
 		else:
 			first_start_handled()
