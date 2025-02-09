@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-12-29 14:35+0100\n"
-"PO-Revision-Date: 2024-12-29 14:38+0100\n"
+"POT-Creation-Date: 2025-02-09 19:06+0100\n"
+"PO-Revision-Date: 2025-02-09 19:06+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -320,17 +320,17 @@ msgstr "Informace o archívu"
 #: src/gui/exception.py:102 src/gui/exception.py:106 src/gui/exception.py:113
 #: src/gui/exception.py:117 src/gui/exception.py:121 src/gui/exception.py:125
 #: src/gui/exception.py:129 src/gui/exception.py:133 src/gui/exception.py:137
-#: src/gui/exception.py:141 src/gui/exception.py:182 src/gui/exception.py:185
-#: src/gui/exception.py:199 src/gui/exception.py:202
+#: src/gui/exception.py:141 src/gui/exception.py:185 src/gui/exception.py:188
+#: src/gui/exception.py:202 src/gui/exception.py:205
 msgid "Error in loading"
 msgstr "Chyba načítání"
 
-#: src/gui/exception.py:102 src/gui/exception.py:113 src/gui/exception.py:182
-#: src/gui/exception.py:199
+#: src/gui/exception.py:102 src/gui/exception.py:113 src/gui/exception.py:185
+#: src/gui/exception.py:202
 msgid "HTTP Error"
 msgstr "Chyba HTTP"
 
-#: src/gui/exception.py:106 src/gui/exception.py:185 src/gui/exception.py:202
+#: src/gui/exception.py:106 src/gui/exception.py:188 src/gui/exception.py:205
 msgid "URL Error"
 msgstr "Chyba URL"
 
@@ -354,11 +354,15 @@ msgstr "Nepodařilo se vytvořit SSL připojení na server"
 msgid "Timeout was exceeded"
 msgstr "Časový limit byl překročen"
 
-#: src/gui/exception.py:147
+#: src/gui/exception.py:145
+msgid "System error occured"
+msgstr "Došlo k systémové chybě"
+
+#: src/gui/exception.py:150
 msgid "You reached the limit of concurrent connections to remote server. Restart your receiver to solve the problem."
 msgstr "Dosáhli jste limitu souběžných připojení ke vzdálenému serveru. Problém vyřešíte restartováním přijímače."
 
-#: src/gui/exception.py:153
+#: src/gui/exception.py:156
 msgid ""
 "An unhandled error occurred while calling the addon. Should I send bug report to addon authors?\n"
 "Report will contain part of log file, informations about your system and addon settings needed for problem analysis."
@@ -366,59 +370,59 @@ msgstr ""
 "Při volání doplňku nastala neošetřená chyba. Mám poslat hlášení o chybě autorům doplňku?\n"
 "Chybové hlášení bude obsahovat část logovacího souboru, informace o vašem systému a nastavení doplňku potřebné pro analýzu problému."
 
-#: src/gui/exception.py:155
+#: src/gui/exception.py:158
 msgid "An unhandled error occurred while calling the addon. Update addon to the latest available version."
 msgstr "Při volání doplňku nastala neošetřená chyba. Zaktualizujte doplněk na poslední dostupní verzi."
 
-#: src/gui/exception.py:157
+#: src/gui/exception.py:160
 msgid "An unhandled error occurred while calling the addon. Enable addons update in plugin settings to get the latest addon version."
 msgstr "Při volání doplňku nastala neošetřená chyba. Povolte v nastaveních pluginu aktualizaci doplňků aby jste dostali poslední dostupnou verzi."
 
-#: src/gui/exception.py:159
+#: src/gui/exception.py:162
 msgid "An unhandled error occurred while calling the addon. Please report a bug so it can be fixed."
 msgstr "Při volání doplňku nastala neošetřená chyba. Prosím nahlaste chybu aby ji bylo možné opravit."
 
-#: src/gui/exception.py:170
+#: src/gui/exception.py:173
 msgid "Download error"
 msgstr "Chyba stahování"
 
-#: src/gui/exception.py:171
+#: src/gui/exception.py:174
 msgid "Download warning"
 msgstr "Upozornění stahování"
 
-#: src/gui/exception.py:172
+#: src/gui/exception.py:175
 msgid "Download info"
 msgstr "Informace o stahování"
 
-#: src/gui/exception.py:179
+#: src/gui/exception.py:182
 msgid "protocol is not supported"
 msgstr "protokol není podporován"
 
-#: src/gui/exception.py:191
+#: src/gui/exception.py:194
 msgid "Updater error"
 msgstr "Chyba aktualizátoru"
 
-#: src/gui/exception.py:192
+#: src/gui/exception.py:195
 msgid "Updater warning"
 msgstr "Upozornění aktualizátoru"
 
-#: src/gui/exception.py:193
+#: src/gui/exception.py:196
 msgid "Updater info"
 msgstr "Informace aktualizátoru"
 
-#: src/gui/exception.py:208
+#: src/gui/exception.py:211
 msgid "Play error"
 msgstr "Chyba přehrávání"
 
-#: src/gui/exception.py:209
+#: src/gui/exception.py:212
 msgid "Play warning"
 msgstr "Varování přehrávání"
 
-#: src/gui/exception.py:210
+#: src/gui/exception.py:213
 msgid "Play info"
 msgstr "Informace o přehrávání"
 
-#: src/gui/exception.py:217
+#: src/gui/exception.py:220
 msgid "Video url doesnt exist"
 msgstr "Adresa videa neexistuje"
 
@@ -1064,12 +1068,12 @@ msgstr "nic nepřipojeno"
 msgid "succesfully finished"
 msgstr "úspěšně dokončeno"
 
-#: src/engine/epg_integrator.py:136
+#: src/engine/epg_integrator.py:151
 msgid "Play Archive"
 msgstr "Přehrát z archívu"
 
-#: src/engine/epg_integrator.py:206 src/engine/client.py:70
-#: src/engine/client.py:260
+#: src/engine/epg_integrator.py:221 src/engine/client.py:70
+#: src/engine/client.py:265
 msgid "This is bonus functionality available only for product supporters. Do you want to know, how to get \"Supporter\" status?"
 msgstr "Toto je bonusová funkcionalita dostupná pouze pro podporovatelé produktu. Chcete vědět, jak získat status \"Podporovatel\"?"
 
@@ -1226,15 +1230,15 @@ msgstr "Playlist z"
 msgid "No playable videos were found"
 msgstr "Nenašli se žádné přehratelné videa"
 
-#: src/engine/addon.py:491
+#: src/engine/addon.py:493
 msgid "Addon order"
 msgstr "Pořadí doplňku"
 
-#: src/engine/addon.py:495
+#: src/engine/addon.py:497
 msgid "Used player"
 msgstr "Používat přehrávač"
 
-#: src/engine/addon.py:520
+#: src/engine/addon.py:522
 msgid "General"
 msgstr "Všeobecné"
 
@@ -1324,21 +1328,21 @@ msgstr "Načtení doplňku selhalo"
 msgid "Addon returned not supported communication interface"
 msgstr "Doplněk vrátil nepodporované komunikační rozhraní"
 
-#: src/engine/contentprovider.py:623
+#: src/engine/contentprovider.py:636
 msgid "Addon is designed for ArchivCZSK version lower then 2.5.0 and incompatible with installed version. Update ArchivCZSK and addons to latest available versions."
 msgstr "Doplněk je vytvořen pro ArchivCZSK verzi menší než 2.5.0 a není kompatibilní s nainstalovanou verzí. Zaktualizujte ArchivCZSK a doplňky na poslední dostupné verze."
 
-#: src/engine/contentprovider.py:628
+#: src/engine/contentprovider.py:641
 #, python-brace-format
 msgid "You need to update archivCZSK at least to version {version}"
 msgstr "Musíte aktualizovat archivCZSK alespoň na verzi {version}"
 
-#: src/engine/contentprovider.py:640
+#: src/engine/contentprovider.py:653
 #, python-brace-format
 msgid "Cannot execute addon {addon_name}. Dependency {dependency_name} version {dependency_version} needs to be at least version {dependency_version_requiered}"
 msgstr "Spuštění doplňku {addon_name} selhalo. Nainstalována závislost {dependency_name} verze {dependency_version} musí být aspoň ve verzi {dependency_version_requiered}"
 
-#: src/engine/contentprovider.py:648
+#: src/engine/contentprovider.py:661
 #, python-brace-format
 msgid ""
 "Cannot execute addon {addon_name}. Missing dependency: {dependency_name}\n"
@@ -1435,61 +1439,61 @@ msgstr ""
 "Aktualizace archivCZSK selhala. {cmd} skončilo chybou\n"
 "{msg}"
 
-#: src/engine/trakttv.py:492
+#: src/engine/trakttv.py:493
 #, python-brace-format
 msgid "Trakt.tv operation {action} ended successfuly"
 msgstr "Trakt.tv operace \"{action}\" skončila úspěšne"
 
-#: src/engine/trakttv.py:495
+#: src/engine/trakttv.py:496
 msgid "Trakt.tv is not paired with this device."
 msgstr "Trakt.tv není spárován s tímhle zařízením."
 
-#: src/engine/trakttv.py:499
+#: src/engine/trakttv.py:500
 #, python-brace-format
 msgid "Trakt.tv operation \"{action}\" failed"
 msgstr "Trakt.tv operace \"{action}\" selhala"
 
-#: src/engine/trakttv.py:513
+#: src/engine/trakttv.py:514
 msgid "Add to watchlist"
 msgstr "Přidat do Watchlist"
 
-#: src/engine/trakttv.py:514
+#: src/engine/trakttv.py:515
 msgid "Delete from watchlist"
 msgstr "Vymazat z Watchlist"
 
-#: src/engine/trakttv.py:517
+#: src/engine/trakttv.py:518
 msgid "Mark as watched"
 msgstr "Označit jako viděno"
 
-#: src/engine/trakttv.py:520
+#: src/engine/trakttv.py:521
 msgid "Mark as not watched"
 msgstr "Označit jako neviděno"
 
-#: src/engine/trakttv.py:522
+#: src/engine/trakttv.py:523
 msgid "Force data synchronisation"
 msgstr "Vynutit synchronizaci dat"
 
-#: src/engine/trakttv.py:523
+#: src/engine/trakttv.py:524
 msgid "Unpair this device from Trakt.tv"
 msgstr "Zrušit spárování zařízení s trakt.tv"
 
-#: src/engine/trakttv.py:526
+#: src/engine/trakttv.py:527
 msgid "Choose Trakt.tv action"
 msgstr "Zvolte akci pro Trakt.tv"
 
-#: src/engine/trakttv.py:541
+#: src/engine/trakttv.py:542
 msgid "Pairing timed out!"
 msgstr "Časový limit pro párování vypršel!"
 
-#: src/engine/trakttv.py:544 src/engine/trakttv.py:557
+#: src/engine/trakttv.py:545 src/engine/trakttv.py:558
 msgid "Pairing aborted by user"
 msgstr "Párování bylo zrušeno uživatelem"
 
-#: src/engine/trakttv.py:553
+#: src/engine/trakttv.py:554
 msgid "Pairing succesed. You can use Trakt.tv functions now"
 msgstr "Spárování bylo úspěšné. Nyní můžete využívat funkce Trakt.tv"
 
-#: src/engine/trakttv.py:566
+#: src/engine/trakttv.py:567
 #, python-brace-format
 msgid ""
 "To pair Trakt.tv with this device go to the activation address and enter pairing code.\n"
@@ -1587,43 +1591,43 @@ msgstr "Obnovuji přehrávání"
 msgid "Resume playback from last play position?"
 msgstr "Obnovit přehrávání od poslední pozice?"
 
-#: src/archivczsk.py:358
+#: src/archivczsk.py:384
 msgid "Checking for addons updates"
 msgstr "Kontrola aktualizací doplňků"
 
-#: src/archivczsk.py:415
+#: src/archivczsk.py:441
 msgid "Do you want to update"
 msgstr "Chcete aktualizovat"
 
-#: src/archivczsk.py:415
+#: src/archivczsk.py:441
 msgid "addons"
 msgstr "doplňky"
 
-#: src/archivczsk.py:426
+#: src/archivczsk.py:452
 msgid "Following addons were updated"
 msgstr "Následující doplňky byly aktualizovány"
 
-#: src/archivczsk.py:460
+#: src/archivczsk.py:486
 msgid "You need to restart E2. Do you want to restart it now?"
 msgstr "Změny se projeví po restartu E2. Chcete nyní restartovat E2?"
 
-#: src/archivczsk.py:487
+#: src/archivczsk.py:513
 msgid "By system check there was no system plugin with name ServiceApp detected. This means, that your system only supports video player integrated in enigma2. Some addons doesn't work properly with internal player or don't work at all. If you will have problem with playing some videos, try to install ServiceApp system plugin from feed of your distribution. Then you can change in addon settings used video player to gstplayer or exteplayer3 that can handle some video formats better."
 msgstr "Při kontrole systému nebyl detekován systémový plugin s názvem ServiceApp. To znamená, že váš systém podporuje pouze video přehrávač integrovaný v enigma2. Některé doplňky nefungují správně s interním přehrávačem nebo nefungují vůbec. Pokud budete mít problém s přehráváním některých videí, zkuste si nainstalovat systémový plugin ServiceApp z feedu vaší distribuce. Poté můžete v nastavení doplňku změnit použitý video přehrávač na gstplayer nebo exteplayer3, který si lépe poradí s některými formáty videa."
 
-#: src/archivczsk.py:489
+#: src/archivczsk.py:515
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3 and gstplayer. These video players are needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer and exteplayer3 from feed of your distribution to be able use all available addons."
 msgstr "Při kontrole systému byl zjištěn systémový plugin s názvem ServiceApp, ale chybí vám přehrávače exteplayer3 a gstplayer. Tyto videopřehrávače jsou potřeba ke zpracování některých video formátů, které interní videopřehrávač zabudovaný do enigma2 zpracovat nedokáže. Doporučuje se nainstalovat gstplayer a exteplayer3 z feedu vaší distribuce, abyste mohli používat všechny dostupné doplňky."
 
-#: src/archivczsk.py:491
+#: src/archivczsk.py:517
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss exteplayer3. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install exteplayer3 from feed of your distribution to be able use all available addons."
 msgstr "Při kontrole systému byl zjištěn systémový plugin s názvem ServiceApp, ale chybí vám přehrávač exteplayer3. Tento videopřehrávač je potřeba ke zpracování některých video formátů, které interní videopřehrávač zabudovaný do enigma2 zpracovat nedokáže. Doporučuje se nainstalovat exteplayer3 z feedu vaší distribuce, abyste mohli používat všechny dostupné doplňky."
 
-#: src/archivczsk.py:493
+#: src/archivczsk.py:519
 msgid "By system check there was system plugin with name ServiceApp detected, but you miss gstplayer. This video player is needed to handle some video formats that internal video player build into enigma2 can't. It is recommended to install gstplayer from feed of your distribution to be able use all available addons."
 msgstr "Při kontrole systému byl zjištěn systémový plugin s názvem ServiceApp, ale chybí vám přehrávač gstplayer. Tento videopřehrávač je potřeba ke zpracování některých video formátů, které interní videopřehrávač zabudovaný do enigma2 zpracovat nedokáže. Doporučuje se nainstalovat gstplayer z feedu vaší distribuce, abyste mohli používat všechny dostupné doplňky."
 
-#: src/archivczsk.py:501
+#: src/archivczsk.py:527
 msgid "You are using outdated image in your receiver without updated SSL certificates used for HTTPS communication. This can cause problems connecting to some sites or services. Outdated images are not supported and errors related to SSL communication will not be fixed. Update your image to latest version or switch to other image if current one doesn't get updates anymore."
 msgstr "Ve svém přijímači používáte zastaralé image bez aktualizovaných SSL certifikátů používaných pro HTTPS komunikaci. Může to způsobit problémy s připojením k některým stránkám nebo službám. Zastaralé image nejsou podporované a chyby souvisící s SSL komunikaci nebudou opravené. Aktualizujte své image na nejnovější verzi nebo přejděte na jiné, pokud už vaše aktuální nedostává další aktualizace."
 

@@ -140,6 +140,9 @@ class AddonExceptionHandler(GUIExceptionHandler):
 					log.logError("Addon (TimeoutError) error '%s'.\n%s"%(str(e),traceback.format_exc()))
 					message = "%s: %s\n%s" % (_("Error in loading"), _("Timeout was exceeded"), str(e))
 					self.errorMessage(message)
+				except OSError as e:
+					log.logError("Addon (OSError) error.\n%s"%traceback.format_exc())
+					self.errorMessage(_("System error occured") + ':\n' + str(e))
 				# we handle all possible exceptions since we dont want plugin to crash because of addon error...
 				except Exception as e:
 					if isinstance(e, ValueError) and str(e) == 'filedescriptor out of range in select()':
