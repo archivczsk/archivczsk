@@ -635,6 +635,10 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 		self["movie_rating"].setText(irat)
 		self["movie_plot"].setText(iplot)
 
+		if 'img' in item.info and item.image != item.info['img']:
+			item.image = item.info['img']
+			self.showPoster(item)
+
 	def load_info_items(self):
 		item = self.getSelectedItem()
 		log.debug("Loading info items for %s" % item)
@@ -649,6 +653,19 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 
 		item.load_info(cbk_continue=check_item)
 
+	def showPoster(self, item):
+		if self.showImageEnabled:
+			if not item.info:
+				no_image_path = self.noImage
+			else:
+				no_image_path = os.path.join(settings.IMAGE_PATH, 'empty.png')
+
+			if item.info.get('adult', False) and parental_pin.get_settings('show_posters') == False:
+				# disable posters for adult content
+				self.poster.set_image(None, no_image_path)
+			else:
+				self.poster.set_image(item.image, no_image_path)
+
 	def updateAddonGUI(self):
 		try:
 			item = self.getSelectedItem()
@@ -662,18 +679,7 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 					# this needs to be started using timer, because it slows down GUI when user quickly switches items
 					self.update_info_items_timer.start(500, True)
 
-				if self.showImageEnabled:
-					if not item.info:
-						no_image_path = self.noImage
-					else:
-						no_image_path = os.path.join(settings.IMAGE_PATH, 'empty.png')
-
-					if item.info.get('adult', False) and parental_pin.get_settings('show_posters') == False:
-						# disable posters for adult content
-						self.poster.set_image(None, no_image_path)
-					else:
-						self.poster.set_image(item.image, no_image_path)
-
+				self.showPoster(item)
 		except:
 			log.logError("updateAddonGUI fail...\n%s"%traceback.format_exc())
 
