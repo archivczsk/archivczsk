@@ -427,7 +427,11 @@ class trakt_tv(object):
 	def refresh_token(self):
 		if 'access_token' in self.login_data:
 			del self.login_data['access_token']
+
+		if 'refresh_token' in self.login_data:
 			code, data = self.call_trakt_api('/oauth/device/token', data={'refresh_token':self.login_data['refresh_token'], 'client_id':self.client_id, 'client_secret':self.client_secret, 'redirect_uri':'urn:ietf:wg:oauth:2.0:oob', 'grant_type':'refresh_token'}, auto_refresh_token=False )
+		else:
+			code = 500
 
 		if code == 200:
 			self.login_data['access_token'] = data['access_token']
@@ -442,22 +446,25 @@ class trakt_tv(object):
 	# #################################################################################################
 
 	def scrobble(self, action, item, progress ):
-		if item['type'] == 'movie':
-			postdata = {"movie": {"ids": self.getTraktIds(item)}}
-		elif item['type'] == 'episode':
-			postdata = {"episode": {"ids": self.getTraktIds(item)}}
-		elif item['type'] == 'show' and 'episode' in item:
-			postdata = { 'show': {'ids': self.getTraktIds(item) }, 'episode': {'season':int('%s' % item.get('season', 1)), 'number':int('%s' % item['episode']) } }
-		else:
-			raise Exception('Not enough data to scrobble {item}'.format(item=str(item)))
+		if self.valid():
+			if item['type'] == 'movie':
+				postdata = {"movie": {"ids": self.getTraktIds(item)}}
+			elif item['type'] == 'episode':
+				postdata = {"episode": {"ids": self.getTraktIds(item)}}
+			elif item['type'] == 'show' and 'episode' in item:
+				postdata = { 'show': {'ids': self.getTraktIds(item) }, 'episode': {'season':int('%s' % item.get('season', 1)), 'number':int('%s' % item['episode']) } }
+			else:
+				raise Exception('Not enough data to scrobble {item}'.format(item=str(item)))
 
-		from ..version import version
-		postdata.update( { "progress":progress, "app_version": version, "app_date": "1970-01-01" } )
+			from ..version import version
+			postdata.update( { "progress":progress, "app_version": version, "app_date": "1970-01-01" } )
 
-		code, data = self.call_trakt_api('/scrobble/' + action, data=postdata)
+			code, data = self.call_trakt_api('/scrobble/' + action, data=postdata)
 
-		if code < 300:
-			ret = data.get('action')
+			if code < 300:
+				ret = data.get('action')
+			else:
+				ret = None
 		else:
 			ret = None
 
