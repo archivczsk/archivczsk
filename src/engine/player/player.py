@@ -273,6 +273,7 @@ class Player(object):
 			self.cleanup_files.append(subtitles_file)
 
 		self.video_player.relativeSeekEnabled(play_settings.get('relative_seek_enabled', True))
+		self.video_player.checkSeekBorders(play_settings.get('check_seek_borders', False))
 
 		tracks_settings = {
 			# list of priority langs used for audio and subtitles - audio will be automatically switched to first available language
@@ -612,6 +613,7 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.seekFwd = self.seekFwdManual
 		self.seekBack = self.seekBackManual
 		self.relative_seek_enabled = True
+		self.check_seek_borders = False
 		self.start_pts = None
 		initSubsSettings()
 
@@ -1054,6 +1056,11 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 			log.info("Disabling relative seek. I will use absolute seek instead.")
 		self.relative_seek_enabled = enabled
 
+	def checkSeekBorders(self, enabled):
+		if enabled:
+			log.info("Enabling seek borders")
+		self.check_seek_borders = enabled
+
 	def pauseService(self):
 		seekstate = self.seekstate
 		InfoBarSeek.pauseService(self)
@@ -1072,6 +1079,12 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		current_pts = getPlayPositionPts(self.session)
 		log.debug("do seek absolute: %s, current position: %s" % (pts, current_pts))
 		self.old_position = getPlayPositionInSeconds(self.session, current_pts)
+
+		if self.check_seek_borders:
+			end_pts = getDurationPts(self.session)
+			if pts >= end_pts:
+				pts = end_pts - 1
+
 		InfoBarSeek.doSeek(self, pts )
 		if self.__timer_seek.isActive():
 			self.__timer_seek.stop()
@@ -1095,6 +1108,12 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 				return self.doSeek(current_pts - self.start_pts + pts)
 
 		self.old_position = getPlayPositionInSeconds(self.session, current_pts)
+
+		if self.check_seek_borders:
+			end_pts = getDurationPts(self.session)
+			if (current_pts + pts) >= end_pts:
+				pts = end_pts - current_pts - 1
+
 		InfoBarSeek.doSeekRelative(self, pts )
 		if self.__timer_seek.isActive():
 			self.__timer_seek.stop()
