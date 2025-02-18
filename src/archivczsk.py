@@ -530,6 +530,20 @@ class ArchivCZSK():
 
 			return msg
 
+		def fix_serviceapp_settings():
+			try:
+				for p in ('serviceexteplayer3', 'servicegstplayer'):
+					c = config.plugins.serviceapp.options[p].hls_explorer
+
+					if c.value:
+						c.value = False
+						c.save()
+						log.info("Disabling HLS explorer for %s in ServiceApp settings" % p)
+			except:
+				pass
+
+			return None
+
 		def run_first_start_actions(actions, prev_ver):
 			if len(actions) > 0:
 				a = actions[0]
@@ -549,7 +563,7 @@ class ArchivCZSK():
 
 		if prev_ver != None:
 			self.check_dependencies(True)
-			run_first_start_actions( [check_player, check_ssl_certificates], prev_ver )
+			run_first_start_actions( [check_player, check_ssl_certificates, fix_serviceapp_settings], prev_ver )
 		else:
 			first_start_handled()
 
