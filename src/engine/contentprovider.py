@@ -3,7 +3,7 @@ Created on 3.10.2012
 
 @author: marko
 '''
-import os
+import os, sys
 import socket
 import traceback
 import importlib
@@ -575,10 +575,23 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		VideoAddonContentProvider.__gui_item_list[1] = None
 		VideoAddonContentProvider.__gui_item_list[2].clear()
 
-	def resolve_addon_interface(self):
+	def resolve_addon_interface(self, need_reload=False):
 		if self.addon_interface:
 			# interface already resolved
-			return
+			if need_reload and config.plugins.archivCZSK.developer_mode.value:
+				try:
+					modules_to_reload = [m for m in sys.modules.values() if self.video_addon.import_package in str(m)]
+					for m in modules_to_reload:
+						log.debug("Reloading module: %s" % m)
+						if is_py3:
+							importlib.reload(m)
+						else:
+							reload(m)
+				except:
+					log.error("Failed to reload addon modules")
+					log.error(traceback.format_exc())
+			else:
+				return
 
 		log.debug("Searching entry point in module %s.%s" % (self.video_addon.import_package, self.video_addon.import_name))
 		try:
@@ -700,7 +713,7 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		return content_deferred
 
 	def call_addon_run_interface(self, session, params, silent):
-		self.resolve_addon_interface()
+		self.resolve_addon_interface(need_reload = (params == {}))
 		if silent:
 			self.addon_interface.run_silent(session, params)
 		else:

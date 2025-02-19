@@ -81,6 +81,7 @@ config.plugins.archivCZSK.trakt.expiration=ConfigNumber()
 def changeAutoUpdate(configElement):
 	UpdateInfo.resetDates()
 
+config.plugins.archivCZSK.developer_mode = ConfigYesNo(default=False)
 config.plugins.archivCZSK.main_menu = ConfigYesNo(default=True)
 config.plugins.archivCZSK.extensions_menu = ConfigYesNo(default=False)
 config.plugins.archivCZSK.epg_menu = ConfigYesNo(default=True)
@@ -139,6 +140,11 @@ config.plugins.archivCZSK.csfdMode = ConfigSelection(default='1', choices=choice
 
 def get_main_settings():
 	list = []
+	from .engine.license import license
+
+	if license.check_level(license.LEVEL_DEVELOPER):
+		list.append(getConfigListEntry(_("Enable developer mode (use only for developing addons)"), config.plugins.archivCZSK.developer_mode))
+
 	list.append(getConfigListEntry(_("Use background color and transparency from system"), config.plugins.archivCZSK.skin_from_system))
 	if not config.plugins.archivCZSK.skin_from_system.value:
 		list.append(getConfigListEntry(_("Background transparency (in %)"), config.plugins.archivCZSK.skin_transparency))

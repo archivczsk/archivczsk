@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-09 19:06+0100\n"
-"PO-Revision-Date: 2025-02-09 19:06+0100\n"
+"POT-Creation-Date: 2025-02-19 11:12+0100\n"
+"PO-Revision-Date: 2025-02-19 11:13+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: sk\n"
@@ -201,7 +201,7 @@ msgstr "Podľa velkosťi"
 msgid "Sort by state"
 msgstr "Podľa stavu"
 
-#: src/gui/download.py:407 src/gui/content.py:537
+#: src/gui/download.py:407 src/gui/content.py:542
 #: src/engine/handlers/addon.py:192
 msgid "Downloads"
 msgstr "Stiahnuté súbory"
@@ -210,81 +210,85 @@ msgstr "Stiahnuté súbory"
 msgid "Unlock protected content"
 msgstr "Odomknúť chránený obsah"
 
-#: src/gui/content.py:67 src/gui/content.py:481
+#: src/gui/content.py:67 src/gui/content.py:486
 msgid "Loading..."
 msgstr "Načítavam..."
 
-#: src/gui/content.py:202 src/gui/content.py:310
+#: src/gui/content.py:202
+msgid "Developer mode is activated"
+msgstr "Vývojársky režim je aktivovaný"
+
+#: src/gui/content.py:207 src/gui/content.py:315
 msgid "show menu of current addon"
 msgstr "zobrazí možnosti doplnku"
 
-#: src/gui/content.py:246 src/gui/content.py:267
+#: src/gui/content.py:251 src/gui/content.py:272
 msgid "enabled"
 msgstr "zapnutý"
 
-#: src/gui/content.py:252
+#: src/gui/content.py:257
 msgid "broken"
 msgstr "nefunkčný"
 
-#: src/gui/content.py:255
+#: src/gui/content.py:260
 msgid "deprecated"
 msgstr "zastaralý"
 
-#: src/gui/content.py:261
+#: src/gui/content.py:266
 msgid "disabled"
 msgstr "vypnutý"
 
-#: src/gui/content.py:292 src/gui/content.py:466
+#: src/gui/content.py:297 src/gui/content.py:471
 msgid "Version: "
 msgstr "Verzia: "
 
-#: src/gui/content.py:336
+#: src/gui/content.py:341
 msgid "Add Category"
 msgstr "Pridať kategóriu"
 
-#: src/gui/content.py:356
+#: src/gui/content.py:361
 msgid "Manager"
 msgstr "Manažér doplnkov"
 
-#: src/gui/content.py:357
+#: src/gui/content.py:362
 msgid "Support us"
 msgstr "Podporte nás"
 
-#: src/gui/content.py:358 src/gui/content.py:536 src/gui/menu.py:42
+#: src/gui/content.py:363 src/gui/content.py:541 src/gui/menu.py:42
 #: src/engine/handlers/addon.py:189 src/engine/handlers/addon.py:303
 msgid "Changelog"
 msgstr "Zmeny"
 
-#: src/gui/content.py:359 src/gui/content.py:539 src/gui/menu.py:221
+#: src/gui/content.py:364 src/gui/content.py:544 src/gui/menu.py:221
 #: src/engine/handlers/addon.py:186 src/engine/handlers/addon.py:300
 msgid "Settings"
 msgstr "Nastavenia"
 
-#: src/gui/content.py:429
+#: src/gui/content.py:434
 msgid "Set category name"
 msgstr "Zvoľte meno kategórie"
 
-#: src/gui/content.py:477
+#: src/gui/content.py:482
 msgid "Canceling..."
 msgstr "Prerušujem načítavanie..."
 
-#: src/gui/content.py:492
+#: src/gui/content.py:497
 msgid "Do you want to exit ArchivCZSK?"
 msgstr "Chcete ukončiť archivCZSK?"
 
-#: src/gui/content.py:506
+#: src/gui/content.py:511
 msgid "show info in CSFD"
 msgstr "zobrazí informácie o vybranej položke v CSFD doplnku"
 
-#: src/gui/content.py:507
+#: src/gui/content.py:512
 msgid "show additional info"
 msgstr "zobrazí dodatočné informácie o vybranej položke"
 
-#: src/gui/content.py:508
+#: src/gui/content.py:513
 msgid "show menu of current item"
 msgstr "zobrazí možnosti vybranej položky"
 
-#: src/gui/content.py:538 src/gui/shortcuts.py:27
+#: src/gui/content.py:543 src/gui/shortcuts.py:27
 #: src/engine/handlers/addon.py:196
 msgid "Shortcuts"
 msgstr "Záložky"
@@ -796,251 +800,255 @@ msgstr "Použite numerické klávesy pre zadanie hodnoty"
 msgid "Apply"
 msgstr "Použiť"
 
-#: src/settings.py:88
+#: src/settings.py:89
 msgid "Don't change"
 msgstr "Nemeniť"
 
-#: src/settings.py:102
+#: src/settings.py:103
 msgid "Stable"
 msgstr "Stabilný"
 
-#: src/settings.py:102
+#: src/settings.py:103
 msgid "Testing"
 msgstr "Testovací"
 
-#: src/settings.py:137
+#: src/settings.py:138
 msgid "Internal"
 msgstr "Interný"
 
-#: src/settings.py:137
+#: src/settings.py:138
 msgid "CSFD"
 msgstr "CSFD"
 
-#: src/settings.py:137
+#: src/settings.py:138
 msgid "CSFDLite"
 msgstr "CSFDLite"
 
-#: src/settings.py:142
+#: src/settings.py:146
+msgid "Enable developer mode (use only for developing addons)"
+msgstr "Povolenie režimu pre vývojárov (použite len na vývoj doplnkov)"
+
+#: src/settings.py:148
 msgid "Use background color and transparency from system"
 msgstr "Použiť farbu pozadia a transparentnosť zo systému"
 
-#: src/settings.py:144
+#: src/settings.py:150
 msgid "Background transparency (in %)"
 msgstr "Priehľadnosť pozadia (v %)"
 
-#: src/settings.py:145
+#: src/settings.py:151
 msgid "Background color (RGB format)"
 msgstr "Farba pozadia (formát RGB)"
 
-#: src/settings.py:146
+#: src/settings.py:152
 msgid "Font size in lists (in %)"
 msgstr "Veľkosť písma v zoznamoch (v %)"
 
-#: src/settings.py:147
+#: src/settings.py:153
 msgid "Enable colored items"
 msgstr "Povoliť vyfarbovanie jednotlivých položiek v zozname"
 
-#: src/settings.py:148
+#: src/settings.py:154
 msgid "Default category"
 msgstr "Predvolená kategória"
 
-#: src/settings.py:149
+#: src/settings.py:155
 msgid "Allow archivCZSK auto update"
 msgstr "Povoliť kontrolu aktualizácií archívuCZSK"
 
-#: src/settings.py:150
+#: src/settings.py:156
 msgid "Allow addons auto update"
 msgstr "Povoliť kontrolu aktualizácií doplnkov"
 
-#: src/settings.py:152
+#: src/settings.py:158
 msgid "Update timeout"
 msgstr "Časový limit aktualizácie"
 
-#: src/settings.py:154
+#: src/settings.py:160
 msgid "Update repository"
 msgstr "Aktualizačný repozitár"
 
-#: src/settings.py:155
+#: src/settings.py:161
 msgid "Update channel"
 msgstr "Aktualizačný kanál"
 
-#: src/settings.py:156
+#: src/settings.py:162
 msgid "Show changelog after update"
 msgstr "Po aktualizácii zobraziť zoznam zmien"
 
-#: src/settings.py:157
+#: src/settings.py:163
 msgid "Check addons integrity"
 msgstr "Kontrolovať integritu doplnkov"
 
-#: src/settings.py:161
+#: src/settings.py:167
 msgid "Show movie poster"
 msgstr "Zobraziť plagát filmu"
 
-#: src/settings.py:163
+#: src/settings.py:169
 msgid "Poster maximum processing size (in kB)"
 msgstr "Maximálna veľkosť plagátu pre spracovanie (v kB)"
 
-#: src/settings.py:164
+#: src/settings.py:170
 msgid "Max posters on HDD"
 msgstr "Max počet plagátov na disku"
 
-#: src/settings.py:168
+#: src/settings.py:174
 msgid "Add to extensions menu"
 msgstr "Pridať do menu rozšírení"
 
-#: src/settings.py:169
+#: src/settings.py:175
 msgid "Add to main menu"
 msgstr "Pridať do hlavného menu"
 
-#: src/settings.py:170
+#: src/settings.py:176
 msgid "Add archive enter shortcut to extensions menu"
 msgstr "Pridať skratku pre vstup do archívu do menu rozšírení"
 
-#: src/settings.py:171
+#: src/settings.py:177
 msgid "Add search option in epg menu"
 msgstr "Pridať vyhľadávanie v archivCZSK na dlhé stlačenie EPG/INFO"
 
-#: src/settings.py:172
+#: src/settings.py:178
 msgid "Integrate into EPG viewer (need restart)"
 msgstr "Integrácia do prehliadača EPG (potrebný reštart)"
 
-#: src/settings.py:174
+#: src/settings.py:180
 msgid "Number of history days in EPG viewer (need restart)"
 msgstr "Počet dní histórie v prehliadači EPG (potrebný reštart)"
 
-#: src/settings.py:178
+#: src/settings.py:184
 msgid "CSFD plugin"
 msgstr "CSFD plugin"
 
-#: src/settings.py:189
+#: src/settings.py:195
 msgid "standard player"
 msgstr "štandardný prehrávač"
 
-#: src/settings.py:190
+#: src/settings.py:196
 msgid "custom player (subtitle support)"
 msgstr "upravený prehrávač (podpora tituliek)"
 
-#: src/settings.py:209
+#: src/settings.py:215
 msgid "Show more info about player"
 msgstr "Zobraziť informácie o prehrávači"
 
-#: src/settings.py:210
+#: src/settings.py:216
 msgid "RTMP Timeout"
 msgstr "RTMP Timeout"
 
-#: src/settings.py:211
+#: src/settings.py:217
 msgid "RTMP Buffer"
 msgstr "RTMP Buffer"
 
-#: src/settings.py:212
+#: src/settings.py:218
 msgid "Confirm exit when closing player"
 msgstr "Potvrdiť ukončenie prehrávania"
 
-#: src/settings.py:213
+#: src/settings.py:219
 msgid "Allow automatically changing audio track"
 msgstr "Povoliť automatickú zmenu zvukovej stopy"
 
-#: src/settings.py:236
+#: src/settings.py:242
 msgid "Change parental control settings"
 msgstr "Zmeniť nastavenie rodičovskej kontroly"
 
-#: src/settings.py:238
+#: src/settings.py:244
 msgid "Your PIN code is set to default 0000. Please change it to your own value."
 msgstr "Váš PIN kód je nastavený na predvolený 0000. Prosím zmeňte si ho na vlastnú hodnotu."
 
-#: src/settings.py:240
+#: src/settings.py:246
 msgid "Enable parental control"
 msgstr "Povoliť rodičovskú kontrolu"
 
-#: src/settings.py:241
+#: src/settings.py:247
 msgid "Change parental control PIN"
 msgstr "Zmeniť PIN pre rodičovskú kontrolu"
 
-#: src/settings.py:242
+#: src/settings.py:248
 msgid "Show adult content"
 msgstr "Zobrazovať obsah pre dospelých"
 
-#: src/settings.py:243
+#: src/settings.py:249
 msgid "Show posters for adult content"
 msgstr "U obsahu pre dospelých zobrazovať postery"
 
-#: src/settings.py:263
+#: src/settings.py:269
 msgid "Data path"
 msgstr "Adresár pre dáta"
 
-#: src/settings.py:264
+#: src/settings.py:270
 msgid "Temp path"
 msgstr "Dočasný adresár"
 
-#: src/settings.py:265
+#: src/settings.py:271
 msgid "Downloads path"
 msgstr "Sťahovať do"
 
-#: src/settings.py:266
+#: src/settings.py:272
 msgid "Posters path"
 msgstr "Plagáty sťahovať do"
 
-#: src/settings.py:268
+#: src/settings.py:274
 msgid "Log path"
 msgstr "Logovať do"
 
-#: src/settings.py:285
+#: src/settings.py:291
 msgid "info"
 msgstr "info"
 
-#: src/settings.py:285
+#: src/settings.py:291
 msgid "debug"
 msgstr "debug"
 
-#: src/settings.py:304
+#: src/settings.py:310
 msgid "Debug mode"
 msgstr "Debug mód"
 
-#: src/settings.py:305
+#: src/settings.py:311
 msgid "Allow sending bug reports on addon error"
 msgstr "Povoliť posielanie chybových hlásení pri chybe doplnku"
 
-#: src/settings.py:306
+#: src/settings.py:312
 msgid "Allow preloading of addons on start"
 msgstr "Povoliť prednačítavanie doplnkov pri štarte"
 
-#: src/settings.py:307
+#: src/settings.py:313
 msgid "Confirm exit when closing plugin"
 msgstr "Potvrdiť ukončenie archívuCZSK"
 
-#: src/settings.py:308
+#: src/settings.py:314
 msgid "Show broken addons"
 msgstr "Zobraziť nefunkčné doplnky"
 
-#: src/settings.py:309
+#: src/settings.py:315
 msgid "Show not supported addons"
 msgstr "Zobraziť nepodporované doplnky"
 
-#: src/settings.py:310
+#: src/settings.py:316
 msgid "On update remove broken and not supported addons"
 msgstr "Pri aktualizácii odstrániť nefunkčné a nepodporované doplnky"
 
-#: src/settings.py:311
+#: src/settings.py:317
 msgid "Show video source selection"
 msgstr "Zobraziť výber zdroju videa"
 
-#: src/settings.py:312
+#: src/settings.py:318
 msgid "Convert captcha images to 8bit"
 msgstr "Konvertovať captcha obrázky"
 
-#: src/settings.py:313
+#: src/settings.py:319
 msgid "Drop caches on exit"
 msgstr "Vymazať medzipamäť po ukončení"
 
-#: src/settings.py:314
+#: src/settings.py:320
 msgid "Internal HTTP server listen port"
 msgstr "Port interného HTTP servera"
 
-#: src/settings.py:315
+#: src/settings.py:321
 msgid "Run HTTP only for internal addons usage"
 msgstr "Spustiť HTTP server iba pre interné použitie doplnkami"
 
-#: src/settings.py:319
+#: src/settings.py:325
 msgid "Allow sending anonymous usage statistics"
 msgstr "Povoliť posielanie anonymných štatistík používania pluginu"
 
@@ -1210,7 +1218,7 @@ msgstr "záložku?"
 msgid "Please select source"
 msgstr "Prosím zvoľte zdroj"
 
-#: src/engine/handlers/media.py:500 src/engine/player/player.py:659
+#: src/engine/handlers/media.py:500 src/engine/player/player.py:661
 msgid "Show playlist"
 msgstr "Zobraziť playlist"
 
@@ -1318,29 +1326,29 @@ msgstr "Všetky doplnky"
 msgid "Category list"
 msgstr "Zoznam kategórií"
 
-#: src/engine/contentprovider.py:595
+#: src/engine/contentprovider.py:612
 msgid "Loading of addon failed"
 msgstr "Načítavanie doplnku zlyhalo"
 
-#: src/engine/contentprovider.py:601
+#: src/engine/contentprovider.py:618
 msgid "Addon returned not supported communication interface"
 msgstr "Doplnok vrátil nepodporované komunikačné rozhranie"
 
-#: src/engine/contentprovider.py:636
+#: src/engine/contentprovider.py:653
 msgid "Addon is designed for ArchivCZSK version lower then 2.5.0 and incompatible with installed version. Update ArchivCZSK and addons to latest available versions."
 msgstr "Doplnok je vytvorený pre ArchivCZSK verziu menšiu ako 2.5.0 a nie je kompatibilný s nainštalovanou verziou. Zaktualizujte ArchivCZSK a doplnky na posledné dostupné verzie."
 
-#: src/engine/contentprovider.py:641
+#: src/engine/contentprovider.py:658
 #, python-brace-format
 msgid "You need to update archivCZSK at least to version {version}"
 msgstr "Musíte aktualizovať ArchivCZSK aspoň na verziu {version}"
 
-#: src/engine/contentprovider.py:653
+#: src/engine/contentprovider.py:670
 #, python-brace-format
 msgid "Cannot execute addon {addon_name}. Dependency {dependency_name} version {dependency_version} needs to be at least version {dependency_version_requiered}"
 msgstr "Spustenie doplnku {addon_name} zlyhalo. Nainštalovaná závislosť {dependency_name} verzia {dependency_version} musí byť aspoň vo verzii {dependency_version_requiered}"
 
-#: src/engine/contentprovider.py:661
+#: src/engine/contentprovider.py:678
 #, python-brace-format
 msgid ""
 "Cannot execute addon {addon_name}. Missing dependency: {dependency_name}\n"
@@ -1437,61 +1445,61 @@ msgstr ""
 "Aktualizácia archivCZSK zlyhala. {cmd} skončilo chybou\n"
 "{msg}"
 
-#: src/engine/trakttv.py:493
+#: src/engine/trakttv.py:500
 #, python-brace-format
 msgid "Trakt.tv operation {action} ended successfuly"
 msgstr "Trakt.tv operácia \"{action}\" skončila úspešne"
 
-#: src/engine/trakttv.py:496
+#: src/engine/trakttv.py:503
 msgid "Trakt.tv is not paired with this device."
 msgstr "Trakt.tv nie je spárovaný s týmto zariadením."
 
-#: src/engine/trakttv.py:500
+#: src/engine/trakttv.py:507
 #, python-brace-format
 msgid "Trakt.tv operation \"{action}\" failed"
 msgstr "Trakt.tv operácia \"{action}\" zlyhala"
 
-#: src/engine/trakttv.py:514
+#: src/engine/trakttv.py:521
 msgid "Add to watchlist"
 msgstr "Pridať do Watchlist"
 
-#: src/engine/trakttv.py:515
+#: src/engine/trakttv.py:522
 msgid "Delete from watchlist"
 msgstr "Vymazať z Watchlist"
 
-#: src/engine/trakttv.py:518
+#: src/engine/trakttv.py:525
 msgid "Mark as watched"
 msgstr "Označiť ako videné"
 
-#: src/engine/trakttv.py:521
+#: src/engine/trakttv.py:528
 msgid "Mark as not watched"
 msgstr "Označiť ako nevidené"
 
-#: src/engine/trakttv.py:523
+#: src/engine/trakttv.py:530
 msgid "Force data synchronisation"
 msgstr "Vynútiť synchronizáciu dát"
 
-#: src/engine/trakttv.py:524
+#: src/engine/trakttv.py:531
 msgid "Unpair this device from Trakt.tv"
 msgstr "Zrušiť spárovanie zariadenia s Trakt.tv"
 
-#: src/engine/trakttv.py:527
+#: src/engine/trakttv.py:534
 msgid "Choose Trakt.tv action"
 msgstr "Zvoľte Trakt.tv akciu"
 
-#: src/engine/trakttv.py:542
+#: src/engine/trakttv.py:549
 msgid "Pairing timed out!"
 msgstr "Časový limit párovania vypršal!"
 
-#: src/engine/trakttv.py:545 src/engine/trakttv.py:558
+#: src/engine/trakttv.py:552 src/engine/trakttv.py:565
 msgid "Pairing aborted by user"
 msgstr "Párovanie bolo zrušené používateľom"
 
-#: src/engine/trakttv.py:554
+#: src/engine/trakttv.py:561
 msgid "Pairing succesed. You can use Trakt.tv functions now"
 msgstr "Párovanie úspešné. Teraz môžete využívať funkcie Trakt.tv"
 
-#: src/engine/trakttv.py:567
+#: src/engine/trakttv.py:574
 #, python-brace-format
 msgid ""
 "To pair Trakt.tv with this device go to the activation address and enter pairing code.\n"
@@ -1507,85 +1515,85 @@ msgstr ""
 msgid "Player switched to {player}"
 msgstr "Prehrávač zmenený na {player}"
 
-#: src/engine/player/player.py:314
+#: src/engine/player/player.py:315
 msgid "Stop playing this movie?"
 msgstr "Ukončiť prehrávanie tohto videa?"
 
-#: src/engine/player/player.py:469 src/engine/player/player.py:477
+#: src/engine/player/player.py:470 src/engine/player/player.py:478
 msgid "Letterbox"
 msgstr "Letterbox"
 
-#: src/engine/player/player.py:470 src/engine/player/player.py:474
-#: src/engine/player/player.py:478
+#: src/engine/player/player.py:471 src/engine/player/player.py:475
+#: src/engine/player/player.py:479
 msgid "Pan&scan"
 msgstr "Pan&scan"
 
-#: src/engine/player/player.py:471 src/engine/player/player.py:475
+#: src/engine/player/player.py:472 src/engine/player/player.py:476
 msgid "Nonlinear"
 msgstr "Nonlinear"
 
-#: src/engine/player/player.py:472 src/engine/player/player.py:476
-#: src/engine/player/player.py:479
+#: src/engine/player/player.py:473 src/engine/player/player.py:477
+#: src/engine/player/player.py:480
 msgid "Just scale"
 msgstr "Just scale"
 
-#: src/engine/player/player.py:473
+#: src/engine/player/player.py:474
 msgid "PillarBox"
 msgstr "PillarBox"
 
-#: src/engine/player/player.py:515
+#: src/engine/player/player.py:516
 msgid "Aspect"
 msgstr "Aspect"
 
-#: src/engine/player/player.py:516
+#: src/engine/player/player.py:517
 msgid "Policy"
 msgstr "Policy"
 
-#: src/engine/player/player.py:554
+#: src/engine/player/player.py:555
 msgid "Show subservices"
 msgstr "Zobraziť subservices"
 
-#: src/engine/player/player.py:579
+#: src/engine/player/player.py:580
 msgid "Please select subservice..."
 msgstr "Prosím zvoľte subservice..."
 
-#: src/engine/player/player.py:660
+#: src/engine/player/player.py:662
 msgid "Play next entry in playlist"
 msgstr "Prehrať nasledujúci záznam v playliste"
 
-#: src/engine/player/player.py:661
+#: src/engine/player/player.py:663
 msgid "Play previous entry in playlist"
 msgstr "Prehrať predchádzajúci záznam v playliste"
 
-#: src/engine/player/player.py:662
+#: src/engine/player/player.py:664
 msgid "Exit player"
 msgstr "Ukončiť prehrávač"
 
-#: src/engine/player/player.py:663
+#: src/engine/player/player.py:665
 msgid "Show/hide infobar"
 msgstr "Zobraziť/skryť infobar"
 
-#: src/engine/player/player.py:664
+#: src/engine/player/player.py:666
 msgid "Switch player type"
 msgstr "Zmeniť typ prehrávača"
 
-#: src/engine/player/player.py:738
+#: src/engine/player/player.py:740
 msgid "Skip intro"
 msgstr "Preskočiť úvod"
 
-#: src/engine/player/player.py:740
+#: src/engine/player/player.py:742
 msgid "Skip credits"
 msgstr "Preskočiť titulky"
 
-#: src/engine/player/player.py:742
+#: src/engine/player/player.py:744
 msgid "Skip this part"
 msgstr "Preskočiť túto časť"
 
-#: src/engine/player/player.py:830
+#: src/engine/player/player.py:832
 msgid "Resuming playback"
 msgstr "Obnovujem prehrávanie"
 
-#: src/engine/player/player.py:839
+#: src/engine/player/player.py:841
 msgid "Resume playback from last play position?"
 msgstr "Obnoviť prehrávanie od poslednej pozície?"
 

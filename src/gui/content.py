@@ -197,6 +197,11 @@ class BaseContentScreen(BaseArchivCZSKListSourceScreen):
 		else:
 			return self.lst_items
 
+	def setTitle(self, title):
+		if config.plugins.archivCZSK.developer_mode.value:
+			title = '{} ({})'.format(title, _("Developer mode is activated"))
+
+		super(BaseContentScreen, self).setTitle(title)
 
 class ArchivCZSKVideoAddonsManagementScreen(BaseContentScreen, TipBar):
 	CONTEXT_TIP = (KEY_MENU_IMG, _("show menu of current addon"))
