@@ -274,6 +274,7 @@ class Player(object):
 
 		self.video_player.relativeSeekEnabled(play_settings.get('relative_seek_enabled', True))
 		self.video_player.checkSeekBorders(play_settings.get('check_seek_borders', False))
+		self.video_player.setSeekBorders(play_settings.get('seek_border_down', 0), play_settings.get('seek_border_up', 0))
 
 		tracks_settings = {
 			# list of priority langs used for audio and subtitles - audio will be automatically switched to first available language
@@ -614,6 +615,7 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.seekBack = self.seekBackManual
 		self.relative_seek_enabled = True
 		self.check_seek_borders = False
+		self.seek_borders = (0, 0)
 		self.start_pts = None
 		initSubsSettings()
 
@@ -1061,6 +1063,10 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 			log.info("Enabling seek borders")
 		self.check_seek_borders = enabled
 
+	def setSeekBorders(self, down_limit, up_limit):
+		log.info("Setting seek borders to (%d, %d)" % (down_limit, up_limit))
+		self.seek_borders = (down_limit * 90000, up_limit * 90000)
+
 	def pauseService(self):
 		seekstate = self.seekstate
 		InfoBarSeek.pauseService(self)
@@ -1081,9 +1087,18 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.old_position = getPlayPositionInSeconds(self.session, current_pts)
 
 		if self.check_seek_borders:
+			if pts < self.seek_borders[0]:
+				pts = self.seek_borders[0]
+
 			end_pts = getDurationPts(self.session)
-			if pts >= end_pts:
-				pts = end_pts - 1
+
+			if end_pts != None:
+				end_pts -= self.seek_borders[1]
+				if end_pts < 1:
+					end_pts = 1
+
+				if pts >= end_pts:
+					pts = end_pts - 1
 
 		InfoBarSeek.doSeek(self, pts )
 		if self.__timer_seek.isActive():
@@ -1110,9 +1125,15 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.old_position = getPlayPositionInSeconds(self.session, current_pts)
 
 		if self.check_seek_borders:
+			if (current_pts + pts) < self.seek_borders[0]:
+				pts = self.seek_borders[0] - current_pts
+
 			end_pts = getDurationPts(self.session)
-			if (current_pts + pts) >= end_pts:
-				pts = end_pts - current_pts - 1
+
+			if end_pts != None:
+				end_pts -= self.seek_borders[1]
+				if (current_pts + pts) >= end_pts:
+					pts = end_pts - current_pts - 1
 
 		InfoBarSeek.doSeekRelative(self, pts )
 		if self.__timer_seek.isActive():
