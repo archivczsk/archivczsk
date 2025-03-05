@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 import os, traceback
 import json, time
-from ..settings import config
+from ..settings import config, LANGUAGE_SETTINGS_ID
 from .. import log
 from .bgservice import AddonBackgroundService
 from datetime import datetime
@@ -197,10 +197,20 @@ class UsageStats(object):
 		except:
 			return 0
 
+	def get_addon_integrity(self, addon_id):
+		from ..archivczsk import ArchivCZSK
+
+		try:
+			addon = ArchivCZSK.get_addon(addon_id)
+			return addon.check_addon_integrity()
+		except:
+			return False
+
 	def send(self):
 		if config.plugins.archivCZSK.send_usage_stats.value:
 			from ..version import version
 			from .player.info import videoPlayerInfo
+			from .license import license
 
 			if videoPlayerInfo.exteplayer3Available:
 				exteplayer3_ver = videoPlayerInfo.getExteplayer3Version() or 0
@@ -233,7 +243,8 @@ class UsageStats(object):
 					"python_ver": stbinfo.python_version,
 					"serviceapp": videoPlayerInfo.serviceappAvailable,
 					"exteplayer3_ver": exteplayer3_ver,
-					"subssupport_ver": videoPlayerInfo.subssupport_version or ''
+					"subssupport_ver": videoPlayerInfo.subssupport_version or '',
+					"lang": LANGUAGE_SETTINGS_ID
 				},
 				'archivczsk': {
 					'version': version,
@@ -242,6 +253,7 @@ class UsageStats(object):
 					'addons_update_enabled': config.plugins.archivCZSK.autoUpdate.value,
 					'update_channel': config.plugins.archivCZSK.update_branch.value,
 					'counters': self.counters,
+					'license': license.is_valid(),
 					'settings' : {
 						'csfd_mode': config.plugins.archivCZSK.csfdMode.value,
 						'parental_enabled': config.plugins.archivCZSK.parental.enable.value
@@ -261,6 +273,7 @@ class UsageStats(object):
 						'exceptions': stats_data.get('exceptions', 0),
 						'profiles': self.get_addon_profiles_cnt(addon_id),
 						'ext_search': stats_data.get('ext_search', 0),
+						'integrity': self.get_addon_integrity(addon_id)
 					}
 
 					astats.update( {k: v for k, v in stats_data.items() if k.startswith('shortcut_')} )
