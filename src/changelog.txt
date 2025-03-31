@@ -1,3 +1,6 @@
+archivCZSK 3.3.2, 31.03.2025
+    - oprava inštalácie závislostí pre OpenATV 7.6
+
 archivCZSK 3.3.1, 10.03.2025
     - aktualizácia API pre doplnky
     - doplnky majú možnosť nastaviť hranice pri posúvaní prehrávania
