@@ -9,14 +9,14 @@ run()
 {
 	echo "Script started at `date`"
 
-	if [ -z `grep libpython3 /usr/bin/enigma2` ] ; then
-		echo "Detected system based on python2"
-		PKGS=$DEP_PY2
-	else
+	if [ `python -V | cut -d ' ' -f 2 | cut -d '.' -f1` = 3 ]; then
 		echo "Detected system based on python3"
 		PKGS=$DEP_PY3
+	else
+		echo "Detected system based on python2"
+		PKGS=$DEP_PY2
 	fi
-	
+
 	if [ -f /usr/bin/dpkg ] ; then
 		echo "Detected deb based system"
 		LOCK_FILE="/var/lib/dpkg/lock"
@@ -32,7 +32,7 @@ run()
 		INSTALL_CMD="opkg install"
 		GET_PKGS="opkg list"
 	fi
-	
+
 	for i in `seq 60`; do
 		sleep 1
 
