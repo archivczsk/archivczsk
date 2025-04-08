@@ -9,7 +9,8 @@ import traceback
 
 from enigma import eConsoleAppContainer
 
-from .. import _, log
+from .. import log
+from .tools.lang import _
 from ..compat import eConnectCallback
 from .exceptions.download import NotSupportedProtocolError
 from .player.info import videoPlayerInfo
@@ -140,12 +141,12 @@ class DownloadManager(object):
 				realtime = True
 			else:
 				realtime = False
-			d = RTMPDownloadE2(url=url, name=name, destDir=destination, 
+			d = RTMPDownloadE2(url=url, name=name, destDir=destination,
 					filename=filename, live=live, quiet=quiet, realtime=realtime)
 		elif url[0:4] == 'http':
 			if isHLSUrl(url):
 				raise NotSupportedProtocolError('HLS')
-			d = HTTPDownloadE2(name=name, url=url, filename=filename, 
+			d = HTTPDownloadE2(name=name, url=url, filename=filename,
 					destDir=destination, quiet=quiet, headers=headers)
 		else:
 			protocol = url.split('://')[0].upper()

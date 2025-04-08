@@ -1,12 +1,12 @@
 import os
 import traceback
-from Components.Language import language
 from Components.config import config, ConfigSubsection, ConfigSelection, \
 	ConfigDirectory, ConfigYesNo, ConfigText, ConfigNumber, ConfigNothing, getConfigListEntry, \
 	NoSave, ConfigInteger, ConfigSequence
 from Tools.Directories import SCOPE_PLUGINS, resolveFilename
 
-from . import log, UpdateInfo, _
+from .engine.tools.lang import _
+from . import log, UpdateInfo
 from .compat import DMM_IMAGE, VTI_IMAGE
 
 try:
@@ -30,7 +30,6 @@ def image_is_openpli():
 	return False
 
 
-LANGUAGE_SETTINGS_ID = language.getLanguage()[:2]
 MENU_SEPARATOR = getConfigListEntry("----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------", NoSave(ConfigNothing()))
 
 ######### Plugin Paths ##############
@@ -82,6 +81,17 @@ def changeAutoUpdate(configElement):
 	UpdateInfo.resetDates()
 
 config.plugins.archivCZSK.developer_mode = ConfigYesNo(default=False)
+
+def langChanged(configElement):
+	from .engine.tools.lang import localeInit
+	if configElement.value == 'auto':
+		lang_id = None
+	else:
+		lang_id = configElement.value
+	localeInit(lang_id)
+
+config.plugins.archivCZSK.lang = ConfigSelection(default='auto', choices=[ ('auto', _('Automaticaly')), ('cs', _("Czech")), ('sk', _("Slovak")), ('en', _("English")) ])
+config.plugins.archivCZSK.lang.addNotifier(langChanged)
 config.plugins.archivCZSK.main_menu = ConfigYesNo(default=True)
 config.plugins.archivCZSK.extensions_menu = ConfigYesNo(default=False)
 config.plugins.archivCZSK.epg_menu = ConfigYesNo(default=True)
@@ -90,7 +100,7 @@ choicelist = [ ('-1', _("Don't change"),) ]
 for i in range(1, 8):
 	choicelist.append( (str(i), str(i),) )
 
-config.plugins.archivCZSK.epg_viewer_history = ConfigSelection(default='7',  choices=choicelist)
+config.plugins.archivCZSK.epg_viewer_history = ConfigSelection(default='7', choices=choicelist)
 config.plugins.archivCZSK.archivAutoUpdate = ConfigYesNo(default=True)
 config.plugins.archivCZSK.archivAutoUpdate.addNotifier(changeAutoUpdate)
 config.plugins.archivCZSK.allow_custom_update = ConfigYesNo(default=False)
@@ -145,6 +155,7 @@ def get_main_settings():
 	if license.check_level(license.LEVEL_DEVELOPER):
 		list.append(getConfigListEntry(_("Enable developer mode (use only for developing addons)"), config.plugins.archivCZSK.developer_mode))
 
+	list.append(getConfigListEntry(_("Plugin language"), config.plugins.archivCZSK.lang))
 	list.append(getConfigListEntry(_("Use background color and transparency from system"), config.plugins.archivCZSK.skin_from_system))
 	if not config.plugins.archivCZSK.skin_from_system.value:
 		list.append(getConfigListEntry(_("Background transparency (in %)"), config.plugins.archivCZSK.skin_transparency))

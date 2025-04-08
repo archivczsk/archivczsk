@@ -10,7 +10,7 @@ from Components.Label import Label
 from Screens.MessageBox import MessageBox
 from Tools.LoadPixmap import LoadPixmap
 
-from .. import _
+from ..engine.tools.lang import _
 from .common import toString
 from .base import BaseArchivCZSKListSourceScreen
 from ..colors import DeleteColors
@@ -45,7 +45,7 @@ class ArchivCZSKShortcutsScreen(BaseArchivCZSKListSourceScreen):
 		item = self.getSelectedItem()
 		if item:
 			message = '%s %s?' % (_('Do you want to delete'), toString(DeleteColors(item.name)))
-			self.session.openWithCallback(self.removeShortcut, 
+			self.session.openWithCallback(self.removeShortcut,
 								MessageBox, message, type=MessageBox.TYPE_YESNO)
 
 	def removeShortcut(self, callback):
@@ -53,7 +53,7 @@ class ArchivCZSKShortcutsScreen(BaseArchivCZSKListSourceScreen):
 			self.provider.remove_shortcut(self.getSelectedItem())
 			self.lst_items = self.provider.get_shortcuts()
 			self.updateMenuList()
-	
+
 	def updateMenuList(self, index=0):
 		if config.plugins.archivCZSK.colored_items.value:
 			def handle_colors(s):

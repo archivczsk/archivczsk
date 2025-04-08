@@ -15,7 +15,8 @@ from Screens.LocationBox import LocationBox
 from Screens.VirtualKeyBoard import VirtualKeyBoard
 from Components.config import config, ConfigSelection
 
-from .. import _, log, settings, version as aczsk
+from .. import log, settings, version as aczsk
+from .tools.lang import _
 from ..compat import eConnectCallback, MessageBox
 from .downloader import getFilenameAndLength, DownloadManager
 from ..gui.download import DownloadManagerMessages

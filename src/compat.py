@@ -15,7 +15,7 @@ from Tools.Directories import fileExists
 
 from enigma import eServiceReference, eListboxPythonMultiContent, eServiceCenter, gFont
 
-from . import _
+from .engine.tools.lang import _
 
 from skin import parseSize as __parseSize
 from skin import parsePosition as __parsePosition

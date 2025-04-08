@@ -6,7 +6,8 @@ from Screens.MessageBox import MessageBox
 from Screens.ChoiceBox import ChoiceBox
 
 from .item import ItemHandler
-from ... import _, log
+from ... import log
+from ..tools.lang import _
 from ...gui.exception import AddonExceptionHandler, DownloadExceptionHandler
 from ..items import PExit, PVideo, PVideoResolved, PVideoNotResolved, PPlaylist
 from ..tools.util import toString

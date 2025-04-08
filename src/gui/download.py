@@ -14,8 +14,9 @@ from Screens.ChoiceBox import ChoiceBox
 from Screens.MessageBox import MessageBox
 from Screens.VirtualKeyBoard import VirtualKeyBoard
 
-from .. import _, settings
+from .. import settings
 from ..compat import eConnectCallback
+from ..engine.tools.lang import _
 from ..engine.downloader import DownloadManager
 from ..engine.tools import util
 from ..engine.items import PVideo

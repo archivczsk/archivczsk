@@ -13,7 +13,8 @@ from .tools.unzip import unzip_to_dir
 from enigma import eTimer
 from ..compat import eConnectCallback
 from .exceptions.updater import UpdateXMLVersionError, UpdateXMLNoUpdateUrl
-from .. import _, log, toString
+from .. import log, toString
+from .tools.lang import _
 
 from Components.Console import Console
 from Components.config import config

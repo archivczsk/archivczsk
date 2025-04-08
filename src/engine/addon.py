@@ -13,7 +13,9 @@ import uuid
 from hashlib import md5
 
 from .tools import util, parser
-from .. import _, log, settings
+from .tools.lang import get_language_id
+from .. import log, settings
+from .tools.lang import _
 from ..resources.repositories import config as addon_config
 from ..gui import menu, info, shortcuts, download
 from .contentprovider import VideoAddonContentProvider
@@ -32,7 +34,7 @@ class Addon(object):
 		self.id = info.id
 		self.name = info.name
 		self.version = info.version
-		self.description = info.description
+		#self.description = info.get_description(get_language_id())
 		self.changelog_path = info.changelog_path
 		self.path = info.path
 		self.relative_path = os.path.relpath(self.path, repository.path)
@@ -47,11 +49,12 @@ class Addon(object):
 
 		# load languages
 		self.language = AddonLanguage(self, os.path.join(self.path, self.repository.addon_languages_relpath))
-		if self.language.has_language(settings.LANGUAGE_SETTINGS_ID):
-			self.language.set_language(settings.LANGUAGE_SETTINGS_ID)
+		archivczsk_lang_id = get_language_id()
+		if self.language.has_language(archivczsk_lang_id):
+			self.language.set_language(archivczsk_lang_id)
 		else:
 			#fix to use czech language instead of slovak language when slovak is not available
-			if settings.LANGUAGE_SETTINGS_ID == 'sk' and self.language.has_language('cs'):
+			if archivczsk_lang_id == 'sk' and self.language.has_language('cs'):
 				self.language.set_language('cs')
 			else:
 				self.language.set_language('en')
@@ -103,6 +106,9 @@ class Addon(object):
 		return self.settings.set_setting(setting_id, value)
 
 	def get_info(self, info):
+		if info == 'description':
+			return self.info.get_description(get_language_id())
+
 		try:
 			atr = getattr(self.info, '%s' % info)
 		except Exception as e:
@@ -705,19 +711,10 @@ class AddonInfo(object):
 		self.shortcuts = addon_dict['shortcuts']
 		self.tmp_path = config.plugins.archivCZSK.tmpPath.value
 		self.data_path = os.path.join(config.plugins.archivCZSK.dataPath.getValue(), self.id)
+		self.description = addon_dict['description']
 
 		# create data_path(profile folder)
 		util.make_path(self.data_path)
-
-		if settings.LANGUAGE_SETTINGS_ID in addon_dict['description']:
-			self.description = addon_dict['description'][settings.LANGUAGE_SETTINGS_ID]
-		elif settings.LANGUAGE_SETTINGS_ID == 'sk' and 'cs' in addon_dict['description']:
-			self.description = addon_dict['description']['cs']
-		else:
-			if not 'en' in addon_dict['description']:
-				self.description = u''
-			else:
-				self.description = addon_dict['description']['en']
 
 		self.requires = addon_dict['requires']
 		self.image = os.path.join(self.path, 'icon.png')
@@ -729,6 +726,17 @@ class AddonInfo(object):
 			self.changelog_path = os.path.join(self.path, 'Changelog.txt')
 		else:
 			self.changelog_path = None
+
+	def get_description(self, lang_id):
+		if lang_id in self.description:
+			return self.description[lang_id]
+		elif lang_id == 'sk' and 'cs' in self.description:
+			return self.description['cs']
+		elif lang_id == 'cs' and 'sk' in self.description:
+			return self.description['sk']
+		else:
+			return self.description.get('en', u'')
+
 
 	def __repr__(self):
 		return "AddonInfo(%s)" % ('/'.join(self.path.split('/')[-2:]))

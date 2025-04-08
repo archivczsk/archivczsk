@@ -16,7 +16,7 @@ from Components.config import config
 from Tools.Directories import fileExists
 from Tools.LoadPixmap import LoadPixmap
 
-from .. import _
+from ..engine.tools.lang import _
 from ..py3compat import *
 
 RATIO = 1

@@ -4,7 +4,7 @@ Created on 11.8.2012
 
 @author: marko
 '''
-from ... import _
+from ...engine.tools.lang import _
 from Components.config import config, ConfigSelection, ConfigDirectory, getConfigListEntry, ConfigBoolean
 
 import os

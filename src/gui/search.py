@@ -16,7 +16,8 @@ from ..client import seeker
 from .base import BaseArchivCZSKListSourceScreen
 from .common import toString
 from ..engine.tools.util import removeDiac
-from .. import _, log
+from ..engine.tools.lang import _
+from .. import log
 
 
 class ArchivCZSKSearchClientScreen(BaseArchivCZSKListSourceScreen):

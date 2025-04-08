@@ -1,12 +1,13 @@
 # -*- coding: utf-8 -*-
+from Components.config import config
 import os, traceback
 import json, time
-from ..settings import config, LANGUAGE_SETTINGS_ID
 from .. import log
 from .bgservice import AddonBackgroundService
 from datetime import datetime
 from .tools.stbinfo import stbinfo
 from .tools.util import get_ntp_timestamp, get_http_timestamp
+from .tools.lang import get_language_id
 import requests
 from base64 import b64encode
 
@@ -244,7 +245,7 @@ class UsageStats(object):
 					"serviceapp": videoPlayerInfo.serviceappAvailable,
 					"exteplayer3_ver": exteplayer3_ver,
 					"subssupport_ver": videoPlayerInfo.subssupport_version or '',
-					"lang": LANGUAGE_SETTINGS_ID
+					"lang": get_language_id()
 				},
 				'archivczsk': {
 					'version': version,

@@ -5,7 +5,8 @@ from Components.config import config
 from Plugins.Plugin import PluginDescriptor
 from ServiceReference import ServiceReference
 
-from . import _, log
+from . import log
+from .engine.tools.lang import _
 from .archivczsk import ArchivCZSK
 from .gsession import GlobalSession
 from .gui.search import ArchivCZSKSearchClientScreen

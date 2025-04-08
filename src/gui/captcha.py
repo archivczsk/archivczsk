@@ -13,8 +13,8 @@ from Components.AVSwitch import AVSwitch
 from Components.Pixmap import Pixmap
 from Components.config import config
 
-from .. import _
 from ..compat import eConnectCallback
+from ..engine.tools.lang import _
 from ..engine.tools.util import convert_png_to_8bit, removeDiac
 from .base import BaseArchivCZSKScreen
 

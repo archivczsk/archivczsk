@@ -2,7 +2,8 @@ import traceback
 from Screens.MessageBox import MessageBox
 
 from .item import ItemHandler
-from ... import _, log
+from ... import log
+from ..tools.lang import _
 from ...gui.exception import AddonExceptionHandler
 from ..items import PExit, PFolder, PSearchItem, PPlaylist, PVideo
 from ...gui.common import showInfoMessage, showErrorMessage, showWarningMessage

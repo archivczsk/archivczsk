@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
+from Components.config import config
 import os, traceback
 import json, time
-from ..settings import config
 from .. import log
 from .bgservice import AddonBackgroundService
 from datetime import datetime, date

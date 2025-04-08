@@ -11,10 +11,12 @@ try:
 except:
 	from urllib.error import HTTPError, URLError
 
+from Components.config import config
 from .common import showInfoMessage, showWarningMessage, showErrorMessage, showYesNoDialog, MessageBox
 from ..engine.exceptions import addon, download, play
 from ..engine.usage import usage_stats
-from .. import _, log, config
+from ..engine.tools.lang import _
+from .. import log
 import requests
 
 # this is needed for compatibility with Python 2.7

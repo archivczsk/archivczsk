@@ -7,8 +7,9 @@ Created on 11.1.2013
 
 import traceback
 import re
-from .. import _, log
+from .. import log
 from ..gui.common import showInfoMessage, showErrorMessage
+from ..engine.tools.lang import _
 from ..engine.parental import parental_pin
 from ..engine.usage import usage_stats
 from ..engine.tools.util import removeDiac

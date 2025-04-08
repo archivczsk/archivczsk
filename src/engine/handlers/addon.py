@@ -11,7 +11,8 @@ from .folder import FolderItemHandler
 from .category import CategoryItemHandler, UserCategoryItemHandler
 from .media import VideoResolvedItemHandler, VideoNotResolvedItemHandler, PlaylistItemHandler
 
-from ... import _, log
+from ... import log
+from ..tools.lang import _
 from ..tools import util
 from ...gui.context import ArchivCZSKSelectCategoryScreen
 from ..contentprovider import VideoAddonContentProvider

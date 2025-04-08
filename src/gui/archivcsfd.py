@@ -27,7 +27,8 @@ from Components.MenuList import MenuList
 from Components.ProgressBar import ProgressBar
 from Components.Pixmap import Pixmap
 from twisted.web.client import downloadPage
-from .. import _, log, settings
+from .. import log, settings
+from ..engine.tools.lang import _
 from ..compat import eConnectCallback
 from ..engine.tools.util import removeDiac
 

@@ -12,9 +12,10 @@ from Tools.LoadPixmap import LoadPixmap
 
 from .poster import PosterProcessing, PosterPixmapHandler
 
-from .. import _, log, settings
+from .. import log, settings
 from ..compat import eConnectCallback
 from .icon import ArchivCZSKDonateScreen
+from ..engine.tools.lang import _
 from ..engine.contentprovider import ArchivCZSKContentProvider
 from ..engine.handlers import ArchivCZSKContentHandler, VideoAddonContentHandler, VideoAddonManagementScreenContentHandler
 from ..engine.items import PFolder, PRoot, PExit, PSearch, PSearchItem, PVideoNotResolved

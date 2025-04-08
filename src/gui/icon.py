@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 import os
 
-from .. import _, log
+from .. import log
 from Components.ActionMap import ActionMap
 from Components.Pixmap import Pixmap
 from enigma import eTimer, ePicLoad
@@ -13,6 +13,7 @@ from .base import BaseArchivCZSKListSourceScreen, BaseArchivCZSKScreen
 from .common import toString
 from ..settings import IMAGE_PATH
 from ..compat import eConnectCallback
+from ..engine.tools.lang import _
 from ..engine.tools import util
 from ..engine.tools.stbinfo import stbinfo
 from ..engine.license import license

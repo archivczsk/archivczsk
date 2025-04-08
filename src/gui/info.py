@@ -17,7 +17,7 @@ from Components.AVSwitch import AVSwitch
 from Components.config import config
 
 from .base import BaseArchivCZSKScreen
-from .. import _, log, settings
+from .. import log, settings
 from ..compat import eConnectCallback
 from .common import showInfoMessage, PanelColorListEntry, PanelList
 from .poster import PosterProcessing, PosterPixmapHandler
@@ -25,6 +25,7 @@ from ..engine.player.info import videoPlayerInfo
 from ..engine.parental import parental_pin
 from ..engine.usage import usage_stats
 from ..engine.tools.util import toUnicode, removeDiac
+from ..engine.tools.lang import _
 from ..colors import DeleteColors
 from ..py3compat import *
 

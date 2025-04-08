@@ -1,7 +1,8 @@
 # -*- coding: UTF-8 -*-
 
 from time import time
-from .. import _, log
+from .. import log
+from .tools.lang import _
 from Components.Input import Input
 from Screens.InputBox import InputBox
 from ..gui.common import showErrorMessage, showInfoMessage

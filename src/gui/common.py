@@ -15,7 +15,8 @@ from Screens.Screen import Screen
 from Tools.Directories import fileExists
 from ..compat import MessageBox
 
-from .. import settings, _, log
+from .. import settings, log
+from ..engine.tools.lang import _
 from ..compat import eConnectCallback, parseSize, parsePosition
 from ..engine.tools.util import BtoMB, BtoKB, BtoGB, toString
 from enigma import loadPNG, RT_VALIGN_TOP, eListbox, ePoint, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_HALIGN_CENTER, RT_VALIGN_CENTER, RT_WRAP, eListboxPythonMultiContent, gFont, getDesktop, eTimer, gPixmapPtr

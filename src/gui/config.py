@@ -3,8 +3,9 @@
 import traceback
 from .base import BaseArchivCZSKScreen, Screen
 from .common import TipBar
-from ..archivczsk import _, log
+from ..archivczsk import log
 from ..compat import DMM_IMAGE
+from ..engine.tools.lang import _
 from ..engine.tools.util import toString, toUnicode
 from Components.ConfigList import ConfigListScreen
 from Components.ActionMap import ActionMap

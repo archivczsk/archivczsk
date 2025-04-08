@@ -1,7 +1,8 @@
 # -*- coding: UTF-8 -*-
-from .. import _, log
+from .. import log
 import traceback
 
+from .tools.lang import _
 from .tools.util import toString
 from Screens.MessageBox import MessageBox
 from Components.config import config, ConfigSelectionNumber
