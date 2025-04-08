@@ -4,30 +4,52 @@ Created on 11.8.2012
 
 @author: marko
 '''
-from ...engine.tools.lang import _
-from Components.config import config, ConfigSelection, ConfigDirectory, getConfigListEntry, ConfigBoolean
-
+from Components.config import config, ConfigSelection, ConfigDirectory, getConfigListEntry, ConfigBoolean, ConfigNumber
+from functools import partial
+from ...compat import DMM_IMAGE
+from ...engine.tools.logger import log
 import os
+
+# just dummy implementation, for extracting texts - real translation will be done when settings will be shown
+def _(s):
+	return s
 
 choicelist_timeout = []
 for i in range(4, 30, 1):
 	choicelist_timeout.append(("%d" % i, "%d s" % i))
 choicelist_timeout.append(("0", "∞"))
 
+available_players=[ ('0', _('Default')), ('1', 'gstplayer'), ('2', 'exteplayer3') ]
+
+if DMM_IMAGE:
+	available_players.extend([ ('3', 'DMM'), ('4', 'DVB (OE>=2.5)')] )
+
 #define settings which will apply for every addon
 global_addon_settings = [
 	{
-		'label':_('Download'),
+		'label':_('General'),
+		'order': 0,
 		'subentries': [
 			{
-				'label': _("Download path"),
-				'id':'download_path'
+				'label': _("Addon order"),
+				'id': 'auto_addon_order',
+				'entry': ConfigNumber(default=99999)
 			},
+			{
+				'label': _("Used player"),
+				'id': 'auto_used_player',
+				'entry': ConfigSelection(default='0', choices=available_players)
+			}
 		]
 	},
 	{
-		'label':_('Loading'),
+		'label':_('Common'),
 		'subentries': [
+			{
+				'label': _("Addon language"),
+				'id': 'addon_lang',
+				'entry': ConfigSelection(default='auto', choices=[ ('auto', _('Automaticaly')), ('cs', _("Czech")), ('sk', _("Slovak")), ('en', _("English")) ])
+			},
 			{
 				'label': _("Timeout"),
 				'id':'loading_timeout',
@@ -37,6 +59,10 @@ global_addon_settings = [
 				'label': _("Verify SSL certificates"),
 				'id':'verify_ssl',
 				'entry': ConfigBoolean(default=False)
+			},
+			{
+				'label': _("Download path"),
+				'id':'download_path'
 			},
 		]
 	}
@@ -64,25 +90,47 @@ def add_global_addon_settings(addon, addon_config):
 
 #get addon config entries with global addons settings
 def getArchiveConfigList(addon):
-	categories = addon.settings.get_configlist_categories()[:]
-	for category in global_addon_settings:
-		category_init = None
+	from ...engine.tools.lang import _
+	categories = addon.settings.get_configlist_categories()
 
-		for cat in categories:
-			if category['label'] == cat['label']:
+	def __load_subentries(idx, gidx):
+		if idx != None:
+			se = categories[idx]['subentries']()
+		else:
+			se = []
+
+		for setting in global_addon_settings[gidx]['subentries']:
+			if 'setting_id' not in setting:
+				se.append(getConfigListEntry(_(setting['label']), getattr(addon.settings.main, setting['id'])))
+			else:
+				se.append(getConfigListEntry(_(setting['label']), setting['setting_id']))
+
+		return se
+
+	ret = []
+	gi_added = []
+
+	for i, cat in enumerate(categories):
+		category_init = None
+		for gi, category in enumerate(global_addon_settings):
+			if category['label'] == cat['label'] or category.get('order') == i:
 				category_init = cat
+				gi_added.append(gi)
+				break
 
 		if category_init is None:
-			category_init = {
-				'label':category['label'],
-				'subentries':[]
-			}
+			ret.append(cat)
+		else:
+			ret.append({
+				'label': category_init['label'],
+				'subentries': partial( __load_subentries, i, gi)
+			})
 
-		for setting in category['subentries']:
-			if 'setting_id' not in setting:
-				category_init['subentries'].append(getConfigListEntry(setting['label'], getattr(addon.settings.main, setting['id'])))
-			else:
-				category_init['subentries'].append(getConfigListEntry(setting['label'], setting['setting_id']))
-		categories.append(category_init)
+	for gi, category in enumerate(global_addon_settings):
+		if gi not in gi_added:
+			ret.append({
+				'label': _(category['label']),
+				'subentries': partial( __load_subentries, None, gi)
+			})
 
-	return categories
+	return ret

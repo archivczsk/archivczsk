@@ -11,6 +11,7 @@ from Components.config import config, ConfigSubsection, ConfigSelection, ConfigY
 import copy
 import uuid
 from hashlib import md5
+from functools import partial
 
 from .tools import util, parser
 from .tools.lang import get_language_id
@@ -485,7 +486,6 @@ class AddonSettings(object):
 		self.old_settings = {}
 
 		self.addon = addon
-		self.categories = []
 		# not every addon has settings
 		try:
 			settings_parser = parser.XBMCSettingsXMLParser(settings_file)
@@ -493,25 +493,6 @@ class AddonSettings(object):
 			pass
 		else:
 			self.category_entries = settings_parser.parse()
-			#hard code addon order for each addon
-			try:
-				#todo check if exist already
-				labelorder = _("Addon order")
-				obj = {'option': 'false', 'default': '99999', 'label': labelorder, 'visible': 'true', 'type': 'number', 'id': 'auto_addon_order'}
-				self.category_entries[0]['subentries'].append(obj)
-
-				labelplayer = _("Used player")
-				available_players="Default|gstplayer|exteplayer3"
-
-				if DMM_IMAGE:
-					available_players += "|DMM|DVB (OE>=2.5)"
-
-				obj = {'lvalues': available_players, 'default': '0', 'label': labelplayer, 'visible': 'true', 'type': 'enum', 'id': 'auto_used_player'}
-				self.category_entries[0]['subentries'].append(obj)
-				#if 'auto_addon_order' in self.category_entries[0]['subentries']:
-				#	 log.logInfo("############auto_addon_order already exist")
-			except:
-				log.logError("Add addon order (%s) failed.\n%s" % (self.addon, traceback.format_exc()))
 			self.initialize_settings()
 
 
@@ -521,24 +502,31 @@ class AddonSettings(object):
 
 	def initialize_settings(self):
 		for entry in self.category_entries:
+			for subentry in entry['subentries']:
+				self.initialize_entry(self.main, subentry)
+
+
+	def get_configlist_categories(self):
+		def __load_subcategory(idx):
+			se = []
+			for subentry in self.category_entries[idx]['subentries']:
+				if subentry['visible'] == 'true':
+					se.append(getConfigListEntry(py2_encode_utf8( self._get_label(subentry['label']) ), subentry['setting_id']))
+			return se
+
+		categories = []
+		for i, entry in enumerate(self.category_entries):
 			if entry['label'] == 'general':
 				if len(entry['subentries']) == 0 :
 					continue
 				else:
-					category = {'label':_('General'), 'subentries':[]}
+					category = {'label':_('General'), 'subentries': partial(__load_subcategory, i)}
 			else:
-				category = {'label':self._get_label(entry['label']), 'subentries':[]}
+				category = {'label':self._get_label(entry['label']), 'subentries': partial( __load_subcategory, i)}
 
-			for subentry in entry['subentries']:
-				self.initialize_entry(self.main, subentry)
-				if subentry['visible'] == 'true':
-					category['subentries'].append(getConfigListEntry(py2_encode_utf8( self._get_label(subentry['label']) ), subentry['setting_id']))
-			log.debug("%s initialized category %s", self, str(category))
-			self.categories.append(category)
+			categories.append(category)
 
-
-	def get_configlist_categories(self):
-		return self.categories
+		return categories
 
 	def setting_exist(self, setting_id):
 		try:
