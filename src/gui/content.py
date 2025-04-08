@@ -12,7 +12,7 @@ from Tools.LoadPixmap import LoadPixmap
 
 from .poster import PosterProcessing, PosterPixmapHandler
 
-from .. import log, settings
+from .. import settings
 from ..compat import eConnectCallback
 from .icon import ArchivCZSKDonateScreen
 from ..engine.tools.lang import _
@@ -21,6 +21,7 @@ from ..engine.handlers import ArchivCZSKContentHandler, VideoAddonContentHandler
 from ..engine.items import PFolder, PRoot, PExit, PSearch, PSearchItem, PVideoNotResolved
 from ..engine.tools.task import Task
 from ..engine.tools.util import toString
+from ..engine.tools.logger import log
 from ..engine.parental import parental_pin
 from .base import BaseArchivCZSKListSourceScreen
 from .common import LoadingScreen, TipBar, CutLabel

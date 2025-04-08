@@ -1,6 +1,6 @@
 # GUI items
 import os
-from .. import log
+from .tools.logger import log
 
 try:
 	from .. import settings, _

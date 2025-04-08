@@ -9,8 +9,10 @@ from Components.config import config, configfile
 from Screens.MessageBox import MessageBox
 from skin import loadSkin
 from enigma import eTimer, eConsoleAppContainer
-from . import log, toString, settings, UpdateInfo
+from . import settings, UpdateInfo
+from .engine.tools.logger import log
 from .engine.tools.lang import _
+from .engine.tools.util import toString
 from .engine.addon import ToolsAddon, VideoAddon, XBMCAddon
 from .engine.exceptions.updater import UpdateXMLVersionError, UpdateXMLNoUpdateUrl
 from .engine.tools.task import Task

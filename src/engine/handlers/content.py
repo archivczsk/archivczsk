@@ -1,5 +1,5 @@
 from .item import ItemHandler
-from ... import log
+from ..tools.logger import log
 from ...gui import context
 from ..items import PExit, PRoot
 from ...colors import DeleteColors

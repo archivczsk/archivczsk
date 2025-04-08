@@ -3,8 +3,8 @@ import shutil
 import random
 from datetime import datetime
 
-from .. import log
 from ..engine.tools import util
+from ..engine.tools.logger import log
 from ..compat import eConnectCallback
 
 from Components.AVSwitch import AVSwitch
@@ -84,7 +84,7 @@ class PosterProcessing:
 			self._remove_oldest_poster_file()
 		log.debug("PosterProcessing._image_downloaded: {0}".format(path))
 		self.poster_files.append((url, path))
-		
+
 		if self._check_file_size_limit(path) != None:
 			self.got_image_callback(url, path)
 
@@ -97,7 +97,7 @@ class PosterProcessing:
 			if (url == poster_url):
 				print("PosterProcessing.get_image_file: found poster path on position {0}/{1}".format(idx, self.poster_limit))
 				return self._check_file_size_limit(path)
-		
+
 		from ..settings import USER_AGENT
 		headers = {"User-Agent": USER_AGENT }
 		util.download_to_file_async(util.toString(poster_url), self._create_poster_path(), self._image_downloaded, headers=headers, timeout=3)
@@ -209,7 +209,7 @@ class PosterPixmapHandler:
 			log.debug("PosterImageHandler.set_image: path={0}".format(path))
 			self.poster_widget.instance.setPixmap(gPixmapPtr())
 			self.last_decoded_url = None
-			# sync 
+			# sync
 			if path is not None:
 				self._start_decode_image(url, path)
 

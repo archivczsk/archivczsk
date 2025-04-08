@@ -2,7 +2,7 @@
 from Components.config import config
 import os, traceback
 import json, time
-from .. import log
+from .tools.logger import log
 from .bgservice import AddonBackgroundService
 from datetime import datetime
 from .tools.stbinfo import stbinfo

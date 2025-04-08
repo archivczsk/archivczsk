@@ -3,7 +3,7 @@
 import traceback
 from .base import BaseArchivCZSKScreen, Screen
 from .common import TipBar
-from ..archivczsk import log
+from ..engine.tools.logger import log
 from ..compat import DMM_IMAGE
 from ..engine.tools.lang import _
 from ..engine.tools.util import toString, toUnicode

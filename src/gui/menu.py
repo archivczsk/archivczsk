@@ -9,13 +9,14 @@ from Components.config import config, ConfigDirectory, ConfigText, ConfigNumber
 from Screens.LocationBox import LocationBox
 from Screens.VirtualKeyBoard import VirtualKeyBoard
 
-from .. import settings, log
+from .. import settings
 from ..resources.repositories import config as addon_config
 from .base import BaseArchivCZSKScreen
 from .common import Tabs
 from ..engine.parental import parental_pin
 from ..engine.tools.util import removeDiac
 from ..engine.tools.lang import _
+from ..engine.tools.logger import log
 
 from ..compat import DMM_IMAGE
 from ..py3compat import *

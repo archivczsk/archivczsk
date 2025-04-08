@@ -35,7 +35,7 @@ except ImportError:
 	def initSubsSettings():
 		pass
 
-from ... import log
+from ..tools.logger import log
 from ..tools.lang import _
 from ...compat import eConnectCallback, DMM_IMAGE, MessageBox
 from ..items import PVideo, PVideoNotResolved, PPlaylist

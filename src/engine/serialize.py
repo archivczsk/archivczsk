@@ -17,21 +17,7 @@ except ImportError:
 
 from .items import PVideoNotResolved, PFolder, PUserCategory
 from .tools.util import toString, toUnicode
-try:
-	from .. import log
-except ImportError:
-	class simple_log:
-		@staticmethod
-		def log(text):
-			print(text)
-		@staticmethod
-		def debug(text):
-			print(text)
-		@staticmethod
-		def error(text):
-			print(text)
-	log = simple_log
-
+from .tools.logger import log
 
 def is_serializable(data):
 	'''

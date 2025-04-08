@@ -4,7 +4,7 @@ Created on 11.1.2013
 @author: marko
 '''
 import traceback
-from .. import log
+from ..engine.tools.logger import log
 from ..gui.common import showInfoMessage, showErrorMessage
 from ..engine.tools.lang import _
 from ..engine.parental import parental_pin

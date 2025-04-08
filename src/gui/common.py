@@ -15,7 +15,8 @@ from Screens.Screen import Screen
 from Tools.Directories import fileExists
 from ..compat import MessageBox
 
-from .. import settings, log
+from .. import settings
+from ..engine.tools.logger import log
 from ..engine.tools.lang import _
 from ..compat import eConnectCallback, parseSize, parsePosition
 from ..engine.tools.util import BtoMB, BtoKB, BtoGB, toString

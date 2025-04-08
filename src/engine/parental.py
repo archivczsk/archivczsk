@@ -1,7 +1,7 @@
 # -*- coding: UTF-8 -*-
 
 from time import time
-from .. import log
+from .tools.logger import log
 from .tools.lang import _
 from Components.Input import Input
 from Screens.InputBox import InputBox

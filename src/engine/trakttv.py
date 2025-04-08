@@ -8,7 +8,7 @@ import time
 from collections import OrderedDict
 from Components.config import config
 from Screens.ChoiceBox import ChoiceBox
-from .. import log
+from .tools.logger import log
 from .tools.lang import _
 from .tools.util import toString
 from ..gui.common import showInfoMessage

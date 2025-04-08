@@ -6,7 +6,8 @@ from Components.config import config, ConfigSubsection, ConfigSelection, \
 from Tools.Directories import SCOPE_PLUGINS, resolveFilename
 
 from .engine.tools.lang import _
-from . import log, UpdateInfo
+from .engine.tools.logger import log
+from . import UpdateInfo
 from .compat import DMM_IMAGE, VTI_IMAGE
 
 try:

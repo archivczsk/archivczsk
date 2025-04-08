@@ -8,7 +8,7 @@ try:
 except:
 	from urllib.parse import urlparse
 
-from ... import log
+from .logger import log
 from .util import download_web_file
 from Components.config import config
 

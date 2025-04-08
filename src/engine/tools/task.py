@@ -14,7 +14,7 @@ except:
 	from queue import Queue
 
 from enigma import ePythonMessagePump
-from ... import log
+from .logger import log
 from ...compat import eConnectCallback
 from ..exceptions.addon import AddonThreadException
 from .util import set_thread_name

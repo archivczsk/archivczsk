@@ -6,8 +6,8 @@ from twisted.internet import defer
 from twisted.python import failure
 from ..compat import eConnectCallback
 from enigma import eTimer, ePythonMessagePump
-from .. import log
-from ..engine.exceptions.addon import AddonServiceException
+from .tools.logger import log
+from .exceptions.addon import AddonServiceException
 from .tools.util import set_thread_name
 
 try:

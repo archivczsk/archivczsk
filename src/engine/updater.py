@@ -10,10 +10,11 @@ import shutil
 import traceback
 from .tools import util, parser
 from .tools.unzip import unzip_to_dir
+from .tools.util import toString
 from enigma import eTimer
 from ..compat import eConnectCallback
 from .exceptions.updater import UpdateXMLVersionError, UpdateXMLNoUpdateUrl
-from .. import log, toString
+from .tools.logger import log
 from .tools.lang import _
 
 from Components.Console import Console

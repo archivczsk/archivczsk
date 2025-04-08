@@ -6,9 +6,10 @@ Created on 21.10.2012
 import os, traceback
 from Components.config import config, ConfigSubsection, ConfigText
 
-from .. import archivczsk, log
+from .. import archivczsk
 from .addon import AddonInfo, ToolsAddon, VideoAddon, VirtualVideoAddon
 from .tools import parser
+from .tools.logger import log
 from . import updater
 
 class Repository():

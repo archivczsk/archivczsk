@@ -1,7 +1,7 @@
 import sys, os
 from enigma import getDesktop, eConsoleAppContainer, eTimer
 from ...compat import eConnectCallback
-from ... import log
+from .logger import log
 import traceback
 import json
 
@@ -29,12 +29,12 @@ class PythonProcess(object):
 	def start(self, callbacks):
 		self.callbacks = callbacks
 		ext = os.path.splitext( self.processPath )[1]
-		
+
 		if ext in ('.py', '.pyo', '.pyc'):
 			cmd = "%s %s" % ('python3' if sys.version_info[0] == 3 else "python", self.processPath)
 		else:
 			cmd = "%s" % self.processPath
-			
+
 		self.appContainer.execute(cmd)
 
 	def running(self):
@@ -91,7 +91,7 @@ class PythonProcess(object):
 			self.data_cached = None
 
 		lines = data.split('\n')
-		
+
 		if len(lines[-1]) != 0:
 			# last line was not terminated by new line - cache it and do not process it
 			self.data_cached = lines[-1]
@@ -102,7 +102,7 @@ class PythonProcess(object):
 			if len(line) == 0:
 				# ignore empty lines
 				continue
-			
+
 			try:
 				message = json.loads(line)
 			except:
@@ -115,4 +115,4 @@ class PythonProcess(object):
 
 	def finishedCB(self, retval):
 		self.callbacks['finishedCB'](retval)
-		
+

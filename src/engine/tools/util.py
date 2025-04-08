@@ -46,10 +46,7 @@ except:
 	def check_EEXIST(e):
 		return e.errno == errno.EEXIST
 
-try:
-	from ... import log
-except ImportError:
-	from .logger import log
+from .logger import log
 
 supported_video_extensions = ('.avi', '.mp4', '.mkv', '.mpeg', '.mpg')
 

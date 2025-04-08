@@ -17,8 +17,7 @@ from .base import BaseArchivCZSKListSourceScreen
 from .common import toString
 from ..engine.tools.util import removeDiac
 from ..engine.tools.lang import _
-from .. import log
-
+from ..engine.tools.logger import log
 
 class ArchivCZSKSearchClientScreen(BaseArchivCZSKListSourceScreen):
 	def __init__(self, session, currService):

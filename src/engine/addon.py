@@ -14,7 +14,7 @@ from hashlib import md5
 
 from .tools import util, parser
 from .tools.lang import get_language_id
-from .. import log, settings
+from .tools.logger import log
 from .tools.lang import _
 from ..resources.repositories import config as addon_config
 from ..gui import menu, info, shortcuts, download

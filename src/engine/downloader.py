@@ -9,7 +9,7 @@ import traceback
 
 from enigma import eConsoleAppContainer
 
-from .. import log
+from .tools.logger import log
 from .tools.lang import _
 from ..compat import eConnectCallback
 from .exceptions.download import NotSupportedProtocolError

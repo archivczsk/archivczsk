@@ -1,4 +1,4 @@
-from ... import log
+from ..tools.logger import log
 from ...gui import info
 from ..parental import parental_pin
 

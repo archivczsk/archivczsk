@@ -11,7 +11,7 @@ from Screens.VirtualKeyBoard import VirtualKeyBoard
 from Screens.ChoiceBox import ChoiceBox
 from Screens.InputBox import InputBox
 
-from .. import log
+from .tools.logger import log
 from .tools.lang import _
 from .contentprovider import VideoAddonContentProvider
 from .exceptions.addon import AddonInfoError, AddonWarningError, AddonError, AddonThreadException, AddonSilentExit

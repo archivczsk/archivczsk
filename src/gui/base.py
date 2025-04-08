@@ -11,7 +11,7 @@ from Components.Sources.List import List
 
 # plugin imports
 from .common import PanelList
-from .. import log
+from ..engine.tools.logger import log
 
 from ..py3compat import *
 

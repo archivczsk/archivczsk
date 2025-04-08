@@ -4,7 +4,7 @@ Created on 22.12.2012
 @author: marko
 '''
 import os, traceback
-from ... import log
+from ..tools.logger import log
 from ...compat import DMM_IMAGE
 
 GSTREAMER_PATH = '/usr/lib/gstreamer-0.10'
