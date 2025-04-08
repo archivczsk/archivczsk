@@ -64,15 +64,9 @@ class ArchivCZSKDonateScreen(BaseArchivCZSKListSourceScreen):
 
 		self["donate_status_label"] = Label(_('"Supporter" status:'))
 		self["donate_result_yes"] = Label(_("Active"))
-		self["donate_validity"] = Label(_("(Bonuses activated until {date})").format(date=license.valid_to()))
-		self["donate_result_no"] = Label(_("Inactive"))
-
-		if license.is_valid():
-			self["donate_result_no"].hide()
-		else:
-			self["donate_validity"].hide()
-			self["donate_result_yes"].hide()
-
+		self["donate_result_no"] = Label()
+		self["donate_validity"] = Label()
+		self.update_license_status()
 
 		self["actions"] = ActionMap(["archivCZSKActions"],
 				{
@@ -87,6 +81,29 @@ class ArchivCZSKDonateScreen(BaseArchivCZSKListSourceScreen):
 		self.onShown.append(self.updateTitle)
 		self.onShown.append(self.setup_countdown)
 		self.onClose.append(self.__onClose)
+
+		if license.get_aes_module():
+			self.check_license()
+
+	def update_license_status(self):
+		if license.get_aes_module() == None:
+			self["donate_result_yes"].hide()
+			self["donate_result_no"].setText(_("Error"))
+			self["donate_validity"].setText(_("Reinstall ArchivCZSK to resolve problem"))
+			self["donate_result_no"].show()
+			self["donate_validity"].show()
+		else:
+			if license.is_valid():
+				self["donate_result_no"].hide()
+				self["donate_validity"].setText(_("(Bonuses activated until {date})").format(date=license.valid_to()))
+				self["donate_validity"].show()
+				self["donate_result_yes"].show()
+			else:
+				self["donate_validity"].hide()
+				self["donate_result_yes"].hide()
+				self["donate_result_no"].setText(_("Inactive"))
+				self["donate_result_no"].show()
+
 
 	def updateTitle(self):
 		if self.countdown > 0:
@@ -126,6 +143,15 @@ class ArchivCZSKDonateScreen(BaseArchivCZSKListSourceScreen):
 		self.countdown_tick_timer.stop()
 		del self.countdown_tick_timer_conn
 		del self.countdown_tick_timer
+
+	def check_license(self):
+		def __update_license_status(success, result):
+			log.debug("License refreshed with response: %s" % success)
+			if success:
+				self.update_license_status()
+
+		log.debug("Starting task that will refresh the license in background")
+		license.bgservice.run_task('task(LicRefresh)', __update_license_status, license.refresh_license)
 
 
 class ArchivCZSKPaymentScreen(BaseArchivCZSKScreen):

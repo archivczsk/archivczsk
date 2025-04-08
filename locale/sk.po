@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-19 11:12+0100\n"
-"PO-Revision-Date: 2025-02-19 11:13+0100\n"
+"POT-Creation-Date: 2025-04-08 10:12+0200\n"
+"PO-Revision-Date: 2025-04-08 10:13+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: sk\n"
@@ -494,40 +494,48 @@ msgstr "Status \"podporovateľ\":"
 msgid "Active"
 msgstr "Aktívny"
 
-#: src/gui/icon.py:67
+#: src/gui/icon.py:91
+msgid "Error"
+msgstr "Chyba"
+
+#: src/gui/icon.py:92
+msgid "Reinstall ArchivCZSK to resolve problem"
+msgstr "Preinštalujte ArchivCZSK na vyriešenie problému"
+
+#: src/gui/icon.py:98
 #, python-brace-format
 msgid "(Bonuses activated until {date})"
 msgstr "(Bonusy aktivované do {date})"
 
-#: src/gui/icon.py:68
+#: src/gui/icon.py:104
 msgid "Inactive"
 msgstr "Neaktívny"
 
-#: src/gui/icon.py:93 src/gui/icon.py:95
+#: src/gui/icon.py:110 src/gui/icon.py:112
 msgid "ArchivCZSK Donate"
 msgstr "Príspevok pre ArchivCZSK"
 
-#: src/gui/icon.py:139
+#: src/gui/icon.py:165
 msgid "It is compatible with slovak bank applications."
 msgstr "Je kompatibilný so slovenskými bankovými aplikáciami."
 
-#: src/gui/icon.py:141
+#: src/gui/icon.py:167
 msgid "It is compatible with czech bank applications."
 msgstr "Je kompatibilný so českými bankovými aplikáciami."
 
-#: src/gui/icon.py:143
+#: src/gui/icon.py:169
 msgid "It is compatible bank applications supporting EPC/GiroCode format."
 msgstr "Je kompatibilný bankovými aplikáciami podporujúcimi EPC/GiroCode formát."
 
-#: src/gui/icon.py:145
+#: src/gui/icon.py:171
 msgid "Scan this QR code using your bank application on your mobile phone."
 msgstr "Načítajte tento QR kód pomocou vašej bankovej aplikácie v mobilnom telefóne."
 
-#: src/gui/icon.py:147
+#: src/gui/icon.py:173
 msgid "Supporter status will be automatically activated after receiving payment. If you send instant payment, it will be activated within an hour. If you send standard transfer, it will be activated on next business day."
 msgstr "Stav podporovateľ bude automaticky aktivovaný po pripísaní platby. Ak pošlete okamžitú platbu, bude aktivovaný do jednej hodiny. Ak pošlete štandardnú platbu, bude aktivovaný v nasledujúci pracovný deň."
 
-#: src/gui/icon.py:178
+#: src/gui/icon.py:204
 msgid "Payment information"
 msgstr "Informácie o platbe"
 
@@ -1080,12 +1088,12 @@ msgstr "úspešne skončilo"
 msgid "Play Archive"
 msgstr "Prehrať z archívu"
 
-#: src/engine/epg_integrator.py:221 src/engine/client.py:70
-#: src/engine/client.py:265
+#: src/engine/epg_integrator.py:221 src/engine/client.py:73
+#: src/engine/client.py:270
 msgid "This is bonus functionality available only for product supporters. Do you want to know, how to get \"Supporter\" status?"
 msgstr "Toto je bonusová funkcionalita dostupná len pre podporovateľov produktu. Chcete vedieť ako získať status \"Podporovateľ\"?"
 
-#: src/engine/client.py:118
+#: src/engine/client.py:121
 msgid "Please set your search expression"
 msgstr "Prosím vložte hľadaný výraz"
 
@@ -1218,7 +1226,7 @@ msgstr "záložku?"
 msgid "Please select source"
 msgstr "Prosím zvoľte zdroj"
 
-#: src/engine/handlers/media.py:500 src/engine/player/player.py:661
+#: src/engine/handlers/media.py:500 src/engine/player/player.py:663
 msgid "Show playlist"
 msgstr "Zobraziť playlist"
 
@@ -1326,29 +1334,29 @@ msgstr "Všetky doplnky"
 msgid "Category list"
 msgstr "Zoznam kategórií"
 
-#: src/engine/contentprovider.py:612
+#: src/engine/contentprovider.py:608
 msgid "Loading of addon failed"
 msgstr "Načítavanie doplnku zlyhalo"
 
-#: src/engine/contentprovider.py:618
+#: src/engine/contentprovider.py:614
 msgid "Addon returned not supported communication interface"
 msgstr "Doplnok vrátil nepodporované komunikačné rozhranie"
 
-#: src/engine/contentprovider.py:653
+#: src/engine/contentprovider.py:649
 msgid "Addon is designed for ArchivCZSK version lower then 2.5.0 and incompatible with installed version. Update ArchivCZSK and addons to latest available versions."
 msgstr "Doplnok je vytvorený pre ArchivCZSK verziu menšiu ako 2.5.0 a nie je kompatibilný s nainštalovanou verziou. Zaktualizujte ArchivCZSK a doplnky na posledné dostupné verzie."
 
-#: src/engine/contentprovider.py:658
+#: src/engine/contentprovider.py:654
 #, python-brace-format
 msgid "You need to update archivCZSK at least to version {version}"
 msgstr "Musíte aktualizovať ArchivCZSK aspoň na verziu {version}"
 
-#: src/engine/contentprovider.py:670
+#: src/engine/contentprovider.py:666
 #, python-brace-format
 msgid "Cannot execute addon {addon_name}. Dependency {dependency_name} version {dependency_version} needs to be at least version {dependency_version_requiered}"
 msgstr "Spustenie doplnku {addon_name} zlyhalo. Nainštalovaná závislosť {dependency_name} verzia {dependency_version} musí byť aspoň vo verzii {dependency_version_requiered}"
 
-#: src/engine/contentprovider.py:678
+#: src/engine/contentprovider.py:674
 #, python-brace-format
 msgid ""
 "Cannot execute addon {addon_name}. Missing dependency: {dependency_name}\n"
@@ -1515,85 +1523,85 @@ msgstr ""
 msgid "Player switched to {player}"
 msgstr "Prehrávač zmenený na {player}"
 
-#: src/engine/player/player.py:315
+#: src/engine/player/player.py:316
 msgid "Stop playing this movie?"
 msgstr "Ukončiť prehrávanie tohto videa?"
 
-#: src/engine/player/player.py:470 src/engine/player/player.py:478
+#: src/engine/player/player.py:471 src/engine/player/player.py:479
 msgid "Letterbox"
 msgstr "Letterbox"
 
-#: src/engine/player/player.py:471 src/engine/player/player.py:475
-#: src/engine/player/player.py:479
+#: src/engine/player/player.py:472 src/engine/player/player.py:476
+#: src/engine/player/player.py:480
 msgid "Pan&scan"
 msgstr "Pan&scan"
 
-#: src/engine/player/player.py:472 src/engine/player/player.py:476
+#: src/engine/player/player.py:473 src/engine/player/player.py:477
 msgid "Nonlinear"
 msgstr "Nonlinear"
 
-#: src/engine/player/player.py:473 src/engine/player/player.py:477
-#: src/engine/player/player.py:480
+#: src/engine/player/player.py:474 src/engine/player/player.py:478
+#: src/engine/player/player.py:481
 msgid "Just scale"
 msgstr "Just scale"
 
-#: src/engine/player/player.py:474
+#: src/engine/player/player.py:475
 msgid "PillarBox"
 msgstr "PillarBox"
 
-#: src/engine/player/player.py:516
+#: src/engine/player/player.py:517
 msgid "Aspect"
 msgstr "Aspect"
 
-#: src/engine/player/player.py:517
+#: src/engine/player/player.py:518
 msgid "Policy"
 msgstr "Policy"
 
-#: src/engine/player/player.py:555
+#: src/engine/player/player.py:556
 msgid "Show subservices"
 msgstr "Zobraziť subservices"
 
-#: src/engine/player/player.py:580
+#: src/engine/player/player.py:581
 msgid "Please select subservice..."
 msgstr "Prosím zvoľte subservice..."
 
-#: src/engine/player/player.py:662
+#: src/engine/player/player.py:664
 msgid "Play next entry in playlist"
 msgstr "Prehrať nasledujúci záznam v playliste"
 
-#: src/engine/player/player.py:663
+#: src/engine/player/player.py:665
 msgid "Play previous entry in playlist"
 msgstr "Prehrať predchádzajúci záznam v playliste"
 
-#: src/engine/player/player.py:664
+#: src/engine/player/player.py:666
 msgid "Exit player"
 msgstr "Ukončiť prehrávač"
 
-#: src/engine/player/player.py:665
+#: src/engine/player/player.py:667
 msgid "Show/hide infobar"
 msgstr "Zobraziť/skryť infobar"
 
-#: src/engine/player/player.py:666
+#: src/engine/player/player.py:668
 msgid "Switch player type"
 msgstr "Zmeniť typ prehrávača"
 
-#: src/engine/player/player.py:740
+#: src/engine/player/player.py:742
 msgid "Skip intro"
 msgstr "Preskočiť úvod"
 
-#: src/engine/player/player.py:742
+#: src/engine/player/player.py:744
 msgid "Skip credits"
 msgstr "Preskočiť titulky"
 
-#: src/engine/player/player.py:744
+#: src/engine/player/player.py:746
 msgid "Skip this part"
 msgstr "Preskočiť túto časť"
 
-#: src/engine/player/player.py:832
+#: src/engine/player/player.py:834
 msgid "Resuming playback"
 msgstr "Obnovujem prehrávanie"
 
-#: src/engine/player/player.py:841
+#: src/engine/player/player.py:843
 msgid "Resume playback from last play position?"
 msgstr "Obnoviť prehrávanie od poslednej pozície?"
 

@@ -9,18 +9,8 @@ from .tools.stbinfo import stbinfo
 import requests
 import time
 
-try:
-	from Cryptodome.Cipher import AES
-except:
-	try:
-		from Crypto.Cipher import AES
-	except:
-		log.error("Cryptodome library is not available")
-		AES = None
-
 import binascii
 import sys
-import base64
 
 # #################################################################################################
 
@@ -39,8 +29,22 @@ class ArchivCZSKLicense(object):
 		self.load()
 		self.bgservice.run_in_loop('Check', 3600, self.check_license)
 
+	def get_aes_module(self):
+		try:
+			from Cryptodome.Cipher import AES
+			return AES
+		except:
+			try:
+				from Crypto.Cipher import AES
+				return AES
+			except:
+				log.error("Cryptodome library is not available")
+				return None
+
 	def load(self):
 		self.lic_data = {}
+
+		AES = self.get_aes_module()
 
 		try:
 			if os.path.isfile(self.lic_file):
@@ -54,7 +58,7 @@ class ArchivCZSKLicense(object):
 				log.debug(traceback.format_exc())
 
 		if self.lic_data.get('level', self.LEVEL_FREE) != self.LEVEL_FREE:
-			log.debug('Loaded license level %d valid from %s to %s' % (self.lic_data['level'], self.valid_from(), self.valid_to() ))
+			log.info('Loaded license level %d valid from %s to %s' % (self.lic_data['level'], self.valid_from(), self.valid_to() ))
 
 	def reset(self):
 		self.lic_data = {}
@@ -75,6 +79,7 @@ class ArchivCZSKLicense(object):
 	def request_license(self):
 		from ..version import version
 		act_time = int(time.time())
+		ret = False
 
 		data = {
 			'version': 1,
@@ -96,12 +101,20 @@ class ArchivCZSKLicense(object):
 					f.write(response.content)
 
 				self.extra_online_check = 0
+				ret = True
 			elif response.status_code == 404:
-				log.debug("This installation has no valid license")
+				log.info("This installation has no valid license")
 			else:
 				log.error("Failed to get license: server returned error %s" % response.status_code)
 		except:
 			log.error("Failed to donwload license:\n%s" % traceback.format_exc())
+
+		return ret
+
+	def refresh_license(self):
+		if self.request_license():
+			self.load()
+			self.online_check = int(time.time()) + (24 * 3600)
 
 	def check_license(self):
 		act_time = int(time.time())
@@ -109,14 +122,12 @@ class ArchivCZSKLicense(object):
 		if self.is_valid(act_time):
 			return
 
-		if  self.lic_data.get('level', 0) != self.LEVEL_FREE:
-			log.debug("License expired")
+		if self.lic_data.get('level', 0) != self.LEVEL_FREE:
+			log.info("License expired")
 
 		self.reset()
 		if (self.online_check == 0 or act_time > self.online_check) or (act_time != 0 and act_time < self.extra_online_check):
-			self.request_license()
-			self.load()
-			self.online_check = act_time + (24 * 3600)
+			self.refresh_license()
 
 	def check_level(self, level):
 		return self.is_valid() and (self.lic_data.get('level', 0) & level) == level
