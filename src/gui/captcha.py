@@ -13,9 +13,9 @@ from Components.AVSwitch import AVSwitch
 from Components.Pixmap import Pixmap
 from Components.config import config
 
-from .. import _, removeDiac
+from .. import _
 from ..compat import eConnectCallback
-from ..engine.tools import util
+from ..engine.tools.util import convert_png_to_8bit, removeDiac
 from .base import BaseArchivCZSKScreen
 
 
@@ -24,34 +24,34 @@ class Captcha(object):
 		self.session = session
 		self.captchaCB = captchaCB
 		self.dest = dest
-		
+
 		if os.path.isfile(image):
 			self.openCaptchaDialog(image)
 		else:
 			if isinstance( image, str ):
 				image = image.encode('utf-8')
 			downloadPage(image, dest).addCallback(self.downloadCaptchaCB).addErrback(self.downloadCaptchaError)
-		
-		
+
+
 	def openCaptchaDialog(self, captcha_file):
 		if config.plugins.archivCZSK.convertPNG.getValue():
-			captcha_file = util.convert_png_to_8bit(captcha_file)
+			captcha_file = convert_png_to_8bit(captcha_file)
 		self.session.openWithCallback(self.captchaCB, ArchivCZSKCaptchaScreen, captcha_file)
 
 	def downloadCaptchaCB(self, txt=""):
 		print("[Captcha] downloaded successfully:")
 		self.openCaptchaDialog(self.dest)
-	
+
 	def downloadCaptchaError(self, err):
 		print("[Captcha] download captcha error: %s", str(err))
 		self.captchaCB('')
-		
+
 
 
 class ArchivCZSKCaptchaScreen(BaseArchivCZSKScreen,VirtualKeyBoard):
-	def __init__(self, session, captcha_file):	
+	def __init__(self, session, captcha_file):
 		BaseArchivCZSKScreen.__init__(self,session,False)
-		VirtualKeyBoard.__init__(self, session, title=removeDiac(_('Type text of picture')))
+		VirtualKeyBoard.__init__(self, session, title=_('Type text of picture'))
 		self["captcha"] = Pixmap()
 		self.Scale = AVSwitch().getFramebufferScale()
 		self.picPath = captcha_file

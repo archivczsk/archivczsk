@@ -24,25 +24,6 @@ if language:
 	localeInit()
 	language.addCallback(localeInit)
 
-def removeDiac(text):
-	searchExp = text
-	try:
-		#log.logDebug("Remove diacritics is '%s'."%type(text))
-		if is_py3 == False and isinstance(searchExp, str):
-			#log.logDebug("Remove diacritics is str, do nothing return '%s'."%searchExp)
-			return searchExp
-		import unicodedata
-		#searchExp = ''.join((c for c in unicodedata.normalize('NFD', unicode(searchExp, 'utf-8', 'ignore')) 
-		#							   if unicodedata.category(c) != 'Mn')).encode('utf-8')
-		searchExp = ''.join((c for c in unicodedata.normalize('NFD', searchExp) 
-									if unicodedata.category(c) != 'Mn'))
-		searchExp = py2_encode_utf8( searchExp )
-	except:
-		log.logError("Remove diacritics '%s' failed.\n%s"%(text,traceback.format_exc()))
-		
-	return searchExp
-
-
 class UpdateInfo(object):
 	CHECK_UPDATE_TIMESTAMP = None
 	CHECK_ADDON_UPDATE_TIMESTAMP = None

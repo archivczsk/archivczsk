@@ -15,17 +15,16 @@ from Components.ScrollLabel import ScrollLabel
 from Components.Pixmap import Pixmap
 from Components.AVSwitch import AVSwitch
 from Components.config import config
-from enigma import ePicLoad
 
 from .base import BaseArchivCZSKScreen
-from .. import _, log, removeDiac, settings
+from .. import _, log, settings
 from ..compat import eConnectCallback
 from .common import showInfoMessage, PanelColorListEntry, PanelList
 from .poster import PosterProcessing, PosterPixmapHandler
 from ..engine.player.info import videoPlayerInfo
 from ..engine.parental import parental_pin
 from ..engine.usage import usage_stats
-from ..engine.tools.util import toUnicode
+from ..engine.tools.util import toUnicode, removeDiac
 from ..colors import DeleteColors
 from ..py3compat import *
 
@@ -62,17 +61,6 @@ def showChangelog(session, changelog_title, changelog_path):
 
 def showItemInfo(session, item):
 	Info(session, item)
-
-#def removeDiacriticsCsfd(text):
-#	 searchExp = text
-#	 try:
-#		 import unicodedata
-#		 searchExp = ''.join((c for c in unicodedata.normalize('NFD', searchExp)
-#									 if unicodedata.category(c) != 'Mn')).encode('utf-8')
-#	 except:
-#		 log.logError("CSFD remove diacritics failed.\n%s"%traceback.format_exc())
-
-#	 return searchExp
 
 def showCSFDInfo(session, item):
 	try:

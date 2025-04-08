@@ -15,7 +15,8 @@ from Screens.VirtualKeyBoard import VirtualKeyBoard
 from ..client import seeker
 from .base import BaseArchivCZSKListSourceScreen
 from .common import toString
-from .. import _, removeDiac, log
+from ..engine.tools.util import removeDiac
+from .. import _, log
 
 
 class ArchivCZSKSearchClientScreen(BaseArchivCZSKListSourceScreen):
@@ -76,7 +77,7 @@ class ArchivCZSKSearchClientScreen(BaseArchivCZSKListSourceScreen):
 		self["search"].setText(self.searchExp)
 
 	def changeSearchExp(self):
-		self.session.openWithCallback(self.changeSearchExpCB, VirtualKeyBoard, title=removeDiac(_("Set your search expression")), text = removeDiac(self.searchExp))
+		self.session.openWithCallback(self.changeSearchExpCB, VirtualKeyBoard, title=_("Set your search expression"), text = removeDiac(self.searchExp))
 
 	def changeSearchExpCB(self, word=None):
 		if word is not None and len(word) > 0:

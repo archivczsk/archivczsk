@@ -14,7 +14,7 @@ from Screens.ChoiceBox import ChoiceBox
 from Screens.MessageBox import MessageBox
 from Screens.VirtualKeyBoard import VirtualKeyBoard
 
-from .. import _, settings, removeDiac
+from .. import _, settings
 from ..compat import eConnectCallback
 from ..engine.downloader import DownloadManager
 from ..engine.tools import util
@@ -94,7 +94,7 @@ class DownloadManagerMessages(object):
 					except OSError as e:
 						print(e)
 				elif callback[1] == "rename":
-					session.openWithCallback(renameCB, VirtualKeyBoard, title=removeDiac(_("Rename filename")), text=removeDiac(download.filename))
+					session.openWithCallback(renameCB, VirtualKeyBoard, title=_("Rename filename"), text=util.removeDiac(download.filename))
 
 		if download is not None:
 			if dInstance and dInstance.running:

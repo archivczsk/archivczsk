@@ -47,7 +47,7 @@ except:
 		return e.errno == errno.EEXIST
 
 try:
-	from ... import log, removeDiac
+	from ... import log
 except ImportError:
 	from .logger import log
 
@@ -94,6 +94,22 @@ def load_xml(xml_file):
 		raise
 	else:
 		return el
+
+def removeDiac(text):
+	searchExp = text
+	try:
+		if is_py3 == False and isinstance(searchExp, str):
+			return searchExp
+
+		import unicodedata
+		searchExp = ''.join((c for c in unicodedata.normalize('NFD', searchExp)
+									if unicodedata.category(c) != 'Mn'))
+
+		searchExp = py2_encode_utf8( searchExp )
+	except:
+		log.logError("Remove diacritics '%s' failed.\n%s"%(text,traceback.format_exc()))
+
+	return searchExp
 
 # source from xbmc_doplnky
 def decode_html(data):
@@ -392,7 +408,6 @@ def encodeFilename(s):
 		return s.encode(sys.getfilesystemencoding(), 'ignore')
 
 def sanitize_filename(value):
-	from ... import removeDiac
 	tmp = removeDiac(value)
 	tmp = tmp.encode('ascii', 'ignore')
 	if is_py3:

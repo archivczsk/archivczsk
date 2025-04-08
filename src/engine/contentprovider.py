@@ -15,14 +15,14 @@ from Screens.LocationBox import LocationBox
 from Screens.VirtualKeyBoard import VirtualKeyBoard
 from Components.config import config, ConfigSelection
 
-from .. import _, log, settings, version as aczsk, removeDiac
+from .. import _, log, settings, version as aczsk
 from ..compat import eConnectCallback, MessageBox
 from .downloader import getFilenameAndLength, DownloadManager
 from ..gui.download import DownloadManagerMessages
 from ..settings import VIDEO_EXTENSIONS, SUBTITLES_EXTENSIONS
 from .exceptions.addon import AddonError
 from .player.player import Player
-from .tools.util import toString, download_web_file
+from .tools.util import toString, removeDiac
 from .items import PVideo, PPlaylist, PDownload, PCategory, PVideoAddon, PCategoryVideoAddon
 from .serialize import CategoriesIO, FavoritesIO
 from .tools import task, util
@@ -338,7 +338,7 @@ class DownloadsMixin(object):
 							currDir=downloads_path)
 				if answer == "filename":
 					session.openWithCallback(change_filename_callback,
-							VirtualKeyBoard, title = removeDiac(_("Edit filename")),
+							VirtualKeyBoard, title = _("Edit filename"),
 							text = filename[0])
 							#text = toString(filename[0]))
 

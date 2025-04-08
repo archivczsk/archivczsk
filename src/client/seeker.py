@@ -7,10 +7,11 @@ Created on 11.1.2013
 
 import traceback
 import re
-from .. import _, log, removeDiac
+from .. import _, log
 from ..gui.common import showInfoMessage, showErrorMessage
 from ..engine.parental import parental_pin
 from ..engine.usage import usage_stats
+from ..engine.tools.util import removeDiac
 from Components.config import config
 
 from ..py3compat import *

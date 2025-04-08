@@ -11,13 +11,13 @@ from Screens.VirtualKeyBoard import VirtualKeyBoard
 from Screens.ChoiceBox import ChoiceBox
 from Screens.InputBox import InputBox
 
-from .. import _, log, removeDiac
+from .. import _, log
 from .contentprovider import VideoAddonContentProvider
 from .exceptions.addon import AddonInfoError, AddonWarningError, AddonError, AddonThreadException, AddonSilentExit
 from .items import PFolder, PVideoResolved, PVideoNotResolved, PPlaylist, PSearch, PSearchItem
 from .parental import parental_pin
 from .tools.task import callFromThread, Task
-from .tools.util import toString, toUnicode
+from .tools.util import toString, toUnicode, removeDiac
 from .license import license
 from .usage import usage_stats
 from ..gui.captcha import Captcha
@@ -96,7 +96,7 @@ def getTextInput(session, title, text=""):
 
 	d = defer.Deferred()
 	#session.openWithCallback(getTextInputCB, VirtualKeyBoard, title=toString(title), text=text)
-	session.openWithCallback(getTextInputCB, VirtualKeyBoard, title=DeleteColors(removeDiac(title)), text=removeDiac(text))
+	session.openWithCallback(getTextInputCB, VirtualKeyBoard, title=DeleteColors(title), text=removeDiac(text))
 	return d
 
 
