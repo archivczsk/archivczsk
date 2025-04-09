@@ -48,20 +48,11 @@ class Addon(object):
 		self.__need_update = False
 		self.remote_hash = None
 
-		# load languages
-		self.language = AddonLanguage(self, os.path.join(self.path, self.repository.addon_languages_relpath))
-		archivczsk_lang_id = get_language_id()
-		if self.language.has_language(archivczsk_lang_id):
-			self.language.set_language(archivczsk_lang_id)
-		else:
-			#fix to use czech language instead of slovak language when slovak is not available
-			if archivczsk_lang_id == 'sk' and self.language.has_language('cs'):
-				self.language.set_language('cs')
-			else:
-				self.language.set_language('en')
-
 		# load settings
 		self.settings = AddonSettings(self, os.path.join(self.path, self.repository.addon_settings_relpath))
+
+		# load languages
+		self.language = AddonLanguage(self, os.path.join(self.path, self.repository.addon_languages_relpath))
 
 		# this is the function, that should be called on direct call
 		self.entry_point = None
@@ -94,8 +85,16 @@ class Addon(object):
 	def remove(self):
 		self._updater.remove_addon(self)
 
-	def get_localized_string(self, id_language):
-		return self.language.get_localized_string(id_language)
+	def get_language_id(self):
+		lang_id = self.get_setting('addon_lang')
+
+		if lang_id == 'auto':
+			lang_id = get_language_id()
+
+		return lang_id
+
+	def get_localized_string(self, s):
+		return self.language.get_localized_string(s, self.get_language_id())
 
 	def setting_exist(self, setting_id):
 		return self.settings.setting_exist(setting_id)
@@ -346,6 +345,24 @@ class DummyGettext(object):
 	def gettext(self, s):
 		return s
 
+class XmlGettext(object):
+	def __init__(self, language_file_path):
+		self.lang_strings = {}
+		try:
+			el = util.load_xml(language_file_path)
+		except Exception:
+			log.error("Skipping language file %s" % language_file_path)
+		else:
+			strings = el.getroot()
+			for string in strings.findall('string'):
+				string_id = string.attrib.get('id')
+				self.lang_strings[string_id] = string.text
+
+			log.debug("Language file %s was successfully loaded" % language_file_path)
+
+	def gettext(self, s):
+		return self.lang_strings.get(s, s)
+
 
 class AddonLanguage(object):
 	"""Loading xml language file"""
@@ -356,16 +373,8 @@ class AddonLanguage(object):
 	}
 
 	def __init__(self, addon, languages_dir):
-
 		self.addon = addon
-		self._languages_dir = languages_dir
-		self._language_filename = 'strings.xml'
-		self.dummy_gettext = DummyGettext()
-		self.current_language = {}
-		self.default_language_id = 'en'
-		self.current_language_id = 'en'
-		self.languages = {}
-		self.use_gettext = False
+		self.languages = { l: DummyGettext() for l in self.language_map.keys() }
 		log.debug("initializing %s - languages", addon)
 
 		if not os.path.isdir(languages_dir):
@@ -375,93 +384,50 @@ class AddonLanguage(object):
 		for language_dir in os.listdir(languages_dir):
 			if language_dir in self.language_map and os.path.isdir( os.path.join(languages_dir, language_dir, 'LC_MESSAGES') ):
 				# directory for gettext localisation exists
-				self.use_gettext = True
-				self.languages[language_dir] = None
+				self.languages[language_dir] = self.load_gettext_language(languages_dir, language_dir)
 			else:
-				language_id = self.get_language_id(language_dir)
+				language_id = self.language_name_to_id(language_dir)
 				if language_id is None:
 					log.error("%s unknown language %s, you need to update Language map to use it, skipping..", self, language_dir)
 					continue
-				language_dir_path = os.path.join(languages_dir, language_dir)
-				language_file_path = os.path.join(language_dir_path, self._language_filename)
-				if os.path.isfile(language_file_path):
-					self.languages[language_id] = None
-				else:
-					log.error("%s cannot find language file %s, skipping %s language..", self, language_file_path, language_dir)
 
-		if self.use_gettext:
-			# always init EN lang if using gettext localisation
-			self.languages['en'] = None
-			self.current_language = self.dummy_gettext
+				self.languages[language_id] = self.load_xml_language(languages_dir, language_id)
+
+		# fix for CS/SK languages
+		if isinstance(self.languages['sk'], DummyGettext) and not isinstance(self.languages['cs'], DummyGettext):
+			self.languages['sk'] = self.languages['cs']
+
+		if isinstance(self.languages['cs'], DummyGettext) and not isinstance(self.languages['sk'], DummyGettext):
+			self.languages['cs'] = self.languages['sk']
 
 	def __repr__(self):
 		return "%s[language]" % self.addon
 
+	def load_gettext_language(self, languages_dir, language_id):
+		log.debug("%s loading gettext language %s", (self, language_id))
+		return gettext.translation(self.addon.get_real_id(), languages_dir, [language_id])
 
-	def load_language(self, language_id):
-		if self.use_gettext:
-			if os.path.isdir( os.path.join(self._languages_dir, language_id, 'LC_MESSAGES') ):
-				self.languages[language_id] = gettext.translation(self.addon.get_real_id(), self._languages_dir, [language_id])
-				log.debug("%s gettext language %s was successfully loaded", (self, language_id))
-			else:
-				log.debug("%s gettext language %s not found - using dummy EN as backup", (self, language_id))
-				self.languages[language_id] = self.dummy_gettext
-			return
-
-		language_dir_path = os.path.join(self._languages_dir, self.get_language_name(language_id))
-		language_file_path = os.path.join(language_dir_path, self._language_filename)
-		try:
-			el = util.load_xml(language_file_path)
-		except Exception:
-			log.error("%s skipping language %s"%(self, language_id))
+	def load_xml_language(self, languages_dir, language_id):
+		language_file_path = os.path.join(languages_dir, self.language_map[language_id], 'strings.xml')
+		if os.path.isfile(language_file_path):
+			return XmlGettext(language_file_path)
 		else:
-			language = {}
-			strings = el.getroot()
-			for string in strings.findall('string'):
-				string_id = string.attrib.get('id')
-				language[string_id] = string.text
-			self.languages[language_id] = language
-			log.debug("%s language %s was successfully loaded", (self, language_id))
+			log.error("%s cannot find language file %s, skipping %s language..", self, language_file_path, language_id)
+			return DummyGettext()
 
-
-	def get_language_id(self, language_name):
+	def language_name_to_id(self, language_name):
 		revert_langs = dict([(item[1], item[0]) for item in list(self.language_map.items())])
 		if language_name in revert_langs:
 			return revert_langs[language_name]
 		else:
 			return None
 
-	def get_language_name(self, language_id):
-		if language_id in self.language_map:
-			return self.language_map[language_id]
-		else:
-			return None
+	def get_localized_string(self, string_id, lang_id):
+		return self.languages[lang_id].gettext(str(string_id))
 
-	def get_localized_string(self, string_id):
-		string_id = str(string_id)
-		if self.use_gettext:
-			return self.current_language.gettext(string_id)
-		if string_id in self.current_language:
-			return self.current_language[string_id]
-		else:
-#			log.error("%s cannot find language id %s in %s language, returning id of language", self, string_id, self.current_language_id)
-			return string_id
-
-	def has_language(self, language_id):
-		return language_id in self.languages
-
-	def set_language(self, language_id):
-		if self.has_language(language_id):
-			if self.languages[language_id] is None:
-				self.load_language(language_id)
-			log.info("%s setting current language %s to %s", self, self.current_language_id, language_id)
-			self.current_language_id = language_id
-			self.current_language = self.languages[language_id]
-		else:
-			log.error("%s cannot set language %s, language is not available", self, language_id)
-
+	# only for backward compatibility with tools_archivczsk <= 2.15
 	def get_language(self):
-		return self.current_language_id
+		return self.addon.get_language_id()
 
 	def close(self):
 		self.addon = None
@@ -511,6 +477,9 @@ class AddonSettings(object):
 			se = []
 			for subentry in self.category_entries[idx]['subentries']:
 				if subentry['visible'] == 'true':
+					if isinstance(subentry['setting_id'], addon_config.ConfigSelectionTr):
+						subentry['setting_id'].translate()
+
 					se.append(getConfigListEntry(py2_encode_utf8( self._get_label(subentry['label']) ), subentry['setting_id']))
 			return se
 
@@ -590,16 +559,16 @@ class AddonSettings(object):
 			setattr(setting, entry['id'], ConfigPassword(default=entry['default'], fixed_size=False))
 
 		elif entry['type'] == 'enum':
-			choicelist = [(str(idx), py2_encode_utf8( self._get_label(e)) ) for idx, e in enumerate(entry['lvalues'].split("|"))]
-			setattr(setting, entry['id'], ConfigSelection(default=entry['default'], choices=choicelist))
+			choicelist = [(str(idx), e) for idx, e in enumerate(entry['lvalues'].split("|"))]
+			setattr(setting, entry['id'], addon_config.ConfigSelectionTr(self._get_label, default=entry['default'], choices=choicelist))
 
 		elif entry['type'] == 'labelenum':
-			choicelist = [(py2_encode_utf8(e), py2_encode_utf8(self._get_label(e))) for e in entry['values'].split("|")]
-			setattr(setting, entry['id'], ConfigSelection(default=entry['default'], choices=choicelist))
+			choicelist = [(py2_encode_utf8(e), e) for e in entry['values'].split("|")]
+			setattr(setting, entry['id'], addon_config.ConfigSelectionTr(self._get_label, default=entry['default'], choices=choicelist))
 
 		elif entry['type'] == 'keyenum':
-			choicelist = [(py2_encode_utf8(e.split(';')[0]), py2_encode_utf8(self._get_label(e.split(';')[1]))) for e in entry['values'].split("|")]
-			setattr(setting, entry['id'], ConfigSelection(default=entry['default'], choices=choicelist))
+			choicelist = [(py2_encode_utf8(e.split(';')[0]), e.split(';')[1]) for e in entry['values'].split("|")]
+			setattr(setting, entry['id'], addon_config.ConfigSelectionTr(self._get_label, default=entry['default'], choices=choicelist))
 
 		elif entry['type'] == 'ipaddress':
 			setattr(setting, entry['id'], ConfigIP(default=list(map(int, entry['default'].split('.'))), auto_jump=True))

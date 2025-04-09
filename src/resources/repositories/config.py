@@ -5,10 +5,13 @@ Created on 11.8.2012
 @author: marko
 '''
 from Components.config import config, ConfigSelection, ConfigDirectory, getConfigListEntry, ConfigBoolean, ConfigNumber
+from ...settings import ConfigSelectionTr
 from functools import partial
 from ...compat import DMM_IMAGE
 from ...engine.tools.logger import log
+from ...engine.tools.lang import _ as tr
 import os
+
 
 # just dummy implementation, for extracting texts - real translation will be done when settings will be shown
 def _(s):
@@ -38,22 +41,22 @@ global_addon_settings = [
 			{
 				'label': _("Used player"),
 				'id': 'auto_used_player',
-				'entry': ConfigSelection(default='0', choices=available_players)
+				'entry': ConfigSelectionTr(tr, default='0', choices=available_players)
 			}
 		]
 	},
 	{
-		'label':_('Common'),
+		'label':_('Other'),
 		'subentries': [
 			{
 				'label': _("Addon language"),
 				'id': 'addon_lang',
-				'entry': ConfigSelection(default='auto', choices=[ ('auto', _('Automaticaly')), ('cs', _("Czech")), ('sk', _("Slovak")), ('en', _("English")) ])
+				'entry': ConfigSelectionTr(tr, default='auto', choices=[ ('auto', _('Automaticaly')), ('cs', _("Czech")), ('sk', _("Slovak")), ('en', _("English")) ])
 			},
 			{
 				'label': _("Timeout"),
 				'id':'loading_timeout',
-				'entry': ConfigSelection(default="10", choices=choicelist_timeout)
+				'entry': ConfigSelectionTr(tr, default="10", choices=choicelist_timeout)
 			},
 			{
 				'label': _("Verify SSL certificates"),
@@ -90,7 +93,6 @@ def add_global_addon_settings(addon, addon_config):
 
 #get addon config entries with global addons settings
 def getArchiveConfigList(addon):
-	from ...engine.tools.lang import _
 	categories = addon.settings.get_configlist_categories()
 
 	def __load_subentries(idx, gidx):
@@ -101,9 +103,14 @@ def getArchiveConfigList(addon):
 
 		for setting in global_addon_settings[gidx]['subentries']:
 			if 'setting_id' not in setting:
-				se.append(getConfigListEntry(_(setting['label']), getattr(addon.settings.main, setting['id'])))
+				set_component = getattr(addon.settings.main, setting['id'])
 			else:
-				se.append(getConfigListEntry(_(setting['label']), setting['setting_id']))
+				set_component = setting['setting_id']
+
+			if isinstance(set_component, ConfigSelectionTr):
+				set_component.translate()
+
+			se.append(getConfigListEntry(tr(setting['label']), set_component))
 
 		return se
 
@@ -129,7 +136,7 @@ def getArchiveConfigList(addon):
 	for gi, category in enumerate(global_addon_settings):
 		if gi not in gi_added:
 			ret.append({
-				'label': _(category['label']),
+				'label': tr(category['label']),
 				'subentries': partial( __load_subentries, None, gi)
 			})
 

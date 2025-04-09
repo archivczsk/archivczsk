@@ -5,10 +5,27 @@ from Components.config import config, ConfigSubsection, ConfigSelection, \
 	NoSave, ConfigInteger, ConfigSequence
 from Tools.Directories import SCOPE_PLUGINS, resolveFilename
 
-from .engine.tools.lang import _
+from .engine.tools.lang import _ as tr
 from .engine.tools.logger import log
 from . import UpdateInfo
 from .compat import DMM_IMAGE, VTI_IMAGE
+from .py3compat import *
+
+def _(s):
+	return s
+
+class ConfigSelectionTr(ConfigSelection):
+	def __init__(self, tr_cbk, choices, default=None, *args, **kwargs):
+		self.__tr_cbk = tr_cbk
+		self.__original_choices = choices
+		self.__original_default = default
+		super(ConfigSelectionTr, self).__init__(choices, default, *args, **kwargs)
+
+	def translate(self):
+		choices = []
+		for c in self.__original_choices:
+			choices.append( (c[0], py2_encode_utf8(self.__tr_cbk(c[1]))) )
+		self.setChoices(choices, self.__original_default)
 
 try:
 	from Components.Converter.ACZSKKodiToE2List import colorFixNeeded
@@ -91,7 +108,11 @@ def langChanged(configElement):
 		lang_id = configElement.value
 	localeInit(lang_id)
 
-config.plugins.archivCZSK.lang = ConfigSelection(default='auto', choices=[ ('auto', _('Automaticaly')), ('cs', _("Czech")), ('sk', _("Slovak")), ('en', _("English")) ])
+	for c in config.plugins.archivCZSK.dict().values():
+		if isinstance(c, ConfigSelectionTr):
+			c.translate()
+
+config.plugins.archivCZSK.lang = ConfigSelectionTr(tr, default='auto', choices=[ ('auto', _('Automaticaly')), ('cs', _("Czech")), ('sk', _("Slovak")), ('en', _("English")) ])
 config.plugins.archivCZSK.lang.addNotifier(langChanged)
 config.plugins.archivCZSK.main_menu = ConfigYesNo(default=True)
 config.plugins.archivCZSK.extensions_menu = ConfigYesNo(default=False)
@@ -101,7 +122,7 @@ choicelist = [ ('-1', _("Don't change"),) ]
 for i in range(1, 8):
 	choicelist.append( (str(i), str(i),) )
 
-config.plugins.archivCZSK.epg_viewer_history = ConfigSelection(default='7', choices=choicelist)
+config.plugins.archivCZSK.epg_viewer_history = ConfigSelectionTr(tr, default='7', choices=choicelist)
 config.plugins.archivCZSK.archivAutoUpdate = ConfigYesNo(default=True)
 config.plugins.archivCZSK.archivAutoUpdate.addNotifier(changeAutoUpdate)
 config.plugins.archivCZSK.allow_custom_update = ConfigYesNo(default=False)
@@ -111,7 +132,7 @@ if config.plugins.archivCZSK.allow_custom_update.value:
 	config.plugins.archivCZSK.update_branch=ConfigText(default='main')
 else:
 	# only official repo is allowed
-	config.plugins.archivCZSK.update_branch=ConfigSelection(default='main',  choices=[ ('main', _('Stable')), ('testing', _("Testing"))])
+	config.plugins.archivCZSK.update_branch=ConfigSelectionTr(tr, default='main',  choices=[ ('main', _('Stable')), ('testing', _("Testing"))])
 	config.plugins.archivCZSK.update_repository.setValue('archivczsk')
 config.plugins.archivCZSK.autoUpdate = ConfigYesNo(default=True)
 config.plugins.archivCZSK.autoUpdate.addNotifier(changeAutoUpdate)
@@ -147,9 +168,10 @@ for i in range(0, 10000, 500):
 config.plugins.archivCZSK.posterSizeMax = ConfigSelection(default="5000", choices=choicelist)
 
 choicelistCsfd = [('1', _("Internal")), ('2', _("CSFD")), ('3', _("CSFDLite"))]
-config.plugins.archivCZSK.csfdMode = ConfigSelection(default='1', choices=choicelistCsfd)
+config.plugins.archivCZSK.csfdMode = ConfigSelectionTr(tr, default='1', choices=choicelistCsfd)
 
 def get_main_settings():
+	_ = tr
 	list = []
 	from .engine.license import license
 
@@ -204,9 +226,6 @@ def get_main_settings():
 config.plugins.archivCZSK.videoPlayer = ConfigSubsection()
 config.plugins.archivCZSK.videoPlayer.info = NoSave(ConfigNothing())
 
-choicelist = [('standard', _('standard player')),
-			  ('custom', _('custom player (subtitle support)'))]
-config.plugins.archivCZSK.videoPlayer.type = ConfigSelection(default="custom", choices=choicelist)
 config.plugins.archivCZSK.videoPlayer.autoPlay = ConfigYesNo(default=True)
 config.plugins.archivCZSK.videoPlayer.confirmExit = ConfigYesNo(default=False)
 config.plugins.archivCZSK.videoPlayer.subtitlesInAudioSelection = ConfigYesNo(default=True if image_is_openpli() else False)
@@ -223,6 +242,7 @@ for i in range(1000, 50000, 1000):
 config.plugins.archivCZSK.videoPlayer.rtmpBuffer = ConfigSelection(default="10000", choices=choicelist)
 
 def get_player_settings():
+	_ = tr
 	list = []
 	list.append(getConfigListEntry(_("Show more info about player"), config.plugins.archivCZSK.videoPlayer.info))
 	list.append(getConfigListEntry(_("RTMP Timeout"), config.plugins.archivCZSK.videoPlayer.rtmpTimeout))
@@ -248,6 +268,7 @@ config.plugins.archivCZSK.parental.pin_tries = ConfigInteger(default=0)
 config.plugins.archivCZSK.parental.time = ConfigInteger(default=0)
 
 def get_parental_settings(locked=False):
+	_ = tr
 	list = []
 
 	if locked:
@@ -277,6 +298,7 @@ config.plugins.archivCZSK.logPath = ConfigDirectory(default="/tmp")
 config.plugins.archivCZSK.logPath.addNotifier(changeLogPath)
 
 def get_path_settings():
+	_ = tr
 	list = []
 	list.append(getConfigListEntry(_("Data path"), config.plugins.archivCZSK.dataPath))
 	list.append(getConfigListEntry(_("Temp path"), config.plugins.archivCZSK.tmpPath))
@@ -301,7 +323,7 @@ def restartHttpServer(configElement):
 		log.error( "Failed to restart internal HTTP server\n%s" % traceback.format_exc() )
 
 choicelist = [('1', _("info")), ('2', _("debug"))]
-config.plugins.archivCZSK.debugMode = ConfigSelection(default='1', choices=choicelist)
+config.plugins.archivCZSK.debugMode = ConfigSelectionTr(tr, default='1', choices=choicelist)
 config.plugins.archivCZSK.bugReports = ConfigYesNo(default=True)
 config.plugins.archivCZSK.debugMode.addNotifier(changeLogMode)
 config.plugins.archivCZSK.showBrokenAddons = ConfigYesNo(default=True)
@@ -318,6 +340,7 @@ config.plugins.archivCZSK.httpLocalhost.addNotifier(restartHttpServer, initial_c
 config.plugins.archivCZSK.send_usage_stats = ConfigYesNo(default=True)
 
 def get_misc_settings():
+	_ = tr
 	list = []
 	list.append(getConfigListEntry(_("Debug mode"), config.plugins.archivCZSK.debugMode))
 	list.append(getConfigListEntry(_("Allow sending bug reports on addon error"), config.plugins.archivCZSK.bugReports))
