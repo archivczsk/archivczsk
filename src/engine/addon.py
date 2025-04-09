@@ -21,7 +21,7 @@ from ..resources.repositories import config as addon_config
 from ..gui import menu, info, shortcuts, download
 from .contentprovider import VideoAddonContentProvider
 from .bgservice import AddonBackgroundService
-from .httpserver import archivCZSKHttpServer, AddonHttpRequestHandler
+from .httpserver import ArchivCZSKHttpServer, AddonHttpRequestHandler
 from ..compat import DMM_IMAGE
 
 from ..py3compat import *
@@ -263,7 +263,7 @@ class VideoAddon(Addon):
 
 	def close(self):
 		self.bgservice.stop_all()
-		archivCZSKHttpServer.unregisterRequestHandler(AddonHttpRequestHandler(self))
+		ArchivCZSKHttpServer.get_instance().unregisterRequestHandler(AddonHttpRequestHandler(self))
 		Addon.close(self)
 		self.provider.close()
 		self.provider = None

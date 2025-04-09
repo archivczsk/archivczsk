@@ -11,7 +11,7 @@ from ..engine.tools.logger import log
 from ..gui.common import showInfoMessage, showErrorMessage
 from ..engine.tools.lang import _
 from ..engine.parental import parental_pin
-from ..engine.usage import usage_stats
+from ..engine.usage import UsageStats
 from ..engine.tools.util import removeDiac
 from Components.config import config
 
@@ -203,7 +203,7 @@ class Search(object):
 		self.provider.start()
 
 	def search(self, search_exp, mode=None):
-		usage_stats.addon_ext_search(self.addon)
+		UsageStats.get_instance().addon_ext_search(self.addon)
 		self.provider.search(self.session, search_exp, mode, self.succ_cb, self.err_cb)
 
 	def close(self):

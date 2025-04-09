@@ -223,7 +223,7 @@ class BGServiceTask(object):
 
 
 # message pump must run all the time
-BGServiceTask.startMessagePump()
+# BGServiceTask.startMessagePump()
 
 
 class AddonBackgroundService(object):

@@ -15,6 +15,24 @@ import sys
 # #################################################################################################
 
 class ArchivCZSKLicense(object):
+	__instance = None
+
+	@staticmethod
+	def start():
+		if ArchivCZSKLicense.__instance == None:
+			ArchivCZSKLicense.__instance = ArchivCZSKLicense()
+
+	@staticmethod
+	def stop():
+		if ArchivCZSKLicense.__instance != None:
+			ArchivCZSKLicense.__instance.bgservice.stop_all()
+			ArchivCZSKLicense.__instance = None
+
+	@staticmethod
+	def get_instance():
+		return ArchivCZSKLicense.__instance
+
+
 	LEVEL_FREE = 0
 	LEVEL_SUPPORTER = 1
 	LEVEL_DEVELOPER = 2
@@ -145,6 +163,3 @@ class ArchivCZSKLicense(object):
 
 	def valid_to(self):
 		return date.fromtimestamp(self.lic_data.get('valid_to', 0)).strftime('%d.%m.%Y')
-
-
-license = ArchivCZSKLicense()

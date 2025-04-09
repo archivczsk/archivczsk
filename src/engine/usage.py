@@ -23,6 +23,24 @@ except:
 	from time import time as monotonic
 
 class UsageStats(object):
+	__instance = None
+
+	@staticmethod
+	def start():
+		if UsageStats.__instance == None:
+			UsageStats.__instance = UsageStats()
+
+	@staticmethod
+	def stop():
+		if UsageStats.__instance != None:
+			UsageStats.__instance.save()
+			UsageStats.__instance.bgservice.stop_all()
+			UsageStats.__instance = None
+
+	@staticmethod
+	def get_instance():
+		return UsageStats.__instance
+
 	STATS_VERSION = 1
 	BUG_REPORT_VERSION = 1
 
@@ -211,7 +229,7 @@ class UsageStats(object):
 		if config.plugins.archivCZSK.send_usage_stats.value:
 			from ..version import version
 			from .player.info import videoPlayerInfo
-			from .license import license
+			from .license import ArchivCZSKLicense
 
 			if videoPlayerInfo.exteplayer3Available:
 				exteplayer3_ver = videoPlayerInfo.getExteplayer3Version() or 0
@@ -254,7 +272,7 @@ class UsageStats(object):
 					'addons_update_enabled': config.plugins.archivCZSK.autoUpdate.value,
 					'update_channel': config.plugins.archivCZSK.update_branch.value,
 					'counters': self.counters,
-					'license': license.is_valid(),
+					'license': ArchivCZSKLicense.get_instance().is_valid(),
 					'settings' : {
 						'csfd_mode': config.plugins.archivCZSK.csfdMode.value,
 						'parental_enabled': config.plugins.archivCZSK.parental.enable.value
@@ -334,5 +352,3 @@ class UsageStats(object):
 
 	def send_bug_report(self, addon=None):
 		self.bgservice.run_task("SendBugReport", None, self.__send_bug_report, addon)
-
-usage_stats = UsageStats()

@@ -14,7 +14,7 @@ except:
 from Components.config import config
 from .common import showInfoMessage, showWarningMessage, showErrorMessage, showYesNoDialog, MessageBox
 from ..engine.exceptions import addon, download, play
-from ..engine.usage import usage_stats
+from ..engine.usage import UsageStats
 from ..engine.tools.lang import _
 from ..engine.tools.logger import log
 import requests
@@ -55,7 +55,7 @@ class GUIExceptionHandler(object):
 	def errorMessageAskReport(self, text, **kwargs):
 		def check_resp(r):
 			if r:
-				usage_stats.send_bug_report(**kwargs)
+				UsageStats.get_instance().send_bug_report(**kwargs)
 				self.infoMessage(_("Bug report was send."))
 
 		showYesNoDialog(self.session, self.messageFormat % (self.__class__.errorName, text), cb=check_resp, default=False, timeout=self.timeout, picon=MessageBox.TYPE_ERROR)
@@ -152,7 +152,7 @@ class AddonExceptionHandler(GUIExceptionHandler):
 						self.errorMessage(_("You reached the limit of concurrent connections to remote server. Restart your receiver to solve the problem."))
 					else:
 						if self.addon:
-							usage_stats.addon_exception(self.addon)
+							UsageStats.get_instance().addon_exception(self.addon)
 						log.logError("Addon error.\n%s"%traceback.format_exc())
 						if config.plugins.archivCZSK.bugReports.value and config.plugins.archivCZSK.autoUpdate.value and (not self.addon or not self.addon.need_update()):
 							self.errorMessageAskReport(_("An unhandled error occurred while calling the addon. Should I send bug report to addon authors?\nReport will contain part of log file, informations about your system and addon settings needed for problem analysis."), addon=self.addon)

@@ -4,7 +4,7 @@ from twisted.web import server, http, resource
 from .tools.logger import log
 from Components.config import config
 from ..py3compat import *
-from .usage import usage_stats
+from .usage import UsageStats
 import traceback
 
 class AddonHttpRequestHandler(resource.Resource):
@@ -75,7 +75,7 @@ class AddonHttpRequestHandler(resource.Resource):
 		return request.path.decode('utf-8')[self.prefix_len:]
 
 	def render(self, request):
-		usage_stats.addon_http_call(self.addon)
+		UsageStats.get_instance().addon_http_call(self.addon)
 		# if addon wants to handle requests more flexible, then it can override this function
 
 		# function for endpoint needs to be named P_endpoint and supports only GET requests (inspired by openwebif)
@@ -104,8 +104,31 @@ class AddonHttpRequestHandler(resource.Resource):
 		data = "Error 404: addon %s has no handler for path %s" % (self.name, path_full)
 		return self.__to_bytes(data)
 
+archivCZSKHttpServer = None
 
-class ArchivCZSKHttpServer:
+class ArchivCZSKHttpServer(object):
+	__instance = None
+
+	@staticmethod
+	def start():
+		if ArchivCZSKHttpServer.__instance == None:
+			ArchivCZSKHttpServer.__instance = ArchivCZSKHttpServer()
+			ArchivCZSKHttpServer.__instance.start_listening()
+			global archivCZSKHttpServer
+			archivCZSKHttpServer = ArchivCZSKHttpServer.__instance
+
+	@staticmethod
+	def stop():
+		if ArchivCZSKHttpServer.__instance != None:
+			ArchivCZSKHttpServer.__instance.stop_listening()
+			ArchivCZSKHttpServer.__instance = None
+			global archivCZSKHttpServer
+			archivCZSKHttpServer = None
+
+	@staticmethod
+	def get_instance():
+		return ArchivCZSKHttpServer.__instance
+
 	def __init__(self):
 		self.root = resource.Resource()
 		self.site = server.Site(self.root)
@@ -186,5 +209,3 @@ class ArchivCZSKHttpServer:
 
 		return None
 
-
-archivCZSKHttpServer = ArchivCZSKHttpServer()

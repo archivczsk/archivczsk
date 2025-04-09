@@ -19,8 +19,8 @@ from .items import PFolder, PVideoResolved, PVideoNotResolved, PPlaylist, PSearc
 from .parental import parental_pin
 from .tools.task import callFromThread, Task
 from .tools.util import toString, toUnicode, removeDiac
-from .license import license
-from .usage import usage_stats
+from .license import ArchivCZSKLicense
+from .usage import UsageStats
 from ..gui.captcha import Captcha
 from ..gui.common import LoadingScreen
 from ..gui.config import ArchivCZSKSimpleConfigScreen
@@ -56,7 +56,7 @@ def getVideoFormats(url):
 @callFromThread
 def openSimpleConfig(session, config_entries, title=None, s=True):
 	def simpleConfigCB(result):
-		if s and result and not license.check_level(license.LEVEL_SUPPORTER):
+		if s and result and not ArchivCZSKLicense.get_instance().check_level(ArchivCZSKLicense.LEVEL_SUPPORTER):
 			def mbox_cbk(result):
 				if result:
 					def close_cbk(result2):
@@ -64,13 +64,13 @@ def openSimpleConfig(session, config_entries, title=None, s=True):
 						d.callback(AddonSilentExit(''))
 
 					from ..gui.icon import ArchivCZSKDonateScreen
-					usage_stats.update_counter('donate_dialog')
+					UsageStats.get_instance().update_counter('donate_dialog')
 					session.openWithCallback(close_cbk, ArchivCZSKDonateScreen)
 				else:
 					loading and loading.start()
 					d.callback(AddonSilentExit(''))
 
-			usage_stats.update_counter('supporter_msg')
+			UsageStats.get_instance().update_counter('supporter_msg')
 			return session.openWithCallback(mbox_cbk, MessageBox, text=toString(_('This is bonus functionality available only for product supporters. Do you want to know, how to get "Supporter" status?')), type=MessageBox.TYPE_YESNO)
 
 		loading and loading.start()
@@ -247,7 +247,7 @@ def refresh_screen(restoreLastPosition=True, parent=False):
 @callFromThread
 def open_donate_dialog(session):
 	from ..gui.icon import ArchivCZSKDonateScreen
-	usage_stats.update_counter('donate_dialog')
+	UsageStats.get_instance().update_counter('donate_dialog')
 	def close_cbk(result):
 		loading and loading.start()
 		d.callback(None)
@@ -259,7 +259,7 @@ def open_donate_dialog(session):
 	return d
 
 def ensure_supporter(session, msg=None):
-	if license.check_level(license.LEVEL_SUPPORTER):
+	if ArchivCZSKLicense.get_instance().check_level(ArchivCZSKLicense.LEVEL_SUPPORTER):
 		return
 
 	if msg:
@@ -267,14 +267,14 @@ def ensure_supporter(session, msg=None):
 	else:
 		msg = ''
 
-	usage_stats.update_counter('supporter_msg')
+	UsageStats.get_instance().update_counter('supporter_msg')
 	if getYesNoInput(session, msg + _('This is bonus functionality available only for product supporters. Do you want to know, how to get "Supporter" status?')) == True:
 		open_donate_dialog(session)
 
 	raise AddonSilentExit('')
 
 def is_supporter():
-	return license.check_level(license.LEVEL_SUPPORTER)
+	return ArchivCZSKLicense.get_instance().check_level(ArchivCZSKLicense.LEVEL_SUPPORTER)
 
 def __process_info_labels(item, info_labels):
 	# this is really hacky implementation ...

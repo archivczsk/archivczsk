@@ -28,7 +28,7 @@ from .tools.util import toString, removeDiac
 from .items import PVideo, PPlaylist, PDownload, PCategory, PVideoAddon, PCategoryVideoAddon
 from .serialize import CategoriesIO, FavoritesIO
 from .tools import task, util
-from .usage import usage_stats
+from .usage import UsageStats
 from ..colors import DeleteColors
 
 from ..py3compat import *
@@ -560,10 +560,10 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		return "%s(%s)"%(self.__class__.__name__, self.video_addon)
 
 	def __stats_start(self):
-		usage_stats.addon_start(self.video_addon)
+		UsageStats.get_instance().addon_start(self.video_addon)
 
 	def __stats_stop(self):
-		usage_stats.addon_stop(self.video_addon)
+		UsageStats.get_instance().addon_stop(self.video_addon)
 
 	def __set_resolving_provider_light(self):
 		VideoAddonContentProvider.__resolving_provider = self

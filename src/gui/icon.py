@@ -16,7 +16,7 @@ from ..engine.tools.lang import _
 from ..engine.tools.logger import log
 from ..engine.tools import util
 from ..engine.tools.stbinfo import stbinfo
-from ..engine.license import license
+from ..engine.license import ArchivCZSKLicense
 try:
 	from ..engine.tools.monotonic import monotonic
 except:
@@ -26,6 +26,7 @@ class ArchivCZSKDonateScreen(BaseArchivCZSKListSourceScreen):
 	def __init__(self, session, countdown=0):
 		BaseArchivCZSKListSourceScreen.__init__(self, session)
 		self.session = session
+		self.license = ArchivCZSKLicense.get_instance()
 		self.countdown = countdown
 
 		self.countdown_tick_timer = eTimer()
@@ -83,20 +84,20 @@ class ArchivCZSKDonateScreen(BaseArchivCZSKListSourceScreen):
 		self.onShown.append(self.setup_countdown)
 		self.onClose.append(self.__onClose)
 
-		if license.get_aes_module():
+		if self.license.get_aes_module():
 			self.check_license()
 
 	def update_license_status(self):
-		if license.get_aes_module() == None:
+		if self.license.get_aes_module() == None:
 			self["donate_result_yes"].hide()
 			self["donate_result_no"].setText(_("Error"))
 			self["donate_validity"].setText(_("Reinstall ArchivCZSK to resolve problem"))
 			self["donate_result_no"].show()
 			self["donate_validity"].show()
 		else:
-			if license.is_valid():
+			if self.license.is_valid():
 				self["donate_result_no"].hide()
-				self["donate_validity"].setText(_("(Bonuses activated until {date})").format(date=license.valid_to()))
+				self["donate_validity"].setText(_("(Bonuses activated until {date})").format(date=self.license.valid_to()))
 				self["donate_validity"].show()
 				self["donate_result_yes"].show()
 			else:
@@ -152,7 +153,7 @@ class ArchivCZSKDonateScreen(BaseArchivCZSKListSourceScreen):
 				self.update_license_status()
 
 		log.debug("Starting task that will refresh the license in background")
-		license.bgservice.run_task('task(LicRefresh)', __update_license_status, license.refresh_license)
+		self.license.bgservice.run_task('task(LicRefresh)', __update_license_status, self.license.refresh_license)
 
 
 class ArchivCZSKPaymentScreen(BaseArchivCZSKScreen):

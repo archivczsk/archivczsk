@@ -209,7 +209,8 @@ def patch_pli_gmepg():
 # #################################################################################################
 
 def ensure_supporter(session):
-	from .license import license
+	from .license import ArchivCZSKLicense
+	license = ArchivCZSKLicense.get_instance()
 
 	if license.check_level(license.LEVEL_SUPPORTER):
 		return True
@@ -226,7 +227,7 @@ def ensure_supporter(session):
 
 def play_archive_entry(self, cooltv=False):
 	from ..client.shortcut import run_shortcut
-	from .httpserver import archivCZSKHttpServer
+	from .httpserver import ArchivCZSKHttpServer
 	from ..gsession import GlobalSession
 
 	event = None
@@ -271,12 +272,12 @@ def play_archive_entry(self, cooltv=False):
 		log.debug("Extracted url: %s" % url)
 
 		# extract addon's http endpoint from url
-		endpoint = archivCZSKHttpServer.urlToEndpoint(url)
+		endpoint = ArchivCZSKHttpServer.get_instance().urlToEndpoint(url)
 		if not endpoint:
 			return None
 
 		log.debug("Addon's endpoint extracted from url: %s" % endpoint)
-		addon = archivCZSKHttpServer.getAddonByEndpoint(endpoint)
+		addon = ArchivCZSKHttpServer.get_instance().getAddonByEndpoint(endpoint)
 		if not addon:
 			return
 

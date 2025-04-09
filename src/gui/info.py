@@ -23,7 +23,7 @@ from .common import showInfoMessage, PanelColorListEntry, PanelList
 from .poster import PosterProcessing, PosterPixmapHandler
 from ..engine.player.info import videoPlayerInfo
 from ..engine.parental import parental_pin
-from ..engine.usage import usage_stats
+from ..engine.usage import UsageStats
 from ..engine.tools.util import toUnicode, removeDiac
 from ..engine.tools.lang import _
 from ..engine.tools.logger import log
@@ -92,15 +92,15 @@ def showCSFDInfo(session, item):
 
 		if csfdType == 1:
 			from ..gui.archivcsfd import ArchivCSFD
-			usage_stats.update_counter('csfd_i')
+			UsageStats.get_instance().update_counter('csfd_i')
 			session.open(ArchivCSFD, name, year)
 		elif csfdType == 2:
 			from Plugins.Extensions.CSFD.plugin import CSFD
-			usage_stats.update_counter('csfd_e')
+			UsageStats.get_instance().update_counter('csfd_e')
 			session.open(CSFD, name)
 		elif csfdType == 3:
 			from Plugins.Extensions.CSFDLite.plugin import CSFDLite
-			usage_stats.update_counter('csfd_l')
+			UsageStats.get_instance().update_counter('csfd_l')
 			try:
 				session.open(CSFDLite, name, yearStr)
 			except:

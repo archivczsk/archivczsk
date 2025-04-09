@@ -1,78 +1,55 @@
 # -*- coding: UTF-8 -*-
-import time, traceback
 
 from Components.config import config
 from Plugins.Plugin import PluginDescriptor
 from ServiceReference import ServiceReference
 
-from .engine.tools.logger import log
-from .engine.tools.lang import _
-from .archivczsk import ArchivCZSK
-from .gsession import GlobalSession
-from .gui.search import ArchivCZSKSearchClientScreen
-from .gui.icon import ArchivCZSKDonateScreen
-from .engine.downloader import DownloadManager
-from .engine.httpserver import archivCZSKHttpServer
-from .engine.license import license
-from .client.shortcut import run_shortcut
 
-NAME = _("ArchivCZSK")
-DESCRIPTION = _("Playing CZ/SK archives")
+def get_description():
+	from .engine.tools.lang import _
+	NAME = _("ArchivCZSK")
+	DESCRIPTION = _("Playing CZ/SK archives")
+	return NAME, DESCRIPTION
+
 
 def sessionStart(reason, session):
-	if config.plugins.archivCZSK.epg_viewer.value:
-		try:
-			log.debug("Going to inject archivczsk into system's EPG")
-			from .engine.epg_integrator import inject_archive_into_epg
-			inject_archive_into_epg()
-		except:
-			log.error(traceback.format_exc())
+	from .archivczsk import ArchivCZSK
+#	ArchivCZSK.start(session)
 
-	GlobalSession.setSession(session)
-	# saving active downloads to session
-	if not hasattr(session, 'archivCZSKdownloads'):
-		session.archivCZSKdownloads = []
-	if DownloadManager.getInstance() is None:
-		DownloadManager(session.archivCZSKdownloads)
-
-	try:
-		from .engine.tools.stbinfo import stbinfo
-		log.info('STB info:\n%s' % stbinfo.to_string())
-	except:
-		pass
 
 def main(session, **kwargs):
-	def runArchivCZSK(callback = None):
-		ArchivCZSK(session)
+	from .archivczsk import ArchivCZSK
+	ArchivCZSK.run(session)
 
-	lastIconDUtcCfg = config.plugins.archivCZSK.lastIconDShowMessage
-
-	monthSeconds = 60 * 60 * 24 * 30
-	if license.is_valid() == False and (lastIconDUtcCfg.value == 0 or (int(time.time()) - lastIconDUtcCfg.value > monthSeconds)):
-		lastIconDUtcCfg.value = int(time.time())
-		lastIconDUtcCfg.save()
-		session.openWithCallback(runArchivCZSK, ArchivCZSKDonateScreen, countdown=10)
-	else:
-		runArchivCZSK()
 
 def menu(menuid, **kwargs):
 	if menuid == "mainmenu":
-		return [(DESCRIPTION, main, "archivy_czsk", 32)]
+		NAME, DESCRIPTION = get_description()
+		return [(DESCRIPTION, main, NAME, 32)]
 	else:
 		return []
 
+
 def eventInfo(session, servicelist, **kwargs):
+	from .gui.search import ArchivCZSKSearchClientScreen
 	ref = session.nav.getCurrentlyPlayingServiceReference()
 	session.open(ArchivCZSKSearchClientScreen, ref)
 
+
 def autostart(reason, *args, **kwargs):
-	print('autostart called with reason: %s' % (str(reason)))
 	if reason == 1:
+		from .archivczsk import ArchivCZSK
 		# stop command
 		ArchivCZSK.stop()
 
 
 def open_content_by_ref(session, **kwargs):
+	from .engine.tools.logger import log
+	from .engine.httpserver import ArchivCZSKHttpServer
+	from .client.shortcut import run_shortcut
+
+	archivCZSKHttpServer = ArchivCZSKHttpServer.get_instance()
+
 	ref = session.nav.getCurrentlyPlayingServiceReference()
 	if not ref:
 		return
@@ -105,6 +82,10 @@ def open_content_by_ref(session, **kwargs):
 
 
 def Plugins(path, **kwargs):
+	NAME, DESCRIPTION = get_description()
+	from .engine.tools.lang import _
+	from . import settings
+
 	result = [
 		PluginDescriptor(where=PluginDescriptor.WHERE_SESSIONSTART, fnc=sessionStart),
 		PluginDescriptor(where=PluginDescriptor.WHERE_AUTOSTART, fnc=autostart),
@@ -115,23 +96,12 @@ def Plugins(path, **kwargs):
 		result.append(PluginDescriptor(_('Open archive for current channel using ArchivCZSK addon'), description=_('When current channel is managed by ArchivCZSK addon, then it opens archive for it'), where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=open_content_by_ref))
 
 	if config.plugins.archivCZSK.extensions_menu.value:
-		#result.append(PluginDescriptor(NAME, where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main))
 		result.append(PluginDescriptor(NAME, description=DESCRIPTION, where=PluginDescriptor.WHERE_EXTENSIONSMENU, fnc=main))
 
 	if config.plugins.archivCZSK.main_menu.value:
-		#result.append(PluginDescriptor(NAME, where=PluginDescriptor.WHERE_MENU, fnc=menu))
 		result.append(PluginDescriptor(NAME, description=DESCRIPTION, where=PluginDescriptor.WHERE_MENU, fnc=menu))
 
 	if config.plugins.archivCZSK.epg_menu.value:
 		result.append(PluginDescriptor(_("Search in ArchivCZSK"), where=PluginDescriptor.WHERE_EVENTINFO, fnc=eventInfo))
 
 	return result
-
-#ArchivCZSK.check_dependencies()
-ArchivCZSK.load_skin()
-ArchivCZSK.load_repositories()
-ArchivCZSK.init_addons()
-archivCZSKHttpServer.start_listening()
-
-if config.plugins.archivCZSK.preload.value:
-	ArchivCZSK.preload_addons()

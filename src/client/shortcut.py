@@ -8,7 +8,7 @@ from ..engine.tools.logger import log
 from ..gui.common import showInfoMessage, showErrorMessage
 from ..engine.tools.lang import _
 from ..engine.parental import parental_pin
-from ..engine.usage import usage_stats
+from ..engine.usage import UsageStats
 
 from ..py3compat import *
 
@@ -153,7 +153,7 @@ class ArchivCZSKShortcut():
 			else:
 				self.status_dialog = self.session.open(ArchivCZSKShortcutRunScreen, text=status_text, shortcut_name=self.shortcut_name)
 
-			usage_stats.addon_shortcut(self.addon, self.shortcut_name)
+			UsageStats.get_instance().addon_shortcut(self.addon, self.shortcut_name)
 			self.addon.provider.start()
 			self.addon.provider.run_shortcut(self.session, self.shortcut_name, self.params, self._successSearch, self._errorSearch)
 		else:

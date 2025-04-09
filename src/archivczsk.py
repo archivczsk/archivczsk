@@ -15,14 +15,19 @@ from .engine.tools.lang import _
 from .engine.tools.util import toString
 from .engine.addon import ToolsAddon, VideoAddon, XBMCAddon
 from .engine.exceptions.updater import UpdateXMLVersionError, UpdateXMLNoUpdateUrl
+from .engine.downloader import DownloadManager
 from .engine.tools.task import Task
+from .engine.httpserver import ArchivCZSKHttpServer
 from .gui.content import ArchivCZSKContentScreen
 from .gui.info import openPartialChangelog
+from .gui.icon import ArchivCZSKDonateScreen
 from .engine.parental import parental_pin
 from .compat import DMM_IMAGE, VTI_IMAGE, eConnectCallback
 from .engine.updater import ArchivUpdater
 from .engine.bgservice import BGServiceTask
-from .engine.usage import usage_stats
+from .engine.license import ArchivCZSKLicense
+from .engine.usage import UsageStats
+from .gsession import GlobalSession
 
 def have_valid_ssl_certificates():
 	# outdated images don't have Let's Encrypt CA, so make a simple check here
@@ -184,9 +189,8 @@ class ArchivCZSK():
 	def load_skin():
 		try:
 			skin_path = os.path.join(settings.SKIN_PATH, config.plugins.archivCZSK.skin.value + ".xml")
-			from .engine.license import license
 
-			if (not license.check_level(license.LEVEL_DEVELOPER)) or (not os.path.isfile(skin_path)):
+			if (not ArchivCZSKLicense.get_instance().check_level(ArchivCZSKLicense.LEVEL_DEVELOPER)) or (not os.path.isfile(skin_path)):
 				skin_path = os.path.join(settings.SKIN_PATH, 'default.xml')
 
 			tmp_skin_path = '/tmp/archivczsk_skin.xml'
@@ -286,16 +290,6 @@ class ArchivCZSK():
 				log.logError("Init of addon %s failed:\n%s" % (addon, traceback.format_exc()))
 
 	@staticmethod
-	def stop():
-		try:
-			usage_stats.save()
-			BGServiceTask.stopServiceThread()
-			BGServiceTask.stopMessagePump()
-		except:
-			log.error(traceback.format_exc())
-		return
-
-	@staticmethod
 	def check_dependencies(force=False):
 		if force or ArchivCZSK.was_upgraded() != None:
 			try:
@@ -320,6 +314,83 @@ class ArchivCZSK():
 				os.remove( first_start_file )
 
 		return prev_ver
+
+	@staticmethod
+	def start(session):
+		BGServiceTask.startMessagePump()
+		BGServiceTask.startServiceThread()
+		ArchivCZSKLicense.start()
+		ArchivCZSKHttpServer.start()
+		ArchivCZSK.load_skin()
+		ArchivCZSK.load_repositories()
+		ArchivCZSK.init_addons()
+		UsageStats.start()
+
+		if config.plugins.archivCZSK.preload.value:
+			ArchivCZSK.preload_addons()
+
+		if config.plugins.archivCZSK.epg_viewer.value:
+			try:
+				log.debug("Going to inject archivczsk into system's EPG")
+				from .engine.epg_integrator import inject_archive_into_epg
+				inject_archive_into_epg()
+			except:
+				log.error(traceback.format_exc())
+
+		GlobalSession.setSession(session)
+		# saving active downloads to session
+		if not hasattr(session, 'archivCZSKdownloads'):
+			session.archivCZSKdownloads = []
+
+		if DownloadManager.getInstance() is None:
+			DownloadManager(session.archivCZSKdownloads)
+
+		try:
+			from .engine.tools.stbinfo import stbinfo
+			log.info('STB info:\n%s' % stbinfo.to_string())
+		except:
+			pass
+
+		return
+
+	@staticmethod
+	def stop():
+		try:
+			for a in ArchivCZSK.get_addons():
+				log.debug("Closing addon %s" % a.id)
+				a.close()
+
+			UsageStats.stop()
+			ArchivCZSKLicense.stop()
+			ArchivCZSKHttpServer.stop()
+			BGServiceTask.stopServiceThread()
+			BGServiceTask.stopMessagePump()
+			ArchivCZSK.__repositories = {}
+			ArchivCZSK.__addons = {}
+			ArchivCZSK.__loaded = False
+		except:
+			log.error(traceback.format_exc())
+
+		DownloadManager.instance = None
+		return
+
+	@staticmethod
+	def run(session):
+		ArchivCZSK.start(session)
+		def runArchivCZSK(callback = None):
+			ArchivCZSK(session)
+
+		lastIconDUtcCfg = config.plugins.archivCZSK.lastIconDShowMessage
+
+		monthSeconds = 60 * 60 * 24 * 30
+
+		if ArchivCZSKLicense.get_instance().is_valid() == False and (lastIconDUtcCfg.value == 0 or (int(time.time()) - lastIconDUtcCfg.value > monthSeconds)):
+			lastIconDUtcCfg.value = int(time.time())
+			lastIconDUtcCfg.save()
+			session.openWithCallback(runArchivCZSK, ArchivCZSKDonateScreen, countdown=10)
+		else:
+			runArchivCZSK()
+
 
 	def __init__(self, session):
 		self.session = session
@@ -604,3 +675,6 @@ class ArchivCZSK():
 					f.write("1")
 			except IOError as e:
 				log.error('cannot drop caches : %s' % str(e))
+
+		ArchivCZSK.stop()
+

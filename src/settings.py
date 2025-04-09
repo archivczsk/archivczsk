@@ -173,9 +173,9 @@ config.plugins.archivCZSK.csfdMode = ConfigSelectionTr(tr, default='1', choices=
 def get_main_settings():
 	_ = tr
 	list = []
-	from .engine.license import license
+	from .engine.license import ArchivCZSKLicense
 
-	if license.check_level(license.LEVEL_DEVELOPER):
+	if ArchivCZSKLicense.get_instance().check_level(ArchivCZSKLicense.LEVEL_DEVELOPER):
 		list.append(getConfigListEntry(_("Enable developer mode (use only for developing addons)"), config.plugins.archivCZSK.developer_mode))
 
 	list.append(getConfigListEntry(_("Plugin language"), config.plugins.archivCZSK.lang))
@@ -316,9 +316,9 @@ def changeLogMode(configElement):
 	log.changeMode(int(configElement.value))
 
 def restartHttpServer(configElement):
-	from .engine.httpserver import archivCZSKHttpServer
+	from .engine.httpserver import ArchivCZSKHttpServer
 	try:
-		archivCZSKHttpServer.start_listening(True)
+		ArchivCZSKHttpServer.get_instance().start_listening(True)
 	except:
 		log.error( "Failed to restart internal HTTP server\n%s" % traceback.format_exc() )
 
