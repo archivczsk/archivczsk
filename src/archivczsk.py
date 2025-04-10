@@ -60,7 +60,6 @@ class ArchivCZSK():
 
 	@staticmethod
 	def load_repositories():
-		start = time.time()
 		from .engine.repository import Repository
 
 		# list directories in settings.REPOSITORY_PATH and search for directory containing addon.xml file = repository
@@ -74,10 +73,6 @@ class ArchivCZSK():
 				else:
 					ArchivCZSK.add_repository(repository)
 					sys.path.append(repository.path)
-
-		ArchivCZSK.__loaded = True
-		diff = time.time() - start
-		log.info("load repositories in {0}".format(diff))
 
 	@staticmethod
 	def process_skin(skin_path_orig, skin_path_new):
@@ -317,26 +312,41 @@ class ArchivCZSK():
 
 	@staticmethod
 	def start(session):
+		if ArchivCZSK.isLoaded():
+			return
+
+		log.info("Starting ArchivCZSK ...")
+		start_time = time.time()
+		log.debug("Starting message pump")
 		BGServiceTask.startMessagePump()
+		log.debug("Starting service thread")
 		BGServiceTask.startServiceThread()
+		log.debug("Initialising license")
 		ArchivCZSKLicense.start()
+		log.debug("Starting HTTP server")
 		ArchivCZSKHttpServer.start()
+		log.debug("Loading skin")
 		ArchivCZSK.load_skin()
+		log.debug("Loading repositories")
 		ArchivCZSK.load_repositories()
+		log.debug("Initialising adddons")
 		ArchivCZSK.init_addons()
+		log.debug("Starting stats collection")
 		UsageStats.start()
 
 		if config.plugins.archivCZSK.preload.value:
+			log.info("Preloading addons")
 			ArchivCZSK.preload_addons()
 
 		if config.plugins.archivCZSK.epg_viewer.value:
 			try:
-				log.debug("Going to inject archivczsk into system's EPG")
+				log.debug("Injecting ArchivCZSK interface to system's EPG")
 				from .engine.epg_integrator import inject_archive_into_epg
 				inject_archive_into_epg()
 			except:
 				log.error(traceback.format_exc())
 
+		log.debug("Initialising downloader")
 		GlobalSession.setSession(session)
 		# saving active downloads to session
 		if not hasattr(session, 'archivCZSKdownloads'):
@@ -346,15 +356,22 @@ class ArchivCZSK():
 			DownloadManager(session.archivCZSKdownloads)
 
 		try:
+			log.info("Collecting STB info")
 			from .engine.tools.stbinfo import stbinfo
 			log.info('STB info:\n%s' % stbinfo.to_string())
 		except:
 			pass
 
+		ArchivCZSK.__loaded = True
+		log.info("ArchivCZSK started in {:.02f} seconds".format(time.time() - start_time))
 		return
 
 	@staticmethod
 	def stop():
+		if not ArchivCZSK.isLoaded():
+			return
+
+		log.info("Stopping ArchivCZSK ...")
 		try:
 			for a in ArchivCZSK.get_addons():
 				log.debug("Closing addon %s" % a.id)
@@ -372,7 +389,15 @@ class ArchivCZSK():
 			log.error(traceback.format_exc())
 
 		DownloadManager.instance = None
+		log.info("ArchivCZSK stopped")
 		return
+
+	@staticmethod
+	def unload():
+		log.stop()
+		modules_to_reload = [k for k, m in sys.modules.items() if 'archivCZSK' in str(m)]
+		for m in modules_to_reload:
+			del sys.modules[m]
 
 	@staticmethod
 	def run(session):
@@ -675,6 +700,3 @@ class ArchivCZSK():
 					f.write("1")
 			except IOError as e:
 				log.error('cannot drop caches : %s' % str(e))
-
-		ArchivCZSK.stop()
-
