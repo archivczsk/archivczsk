@@ -321,8 +321,6 @@ class UsageStats(object):
 			s.close()
 
 	def __send_bug_report(self, addon=None):
-		from .tools.logger import memRingBuff
-
 		def _e(d):
 			return b64encode(d.encode('utf-8')).decode('utf-8').swapcase().rstrip('=')
 
@@ -333,7 +331,7 @@ class UsageStats(object):
 			'stbinfo': _e(stbinfo.to_string()),
 			'settings': _e(json.dumps(addon.settings.dict(filter_sensitive=True))) if addon else None,
 			'addon': str(addon) if addon else None,
-			'log': _e(memRingBuff.dump())
+			'log': _e(log.dump_ringbuff())
 		}
 		data['checksum'] = self.calc_data_checksum(data)
 
