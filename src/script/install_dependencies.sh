@@ -2,8 +2,8 @@
 
 log_file="/tmp/archivCZSK_install_dep.txt"
 
-DEP_PY2="rtmpdump ffmpeg python-importlib python-pickle python-html python-threading python-json python-zlib python-compression python-requests python-codecs python-email python-pycrypto python-pycryptodome python-beautifulsoup4"
-DEP_PY3="rtmpdump ffmpeg python3-pickle python3-html python3-threading python3-json python3-compression python3-requests python3-codecs python3-email python3-pycryptodome python3-beautifulsoup4"
+DEP_PY2="rtmpdump python-importlib python-pickle python-html python-threading python-json python-zlib python-compression python-requests python-codecs python-email python-pycrypto python-pycryptodome python-beautifulsoup4"
+DEP_PY3="rtmpdump python3-pickle python3-html python3-threading python3-json python3-compression python3-requests python3-codecs python3-email python3-pycryptodome python3-beautifulsoup4"
 
 run()
 {
