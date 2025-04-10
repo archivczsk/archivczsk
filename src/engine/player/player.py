@@ -770,6 +770,11 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 			return
 
 		cur_position = getPlayPositionInSeconds(self.session)
+		if cur_position == None or cur_position < 0:
+			log.debug("No correct PTS is available")
+			self.__timer_seek_notification.start(1000, True)
+			return
+
 		if cur_position == self.old_position:
 			# seek still in progress, try again later
 			log.debug("Seek not finished yet - planing new setup in a while")
