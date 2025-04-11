@@ -19,6 +19,7 @@ class ArchivCZSKLicense(object):
 
 	@staticmethod
 	def start():
+		log.debug("Initialising license")
 		if ArchivCZSKLicense.__instance == None:
 			ArchivCZSKLicense.__instance = ArchivCZSKLicense()
 

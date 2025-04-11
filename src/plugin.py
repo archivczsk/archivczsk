@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 
+import os, sys, traceback
 from Components.config import config
 from Plugins.Plugin import PluginDescriptor
 from ServiceReference import ServiceReference
@@ -14,13 +15,47 @@ def get_description():
 
 def sessionStart(reason, session):
 	from .archivczsk import ArchivCZSK
-#	ArchivCZSK.start(session)
+	ArchivCZSK.start(session)
+
+def unload_archivczsk(session, unloaded_cbk=None):
+	from .archivczsk import ArchivCZSK
+
+	def __unload():
+		if not stopped:
+			from .engine.tools.logger import log
+			log.debug("HTTP server still running ...")
+
+		session.__stop_t.stop()
+		del session.__stop_tc
+		del session.__stop_t
+		ArchivCZSK.unload()
+
+		if unloaded_cbk != None:
+			unloaded_cbk()
+
+	stopped = False
+	def __stop_cbk():
+		stopped = True
+
+	ArchivCZSK.stop(__stop_cbk)
+	# now we need to wait a little bit in order to HTTP server completely stops
+	from enigma import eTimer
+	from .compat import eConnectCallback
+	session.__stop_t = eTimer()
+	session.__stop_tc = eConnectCallback(session.__stop_t.timeout, __unload)
+	session.__stop_t.start(1000)
 
 
 def main(session, **kwargs):
-	from .archivczsk import ArchivCZSK
-	ArchivCZSK.run(session)
+	def __run():
+		from .archivczsk import ArchivCZSK
+		ArchivCZSK.run(session)
 
+	if os.path.isfile('/tmp/aczsk_reload.txt'):
+		os.remove('/tmp/aczsk_reload.txt')
+		unload_archivczsk(session, __run)
+	else:
+		__run()
 
 def menu(menuid, **kwargs):
 	if menuid == "mainmenu":

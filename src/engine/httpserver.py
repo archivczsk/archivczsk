@@ -112,15 +112,17 @@ class ArchivCZSKHttpServer(object):
 	@staticmethod
 	def start():
 		if ArchivCZSKHttpServer.__instance == None:
+			log.debug("Starting HTTP server")
 			ArchivCZSKHttpServer.__instance = ArchivCZSKHttpServer()
 			ArchivCZSKHttpServer.__instance.start_listening()
 			global archivCZSKHttpServer
 			archivCZSKHttpServer = ArchivCZSKHttpServer.__instance
 
 	@staticmethod
-	def stop():
+	def stop(stop_cbk=None):
 		if ArchivCZSKHttpServer.__instance != None:
-			ArchivCZSKHttpServer.__instance.stop_listening()
+			log.debug("Stopping HTTP server")
+			ArchivCZSKHttpServer.__instance.stop_listening(stop_cbk)
 			ArchivCZSKHttpServer.__instance = None
 			global archivCZSKHttpServer
 			archivCZSKHttpServer = None
@@ -137,7 +139,7 @@ class ArchivCZSKHttpServer(object):
 		self.running = None
 
 	def start_listening(self, only_restart=False):
-		def continue_cbk(*args):
+		def continue_cbk():
 			self.port = config.plugins.archivCZSK.httpPort.value
 
 			if only_restart and not was_started:
@@ -150,6 +152,7 @@ class ArchivCZSKHttpServer(object):
 				else:
 					listen_address = '0.0.0.0'
 
+				log.info("Starting HTTP server on %s:%s" % (listen_address, self.port))
 				try:
 					self.running = reactor.listenTCP(self.port, self.site, interface=listen_address)
 				except:
@@ -163,11 +166,14 @@ class ArchivCZSKHttpServer(object):
 			self.stop_listening(continue_cbk)
 
 	def stop_listening(self, cbk=None):
+		def __wrap_cbk(*args):
+			cbk()
+
 		if self.running != None:
 			defer = self.running.stopListening()
 			self.running = None
 			if cbk:
-				defer.addBoth(cbk)
+				defer.addCallback(__wrap_cbk)
 		elif cbk:
 			cbk()
 
@@ -193,9 +199,9 @@ class ArchivCZSKHttpServer(object):
 	def unregisterRequestHandler(self, requestHandler ):
 		try:
 			self.root.delEntity(requestHandler.name.encode('utf-8'))
-			log.logInfo( "HTTP request handler for endpoint %s removed" % requestHandler.name)
+			log.info( "HTTP request handler for endpoint %s removed" % requestHandler.name)
 		except:
-			log.logInfo( "HTTP request handler for endpoint %s not found" % requestHandler.name)
+			log.debug( "HTTP request handler for endpoint %s not found" % requestHandler.name)
 
 	def getAddonByEndpoint(self, endpoint):
 		handler = self.root.getStaticEntity(endpoint.encode('utf-8'))

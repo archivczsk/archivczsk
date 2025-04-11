@@ -28,11 +28,13 @@ class UsageStats(object):
 	@staticmethod
 	def start():
 		if UsageStats.__instance == None:
+			log.debug("Starting stats collector")
 			UsageStats.__instance = UsageStats()
 
 	@staticmethod
 	def stop():
 		if UsageStats.__instance != None:
+			log.debug("Stopping stats collector")
 			UsageStats.__instance.save()
 			UsageStats.__instance.bgservice.stop_all()
 			UsageStats.__instance = None

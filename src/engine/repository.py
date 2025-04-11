@@ -23,7 +23,7 @@ class Repository():
 	SUPPORTED_ADDONS = ['video', 'tools']
 
 	def __init__(self, config_file):
-		log.debug("initializing repository from %s" , config_file)
+		log.debug("Initializing repository from %s" , config_file)
 		pars = parser.XBMCAddonXMLParser(config_file)
 		repo_dict = pars.parse()
 
@@ -76,7 +76,7 @@ class Repository():
 			if addon_info.type == 'video':
 				try:
 					if not addon_info.deprecated and not addon_info.broken:
-						# chceck if there exitst a script file described in addon.xml
+						# check if there exitst a script file described in addon.xml
 						for ext in ('.py', '.pyc', '.pyo'):
 							tmp = os.path.join(addon_path, addon_info.import_name + ext)
 							if os.path.isfile(tmp):

@@ -60,6 +60,7 @@ class ArchivCZSK():
 
 	@staticmethod
 	def load_repositories():
+		log.debug("Loading repositories")
 		from .engine.repository import Repository
 
 		# list directories in settings.REPOSITORY_PATH and search for directory containing addon.xml file = repository
@@ -72,7 +73,8 @@ class ArchivCZSK():
 					log.error("Failed to load repository: %s\n%s" % (repo, traceback.format_exc()))
 				else:
 					ArchivCZSK.add_repository(repository)
-					sys.path.append(repository.path)
+					if repository.path not in sys.path:
+						sys.path.append(repository.path)
 
 	@staticmethod
 	def process_skin(skin_path_orig, skin_path_new):
@@ -234,6 +236,10 @@ class ArchivCZSK():
 		ArchivCZSK.__repositories[repository.id] = repository
 
 	@staticmethod
+	def remove_repository(repository):
+		del ArchivCZSK.__repositories[repository.id]
+
+	@staticmethod
 	def get_addon(addon_id):
 		return ArchivCZSK.__addons[addon_id]
 
@@ -267,6 +273,11 @@ class ArchivCZSK():
 
 	@staticmethod
 	def preload_addons():
+		if config.plugins.archivCZSK.preload.value == False:
+			return
+
+		log.info("Starting addons preload")
+
 		for addon in ArchivCZSK.get_video_addons():
 			try:
 				if addon.is_enabled():
@@ -276,6 +287,8 @@ class ArchivCZSK():
 
 	@staticmethod
 	def init_addons():
+		log.debug("Initialising adddons")
+
 		for addon in ArchivCZSK.get_tools_addons():
 			try:
 				if addon.is_enabled():
@@ -283,6 +296,23 @@ class ArchivCZSK():
 					addon.init()
 			except:
 				log.logError("Init of addon %s failed:\n%s" % (addon, traceback.format_exc()))
+
+	@staticmethod
+	def close_addons():
+		for a in ArchivCZSK.get_addons():
+			log.debug("Closing addon %s" % a.id)
+			a.close()
+			ArchivCZSK.remove_addon(a)
+
+		ArchivCZSK.__addons = {}
+
+	@staticmethod
+	def close_repositories():
+		for r in ArchivCZSK.get_repositories():
+			log.debug("Closing repository %s" % r.id)
+			ArchivCZSK.remove_repository(r)
+
+		ArchivCZSK.__repositories = {}
 
 	@staticmethod
 	def check_dependencies(force=False):
@@ -317,26 +347,16 @@ class ArchivCZSK():
 
 		log.info("Starting ArchivCZSK ...")
 		start_time = time.time()
-		log.debug("Starting message pump")
 		BGServiceTask.startMessagePump()
-		log.debug("Starting service thread")
 		BGServiceTask.startServiceThread()
-		log.debug("Initialising license")
 		ArchivCZSKLicense.start()
-		log.debug("Starting HTTP server")
 		ArchivCZSKHttpServer.start()
-		log.debug("Loading skin")
 		ArchivCZSK.load_skin()
-		log.debug("Loading repositories")
 		ArchivCZSK.load_repositories()
-		log.debug("Initialising adddons")
 		ArchivCZSK.init_addons()
 		log.debug("Starting stats collection")
 		UsageStats.start()
-
-		if config.plugins.archivCZSK.preload.value:
-			log.info("Preloading addons")
-			ArchivCZSK.preload_addons()
+		ArchivCZSK.preload_addons()
 
 		if config.plugins.archivCZSK.epg_viewer.value:
 			try:
@@ -367,28 +387,20 @@ class ArchivCZSK():
 		return
 
 	@staticmethod
-	def stop():
+	def stop(stop_cbk=None):
 		if not ArchivCZSK.isLoaded():
 			return
 
 		log.info("Stopping ArchivCZSK ...")
-		try:
-			for a in ArchivCZSK.get_addons():
-				log.debug("Closing addon %s" % a.id)
-				a.close()
-
-			UsageStats.stop()
-			ArchivCZSKLicense.stop()
-			ArchivCZSKHttpServer.stop()
-			BGServiceTask.stopServiceThread()
-			BGServiceTask.stopMessagePump()
-			ArchivCZSK.__repositories = {}
-			ArchivCZSK.__addons = {}
-			ArchivCZSK.__loaded = False
-		except:
-			log.error(traceback.format_exc())
-
+		ArchivCZSK.close_addons()
+		ArchivCZSK.close_repositories()
+		UsageStats.stop()
+		ArchivCZSKLicense.stop()
+		BGServiceTask.stopServiceThread()
+		BGServiceTask.stopMessagePump()
+		ArchivCZSK.__loaded = False
 		DownloadManager.instance = None
+		ArchivCZSKHttpServer.stop(stop_cbk)
 		log.info("ArchivCZSK stopped")
 		return
 
@@ -398,6 +410,12 @@ class ArchivCZSK():
 		modules_to_reload = [k for k, m in sys.modules.items() if 'archivCZSK' in str(m)]
 		for m in modules_to_reload:
 			del sys.modules[m]
+
+		try:
+			from importlib import invalidate_caches
+			invalidate_caches()
+		except:
+			pass
 
 	@staticmethod
 	def run(session):
@@ -552,12 +570,12 @@ class ArchivCZSK():
 					type=MessageBox.TYPE_INFO)
 
 	def _update_addons(self):
+		self.updated_addons = []
 		for addon in self.to_update_addons:
 			updated = False
 			try:
 				updated = addon.update()
 			except Exception:
-				traceback.print_exc()
 				log.logError("Update addon '%s' failed.\n%s" % (addon.id,traceback.format_exc()))
 				continue
 			else:
@@ -579,12 +597,16 @@ class ArchivCZSK():
 					addon.remove()
 
 	def ask_restart_e2(self, callback=None):
-		ArchivCZSK.__need_restart = True
-		self.session.openWithCallback(self.restart_e2,
-				MessageBox,
-				_("You need to restart E2. Do you want to restart it now?"),
-				type=MessageBox.TYPE_YESNO)
-
+		if config.plugins.archivCZSK.no_restart.value:
+			self.reload_addons(self.updated_addons)
+			self.updated_addons = []
+			self.open_archive_screen()
+		else:
+			ArchivCZSK.__need_restart = True
+			self.session.openWithCallback(self.restart_e2,
+					MessageBox,
+					_("You need to restart E2. Do you want to restart it now?"),
+					type=MessageBox.TYPE_YESNO)
 
 	def restart_e2(self, callback=None):
 		if callback:
@@ -592,9 +614,6 @@ class ArchivCZSK():
 			self.session.open(TryQuitMainloop, 3)
 
 	def open_archive_screen(self, callback=None):
-		if not ArchivCZSK.__loaded:
-			self.load_repositories()
-
 		def first_start_handled(callback=None):
 			# first screen to open when starting plugin,
 			# so we start worker thread where we can run our tasks(ie. loading archives)
@@ -700,3 +719,25 @@ class ArchivCZSK():
 					f.write("1")
 			except IOError as e:
 				log.error('cannot drop caches : %s' % str(e))
+
+	@staticmethod
+	def reload_addons(addons):
+		log.info("Starting addons reload")
+		start_time = time.time()
+
+		modules_to_reload = []
+		for addon in addons:
+			modules_to_reload.extend( [k for k, m in sys.modules.items() if addon.path in str(m)] )
+
+		ArchivCZSK.close_addons()
+		ArchivCZSK.close_repositories()
+
+		for m in modules_to_reload:
+			log.debug("Unloading module %s" % m)
+			del sys.modules[m]
+
+		ArchivCZSK.load_repositories()
+		ArchivCZSK.init_addons()
+		ArchivCZSK.preload_addons()
+
+		log.info("Addons reloaded in {:.02f} seconds".format(time.time() - start_time))
