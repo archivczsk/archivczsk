@@ -8,6 +8,7 @@ Updated on 28.10.2017 by chaoss
 import os
 import shutil
 import traceback
+import threading
 from .tools import util, parser
 from .tools.unzip import unzip_to_dir
 from .tools.util import toString
@@ -36,34 +37,10 @@ class ArchivCZSKUpdateInfoScreen(Screen):
 	def set_status(self, text):
 		self['status'].setText(toString(text))
 
-
-class ArchivUpdater(object):
-	def __init__(self, archivInstance):
-		self.archiv = archivInstance
-		self.tmpPath = config.plugins.archivCZSK.tmpPath.value
-		if not self.tmpPath:
-			self.tmpPath = "/tmp"
-
-		self.tmpPath = "/tmp"
-		self.__console = None
+class RunNext(object):
+	def __init__(self, session):
+		self.session = session
 		self.__updateDialog = None
-		self.remote_version = ""
-		self.remote_date = ""
-		self.updateXmlFilePath = os.path.join(self.tmpPath, 'archivczskupdate.xml')
-		self.updateIpkFilePathTemplate = os.path.join(self.tmpPath, 'archivczsk_{version}-{date}.ipk')
-		self.updateIpkFilePath = None
-
-		self.updateXml = "https://raw.githubusercontent.com/{update_repository}/archivczsk/{update_branch}/build/ipk/latest.xml"
-		self.updateIpk = "https://raw.githubusercontent.com/{update_repository}/archivczsk/{update_branch}/build/ipk/archivczsk_{version}-{date}.ipk"
-
-		self.needUpdate = False
-
-		if os.path.isfile( '/usr/bin/dpkg' ):
-			self.pkgInstallCmd = 'dpkg --install --force-all {update_file}'
-			self.updateMode = 'dpkg'
-		else: #if os.path.isfile( '/usr/bin/opkg' ):
-			self.pkgInstallCmd = 'opkg install --force-overwrite --force-depends --force-downgrade --force-reinstall {update_file}'
-			self.updateMode = 'opkg'
 
 	def run_next(self, cbk, msg=None):
 		# this is needed to make changes in GUI, because you need to return call to reactor
@@ -84,12 +61,41 @@ class ArchivUpdater(object):
 		if self.__updateDialog != None:
 			self.__updateDialog.set_status(msg)
 		else:
-			self.__updateDialog = self.archiv.session.open(ArchivCZSKUpdateInfoScreen, text=msg)
+			self.__updateDialog = self.session.open(ArchivCZSKUpdateInfoScreen, text=msg)
 
 	def close_dialog(self):
 		if self.__updateDialog != None:
-			self.archiv.session.close(self.__updateDialog)
+			self.session.close(self.__updateDialog)
 			self.__updateDialog = None
+
+
+class ArchivUpdater(RunNext):
+	def __init__(self, archivInstance):
+		super(ArchivUpdater, self).__init__(archivInstance.session)
+		self.archiv = archivInstance
+		self.tmpPath = config.plugins.archivCZSK.tmpPath.value
+		if not self.tmpPath:
+			self.tmpPath = "/tmp"
+
+		self.tmpPath = "/tmp"
+		self.__console = None
+		self.remote_version = ""
+		self.remote_date = ""
+		self.updateXmlFilePath = os.path.join(self.tmpPath, 'archivczskupdate.xml')
+		self.updateIpkFilePathTemplate = os.path.join(self.tmpPath, 'archivczsk_{version}-{date}.ipk')
+		self.updateIpkFilePath = None
+
+		self.updateXml = "https://raw.githubusercontent.com/{update_repository}/archivczsk/{update_branch}/build/ipk/latest.xml"
+		self.updateIpk = "https://raw.githubusercontent.com/{update_repository}/archivczsk/{update_branch}/build/ipk/archivczsk_{version}-{date}.ipk"
+
+		self.needUpdate = False
+
+		if os.path.isfile( '/usr/bin/dpkg' ):
+			self.pkgInstallCmd = 'dpkg --install --force-all {update_file}'
+			self.updateMode = 'dpkg'
+		else: #if os.path.isfile( '/usr/bin/opkg' ):
+			self.pkgInstallCmd = 'opkg install --force-overwrite --force-depends --force-downgrade --force-reinstall {update_file}'
+			self.updateMode = 'opkg'
 
 	def checkUpdate(self):
 		self.run_next(self.checkUpdateStarted, _("Checking for updates"))
@@ -240,6 +246,128 @@ class ArchivUpdater(object):
 		except:
 			log.logError("ArchivUpdater remove temp files failed.\n%s" % traceback.format_exc())
 			pass
+
+class AddonsUpdater(RunNext):
+	def __init__(self, archivInstance):
+		super(AddonsUpdater, self).__init__(archivInstance.session)
+		self.archiv = archivInstance
+		self.updated_addons = []
+		self.to_update_addons = []
+
+	def checkUpdate(self):
+		log.info("Checking addons update...")
+		self.run_next(self.check_addon_updates, _("Checking for addons update"))
+
+	def check_addon_updates(self):
+		lock = threading.Lock()
+		threads = []
+		def check_repository(repository):
+			try:
+				to_update = repository.check_updates()
+				with lock:
+					self.to_update_addons += to_update
+			except UpdateXMLVersionError:
+				log.error('cannot retrieve update xml for repository %s', repository)
+			except UpdateXMLNoUpdateUrl:
+				log.info('Repository %s has no update URL set - addons update is for this repository disabled', repository)
+			except Exception:
+				traceback.print_exc()
+				log.error('error when checking updates for repository %s', repository)
+		for repository in self.archiv.get_repositories():
+			threads.append(threading.Thread(target=check_repository, args=(repository,)))
+		for t in threads:
+			t.start()
+		for t in threads:
+			t.join()
+		update_string = '\n'.join(addon.name for addon in self.to_update_addons)
+		if len(self.to_update_addons) > 5:
+			update_string = '\n'.join(addon.name for addon in self.to_update_addons[:6])
+			update_string += "\n...\n..."
+		self.__update_string = update_string
+
+		self.run_next(self.check_updates_finished)
+
+	def check_updates_finished(self, callback=None):
+		update_string = self.__update_string
+		del self.__update_string
+		if update_string != '':
+			self.ask_update_addons(update_string)
+		else:
+			self.continueToArchiv()
+
+	def ask_update_addons(self, update_string):
+		self.session.openWithCallback(
+				self.ask_update_answer,
+				MessageBox,
+				"%s %s? (%s)\n\n%s" % (_("Do you want to update"), _("addons"), len(self.to_update_addons), toString(update_string)),
+				type = MessageBox.TYPE_YESNO)
+
+	def ask_update_answer(self, callback=None):
+		if not callback:
+			return self.continueToArchiv()
+
+		self.updated_addons = []
+		self.to_update_addons_len = len(self.to_update_addons)
+		return self.run_addons_update()
+
+	def run_addons_update(self):
+		if self.to_update_addons:
+			self.__addon = self.to_update_addons.pop()
+			self.run_next(self.process_addon_update, _('Updating addon: {name}'.format(name=self.__addon.name)))
+		else:
+			update_string = '\n'.join(addon_u.name for addon_u in self.updated_addons)
+			if len(self.updated_addons) > 5:
+				update_string = '\n'.join(addon.name for addon in self.updated_addons[:6])
+				update_string += "\n...\n..."
+
+			self.__update_string = update_string
+			self.run_next(self.cleanup_addons, _("Removing old broken and unsupported addons"))
+
+	def process_addon_update(self):
+		updated = False
+		addon = self.__addon
+		try:
+			updated = addon.update()
+		except Exception:
+			log.logError("Update addon '%s' failed.\n%s" % (addon.id,traceback.format_exc()))
+		else:
+			if updated:
+				self.updated_addons.append(addon)
+
+		self.run_addons_update()
+
+	def cleanup_addons(self):
+		if config.plugins.archivCZSK.cleanupBrokenAddons.value:
+			for addon in self.archiv.get_addons():
+				if addon.info.broken and not addon.supported:
+					log.logInfo("Addon %s is broken and not supported - removing" % addon.id)
+					addon.remove()
+
+		self.run_next(self.update_finished)
+
+	def update_finished(self):
+		updated_string = self.__update_string
+		del self.__update_string
+
+		self.session.openWithCallback(self.update_finished2,
+				MessageBox,
+				"%s: (%s/%s):\n\n%s" % (_("Following addons were updated"), len(self.updated_addons), self.to_update_addons_len, toString(updated_string)),
+				type=MessageBox.TYPE_INFO)
+
+	def update_finished2(self, *args):
+		if config.plugins.archivCZSK.no_restart.value:
+			self.run_next(self.reload_addons, _("Reloading addons. Please wait ..."))
+		else:
+			self.archiv.ask_restart_e2()
+
+	def reload_addons(self):
+		self.archiv.reload_addons(self.updated_addons)
+		self.updated_addons = []
+		self.run_next(self.continueToArchiv)
+
+	def continueToArchiv(self):
+		self.archiv.open_archive_screen()
+
 
 class Updater(object):
 	"""Updater for updating addons in repository, every repository has its own updater"""

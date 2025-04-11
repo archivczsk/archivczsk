@@ -428,6 +428,8 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 		self.workingFinished()
 
 	def changelog(self):
+		from .. import UpdateInfo
+		UpdateInfo.resetDates()
 		changelog_path = os.path.join(settings.PLUGIN_PATH, 'changelog.txt')
 		if os.path.isfile(changelog_path):
 			info.showChangelog(self.session, "ArchivCZSK", changelog_path)

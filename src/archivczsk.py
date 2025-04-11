@@ -1,6 +1,5 @@
 import os,sys
 import shutil
-import threading
 import traceback
 import datetime
 import time
@@ -8,13 +7,11 @@ import time
 from Components.config import config, configfile
 from Screens.MessageBox import MessageBox
 from skin import loadSkin
-from enigma import eTimer, eConsoleAppContainer
+from enigma import eConsoleAppContainer
 from . import settings, UpdateInfo
 from .engine.tools.logger import log
 from .engine.tools.lang import _
-from .engine.tools.util import toString
 from .engine.addon import ToolsAddon, VideoAddon, XBMCAddon
-from .engine.exceptions.updater import UpdateXMLVersionError, UpdateXMLNoUpdateUrl
 from .engine.downloader import DownloadManager
 from .engine.tools.task import Task
 from .engine.httpserver import ArchivCZSKHttpServer
@@ -22,8 +19,8 @@ from .gui.content import ArchivCZSKContentScreen
 from .gui.info import openPartialChangelog
 from .gui.icon import ArchivCZSKDonateScreen
 from .engine.parental import parental_pin
-from .compat import DMM_IMAGE, VTI_IMAGE, eConnectCallback
-from .engine.updater import ArchivUpdater
+from .compat import DMM_IMAGE, VTI_IMAGE
+from .engine.updater import ArchivUpdater, AddonsUpdater
 from .engine.bgservice import BGServiceTask
 from .engine.license import ArchivCZSKLicense
 from .engine.usage import UsageStats
@@ -445,8 +442,6 @@ class ArchivCZSK():
 
 	def __init__(self, session):
 		self.session = session
-		self.to_update_addons = []
-		self.updated_addons = []
 
 		if ArchivCZSK.__need_restart:
 			self.ask_restart_e2()
@@ -493,10 +488,11 @@ class ArchivCZSK():
 
 	def checkArchivUpdate(self):
 		try:
-			log.logInfo("Checking archivCZSK update...")
+			log.info("Checking ArchivCZSK update ...")
 			upd = ArchivUpdater(self)
 			upd.checkUpdate()
 		except:
+			log.error(traceback.format_exc())
 			if config.plugins.archivCZSK.autoUpdate.value and self.canCheckUpdate(False):
 				self.runAddonsUpdateCheck()
 			else:
@@ -504,117 +500,19 @@ class ArchivCZSK():
 
 	def runAddonsUpdateCheck(self):
 		try:
-			log.logInfo("Checking addons update...")
-			self.__updateDialog = self.session.openWithCallback(self.check_updates_finished, MessageBox,
-											   _("Checking for addons updates"),
-											   type=MessageBox.TYPE_INFO,
-											   enable_input=False)
-
-			# this is needed in order to show __updateDialog
-			self.updateCheckTimer = eTimer()
-			self.updateCheckTimer_conn = eConnectCallback(self.updateCheckTimer.timeout, self.check_addon_updates)
-			self.updateCheckTimer.start(200, True)
+			log.info("Checking addons update ...")
+			upd = AddonsUpdater(self)
+			upd.checkUpdate()
 		except:
-			log.logError("Download addons failed.")
+			log.error(traceback.format_exc())
 			self.open_archive_screen()
-
-	def check_addon_updates(self):
-		del self.updateCheckTimer
-		del self.updateCheckTimer_conn
-
-		lock = threading.Lock()
-		threads = []
-		def check_repository(repository):
-			try:
-				to_update = repository.check_updates()
-				with lock:
-					self.to_update_addons += to_update
-			except UpdateXMLVersionError:
-				log.error('cannot retrieve update xml for repository %s', repository)
-			except UpdateXMLNoUpdateUrl:
-				log.info('Repository %s has no update URL set - addons update is for this repository disabled', repository)
-			except Exception:
-				traceback.print_exc()
-				log.error('error when checking updates for repository %s', repository)
-		for repo_key in list(self.__repositories.keys()):
-			repository = self.__repositories[repo_key]
-			threads.append(threading.Thread(target=check_repository, args=(repository,)))
-		for t in threads:
-			t.start()
-		for t in threads:
-			t.join()
-		update_string = '\n'.join(addon.name for addon in self.to_update_addons)
-		if len(self.to_update_addons) > 5:
-			update_string = '\n'.join(addon.name for addon in self.to_update_addons[:6])
-			update_string += "\n...\n..."
-		self.__update_string = update_string
-
-		self.session.close(self.__updateDialog)
-
-	def check_updates_finished(self, callback=None):
-		update_string = self.__update_string
-		del self.__update_string
-		if update_string != '':
-			self.ask_update_addons(update_string)
-		else:
-			self.open_archive_screen()
-
-	def ask_update_addons(self, update_string):
-		self.session.openWithCallback(
-				self.update_addons,
-				MessageBox,
-				"%s %s? (%s)\n\n%s" % (_("Do you want to update"), _("addons"), len(self.to_update_addons), toString(update_string)),
-				type = MessageBox.TYPE_YESNO)
-
-	def update_addons(self, callback=None, verbose=True):
-		if not callback:
-			self.open_archive_screen()
-		else:
-			updated_string = self._update_addons()
-			self._cleanup_addons()
-			self.session.openWithCallback(self.ask_restart_e2,
-					MessageBox,
-					"%s: (%s/%s):\n\n%s" % (_("Following addons were updated"), len(self.updated_addons), len(self.to_update_addons), toString(updated_string)),
-					type=MessageBox.TYPE_INFO)
-
-	def _update_addons(self):
-		self.updated_addons = []
-		for addon in self.to_update_addons:
-			updated = False
-			try:
-				updated = addon.update()
-			except Exception:
-				log.logError("Update addon '%s' failed.\n%s" % (addon.id,traceback.format_exc()))
-				continue
-			else:
-				if updated:
-					self.updated_addons.append(addon)
-
-		update_string = '\n'.join(addon_u.name for addon_u in self.updated_addons)
-		if len(self.updated_addons) > 5:
-			update_string = '\n'.join(addon.name for addon in self.updated_addons[:6])
-			update_string += "\n...\n..."
-
-		return update_string
-
-	def _cleanup_addons(self):
-		if config.plugins.archivCZSK.cleanupBrokenAddons.value:
-			for addon in self.get_addons():
-				if addon.info.broken and not addon.supported:
-					log.logInfo("Addon %s is broken and not supported - removing" % addon.id)
-					addon.remove()
 
 	def ask_restart_e2(self, callback=None):
-		if config.plugins.archivCZSK.no_restart.value:
-			self.reload_addons(self.updated_addons)
-			self.updated_addons = []
-			self.open_archive_screen()
-		else:
-			ArchivCZSK.__need_restart = True
-			self.session.openWithCallback(self.restart_e2,
-					MessageBox,
-					_("You need to restart E2. Do you want to restart it now?"),
-					type=MessageBox.TYPE_YESNO)
+		ArchivCZSK.__need_restart = True
+		self.session.openWithCallback(self.restart_e2,
+				MessageBox,
+				_("You need to restart E2. Do you want to restart it now?"),
+				type=MessageBox.TYPE_YESNO)
 
 	def restart_e2(self, callback=None):
 		if callback:
