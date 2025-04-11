@@ -418,7 +418,11 @@
 		<widget name="footer" position="*10*,*710*" size="*1458*,*120*" halign="center" font="Regular;*30*" transparent="1"/>
 	</screen>
 
-	<screen name="ArchivCZSKShortcutRunScreen" position="center,center" size="*1000*,*100*" backgroundColor="#0a000000">
-		<widget name="status" position="*10*,*10*" size="*980*,*80*" valign="center" halign="left" font="Regular;*32*" transparent="1"/>
+	<screen name="ArchivCZSKShortcutRunScreen" position="center,center" size="*1200*,*140*" backgroundColor="#0a000000">
+		<widget name="status" position="*20*,*10*" size="*1180*,*120*" valign="center" halign="left" font="Regular;*32*" transparent="1"/>
+	</screen>
+
+	<screen name="ArchivCZSKUpdateInfoScreen" position="center,center" size="*1200*,*150*" backgroundColor="#0a000000">
+		<widget name="status" position="*20*,*10*" size="*1180*,*130*" valign="center" halign="left" font="Regular;*32*" transparent="1"/>
 	</screen>
 </skin>

@@ -20,6 +20,22 @@ from .tools.lang import _
 from Components.Console import Console
 from Components.config import config
 from Screens.MessageBox import MessageBox
+from Components.Label import Label
+from Screens.Screen import Screen
+
+class ArchivCZSKUpdateInfoScreen(Screen):
+	def __init__(self, session, text=None):
+		Screen.__init__(self, session)
+		self["status"] = Label()
+
+		if text:
+			self['status'].setText(toString(text))
+
+		self.setTitle(_("Updating ArchivCZSK"))
+
+	def set_status(self, text):
+		self['status'].setText(toString(text))
+
 
 class ArchivUpdater(object):
 	def __init__(self, archivInstance):
@@ -49,21 +65,36 @@ class ArchivUpdater(object):
 			self.pkgInstallCmd = 'opkg install --force-overwrite --force-depends --force-downgrade --force-reinstall {update_file}'
 			self.updateMode = 'opkg'
 
-	def checkUpdate(self):
-		self.__updateDialog = self.archiv.session.openWithCallback(self.checkUpdateFinished, MessageBox,
-								   _("Checking for updates"),
-								   type=MessageBox.TYPE_INFO,
-								   enable_input=False)
+	def run_next(self, cbk, msg=None):
+		# this is needed to make changes in GUI, because you need to return call to reactor
+		def __cbk_wrapper():
+			del self.updateCheckTimer
+			del self.updateCheckTimer_conn
+			cbk()
 
-		# this is needed in order to show __updateDialog
+		if msg:
+			self.show_dialog(msg)
+		else:
+			self.close_dialog()
 		self.updateCheckTimer = eTimer()
-		self.updateCheckTimer_conn = eConnectCallback(self.updateCheckTimer.timeout, self.checkUpdateStarted)
-		self.updateCheckTimer.start(200, True)
+		self.updateCheckTimer_conn = eConnectCallback(self.updateCheckTimer.timeout, __cbk_wrapper)
+		self.updateCheckTimer.start(100, True)
+
+	def show_dialog(self, msg):
+		if self.__updateDialog != None:
+			self.__updateDialog.set_status(msg)
+		else:
+			self.__updateDialog = self.archiv.session.open(ArchivCZSKUpdateInfoScreen, text=msg)
+
+	def close_dialog(self):
+		if self.__updateDialog != None:
+			self.archiv.session.close(self.__updateDialog)
+			self.__updateDialog = None
+
+	def checkUpdate(self):
+		self.run_next(self.checkUpdateStarted, _("Checking for updates"))
 
 	def checkUpdateStarted(self):
-		del self.updateCheckTimer
-		del self.updateCheckTimer_conn
-
 		try:
 			if self.downloadUpdateXml():
 				from ..version import version
@@ -86,9 +117,7 @@ class ArchivUpdater(object):
 		except:
 			log.logError("ArchivUpdater update failed.\n%s" % traceback.format_exc())
 
-		# execution will continue in self.checkUpdateFinished()
-		self.archiv.session.close(self.__updateDialog)
-
+		self.run_next(self.checkUpdateFinished)
 
 	def checkUpdateFinished(self):
 		if self.needUpdate:
@@ -107,66 +136,65 @@ class ArchivUpdater(object):
 			log.logDebug("ArchivUpdater update canceled.")
 			self.continueToArchiv()
 		else:
-			self.__updateDialog = self.archiv.session.openWithCallback(self.downloadIpkFinished, MessageBox,
-					   _("Downloading update package"),
-					   type=MessageBox.TYPE_INFO,
-					   enable_input=False)
+			self.run_next(self.processDownloadIpk, _("Downloading update package"))
 
-			# download update package
-			self.downloadSuccess = self.downloadIpk()
+	def processDownloadIpk(self):
+		# download update package
+		self.downloadSuccess = self.downloadIpk()
 
-			# execution will continue in self.downloadIpkFinished()
-			self.archiv.session.close(self.__updateDialog)
+		if self.downloadSuccess:
+			self.run_next(self.downloadIpkFinished, _("Updating archivCZSK using package manager"))
+		else:
+			self.run_next(self.downloadIpkFailed)
 
 	def downloadIpkFinished(self):
-		if self.downloadSuccess:
-			self.__updateDialog = self.archiv.session.openWithCallback(self.updateArchivIpkFinished, MessageBox,
-					   _("Updating archivCZSK using package manager"),
-					   type=MessageBox.TYPE_INFO,
-					   enable_input=False)
+		if self.updateMode == 'dpkg':
+			updateDebFilePath = self.updateIpkFilePath.replace('.ipk', '.deb')
+			os.rename( self.updateIpkFilePath, updateDebFilePath )
+			self.updateIpkFilePath = updateDebFilePath
 
-			if self.updateMode == 'dpkg':
-				updateDebFilePath = self.updateIpkFilePath.replace('.ipk', '.deb')
-				os.rename( self.updateIpkFilePath, updateDebFilePath )
-				self.updateIpkFilePath = updateDebFilePath
+		log.logInfo("Update command: %s" % self.pkgInstallCmd.replace('{update_file}', self.updateIpkFilePath) )
+		self.__console = Console()
 
-			log.logInfo("Update command: %s" % self.pkgInstallCmd.replace('{update_file}', self.updateIpkFilePath) )
-			self.__console = Console()
-			self.__console.ePopen(self.pkgInstallCmd.replace('{update_file}', self.updateIpkFilePath), self.pkgInstallCmdFinished)
-		else:
-			strMsg = "%s" % _("Failed to download archivCZSK update package")
-			self.archiv.session.openWithCallback(self.updateFailed,
-					MessageBox,
-					strMsg,
-					type=MessageBox.TYPE_INFO)
+		self.__console.ePopen(self.pkgInstallCmd.replace('{update_file}', self.updateIpkFilePath), self.pkgInstallCmdFinished)
+
+	def downloadIpkFailed(self):
+		self.archiv.session.openWithCallback(self.updateFailed,
+				MessageBox,
+				_("Failed to download archivCZSK update package"),
+				type=MessageBox.TYPE_ERROR)
+
 
 	def pkgInstallCmdFinished(self, data, retval, extra_args):
 		self.update_retval = retval
 		self.update_data = data
-		# close Message box - execution wil continue in updateArchivIpkFinished()
-		self.archiv.session.close(self.__updateDialog)
+
+		if self.update_retval == 0:
+			self.run_next(self.updateArchivIpkFinished)
+		else:
+			self.run_next(self.updateArchivIpkFailed)
 
 	def updateArchivIpkFinished(self):
-		if self.update_retval == 0:
-			log.logInfo("ArchivUpdater update archivCZSK from ipk/deb success. %s" % self.update_data)
-			self.removeTempFiles()
+		log.logInfo("ArchivUpdater update archivCZSK from ipk/deb success. %s" % self.update_data)
+		self.removeTempFiles()
 
-			# restart enigma
-			strMsg = "%s" % _("Update archivCZSK complete.")
-			self.archiv.session.openWithCallback(self.archiv.ask_restart_e2,
-					MessageBox,
-					strMsg,
-					type=MessageBox.TYPE_INFO)
-
+		# restart enigma
+		if config.plugins.archivCZSK.no_restart.value:
+			self.archiv.session.openWithCallback(self.reloadArchiv, MessageBox, _("Update complete. Please start ArchivCZSK again."), type=MessageBox.TYPE_INFO)
 		else:
-			log.logError("ArchivUpdater update archivCZSK from ipk/deb failed. %s ### retval=%s" % (self.update_data, self.update_retval))
+			self.archiv.session.openWithCallback(self.archiv.ask_restart_e2, MessageBox, _("Update archivCZSK complete."), type=MessageBox.TYPE_INFO)
 
-			strMsg = "%s" % _("Update archivCZSK failed. {cmd} returned error\n{msg}".format(cmd=self.updateMode, msg=self.update_data) )
+	def reloadArchiv(self, *args):
+		self.archiv.reload_needed(True)
+		# don't continue - reload is needed, so user needs to run ArchivCZSK again
 
-			self.archiv.session.openWithCallback(self.updateFailed,
-					MessageBox,
-					strMsg,
-					type=MessageBox.TYPE_INFO)
+	def updateArchivIpkFailed(self):
+		log.logError("ArchivUpdater update archivCZSK from ipk/deb failed. %s ### retval=%s" % (self.update_data, self.update_retval))
+
+		self.archiv.session.openWithCallback(self.updateFailed,
+				MessageBox,
+				_("Update archivCZSK failed. {cmd} returned error\n{msg}".format(cmd=self.updateMode, msg=self.update_data) ),
+				type=MessageBox.TYPE_ERROR)
 
 	def downloadUpdateXml(self):
 		updateXml = self.updateXml.replace('{update_repository}', config.plugins.archivCZSK.update_repository.value ).replace('{update_branch}', config.plugins.archivCZSK.update_branch.value)

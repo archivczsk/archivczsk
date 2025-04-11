@@ -15,8 +15,6 @@ from Tools.Directories import fileExists
 
 from enigma import eServiceReference, eListboxPythonMultiContent, eServiceCenter, gFont
 
-from .engine.tools.lang import _
-
 from skin import parseSize as __parseSize
 from skin import parsePosition as __parsePosition
 
@@ -195,6 +193,8 @@ class FileList(MenuList):
 		return False
 
 	def changeDir(self, directory, select=None):
+		from .engine.tools.lang import _
+
 		self.list = []
 
 		# if we are just entering from the list of mount points:

@@ -49,6 +49,7 @@ class ArchivCZSK():
 
 	__loaded = False
 	__need_restart = False
+	__reload_needed = False
 	force_skin_reload = False
 
 	__repositories = {}
@@ -339,6 +340,13 @@ class ArchivCZSK():
 				os.remove( first_start_file )
 
 		return prev_ver
+
+	@staticmethod
+	def reload_needed(needed=None):
+		if needed != None:
+			ArchivCZSK.__reload_needed = needed
+
+		return ArchivCZSK.__reload_needed
 
 	@staticmethod
 	def start(session):
