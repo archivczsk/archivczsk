@@ -6,6 +6,7 @@ from Components.config import config
 from ..py3compat import *
 from .usage import UsageStats
 import traceback
+from .license import ArchivCZSKLicense
 
 class RequestWrapper(object):
 	def __init__(self, request):
@@ -122,6 +123,17 @@ class AddonHttpRequestHandler(resource.Resource):
 
 archivCZSKHttpServer = None
 
+class ArchivCZSKReloadHandler(resource.Resource):
+	isLeaf = True
+
+	def render(self, request):
+		from ..archivczsk import ArchivCZSK
+		ArchivCZSK.reload_needed(True)
+		request.setHeader("content-type", "text/plain; charset=utf-8")
+		request.setResponseCode(http.OK)
+		return b'Reload activated\n'
+
+
 class ArchivCZSKHttpServer(object):
 	__instance = None
 
@@ -153,6 +165,9 @@ class ArchivCZSKHttpServer(object):
 		self.site.displayTracebacks = True
 		self.port = config.plugins.archivCZSK.httpPort.value
 		self.running = None
+		if ArchivCZSKLicense.get_instance().check_level(ArchivCZSKLicense.LEVEL_DEVELOPER):
+			log.info("Adding RELOAD endpoint to HTTP server")
+			self.root.putChild(b'reload', ArchivCZSKReloadHandler())
 
 	def start_listening(self, only_restart=False):
 		def continue_cbk():
