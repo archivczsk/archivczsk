@@ -7,6 +7,22 @@ from ..py3compat import *
 from .usage import UsageStats
 import traceback
 
+class RequestWrapper(object):
+	def __init__(self, request):
+		self._request = request
+
+	def __getattr__(self, name):
+		if name == 'finish':
+			return self.finish
+		else:
+			return getattr(self._request, name)
+
+	# if connection was lost, original finish() will raise exception
+	# this small wrapper check if this will happen and don't call finish() in this case
+	def finish(self):
+		if not hasattr(self._request, '_disconnected') or not self._request._disconnected:
+			return self._request.finish()
+
 class AddonHttpRequestHandler(resource.Resource):
 	isLeaf = True
 
@@ -90,12 +106,12 @@ class AddonHttpRequestHandler(resource.Resource):
 
 			if callable(func):
 				try:
-					return self.__to_bytes((func(request, path_full[len(path)+1:])))
+					return self.__to_bytes((func(RequestWrapper(request), path_full[len(path)+1:])))
 				except:
 					log.error("Error by handling HTTP request:\n%s" % traceback.format_exc())
 					return self.reply_error500(request)
 
-		return self.__to_bytes(self.default_handler( request, path_full ))
+		return self.__to_bytes(self.default_handler( RequestWrapper(request), path_full ))
 
 	def default_handler(self, request, path_full ):
 		# this is default handler, when request is not processed by named endpoint - it mostly prints error message
