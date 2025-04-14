@@ -65,7 +65,7 @@ class ArchivCZSKReloader(object):
 		from .archivczsk import ArchivCZSK
 
 		if not ArchivCZSK.isLoaded():
-			return self.run_next(self.unload_finished)
+			return self.run_next(self.unload_finished, _("Old version not running"))
 
 		def __unload():
 			if not stopped:
@@ -76,7 +76,7 @@ class ArchivCZSKReloader(object):
 			del self.__stop_tc
 			del self.__stop_t
 			ArchivCZSK.unload()
-			return self.run_next(self.unload_finished)
+			return self.run_next(self.unload_finished, _("Old version stopped"))
 
 		stopped = False
 		def __stop_cbk():

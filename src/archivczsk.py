@@ -8,7 +8,7 @@ from Components.config import config, configfile
 from Screens.MessageBox import MessageBox
 from skin import loadSkin
 from enigma import eConsoleAppContainer
-from . import settings, UpdateInfo
+from . import settings
 from .engine.tools.logger import log
 from .engine.tools.lang import _
 from .engine.addon import ToolsAddon, VideoAddon, XBMCAddon
@@ -18,9 +18,9 @@ from .engine.httpserver import ArchivCZSKHttpServer
 from .gui.content import ArchivCZSKContentScreen
 from .gui.info import openPartialChangelog
 from .gui.icon import ArchivCZSKDonateScreen
+from .gui.updater import ArchivCZSKUpdateInfoScreen
 from .engine.parental import parental_pin
 from .compat import DMM_IMAGE, VTI_IMAGE
-from .engine.updater import ArchivUpdater, AddonsUpdater
 from .engine.bgservice import BGServiceTask
 from .engine.license import ArchivCZSKLicense
 from .engine.usage import UsageStats
@@ -450,61 +450,17 @@ class ArchivCZSK():
 				ArchivCZSK.load_skin()
 				ArchivCZSK.force_skin_reload = False
 
-			if config.plugins.archivCZSK.archivAutoUpdate.value and self.canCheckUpdate(True):
-				self.checkArchivUpdate()
-			elif config.plugins.archivCZSK.autoUpdate.value and self.canCheckUpdate(False):
-				self.runAddonsUpdateCheck()
+			if ArchivCZSKUpdateInfoScreen.canCheckUpdate():
+				self.session.openWithCallback(self.update_checked, ArchivCZSKUpdateInfoScreen, self )
 			else:
 				self.open_archive_screen()
 
-	def canCheckUpdate(self, archivUpdate):
-		limitHour = 4
-		try:
-			if archivUpdate:
-				if UpdateInfo.CHECK_UPDATE_TIMESTAMP is None:
-					UpdateInfo.CHECK_UPDATE_TIMESTAMP = datetime.datetime.now()
-					return True
-				else:
-					delta = UpdateInfo.CHECK_UPDATE_TIMESTAMP + datetime.timedelta(hours=limitHour)
-					if datetime.datetime.now() > delta:
-						UpdateInfo.CHECK_UPDATE_TIMESTAMP = datetime.datetime.now()
-						return True
-					else:
-						return False
-			else:
-				if UpdateInfo.CHECK_ADDON_UPDATE_TIMESTAMP is None:
-					UpdateInfo.CHECK_ADDON_UPDATE_TIMESTAMP = datetime.datetime.now()
-					return True
-				else:
-					delta = UpdateInfo.CHECK_ADDON_UPDATE_TIMESTAMP + datetime.timedelta(hours=limitHour)
-					if datetime.datetime.now() > delta:
-						UpdateInfo.CHECK_ADDON_UPDATE_TIMESTAMP = datetime.datetime.now()
-						return True
-					else:
-						return False
-		except:
-			log.logError("canCheckUpdate failed.\n%s"%traceback.format_exc())
-			return True
-
-	def checkArchivUpdate(self):
-		try:
-			log.info("Checking ArchivCZSK update ...")
-			upd = ArchivUpdater(self)
-			upd.checkUpdate()
-		except:
-			log.error(traceback.format_exc())
-			if config.plugins.archivCZSK.autoUpdate.value and self.canCheckUpdate(False):
-				self.runAddonsUpdateCheck()
-			else:
-				self.open_archive_screen()
-
-	def runAddonsUpdateCheck(self):
-		try:
-			log.info("Checking addons update ...")
-			upd = AddonsUpdater(self)
-			upd.checkUpdate()
-		except:
-			log.error(traceback.format_exc())
+	def update_checked(self, result='continue'):
+		if result == 'restart':
+			self.ask_restart_e2()
+		elif result == 'reload':
+			self.reload_needed(True)
+		else:
 			self.open_archive_screen()
 
 	def ask_restart_e2(self, callback=None):

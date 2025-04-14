@@ -6,9 +6,7 @@ _ = None
 
 class UpdateInfo(object):
 	CHECK_UPDATE_TIMESTAMP = None
-	CHECK_ADDON_UPDATE_TIMESTAMP = None
 
 	@staticmethod
 	def resetDates():
 		UpdateInfo.CHECK_UPDATE_TIMESTAMP = None
-		UpdateInfo.CHECK_ADDON_UPDATE_TIMESTAMP = None
