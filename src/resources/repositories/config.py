@@ -36,12 +36,12 @@ global_addon_settings = [
 			{
 				'label': _("Addon order"),
 				'id': 'auto_addon_order',
-				'entry': ConfigNumber(default=99999)
+				'entry': lambda: ConfigNumber(default=99999)
 			},
 			{
 				'label': _("Used player"),
 				'id': 'auto_used_player',
-				'entry': ConfigSelectionTr(tr, default='0', choices=available_players)
+				'entry': lambda: ConfigSelectionTr(tr, default='0', choices=available_players)
 			}
 		]
 	},
@@ -51,17 +51,17 @@ global_addon_settings = [
 			{
 				'label': _("Addon language"),
 				'id': 'addon_lang',
-				'entry': ConfigSelectionTr(tr, default='auto', choices=[ ('auto', _('Automaticaly')), ('cs', _("Czech")), ('sk', _("Slovak")), ('en', _("English")) ])
+				'entry': lambda: ConfigSelectionTr(tr, default='auto', choices=[ ('auto', _('Automaticaly')), ('cs', _("Czech")), ('sk', _("Slovak")), ('en', _("English")) ])
 			},
 			{
 				'label': _("Timeout"),
 				'id':'loading_timeout',
-				'entry': ConfigSelectionTr(tr, default="10", choices=choicelist_timeout)
+				'entry': lambda: ConfigSelectionTr(tr, default="10", choices=choicelist_timeout)
 			},
 			{
 				'label': _("Verify SSL certificates"),
 				'id':'verify_ssl',
-				'entry': ConfigBoolean(default=False)
+				'entry': lambda: ConfigBoolean(default=False)
 			},
 			{
 				'label': _("Download path"),
@@ -87,8 +87,8 @@ def add_global_addon_settings(addon, addon_config):
 				add_global_addon_specific_setting(addon, addon_config, setting)
 			else:
 				if not hasattr( addon_config, setting['id']):
-					setattr(addon_config, setting['id'], setting['entry'])
-					setting['setting_id'] = getattr(addon_config, setting['id'])
+					setattr(addon_config, setting['id'], setting['entry']())
+#					setting['setting_id'] = getattr(addon_config, setting['id'])
 
 
 #get addon config entries with global addons settings
