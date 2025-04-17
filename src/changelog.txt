@@ -1,3 +1,7 @@
+archivCZSK 3.4.1, 17.04.2025
+    - oprava reloadu doplnkov
+    - oprava globálnej konfigurácie u doplnkov
+
 archivCZSK 3.4.0, 17.04.2025
     - automatická obnova licencie pri zobrazení obrazovky "Podporte nás"
     - pridaná možnosť nastaviť jazyk pluginu ako aj doplnkov nezávisle na jazyku systému
