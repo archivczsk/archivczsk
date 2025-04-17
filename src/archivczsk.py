@@ -410,11 +410,13 @@ class ArchivCZSK():
 		return
 
 	@staticmethod
-	def unload():
+	def unload(modules_to_reload=None):
+		if not modules_to_reload:
+			modules_to_reload = []
+
+		modules_to_reload.extend([k for k, m in sys.modules.items() if 'archivCZSK' in str(m)])
+		ArchivCZSK.unload_modules(modules_to_reload)
 		log.stop()
-		modules_to_reload = [k for k, m in sys.modules.items() if 'archivCZSK' in str(m)]
-		for m in modules_to_reload:
-			del sys.modules[m]
 
 		try:
 			from importlib import invalidate_caches
@@ -583,20 +585,31 @@ class ArchivCZSK():
 				log.error('cannot drop caches : %s' % str(e))
 
 	@staticmethod
-	def reload_addons(addons):
+	def get_addon_modules():
+		modules = []
+		for addon in ArchivCZSK.get_addons():
+			modules.extend( [k for k in sys.modules.keys() if k.startswith(addon.relative_path)] )
+
+		return modules
+
+	@staticmethod
+	def unload_modules(modules):
+		for m in modules:
+			if m in sys.modules:
+				log.debug("Unloading module: %s" % m)
+				del sys.modules[m]
+
+
+	@staticmethod
+	def reload_addons():
 		log.info("Starting addons reload")
 		start_time = time.time()
 
-		modules_to_reload = []
-		for addon in addons:
-			modules_to_reload.extend( [k for k, m in sys.modules.items() if addon.path in str(m)] )
+		modules_to_reload = ArchivCZSK.get_addon_modules()
 
 		ArchivCZSK.close_addons()
 		ArchivCZSK.close_repositories()
-
-		for m in modules_to_reload:
-			log.debug("Unloading module %s" % m)
-			del sys.modules[m]
+		ArchivCZSK.unload_modules(modules_to_reload)
 
 		ArchivCZSK.load_repositories()
 		ArchivCZSK.init_addons()

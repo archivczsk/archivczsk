@@ -27,6 +27,7 @@ class ArchivCZSKReloader(object):
 		self.session = session
 		self.dialog = None
 		self.run_after_reload = False
+		self.force_e2_restart = False
 
 	def run_next(self, cbk, msg=None):
 		# this is needed to make changes in GUI, because you need to return call to reactor
@@ -75,12 +76,25 @@ class ArchivCZSKReloader(object):
 			self.__stop_t.stop()
 			del self.__stop_tc
 			del self.__stop_t
-			ArchivCZSK.unload()
+
+			if self.force_e2_restart:
+				from Screens.Standby import TryQuitMainloop
+				self.session.open(TryQuitMainloop, 3)
+				return
+
+			ArchivCZSK.unload(addon_modules)
 			return self.run_next(self.unload_finished, _("Old version stopped"))
 
 		stopped = False
 		def __stop_cbk():
 			stopped = True
+
+		try:
+			addon_modules = ArchivCZSK.get_addon_modules()
+		except:
+			addon_modules = []
+			# this is needed in order to update version 3.4.0, that has bug in addons reload
+			self.force_e2_restart = True
 
 		ArchivCZSK.stop(__stop_cbk)
 		# now we need to wait a little bit in order to HTTP server completely stops

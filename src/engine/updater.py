@@ -345,7 +345,7 @@ class AddonsUpdater(RunNext):
 			self.finish_cbk('restart')
 
 	def reload_addons(self):
-		self.archiv.reload_addons(self.updated_addons)
+		self.archiv.reload_addons()
 		self.updated_addons = []
 		self.run_next(self.continueToArchiv, _("Addons were reloaded"))
 
