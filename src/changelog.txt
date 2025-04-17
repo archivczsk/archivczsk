@@ -1,3 +1,11 @@
+archivCZSK 3.4.0, 17.04.2025
+    - automatická obnova licencie pri zobrazení obrazovky "Podporte nás"
+    - pridaná možnosť nastaviť jazyk pluginu ako aj doplnkov nezávisle na jazyku systému
+    - oprava pádu pri prehrávaní nie je dostupné aktuálne PTS
+    - kompletne prerobená inicializácia a ukončovanie pluginu a doplnkov
+    - reorganizácia nastavení doplnkov
+    - aktualizácia pluginu a doplnkov bez potreby reštartu enigmy (možnosť zmeniť v nastaveniach)
+
 archivCZSK 3.3.2, 31.03.2025
     - oprava inštalácie závislostí pre OpenATV 7.6
 
@@ -8,7 +16,7 @@ archivCZSK 3.3.1, 10.03.2025
 archivCZSK 3.3.0, 18.02.2025
     - aktualizácia API pre doplnky
     - vylepšenia okolo trakt.tv
-    - automatické vypnutie voľby HLS explorer v ServiceApp po inšatlácii
+    - automatické vypnutie voľby HLS explorer v ServiceApp po inštalácii
 
 archivCZSK 3.2.0, 09.02.2025
     - oprava obnovy autorizačného tokenu u trakt.tv
