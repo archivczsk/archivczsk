@@ -1,3 +1,6 @@
+archivCZSK 3.4.2, 18.04.2025
+    - oprava pádu pri zobrazení zoznamu stiahnutých súborov
+
 archivCZSK 3.4.1, 17.04.2025
     - oprava reloadu doplnkov
     - oprava globálnej konfigurácie u doplnkov
