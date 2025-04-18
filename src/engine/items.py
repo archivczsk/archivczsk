@@ -1,14 +1,11 @@
 # GUI items
 import os
 from .tools.logger import log
-
-try:
-	from .. import settings, _
-	PNG_PATH = settings.IMAGE_PATH
-except ImportError:
-	PNG_PATH = '/tmp/png/'
-
+from .tools.lang import _
+from .. import settings
 from ..py3compat import *
+
+PNG_PATH = settings.IMAGE_PATH
 
 class PContextMenuItem(object):
 	def __init__(self, name, thumb, enabled, action=None, params=None, is_media=False):
