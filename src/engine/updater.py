@@ -39,7 +39,7 @@ class RunNext(object):
 			self.close_dialog()
 		self.updateCheckTimer = eTimer()
 		self.updateCheckTimer_conn = eConnectCallback(self.updateCheckTimer.timeout, __cbk_wrapper)
-		self.updateCheckTimer.start(10, True)
+		self.updateCheckTimer.start(100, True)
 
 	def show_dialog(self, msg):
 		if self.__updateDialog != None:

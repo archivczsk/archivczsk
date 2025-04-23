@@ -56,6 +56,8 @@ class Addon(object):
 
 		# this is the function, that should be called on direct call
 		self.entry_point = None
+		self.e2_main_menu_plugin = None
+		self.update_main_menu_shortcut()
 
 	def __repr__(self):
 		return "%s(%s-%s)" % (self.__class__.__name__, self.name, self.version)
@@ -122,11 +124,56 @@ class Addon(object):
 		def __settings_closed(*args):
 			saved = args[0] if len(args) > 0  else False
 			self.settings.unpause_change_notifiers(saved)
+			self.update_main_menu_shortcut()
 			if cb:
 				cb(*args)
 
 		self.settings.pause_change_notifiers()
 		menu.openAddonMenu(session, self, __settings_closed)
+
+	def e2_shortcut(self, session, **kwargs):
+		try:
+			from ..plugin import main
+			return main(session, self.id)
+		except:
+			try:
+				log.error(traceback.format_exc())
+			except:
+				pass
+
+	def e2_menu(self, menuid, **kwargs):
+		if menuid == "mainmenu":
+			from ..plugin import main
+#			return [(self.name, self.e2_shortcut, self.id, 33)]
+			return [(self.name, partial(main, autorun_addon=self.id), self.id, 33)]
+		else:
+			return []
+
+	def update_main_menu_shortcut(self):
+		if self.get_setting('main_menu_shortcut'):
+			self.install_e2_shortcut()
+		else:
+			self.uninstall_e2_shortcut()
+
+	def install_e2_shortcut(self):
+		if self.e2_main_menu_plugin:
+			return
+
+		from Components.PluginComponent import plugins
+		from Plugins.Plugin import PluginDescriptor
+
+		log.info("%s adding shortcut to Enigma's main menu" % self)
+		self.e2_main_menu_plugin = PluginDescriptor(self.name, description=self.get_info('description'), where=PluginDescriptor.WHERE_MENU, fnc=self.e2_menu, needsRestart=False)
+		plugins.addPlugin(self.e2_main_menu_plugin)
+
+	def uninstall_e2_shortcut(self):
+		if not self.e2_main_menu_plugin:
+			return
+
+		log.info("%s uninstalling shortcut from Enigma's main menu" % self)
+		from Components.PluginComponent import plugins
+		plugins.removePlugin(self.e2_main_menu_plugin)
+		self.e2_main_menu_plugin = None
 
 	def open_changelog(self, session):
 		info.showChangelog(session, self.name, self.changelog_path)

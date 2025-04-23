@@ -316,32 +316,38 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 
 	CONTEXT_TIP = (KEY_MENU_IMG, _("show menu of current addon"))
 
-	def __init__(self, session, archivCZSK):
+	def __init__(self, session, archivCZSK, autorun_addon=None):
 		provider = ArchivCZSKContentProvider(archivCZSK, os.path.join(config.plugins.archivCZSK.dataPath.value, 'categories'))
 		provider.start()
 		contentHandler = ArchivCZSKContentHandler(session, self, provider)
 		defaultCategory = config.plugins.archivCZSK.defaultCategory.value
 		categoryItem = categoryAddons = None
-		if defaultCategory != 'categories':
-			categoryItem = provider.get_content({'category':defaultCategory})
-			categoryAddons = provider.get_content({'category_addons':defaultCategory})
-			# dont add PExit() if default category is user created cat.
-			gotParrent = True
-			try:
-				gotParrent = self.getParent() is not None
-			except:
-				pass
-			if gotParrent and (defaultCategory == 'all_addons') and categoryAddons is not None:
-				categoryAddons.insert(0, PExit())
-		categoryItems = provider.get_content()
+		if autorun_addon:
+			categoryItems = provider.get_content({'addon': autorun_addon})
+		else:
+			if defaultCategory != 'categories':
+				categoryItem = provider.get_content({'category':defaultCategory})
+				categoryAddons = provider.get_content({'category_addons':defaultCategory})
+				# dont add PExit() if default category is user created cat.
+				gotParrent = True
+				try:
+					gotParrent = self.getParent() is not None
+				except:
+					pass
+				if gotParrent and (defaultCategory == 'all_addons') and categoryAddons is not None:
+					categoryAddons.insert(0, PExit())
+			categoryItems = provider.get_content()
 		BaseContentScreen.__init__(self, session, contentHandler, categoryItems)
 		if categoryItem is not None	 and categoryAddons is not None:
 			self.save()
 			self.load({'lst_items':categoryAddons,
 							'parent_it':categoryItem,
 							'refresh':False})
+
 		self.ctx_items.append((_("Add Category"), None, self.addCategory))
 		self.provider = provider
+		self.autorun_addon = autorun_addon
+		self.autorun_handled = False
 		self.updateGUITimer = eTimer()
 		self.updateGUITimer_conn = eConnectCallback(self.updateGUITimer.timeout, self.updateAddonGUI)
 
@@ -381,6 +387,15 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 			}, -2)
 		# after layout show update item "GUI" - edit: shamann
 		self.onLayoutFinish.append(self.updateAddonGUI)
+		self.onShow.append(self.handle_autorun)
+
+	def handle_autorun(self):
+		if self.autorun_addon:
+			if self.autorun_handled:
+				self.closePlugin(True)
+			else:
+				self.autorun_handled = True
+				self.ok()
 
 	def __onClose(self):
 		self.provider.stop()

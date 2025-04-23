@@ -5,7 +5,6 @@ from Components.config import config
 from Plugins.Plugin import PluginDescriptor
 from ServiceReference import ServiceReference
 
-
 def get_description():
 	from .engine.tools.lang import _
 	NAME = _("ArchivCZSK")
@@ -18,14 +17,14 @@ def sessionStart(reason, session):
 	ArchivCZSK.start(session)
 
 
-def main(session, **kwargs):
+def main(session, autorun_addon=None, **kwargs):
 	from .archivczsk import ArchivCZSK
 
 	if ArchivCZSK.reload_needed():
 		from .reload import ArchivCZSKReloader
-		ArchivCZSKReloader(session).reload_and_run()
+		ArchivCZSKReloader(session, autorun_addon).reload_and_run()
 	else:
-		ArchivCZSK.run(session)
+		ArchivCZSK.run(session, autorun_addon)
 
 def menu(menuid, **kwargs):
 	if menuid == "mainmenu":
@@ -34,19 +33,16 @@ def menu(menuid, **kwargs):
 	else:
 		return []
 
-
 def eventInfo(session, servicelist, **kwargs):
 	from .gui.search import ArchivCZSKSearchClientScreen
 	ref = session.nav.getCurrentlyPlayingServiceReference()
 	session.open(ArchivCZSKSearchClientScreen, ref)
-
 
 def autostart(reason, *args, **kwargs):
 	if reason == 1:
 		from .archivczsk import ArchivCZSK
 		# stop command
 		ArchivCZSK.stop()
-
 
 def open_content_by_ref(session, **kwargs):
 	from .engine.tools.logger import log
@@ -108,5 +104,10 @@ def Plugins(path, **kwargs):
 
 	if config.plugins.archivCZSK.epg_menu.value:
 		result.append(PluginDescriptor(_("Search in ArchivCZSK"), where=PluginDescriptor.WHERE_EVENTINFO, fnc=eventInfo))
+
+	from .archivczsk import ArchivCZSK
+
+	for pd in ArchivCZSK.get_menu_shortcuts():
+		result.append(pd)
 
 	return result

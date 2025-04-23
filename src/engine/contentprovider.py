@@ -418,6 +418,8 @@ class ArchivCZSKContentProvider(ContentProvider):
 			return self._get_category_addons(params['category_addons'], params)
 		if 'categories_user' in params:
 			return self._get_categories(user_only=True)
+		if 'addon' in params:
+			return self._get_all_addons(params)
 
 	def add_category(self, category_title):
 		pcategory = PCategory()
@@ -470,11 +472,18 @@ class ArchivCZSKContentProvider(ContentProvider):
 		def filter_supported_addons(paddon):
 			return paddon.addon.supported
 
+		def filter_addon_id(paddon):
+			return paddon.addon.id == params['addon']
+
 		if params.get('filter_enabled', True):
 			addons = list(filter(filter_enabled_addons, addons))
 
 		if params.get('filter_supported', not config.plugins.archivCZSK.showNotSupportedAddons.value):
 			addons = list(filter(filter_supported_addons, addons))
+
+		if params.get('addon'):
+			addons = list(filter(filter_addon_id, addons))
+
 		return addons
 
 	def _sort_addons(self, addons):

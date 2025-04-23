@@ -64,6 +64,11 @@ global_addon_settings = [
 				'entry': lambda: ConfigBoolean(default=False)
 			},
 			{
+				'label': _("Show addon shortcut in main menu of Enigma"),
+				'id':'main_menu_shortcut',
+				'entry': lambda: ConfigBoolean(default=False)
+			},
+			{
 				'label': _("Download path"),
 				'id':'download_path'
 			},

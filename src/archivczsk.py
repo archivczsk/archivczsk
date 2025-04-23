@@ -296,8 +296,11 @@ class ArchivCZSK():
 				log.logError("Init of addon %s failed:\n%s" % (addon, traceback.format_exc()))
 
 	@staticmethod
-	def close_addons():
+	def close_addons(uninstall_shortcut=False):
 		for a in ArchivCZSK.get_addons():
+			if uninstall_shortcut:
+				a.uninstall_e2_shortcut()
+
 			log.debug("Closing addon %s" % a.id)
 			a.close()
 			ArchivCZSK.remove_addon(a)
@@ -397,7 +400,10 @@ class ArchivCZSK():
 			return
 
 		log.info("Stopping ArchivCZSK ...")
-		ArchivCZSK.close_addons()
+		# this is little hack
+		# If Enigma shutdowns, then stop_cbk is not set. We use this information to notify addons to not to remove shortcuts to main menu, because it will result in crash in buggy enigma code
+		# if stop_cbk is set, then plugin reload is requested, and we must remove shortcuts, because addons will be reloaded and old shortcuts will no longer be valid
+		ArchivCZSK.close_addons(stop_cbk != None)
 		ArchivCZSK.close_repositories()
 		UsageStats.stop()
 		ArchivCZSKLicense.stop()
@@ -414,7 +420,8 @@ class ArchivCZSK():
 		if not modules_to_reload:
 			modules_to_reload = []
 
-		modules_to_reload.extend([k for k, m in sys.modules.items() if 'archivCZSK' in str(m)])
+		#archivCZSK and archivCZSK.plugin can't be reloaded without restart, because there are references in enigma to them
+		modules_to_reload.extend([k for k in sys.modules.keys() if k.startswith('Plugins.Extensions.archivCZSK.') and k !='Plugins.Extensions.archivCZSK.plugin'])
 		ArchivCZSK.unload_modules(modules_to_reload)
 		log.stop()
 
@@ -425,10 +432,10 @@ class ArchivCZSK():
 			pass
 
 	@staticmethod
-	def run(session):
+	def run(session, autorun_addon=None):
 		ArchivCZSK.start(session)
 		def runArchivCZSK(callback = None):
-			ArchivCZSK(session)
+			ArchivCZSK(session, autorun_addon)
 
 		lastIconDUtcCfg = config.plugins.archivCZSK.lastIconDShowMessage
 
@@ -442,8 +449,9 @@ class ArchivCZSK():
 			runArchivCZSK()
 
 
-	def __init__(self, session):
+	def __init__(self, session, autorun_addon=None):
 		self.session = session
+		self.autorun_addon = autorun_addon
 
 		if ArchivCZSK.__need_restart:
 			self.ask_restart_e2()
@@ -483,7 +491,7 @@ class ArchivCZSK():
 			# so we start worker thread where we can run our tasks(ie. loading archives)
 			Task.startWorkerThread()
 			parental_pin.lock_pin()
-			self.session.openWithCallback(self.close_archive_screen, ArchivCZSKContentScreen, self)
+			self.session.openWithCallback(self.close_archive_screen, ArchivCZSKContentScreen, self, self.autorun_addon)
 
 		def check_player():
 			# check if we have all players installed
@@ -585,6 +593,13 @@ class ArchivCZSK():
 				log.error('cannot drop caches : %s' % str(e))
 
 	@staticmethod
+	def get_menu_shortcuts():
+		log.info("Returning addon shortcuts for Enigma's main menu")
+		for addon in ArchivCZSK.get_addons():
+			if addon.e2_main_menu_plugin:
+				yield addon.e2_main_menu_plugin
+
+	@staticmethod
 	def get_addon_modules():
 		modules = []
 		for addon in ArchivCZSK.get_addons():
@@ -607,7 +622,7 @@ class ArchivCZSK():
 
 		modules_to_reload = ArchivCZSK.get_addon_modules()
 
-		ArchivCZSK.close_addons()
+		ArchivCZSK.close_addons(True)
 		ArchivCZSK.close_repositories()
 		ArchivCZSK.unload_modules(modules_to_reload)
 

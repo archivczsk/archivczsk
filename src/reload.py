@@ -3,31 +3,64 @@
 from enigma import eTimer
 from Components.Label import Label
 from Screens.Screen import Screen
-from .compat import eConnectCallback
 from .engine.tools.util import toString
 from .engine.tools.lang import _
+
+# taken from IPTVPlayer
+class eConnectCallbackObj:
+	def __init__(self, obj=None, connectHandler=None):
+		self.connectHandler = connectHandler
+		self.obj = obj
+
+	def __del__(self):
+		if 'connect' not in dir(self.obj):
+			if 'get' in dir(self.obj):
+				self.obj.get().remove(self.connectHandler)
+			else:
+				self.obj.remove(self.connectHandler)
+		else:
+			del self.connectHandler
+		self.connectHandler = None
+		self.obj = None
+
+# taken from IPTVPlayer
+def eConnectCallback(obj, callbackFun):
+	if 'connect' in dir(obj):
+		return eConnectCallbackObj(obj, obj.connect(callbackFun))
+	else:
+		if 'get' in dir(obj):
+			obj.get().append(callbackFun)
+		else:
+			obj.append(callbackFun)
+		return eConnectCallbackObj(obj, callbackFun)
+	return eConnectCallbackObj()
 
 class ArchivCZSKReloadInfoScreen(Screen):
 	def __init__(self, session, text=None):
 		Screen.__init__(self, session)
+		self.toString = toString
+		self._ = _
 		self.skinName = ['ArchivCZSKUpdateInfoScreen']
 		self["status"] = Label()
 
 		if text:
-			self['status'].setText(toString(text))
+			self['status'].setText(self.toString(text))
 
-		self.setTitle(_("Loading ArchivCZSK"))
+		self.setTitle(self._("Loading ArchivCZSK"))
 
 	def set_status(self, text):
-		self['status'].setText(toString(text))
+		self['status'].setText(self.toString(text))
 
 
 class ArchivCZSKReloader(object):
-	def __init__(self, session):
+	def __init__(self, session, autorun_addon=None):
 		self.session = session
+		self.autorun_addon = autorun_addon
 		self.dialog = None
 		self.run_after_reload = False
 		self.force_e2_restart = False
+		self.eConnectCallback = eConnectCallback
+		self._ = _
 
 	def run_next(self, cbk, msg=None):
 		# this is needed to make changes in GUI, because you need to return call to reactor
@@ -41,7 +74,7 @@ class ArchivCZSKReloader(object):
 		else:
 			self.close_dialog()
 		self.t = eTimer()
-		self.tc = eConnectCallback(self.t.timeout, __cbk_wrapper)
+		self.tc = self.eConnectCallback(self.t.timeout, __cbk_wrapper)
 		self.t.start(100, True)
 
 	def show_dialog(self, msg):
@@ -60,13 +93,13 @@ class ArchivCZSKReloader(object):
 		self.reload()
 
 	def reload(self):
-		self.run_next(self.unload, _("Stopping old version of ArchivCZSK"))
+		self.run_next(self.unload, self._("Stopping old version of ArchivCZSK"))
 
 	def unload(self):
 		from .archivczsk import ArchivCZSK
 
 		if not ArchivCZSK.isLoaded():
-			return self.run_next(self.unload_finished, _("Old version not running"))
+			return self.run_next(self.unload_finished, self._("Old version not running"))
 
 		def __unload():
 			if not stopped:
@@ -83,7 +116,7 @@ class ArchivCZSKReloader(object):
 				return
 
 			ArchivCZSK.unload(addon_modules)
-			return self.run_next(self.unload_finished, _("Old version stopped"))
+			return self.run_next(self.unload_finished, self._("Old version stopped"))
 
 		stopped = False
 		def __stop_cbk():
@@ -99,11 +132,11 @@ class ArchivCZSKReloader(object):
 		ArchivCZSK.stop(__stop_cbk)
 		# now we need to wait a little bit in order to HTTP server completely stops
 		self.__stop_t = eTimer()
-		self.__stop_tc = eConnectCallback(self.__stop_t.timeout, __unload)
+		self.__stop_tc = self.eConnectCallback(self.__stop_t.timeout, __unload)
 		self.__stop_t.start(1000)
 
 	def unload_finished(self):
-		self.run_next(self.start_archivczsk, _("Initialising new version of ArchivCZSK"))
+		self.run_next(self.start_archivczsk, self._("Initialising new version of ArchivCZSK"))
 
 	def start_archivczsk(self):
 		from .archivczsk import ArchivCZSK
@@ -116,4 +149,4 @@ class ArchivCZSKReloader(object):
 
 	def run_archivczsk(self):
 		from .archivczsk import ArchivCZSK
-		ArchivCZSK.run(self.session)
+		ArchivCZSK.run(self.session, self.autorun_addon)
