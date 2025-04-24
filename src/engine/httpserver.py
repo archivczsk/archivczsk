@@ -133,6 +133,17 @@ class ArchivCZSKReloadHandler(resource.Resource):
 		request.setResponseCode(http.OK)
 		return b'Reload activated\n'
 
+class ArchivCZSKE2ReloadHandler(resource.Resource):
+	isLeaf = True
+
+	def render(self, request):
+		from Components.PluginComponent import plugins
+		from Tools.Directories import resolveFilename, SCOPE_PLUGINS
+		plugins.readPluginList(resolveFilename(SCOPE_PLUGINS))
+		request.setHeader("content-type", "text/plain; charset=utf-8")
+		request.setResponseCode(http.OK)
+		return b'E2 reload activated\n'
+
 
 class ArchivCZSKHttpServer(object):
 	__instance = None
@@ -168,6 +179,7 @@ class ArchivCZSKHttpServer(object):
 		if ArchivCZSKLicense.get_instance().check_level(ArchivCZSKLicense.LEVEL_DEVELOPER):
 			log.info("Adding RELOAD endpoint to HTTP server")
 			self.root.putChild(b'reload', ArchivCZSKReloadHandler())
+			self.root.putChild(b'e2reload', ArchivCZSKE2ReloadHandler())
 
 	def start_listening(self, only_restart=False):
 		def continue_cbk():
