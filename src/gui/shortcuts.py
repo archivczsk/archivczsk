@@ -14,6 +14,7 @@ from ..engine.tools.lang import _
 from .common import toString
 from .base import BaseArchivCZSKListSourceScreen
 from ..colors import DeleteColors
+from .info import showCSFDInfo
 
 
 def openShortcuts(session, addon, cb):
@@ -34,6 +35,8 @@ class ArchivCZSKShortcutsScreen(BaseArchivCZSKListSourceScreen):
 				"ok": self.ok,
 				"cancel": self.cancel,
 				"red": self.askRemoveShortcut,
+				"info": self.show_info,
+				"csfd": self.show_info,
 			})
 
 		self.onShown.append(self.setWindowTitle)
@@ -72,3 +75,5 @@ class ArchivCZSKShortcutsScreen(BaseArchivCZSKListSourceScreen):
 	def cancel(self):
 		self.close(None)
 
+	def show_info(self):
+		showCSFDInfo(self.session, self.getSelectedItem())
