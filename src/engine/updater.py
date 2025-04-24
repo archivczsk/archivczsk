@@ -17,6 +17,7 @@ from ..compat import eConnectCallback
 from .exceptions.updater import UpdateXMLVersionError, UpdateXMLNoUpdateUrl
 from .tools.logger import log
 from .tools.lang import _
+from ..py3compat import *
 
 from Components.Console import Console
 from Components.config import config
@@ -168,7 +169,7 @@ class ArchivUpdater(RunNext):
 		self.removeTempFiles()
 
 		# restart enigma
-		if config.plugins.archivCZSK.no_restart.value:
+		if config.plugins.archivCZSK.no_restart.value and self.check_api_level():
 			self.archiv.session.openWithCallback(self.reloadArchiv, MessageBox, _("Update complete. Please start ArchivCZSK again."), type=MessageBox.TYPE_INFO)
 		else:
 			self.archiv.session.openWithCallback(self.restartArchiv, MessageBox, _("Update archivCZSK complete."), type=MessageBox.TYPE_INFO)
@@ -228,6 +229,25 @@ class ArchivUpdater(RunNext):
 		except:
 			log.logError("ArchivUpdater remove temp files failed.\n%s" % traceback.format_exc())
 			pass
+
+	def check_api_level(self):
+		from .. import version
+		try:
+			old_api_level = version.reload_api_level
+		except:
+			old_api_level = 1
+
+		if is_py3:
+			import importlib
+			version = importlib.reload(version)
+		else:
+			version = reload(version)
+
+		new_api_level = version.reload_api_level
+		log.info("Old API level: %d" % old_api_level)
+		log.info("New API level: %d" % new_api_level)
+		return old_api_level == new_api_level
+
 
 class AddonsUpdater(RunNext):
 	def __init__(self, archivInstance, finish_cbk, update_dialog=None):
