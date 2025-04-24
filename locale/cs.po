@@ -331,7 +331,7 @@ msgstr "Chybové hlášení bylo odesláno."
 
 #: src/gui/exception.py:73
 msgid "Addon error"
-msgstr "Chyba archívu"
+msgstr "Chyba doplňku"
 
 #: src/gui/exception.py:74
 msgid "Addon warning"
@@ -339,7 +339,7 @@ msgstr "Upozornění doplňku"
 
 #: src/gui/exception.py:75
 msgid "Addon info"
-msgstr "Informace o archívu"
+msgstr "Informace doplňku"
 
 #: src/gui/exception.py:104 src/gui/exception.py:108 src/gui/exception.py:115
 #: src/gui/exception.py:119 src/gui/exception.py:123 src/gui/exception.py:127
