@@ -145,7 +145,7 @@ class Addon(object):
 		if menuid == "mainmenu":
 			from ..plugin import main
 #			return [(self.name, self.e2_shortcut, self.id, 33)]
-			return [(self.name, partial(main, autorun_addon=self.id), self.id, 33)]
+			return [(py2_encode_utf8(self.name), partial(main, autorun_addon=self.id), py2_encode_utf8(self.id), 33)]
 		else:
 			return []
 
@@ -163,7 +163,7 @@ class Addon(object):
 		from Plugins.Plugin import PluginDescriptor
 
 		log.info("%s adding shortcut to Enigma's main menu" % self)
-		self.e2_main_menu_plugin = PluginDescriptor(self.name, description=self.get_info('description'), where=PluginDescriptor.WHERE_MENU, fnc=self.e2_menu, needsRestart=False)
+		self.e2_main_menu_plugin = PluginDescriptor(py2_encode_utf8(self.name), description=py2_encode_utf8(self.get_info('description')), where=PluginDescriptor.WHERE_MENU, fnc=self.e2_menu, needsRestart=False)
 		plugins.addPlugin(self.e2_main_menu_plugin)
 
 	def uninstall_e2_shortcut(self):
