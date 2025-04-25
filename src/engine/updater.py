@@ -32,6 +32,7 @@ class RunNext(object):
 		self.updateCheckTimer_conn = eConnectCallback(self.updateCheckTimer.timeout, self.cbk_wrapper)
 
 	def stop_timers(self):
+		log.debug("[RunNext] stopping timers")
 		del self.updateCheckTimer
 		del self.updateCheckTimer_conn
 
@@ -40,7 +41,10 @@ class RunNext(object):
 			cbk = self.__cbk
 			self.__cbk = None
 			self.updateCheckTimer.stop()
+			log.debug("[RunNext] calling: %s" % str(cbk).split(' ')[2])
 			cbk()
+		else:
+			log.debug("[RunNext] nothing to call - cbk is none")
 
 	def run_next(self, cbk, msg=None):
 		if msg:
@@ -49,6 +53,7 @@ class RunNext(object):
 			self.close_dialog()
 
 		self.__cbk = cbk
+		log.debug("[RunNext] scheduling: %s" % str(cbk).split(' ')[2])
 		self.updateCheckTimer.start(100)
 
 	def show_dialog(self, msg):
@@ -153,11 +158,17 @@ class ArchivUpdater(RunNext):
 			self.updateIpkFilePath = updateDebFilePath
 
 		log.logInfo("Update command: %s" % self.pkgInstallCmd.replace('{update_file}', self.updateIpkFilePath) )
-		self.__console = Console()
-
-		self.__console.ePopen(self.pkgInstallCmd.replace('{update_file}', self.updateIpkFilePath), self.pkgInstallCmdFinished)
+		try:
+			self.__console = Console()
+			self.__console.ePopen(self.pkgInstallCmd.replace('{update_file}', self.updateIpkFilePath), self.pkgInstallCmdFinished)
+		except:
+			log.error(traceback.format_exc())
+			self.update_data = 'ePopen Failed'
+			self.update_retval = -1
+			self.updateArchivIpkFailed()
 
 	def downloadIpkFailed(self):
+		log.debug("[Updater] downloadIpkFailed - opening message box")
 		self.archiv.session.openWithCallback(self.updateFailed,
 				MessageBox,
 				_("Failed to download archivCZSK update package"),
@@ -165,6 +176,7 @@ class ArchivUpdater(RunNext):
 
 
 	def pkgInstallCmdFinished(self, data, retval, extra_args):
+		log.debug("[Updater] pkgInstallCmdFinished with return code %s" % retval)
 		self.update_retval = retval
 		self.update_data = data
 
