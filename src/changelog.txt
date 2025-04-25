@@ -1,3 +1,9 @@
+archivCZSK 3.4.3, 25.04.2025
+    - do nastavení doplnkov pribudla možnosť pridať skratku do hlavného menu Enigmy
+    - oprava zaseknutia GUI ak doplnok nevráti URL adresu pre prehrávanie
+    - opravy okolo aktualizácie bez reštartu
+    - pridanie podpory pre zobrazenie ČSFD informácií pre položky uložené v záložkách
+
 archivCZSK 3.4.2, 18.04.2025
     - oprava pádu pri zobrazení zoznamu stiahnutých súborov
 
