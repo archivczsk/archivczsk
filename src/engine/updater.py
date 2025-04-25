@@ -26,21 +26,30 @@ from Screens.MessageBox import MessageBox
 class RunNext(object):
 	def __init__(self, updateDialog):
 		self.__updateDialog = updateDialog
+		self.__cbk = None
 
-	def run_next(self, cbk, msg=None):
-		# this is needed to make changes in GUI, because you need to return call to reactor
-		def __cbk_wrapper():
-			del self.updateCheckTimer
-			del self.updateCheckTimer_conn
+		self.updateCheckTimer = eTimer()
+		self.updateCheckTimer_conn = eConnectCallback(self.updateCheckTimer.timeout, self.cbk_wrapper)
+
+	def stop_timers(self):
+		del self.updateCheckTimer
+		del self.updateCheckTimer_conn
+
+	def cbk_wrapper(self):
+		if self.__cbk != None:
+			cbk = self.__cbk
+			self.__cbk = None
+			self.updateCheckTimer.stop()
 			cbk()
 
+	def run_next(self, cbk, msg=None):
 		if msg:
 			self.show_dialog(msg)
 		else:
 			self.close_dialog()
-		self.updateCheckTimer = eTimer()
-		self.updateCheckTimer_conn = eConnectCallback(self.updateCheckTimer.timeout, __cbk_wrapper)
-		self.updateCheckTimer.start(100, True)
+
+		self.__cbk = cbk
+		self.updateCheckTimer.start(100)
 
 	def show_dialog(self, msg):
 		if self.__updateDialog != None:
@@ -175,10 +184,12 @@ class ArchivUpdater(RunNext):
 			self.archiv.session.openWithCallback(self.restartArchiv, MessageBox, _("Update archivCZSK complete."), type=MessageBox.TYPE_INFO)
 
 	def restartArchiv(self, *args):
+		self.stop_timers()
 		self.finish_cbk('restart')
 
 	def reloadArchiv(self, *args):
 		self.close_dialog()
+		self.stop_timers()
 		# don't continue - reload is needed, so user needs to run ArchivCZSK again
 		self.finish_cbk('reload')
 
@@ -218,6 +229,7 @@ class ArchivUpdater(RunNext):
 
 	def continueToArchiv(self):
 		self.removeTempFiles()
+		self.stop_timers()
 		self.finish_cbk('continue')
 
 	def removeTempFiles(self):
@@ -361,6 +373,7 @@ class AddonsUpdater(RunNext):
 		if config.plugins.archivCZSK.no_restart.value:
 			self.run_next(self.reload_addons, _("Reloading addons. Please wait ..."))
 		else:
+			self.stop_timers()
 			self.close_dialog()
 			self.finish_cbk('restart')
 
@@ -370,6 +383,7 @@ class AddonsUpdater(RunNext):
 		self.run_next(self.continueToArchiv, _("Addons were reloaded"))
 
 	def continueToArchiv(self):
+		self.stop_timers()
 		self.finish_cbk('continue')
 
 

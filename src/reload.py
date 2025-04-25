@@ -61,21 +61,29 @@ class ArchivCZSKReloader(object):
 		self.force_e2_restart = False
 		self.eConnectCallback = eConnectCallback
 		self._ = _
+		self.__cbk = None
+		self.t = eTimer()
+		self.tc = self.eConnectCallback(self.t.timeout, self.cbk_wrapper)
 
-	def run_next(self, cbk, msg=None):
-		# this is needed to make changes in GUI, because you need to return call to reactor
-		def __cbk_wrapper():
-			del self.t
-			del self.tc
+	def cbk_wrapper(self):
+		if self.__cbk != None:
+			cbk = self.__cbk
+			self.__cbk = None
+			self.t.stop()
 			cbk()
 
+	def stop_timers(self):
+		del self.t
+		del self.tc
+
+	def run_next(self, cbk, msg=None):
 		if msg:
 			self.show_dialog(msg)
 		else:
 			self.close_dialog()
-		self.t = eTimer()
-		self.tc = self.eConnectCallback(self.t.timeout, __cbk_wrapper)
-		self.t.start(100, True)
+
+		self.__cbk = cbk
+		self.t.start(100)
 
 	def show_dialog(self, msg):
 		if self.dialog:
@@ -111,6 +119,7 @@ class ArchivCZSKReloader(object):
 			del self.__stop_t
 
 			if self.force_e2_restart:
+				self.stop_timers()
 				from Screens.Standby import TryQuitMainloop
 				self.session.open(TryQuitMainloop, 3)
 				return
@@ -145,8 +154,10 @@ class ArchivCZSKReloader(object):
 		if self.run_after_reload:
 			self.run_next(self.run_archivczsk)
 		else:
+			self.stop_timers()
 			self.close_dialog()
 
 	def run_archivczsk(self):
+		self.stop_timers()
 		from .archivczsk import ArchivCZSK
 		ArchivCZSK.run(self.session, self.autorun_addon)
