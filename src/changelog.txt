@@ -1,3 +1,8 @@
+archivCZSK 3.4.4, 01.05.2025
+    - oprava pádu pri kontrole platnosti stavu "podporovateľ"
+    - oprava pádu ak je pridaná skratka na doplnok pre python2 image
+    - vylepšenie ladiacich výpisov počas aktualizácie
+
 archivCZSK 3.4.3, 25.04.2025
     - do nastavení doplnkov pribudla možnosť pridať skratku do hlavného menu Enigmy
     - oprava zaseknutia GUI ak doplnok nevráti URL adresu pre prehrávanie
