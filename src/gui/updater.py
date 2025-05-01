@@ -2,6 +2,7 @@
 
 import traceback
 from Components.Label import Label
+from Components.ActionMap import ActionMap
 from Screens.Screen import Screen
 from Components.config import config
 from datetime import datetime, timedelta
@@ -17,13 +18,35 @@ class ArchivCZSKUpdateInfoScreen(Screen):
 		Screen.__init__(self, session)
 		self.archiv = archivInstance
 		self.__update_started = False
+		self.__upd = None
 
 		self["status"] = Label(_("Looking for updates. Please wait ..."))
+
+		self["actions"] = ActionMap(["archivCZSKActions"],
+		{
+			"ok": self.ok,
+			"cancel": self.cancel,
+		})
+
 		self.setTitle(_("Updating ArchivCZSK"))
 		self.onShown.append(self.start_updater)
 
 	def set_status(self, text):
 		self['status'].setText(toString(text))
+
+	def ok(self):
+		log.info("OK pressed during update ...")
+		try:
+			self.__upd.cbk_wrapper()
+		except:
+			log.error(traceback.format_exc())
+
+	def cancel(self):
+		log.info("CANCEL pressed during update ...")
+		try:
+			self.__upd.cbk_wrapper()
+		except:
+			log.error(traceback.format_exc())
 
 	@staticmethod
 	def canCheckUpdate():
@@ -46,14 +69,15 @@ class ArchivCZSKUpdateInfoScreen(Screen):
 	def checkArchivUpdate(self):
 		try:
 			log.info("Checking ArchivCZSK update ...")
-			upd = ArchivUpdater(self.archiv, self.archiv_update_finished, self)
-			upd.checkUpdate()
+			self.__upd = ArchivUpdater(self.archiv, self.archiv_update_finished, self)
+			self.__upd.checkUpdate()
 		except:
 			log.error(traceback.format_exc())
 			self.archiv_update_finished()
 
 
 	def archiv_update_finished(self, result='continue'):
+		self.__upd = None
 		if result == 'continue' and config.plugins.archivCZSK.autoUpdate.value:
 			self.checkAddonsUpdate()
 		else:
@@ -62,13 +86,14 @@ class ArchivCZSKUpdateInfoScreen(Screen):
 	def checkAddonsUpdate(self):
 		try:
 			log.info("Checking addons update ...")
-			upd = AddonsUpdater(self.archiv, self.addons_update_finished, self)
-			upd.checkUpdate()
+			self.__upd = AddonsUpdater(self.archiv, self.addons_update_finished, self)
+			self.__upd.checkUpdate()
 		except:
 			log.error(traceback.format_exc())
 			self.addons_update_finished()
 
 	def addons_update_finished(self, result='continue'):
+		self.__upd = None
 		self.close(result)
 
 	def start_updater(self):
