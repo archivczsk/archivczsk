@@ -196,7 +196,7 @@ class ArchivCZSKPaymentScreen(BaseArchivCZSKScreen):
 			payment_screen_time = int(monotonic()) - self.screen_time
 			if payment_screen_time > 10:
 				log.info("Payment screen time was {}s - enabling extra license checks for next 24 hours".format(payment_screen_time))
-				self.license.enable_extra_checks()
+				ArchivCZSKLicense.get_instance().enable_extra_checks()
 
 		del self.picLoad_conn
 		del self.PicLoad
