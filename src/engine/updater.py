@@ -12,8 +12,7 @@ import threading
 from .tools import util, parser
 from .tools.unzip import unzip_to_dir
 from .tools.util import toString
-from enigma import eTimer
-from ..compat import eConnectCallback
+from ..compat import eCompatTimer
 from .exceptions.updater import UpdateXMLVersionError, UpdateXMLNoUpdateUrl
 from .tools.logger import log
 from .tools.lang import _
@@ -28,13 +27,11 @@ class RunNext(object):
 		self.__updateDialog = updateDialog
 		self.__cbk = None
 
-		self.updateCheckTimer = eTimer()
-		self.updateCheckTimer_conn = eConnectCallback(self.updateCheckTimer.timeout, self.cbk_wrapper)
+		self.updateCheckTimer = eCompatTimer(self.cbk_wrapper)
 
 	def stop_timers(self):
 		log.debug("[RunNext] stopping timers")
 		del self.updateCheckTimer
-		del self.updateCheckTimer_conn
 
 	def cbk_wrapper(self):
 		if self.__cbk != None:

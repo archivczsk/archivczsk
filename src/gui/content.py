@@ -13,7 +13,7 @@ from Tools.LoadPixmap import LoadPixmap
 from .poster import PosterProcessing, PosterPixmapHandler
 
 from .. import settings
-from ..compat import eConnectCallback
+from ..compat import eCompatTimer
 from .icon import ArchivCZSKDonateScreen
 from ..engine.tools.lang import _
 from ..engine.contentprovider import ArchivCZSKContentProvider
@@ -26,7 +26,7 @@ from ..engine.parental import parental_pin
 from .base import BaseArchivCZSKListSourceScreen
 from .common import LoadingScreen, TipBar, CutLabel
 from .download import DownloadList
-from enigma import eTimer, gPixmapPtr
+from enigma import gPixmapPtr
 from .menu import ArchivCZSKConfigScreen
 from ..colors import DeleteColors
 from . import info
@@ -219,8 +219,7 @@ class ArchivCZSKVideoAddonsManagementScreen(BaseContentScreen, TipBar):
 		TipBar.__init__(self, [self.CONTEXT_TIP], startOnShown=False)
 		self.skinName = "ArchivCZSKContentScreen"
 		self["menu"].style = "management"
-		self.updateGUITimer = eTimer()
-		self.updateGUITimer_conn = eConnectCallback(self.updateGUITimer.timeout, self.updateAddonGUI)
+		self.updateGUITimer = eCompatTimer(self.updateAddonGUI)
 		self.onUpdateGUI.append(self.changeAddon)
 		self.onClose.append(self.__onClose)
 		self["image"] = Pixmap()
@@ -307,7 +306,6 @@ class ArchivCZSKVideoAddonsManagementScreen(BaseContentScreen, TipBar):
 
 	def __onClose(self):
 		self.updateGUITimer.stop()
-		del self.updateGUITimer_conn
 		del self.updateGUITimer
 
 
@@ -348,8 +346,7 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 		self.provider = provider
 		self.autorun_addon = autorun_addon
 		self.autorun_handled = False
-		self.updateGUITimer = eTimer()
-		self.updateGUITimer_conn = eConnectCallback(self.updateGUITimer.timeout, self.updateAddonGUI)
+		self.updateGUITimer = eCompatTimer(self.updateAddonGUI)
 
 		# include DownloadList
 		DownloadList.__init__(self)
@@ -400,7 +397,6 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 	def __onClose(self):
 		self.provider.stop()
 		self.updateGUITimer.stop()
-		del self.updateGUITimer_conn
 		del self.updateGUITimer
 
 	def updateMenuList(self, index=0):
@@ -540,11 +536,8 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 		# include DownloadList
 		DownloadList.__init__(self)
 
-		self.update_info_items_timer = eTimer()
-		self.update_info_items_timer_conn = eConnectCallback(self.update_info_items_timer.timeout, self.load_info_items)
-
-		self.updateGUITimer = eTimer()
-		self.updateGUITimer_conn = eConnectCallback(self.updateGUITimer.timeout, self.updateAddonGUI)
+		self.update_info_items_timer = eCompatTimer(self.load_info_items)
+		self.updateGUITimer = eCompatTimer(self.updateAddonGUI)
 		self.onUpdateGUI.append(self.changeAddon)
 		self.onClose.append(self.__onClose)
 
@@ -602,10 +595,8 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 
 	def __onClose(self):
 		self.updateGUITimer.stop()
-		del self.updateGUITimer_conn
 		del self.updateGUITimer
 		self.update_info_items_timer.stop()
-		del self.update_info_items_timer_conn
 		del self.update_info_items_timer
 		del self.poster
 

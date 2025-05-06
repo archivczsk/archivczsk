@@ -7,13 +7,12 @@ Created on 22.4.2012
 import os
 from twisted.web.client import downloadPage
 
-from enigma import ePicLoad
 from Screens.VirtualKeyBoard import VirtualKeyBoard
 from Components.AVSwitch import AVSwitch
 from Components.Pixmap import Pixmap
 from Components.config import config
 
-from ..compat import eConnectCallback
+from ..compat import eCompatPicLoad
 from ..engine.tools.lang import _
 from ..engine.tools.util import convert_png_to_8bit, removeDiac
 from .base import BaseArchivCZSKScreen
@@ -55,8 +54,7 @@ class ArchivCZSKCaptchaScreen(BaseArchivCZSKScreen,VirtualKeyBoard):
 		self["captcha"] = Pixmap()
 		self.Scale = AVSwitch().getFramebufferScale()
 		self.picPath = captcha_file
-		self.picLoad = ePicLoad()
-		self.picLoad_conn = eConnectCallback(self.picLoad.PictureData, self.decodePicture)
+		self.picLoad = eCompatPicLoad(self.decodePicture)
 		self.onLayoutFinish.append(self.showPicture)
 		self.onClose.append(self.__onClose)
 
@@ -75,5 +73,4 @@ class ArchivCZSKCaptchaScreen(BaseArchivCZSKScreen,VirtualKeyBoard):
 			self["captcha"].show()
 
 	def __onClose(self):
-		del self.picLoad_conn
 		del self.picLoad

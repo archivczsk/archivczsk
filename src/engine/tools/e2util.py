@@ -1,6 +1,6 @@
 import sys, os
-from enigma import getDesktop, eConsoleAppContainer, eTimer
-from ...compat import eConnectCallback
+from enigma import getDesktop, eConsoleAppContainer
+from ...compat import eConnectCallback, eCompatTimer
 from .logger import log
 import traceback
 import json
@@ -44,7 +44,6 @@ class PythonProcess(object):
 		def check_stopped():
 			if not self.appContainer.running():
 				self.stopTimer.stop()
-				del self.stopTimer_conn
 				del self.stopTimer
 				del self.__i
 				return
@@ -53,7 +52,6 @@ class PythonProcess(object):
 				self.appContainer.kill()
 			elif self.__i == 1:
 				self.stopTimer.stop()
-				del self.stopTimer_conn
 				del self.stopTimer
 				raise Exception("cannot kill process")
 
@@ -64,8 +62,7 @@ class PythonProcess(object):
 
 		if self.appContainer.running():
 			self.appContainer.sendCtrlC()
-			self.stopTimer = eTimer()
-			self.stopTimer_conn = eConnectCallback(self.stopTimer.timeout, check_stopped)
+			self.stopTimer = eCompatTimer(check_stopped)
 			self.stopTimer.start(2000, False)
 
 	def write(self, data):

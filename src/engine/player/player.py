@@ -1,6 +1,6 @@
 import traceback, os
 
-from enigma import eServiceReference, iPlayableService, eTimer
+from enigma import eServiceReference, iPlayableService
 from Components.ActionMap import ActionMap, HelpableActionMap
 from Components.config import config
 from Components.Label import Label
@@ -37,7 +37,7 @@ except ImportError:
 
 from ..tools.logger import log
 from ..tools.lang import _
-from ...compat import eConnectCallback, DMM_IMAGE, MessageBox
+from ...compat import eCompatTimer, DMM_IMAGE, MessageBox
 from ..items import PVideo, PVideoNotResolved, PPlaylist
 from ..tools import e2util
 from ..tools.util import toString
@@ -401,8 +401,7 @@ class SkipNotificationScreen(Screen):
 		self.skin = skin
 		self["status"] = Label()
 
-		self.timer = eTimer()
-		self.timer_conn = eConnectCallback(self.timer.timeout, self.hide)
+		self.timer = eCompatTimer(self.hide)
 		self.onClose.append(self.__on_close)
 		self.onShow.append(self.__on_show)
 		self.onHide.append(self.__on_hide)
@@ -416,7 +415,6 @@ class SkipNotificationScreen(Screen):
 
 	def __on_close(self):
 		self.timer.stop()
-		del self.timer_conn
 		del self.timer
 
 	def __on_show(self):
@@ -453,13 +451,11 @@ class StatusScreen(Screen):
 		skin+= '</screen>'
 		self.skin = skin
 		self["status"] = Label()
-		self.timer = eTimer()
-		self.timer_conn = eConnectCallback(self.timer.timeout, self.hide)
+		self.timer = eCompatTimer(self.hide)
 		self.onClose.append(self.__on_close)
 
 	def __on_close(self):
 		self.timer.stop()
-		del self.timer_conn
 		del self.timer
 
 	def set_status(self, text, color="yellow", timeout=1500):
@@ -556,13 +552,11 @@ class InfoBarSubservicesSupport(object):
 	def __init__(self):
 		self["InfoBarSubservicesActions"] = HelpableActionMap(self,
 				"ColorActions", { "green": (self.showSubservices, _("Show subservices"))}, -2)
-		self.__timer = eTimer()
-		self.__timer_conn = (self.__timer.timeout, self.__seekToCurrentPosition)
+		self.__timer = eCompatTimer(self.__seekToCurrentPosition)
 		self.onClose.append(self.__onClose)
 
 	def __onClose(self):
 		self.__timer.stop()
-		del self.__timer_conn
 		del self.__timer
 
 	def showSubservices(self):
@@ -639,18 +633,12 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 		self.status_dialog = self.session.instantiateDialog(StatusScreen)
 		self.skip_dialog = self.session.instantiateDialog(SkipNotificationScreen)
 		self.player_callback = player_callback
-		self.__timer = eTimer()
-		self.__timer_conn = eConnectCallback(self.__timer.timeout, self.__pts_available)
-		self.__timer_seek = eTimer()
-		self.__timer_seek_conn = eConnectCallback(self.__timer_seek.timeout, self.__check_seek_position)
-		self.__timer_seek_notification = eTimer()
-		self.__timer_seek_notification_conn = eConnectCallback(self.__timer_seek_notification.timeout, self.setup_skip_notification)
-		self.__timer_watching = eTimer()
-		self.__timer_watching_conn = eConnectCallback(self.__timer_watching.timeout, self.__watching)
-		self.__timer_tracks_setup = eTimer()
-		self.__timer_tracks_setup_conn = eConnectCallback(self.__timer_tracks_setup.timeout, self.setup_tracks)
-		self.__timer_skip_notification = eTimer()
-		self.__timer_skip_notification_conn = eConnectCallback(self.__timer_skip_notification.timeout, self.show_skip_notification)
+		self.__timer = eCompatTimer(self.__pts_available)
+		self.__timer_seek = eCompatTimer(self.__check_seek_position)
+		self.__timer_seek_notification = eCompatTimer(self.setup_skip_notification)
+		self.__timer_watching = eCompatTimer(self.__watching)
+		self.__timer_tracks_setup = eCompatTimer(self.setup_tracks)
+		self.__timer_skip_notification = eCompatTimer(self.show_skip_notification)
 		self.only_future_skip_notifications = False
 		self.__subtitles_url = None
 		self.__resume_time_sec = None
@@ -702,17 +690,11 @@ class ArchivCZSKMoviePlayer(InfoBarBase, SubsSupport, SubsSupportStatus, InfoBar
 	def __on_close(self):
 		self.__timer.stop()
 		self.__timer_watching.stop()
-		del self.__timer_conn
 		del self.__timer
-		del self.__timer_seek_conn
 		del self.__timer_seek
-		del self.__timer_seek_notification_conn
 		del self.__timer_seek_notification
-		del self.__timer_watching_conn
 		del self.__timer_watching
-		del self.__timer_tracks_setup_conn
 		del self.__timer_tracks_setup
-		del self.__timer_skip_notification_conn
 		del self.__timer_skip_notification
 		RemovePopup(self.RESUME_POPUP_ID)
 		self.session.deleteDialog(self.status_dialog)

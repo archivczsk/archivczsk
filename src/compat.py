@@ -13,7 +13,7 @@ from Components.MenuList import MenuList
 from Screens.MessageBox import MessageBox as OrigMessageBox
 from Tools.Directories import fileExists
 
-from enigma import eServiceReference, eListboxPythonMultiContent, eServiceCenter, gFont
+from enigma import eServiceReference, eListboxPythonMultiContent, eServiceCenter, gFont, eTimer, ePicLoad, ePythonMessagePump
 
 from skin import parseSize as __parseSize
 from skin import parsePosition as __parsePosition
@@ -64,7 +64,50 @@ def eConnectCallback(obj, callbackFun):
 		else:
 			obj.append(callbackFun)
 		return eConnectCallbackObj(obj, callbackFun)
-	return eConnectCallbackObj()
+
+class eCompatWrapper(object):
+	def __init__(self, callbackFun):
+		self.t = self.__class__.COMPAT_OBJECT()
+		self.callbackFun = callbackFun
+
+		obj = getattr(self.t, self.__class__.CALLBACK_MEMBER)
+
+		if 'connect' in dir(obj):
+			self.conn_obj = obj.connect(callbackFun)
+		elif 'get' in dir(obj):
+			obj.get().append(callbackFun)
+		else:
+			obj.append(callbackFun)
+
+	def __del__(self):
+		obj = getattr(self.t, self.CALLBACK_MEMBER)
+		if 'connect' in dir(obj):
+			try:
+				del self.conn_obj
+			except:
+				pass
+		elif 'get' in dir(obj):
+			obj.get().remove(self.callbackFun)
+		else:
+			obj.remove(self.callbackFun)
+
+		self.callbackFun = None
+		del self.t
+
+	def __getattr__(self, name):
+		return getattr(self.t, name)
+
+class eCompatTimer(eCompatWrapper):
+	COMPAT_OBJECT = eTimer
+	CALLBACK_MEMBER = 'timeout'
+
+class eCompatPicLoad(eCompatWrapper):
+	COMPAT_OBJECT = ePicLoad
+	CALLBACK_MEMBER = 'PictureData'
+
+class eCompatPythonMessagePump(eCompatWrapper):
+	COMPAT_OBJECT = ePythonMessagePump
+	CALLBACK_MEMBER = 'recv_msg'
 
 # this function is not the same accross different images
 def LanguageEntryComponent(file, name, index):

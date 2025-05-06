@@ -15,7 +15,7 @@ from Screens.MessageBox import MessageBox
 from Screens.VirtualKeyBoard import VirtualKeyBoard
 
 from .. import settings
-from ..compat import eConnectCallback
+from ..compat import eCompatTimer
 from ..engine.tools.lang import _
 from ..engine.downloader import DownloadManager
 from ..engine.tools import util
@@ -24,7 +24,6 @@ from ..gsession import GlobalSession
 from . import info
 from .base import BaseArchivCZSKScreen, BaseArchivCZSKMenuListScreen
 from .common import PanelListDownload, PanelListDownloadEntry, PanelListDownloadListEntry, MultiLabelWidget
-from enigma import eTimer
 
 from ..py3compat import *
 
@@ -143,8 +142,7 @@ class ArchivCZSKDownloadStatusScreen(BaseArchivCZSKScreen):
 		self._download.onFinishCB.append(self.updateFinishTime)
 		self._download.onFinishCB.append(self.stopTimer)
 
-		self.timer = eTimer()
-		self.timer_conn = eConnectCallback(self.timer.timeout, self.updateStatus)
+		self.timer = eCompatTimer(self.updateStatus)
 		self.timer_interval = 3000
 
 		self.onShown.append(self.updateStaticInfo)
@@ -154,8 +152,6 @@ class ArchivCZSKDownloadStatusScreen(BaseArchivCZSKScreen):
 
 		self.onLayoutFinish.append(self.startRun)  # dont start before gui is finished
 		self.onLayoutFinish.append(self.updateGUI)
-
-
 
 		self.onClose.append(self.__onClose)
 
@@ -256,7 +252,6 @@ class ArchivCZSKDownloadStatusScreen(BaseArchivCZSKScreen):
 		self._download.onFinishCB.remove(self.stopTimer)
 
 		self.stopTimer()
-		del self.timer_conn
 		del self.timer
 
 

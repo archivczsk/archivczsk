@@ -13,9 +13,8 @@ try:
 except:
 	from queue import Queue
 
-from enigma import ePythonMessagePump
 from .logger import log
-from ...compat import eConnectCallback
+from ...compat import eCompatPythonMessagePump
 from ..exceptions.addon import AddonThreadException
 from .util import set_thread_name
 
@@ -36,7 +35,6 @@ def run_in_main_thread(val):
 	fnc_out_queue.get()()
 
 m_pump = None
-m_pump_conn = None
 
 def callFromThread(func):
 	"""calls function from child thread in main(reactor) thread,
@@ -105,13 +103,9 @@ class Task(object):
 	@staticmethod
 	def startWorkerThread():
 		log.debug("[Task] starting workerThread")
-		global m_pump_conn
-		if m_pump_conn is not None:
-			del m_pump_conn
 		global m_pump
 		if m_pump is None:
-			m_pump = ePythonMessagePump()
-		m_pump_conn = eConnectCallback(m_pump.recv_msg, run_in_main_thread)
+			m_pump = eCompatPythonMessagePump(run_in_main_thread)
 		Task.worker_thread = WorkerThread()
 		Task.worker_thread.start()
 
@@ -131,10 +125,6 @@ class Task(object):
 				break
 			f()
 
-		global m_pump_conn
-		if m_pump_conn is not None:
-			del m_pump_conn
-		m_pump_conn = None
 		global m_pump
 		if m_pump is not None:
 			m_pump.stop()

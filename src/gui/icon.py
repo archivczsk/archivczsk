@@ -3,7 +3,6 @@ import os
 
 from Components.ActionMap import ActionMap
 from Components.Pixmap import Pixmap
-from enigma import eTimer, ePicLoad
 from Components.Label import Label
 from Tools.LoadPixmap import LoadPixmap
 from Components.config import config
@@ -11,7 +10,7 @@ from Components.AVSwitch import AVSwitch
 from .base import BaseArchivCZSKListSourceScreen, BaseArchivCZSKScreen
 from .common import toString
 from ..settings import IMAGE_PATH
-from ..compat import eConnectCallback
+from ..compat import eCompatPicLoad, eCompatTimer
 from ..engine.tools.lang import _
 from ..engine.tools.logger import log
 from ..engine.tools import util
@@ -29,8 +28,7 @@ class ArchivCZSKDonateScreen(BaseArchivCZSKListSourceScreen):
 		self.license = ArchivCZSKLicense.get_instance()
 		self.countdown = countdown
 
-		self.countdown_tick_timer = eTimer()
-		self.countdown_tick_timer_conn = eConnectCallback(self.countdown_tick_timer.timeout, self.countdown_tick)
+		self.countdown_tick_timer = eCompatTimer(self.countdown_tick)
 
 		self.price = {
 			'czk': (25, ' CZK'),
@@ -143,7 +141,6 @@ class ArchivCZSKDonateScreen(BaseArchivCZSKListSourceScreen):
 
 	def __onClose(self):
 		self.countdown_tick_timer.stop()
-		del self.countdown_tick_timer_conn
 		del self.countdown_tick_timer
 
 	def check_license(self):
@@ -175,8 +172,7 @@ class ArchivCZSKPaymentScreen(BaseArchivCZSKScreen):
 		self["footer"] = Label(_('Supporter status will be automatically activated after receiving payment. If you send instant payment, it will be activated within an hour. If you send standard transfer, it will be activated on next business day.'))
 
 		self["qrimage"] = Pixmap()
-		self.PicLoad = ePicLoad()
-		self.picLoad_conn = eConnectCallback(self.PicLoad.PictureData, self.DecodePicture)
+		self.PicLoad = eCompatPicLoad(self.DecodePicture)
 
 		self["actions"] = ActionMap(["OkCancelActions"], {
 			"ok": self.close,
@@ -198,7 +194,6 @@ class ArchivCZSKPaymentScreen(BaseArchivCZSKScreen):
 				log.info("Payment screen time was {}s - enabling extra license checks for next 24 hours".format(payment_screen_time))
 				ArchivCZSKLicense.get_instance().enable_extra_checks()
 
-		del self.picLoad_conn
 		del self.PicLoad
 
 

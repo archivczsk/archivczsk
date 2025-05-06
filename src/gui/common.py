@@ -18,9 +18,9 @@ from ..compat import MessageBox
 from .. import settings
 from ..engine.tools.logger import log
 from ..engine.tools.lang import _
-from ..compat import eConnectCallback, parseSize, parsePosition
+from ..compat import eCompatTimer, parseSize, parsePosition
 from ..engine.tools.util import BtoMB, BtoKB, BtoGB, toString
-from enigma import loadPNG, RT_VALIGN_TOP, eListbox, ePoint, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_HALIGN_CENTER, RT_VALIGN_CENTER, RT_WRAP, eListboxPythonMultiContent, gFont, getDesktop, eTimer, gPixmapPtr
+from enigma import loadPNG, RT_VALIGN_TOP, eListbox, ePoint, RT_HALIGN_LEFT, RT_HALIGN_RIGHT, RT_HALIGN_CENTER, RT_VALIGN_CENTER, RT_WRAP, eListboxPythonMultiContent, gFont, getDesktop, gPixmapPtr
 from skin import parseColor, parseFont
 import skin
 
@@ -228,8 +228,7 @@ class TipBar():
 		self.tip_list = tip_list
 		self.tip_selection = 0
 		self.tip_timer_refresh = tip_timer_refresh * 1000
-		self.tip_timer = eTimer()
-		self.tip_timer_conn = eConnectCallback(self.tip_timer.timeout, self.changeTip)
+		self.tip_timer = eCompatTimer(self.changeTip)
 		if startOnShown:
 			self.onFirstExecBegin.append(self.startTipTimer)
 
@@ -272,7 +271,6 @@ class TipBar():
 
 	def __exit(self):
 		self.stopTipTimer()
-		del self.tip_timer_conn
 		del self.tip_timer
 
 
@@ -296,13 +294,11 @@ class LoadingScreen(Screen):
 		self.curr = 0
 		self.__shown = False
 
-		self.timer = eTimer()
-		self.timer_conn = eConnectCallback(self.timer.timeout, self.showNextSpinner)
+		self.timer = eCompatTimer(self.showNextSpinner)
 		self.onClose.append(self.__onClose)
 
 	def __onClose(self):
 		self.timer.stop()
-		del self.timer_conn
 		del self.timer
 
 	def start(self):

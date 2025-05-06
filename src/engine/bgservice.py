@@ -4,8 +4,7 @@ import traceback
 from threading import Thread
 from twisted.internet import defer
 from twisted.python import failure
-from ..compat import eConnectCallback
-from enigma import eTimer, ePythonMessagePump
+from ..compat import eCompatPythonMessagePump, eCompatTimer
 from .tools.logger import log
 from .exceptions.addon import AddonServiceException
 from .tools.util import set_thread_name
@@ -35,7 +34,6 @@ def run_in_main_thread(val):
 
 
 m_pump = None
-m_pump_conn = None
 
 
 def callFromService(func):
@@ -118,13 +116,9 @@ class BGServiceTask(object):
 	@staticmethod
 	def startMessagePump():
 		log.debug("[BGServiceTask] starting service -> reactor message pump")
-		global m_pump_conn
-		if m_pump_conn is not None:
-			del m_pump_conn
 		global m_pump
 		if m_pump is None:
-			m_pump = ePythonMessagePump()
-		m_pump_conn = eConnectCallback(m_pump.recv_msg, run_in_main_thread)
+			m_pump = eCompatPythonMessagePump(run_in_main_thread)
 
 	@staticmethod
 	def startServiceThread():
@@ -143,11 +137,6 @@ class BGServiceTask(object):
 	@staticmethod
 	def stopMessagePump():
 		log.debug("[BGServiceTask] stopping service -> reactor message pump")
-		global m_pump_conn
-		if m_pump_conn is not None:
-			del m_pump_conn
-			m_pump_conn = None
-
 		global m_pump
 		if m_pump is not None:
 			m_pump.stop()
@@ -237,7 +226,6 @@ class AddonBackgroundService(object):
 			for t in self.loop_timers:
 				t['timer'].stop()
 				del t['timer']
-				del t['timer_conn']
 			self.loop_timers = []
 
 		fnc_out_queue.put(__stop_timers)
@@ -257,8 +245,7 @@ class AddonBackgroundService(object):
 			self.__run_task_internal(name, None, fn, *args, **kwargs)
 
 		def __init_timer():
-			t['timer'] = eTimer()
-			t['timer_conn'] = eConnectCallback(t['timer'].timeout, __run_in_loop)
+			t['timer'] = eCompatTimer(__run_in_loop)
 			t['timer'].start(seconds_to_loop * 1000)
 			self.loop_timers.append(t)
 
@@ -274,7 +261,6 @@ class AddonBackgroundService(object):
 			def __stop_timer():
 				t['timer'].stop()
 				del t['timer']
-				del t['timer_conn']
 
 			fnc_out_queue.put(__stop_timer)
 			m_pump.send(0)
@@ -284,7 +270,6 @@ class AddonBackgroundService(object):
 
 		def __cleanup(success, result):
 			del t['timer']
-			del t['timer_conn']
 			self.one_shot_timers.remove(t)
 			if finish_cbk:
 				try:
@@ -296,8 +281,7 @@ class AddonBackgroundService(object):
 			self.__run_task_internal(name, __cleanup, cbk, *args, **kwargs)
 
 		def __init_timer():
-			t['timer'] = eTimer()
-			t['timer_conn'] = eConnectCallback(t['timer'].timeout, __run_delayed)
+			t['timer'] = eCompatTimer(__run_delayed)
 			t['timer'].start(delay_seconds * 1000, True)
 			self.one_shot_timers.append(t)
 
@@ -311,12 +295,10 @@ class AddonBackgroundService(object):
 		def __run_delayed():
 			cbk(*args, **kwargs)
 			del t['timer']
-			del t['timer_conn']
 			self.one_shot_timers.remove(t)
 
 		def __init_timer():
-			t['timer'] = eTimer()
-			t['timer_conn'] = eConnectCallback(t['timer'].timeout, __run_delayed)
+			t['timer'] = eCompatTimer(__run_delayed)
 			t['timer'].start(delay_ms, True)
 			self.one_shot_timers.append(t)
 

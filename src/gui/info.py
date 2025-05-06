@@ -18,7 +18,6 @@ from Components.config import config
 
 from .base import BaseArchivCZSKScreen
 from .. import settings
-from ..compat import eConnectCallback
 from .common import showInfoMessage, PanelColorListEntry, PanelList
 from .poster import PosterProcessing, PosterPixmapHandler
 from ..engine.player.info import videoPlayerInfo

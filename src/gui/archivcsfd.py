@@ -14,7 +14,6 @@ except:
 	from urllib.request import build_opener, HTTPRedirectHandler
 	from urllib.request import quote
 
-from enigma import ePicLoad
 from random import randint
 from Components.config import config
 from Screens.Screen import Screen
@@ -30,7 +29,7 @@ from twisted.web.client import downloadPage
 from .. import settings
 from ..engine.tools.logger import log
 from ..engine.tools.lang import _
-from ..compat import eConnectCallback
+from ..compat import eCompatPicLoad
 from ..engine.tools.util import removeDiac
 
 from ..py3compat import *
@@ -41,10 +40,7 @@ class ArchivCSFD(Screen):
 			Screen.__init__(self, session)
 			self.eventName = eventName
 			self["poster"] = Pixmap()
-			self.picload = ePicLoad()
-			#self.picload.PictureData.get().append(self.paintPosterPixmapCB)
-			# OE2.0 - OE2.5 compatibility
-			self.picload_conn = eConnectCallback(self.picload.PictureData, self.paintPosterPixmapCB)
+			self.picload = eCompatPicLoad(self.paintPosterPixmapCB)
 			self["stars"] = ProgressBar()
 			self["starsbg"] = Pixmap()
 			self["stars"].hide()
@@ -100,9 +96,6 @@ class ArchivCSFD(Screen):
 			#raise
 
 	def __onClose(self):
-		# OE2.0 - OE2.5 compatibility
-		# picload_conn this must be, if not than crash system
-		del self.picload_conn
 		del self.picload
 		self.close()
 

@@ -6,34 +6,37 @@ from Screens.Screen import Screen
 from .engine.tools.util import toString
 from .engine.tools.lang import _
 
-# taken from IPTVPlayer
-class eConnectCallbackObj:
-	def __init__(self, obj=None, connectHandler=None):
-		self.connectHandler = connectHandler
-		self.obj = obj
+class eCompatTimer(object):
+	def __init__(self, callbackFun):
+		self.t = eTimer()
+		self.callbackFun = callbackFun
 
-	def __del__(self):
-		if 'connect' not in dir(self.obj):
-			if 'get' in dir(self.obj):
-				self.obj.get().remove(self.connectHandler)
-			else:
-				self.obj.remove(self.connectHandler)
-		else:
-			del self.connectHandler
-		self.connectHandler = None
-		self.obj = None
+		obj = self.t.timeout
 
-# taken from IPTVPlayer
-def eConnectCallback(obj, callbackFun):
-	if 'connect' in dir(obj):
-		return eConnectCallbackObj(obj, obj.connect(callbackFun))
-	else:
-		if 'get' in dir(obj):
+		if 'connect' in dir(obj):
+			self.conn_obj = obj.connect(callbackFun)
+		elif 'get' in dir(obj):
 			obj.get().append(callbackFun)
 		else:
 			obj.append(callbackFun)
-		return eConnectCallbackObj(obj, callbackFun)
-	return eConnectCallbackObj()
+
+	def __del__(self):
+		obj = self.t.timeout
+		if 'connect' in dir(obj):
+			try:
+				del self.conn_obj
+			except:
+				pass
+		elif 'get' in dir(obj):
+			obj.get().remove(self.callbackFun)
+		else:
+			obj.remove(self.callbackFun)
+
+		self.callbackFun = None
+		del self.t
+
+	def __getattr__(self, name):
+		return getattr(self.t, name)
 
 class ArchivCZSKReloadInfoScreen(Screen):
 	def __init__(self, session, text=None):
@@ -59,11 +62,9 @@ class ArchivCZSKReloader(object):
 		self.dialog = None
 		self.run_after_reload = False
 		self.force_e2_restart = False
-		self.eConnectCallback = eConnectCallback
 		self._ = _
 		self.__cbk = None
-		self.t = eTimer()
-		self.tc = self.eConnectCallback(self.t.timeout, self.cbk_wrapper)
+		self.t = eCompatTimer(self.cbk_wrapper)
 
 	def cbk_wrapper(self):
 		if self.__cbk != None:
@@ -74,7 +75,6 @@ class ArchivCZSKReloader(object):
 
 	def stop_timers(self):
 		del self.t
-		del self.tc
 
 	def run_next(self, cbk, msg=None):
 		if msg:
@@ -115,7 +115,6 @@ class ArchivCZSKReloader(object):
 				log.debug("HTTP server still running ...")
 
 			self.__stop_t.stop()
-			del self.__stop_tc
 			del self.__stop_t
 
 			if self.force_e2_restart:
@@ -140,8 +139,7 @@ class ArchivCZSKReloader(object):
 
 		ArchivCZSK.stop(__stop_cbk)
 		# now we need to wait a little bit in order to HTTP server completely stops
-		self.__stop_t = eTimer()
-		self.__stop_tc = self.eConnectCallback(self.__stop_t.timeout, __unload)
+		self.__stop_t = eCompatTimer(__unload)
 		self.__stop_t.start(1000)
 
 	def unload_finished(self):

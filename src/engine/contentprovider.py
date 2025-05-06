@@ -18,7 +18,7 @@ from Components.config import config, ConfigSelection
 from .. import settings, version as aczsk
 from .tools.logger import log
 from .tools.lang import _
-from ..compat import eConnectCallback, MessageBox
+from ..compat import eCompatTimer, MessageBox
 from .downloader import getFilenameAndLength, DownloadManager
 from ..gui.download import DownloadManagerMessages
 from ..settings import VIDEO_EXTENSIONS, SUBTITLES_EXTENSIONS
@@ -32,7 +32,6 @@ from .usage import UsageStats
 from ..colors import DeleteColors
 
 from ..py3compat import *
-from enigma import eTimer
 PNG_PATH = settings.IMAGE_PATH
 
 CREATE_DEFAULT_HTTPS_CONTEXT = None
@@ -142,7 +141,6 @@ class PlayMixin(object):
 		def stop_etimer():
 			if len(etimer):
 				etimer[0].stop()
-				del etimer[1]
 				del etimer[0]
 
 		def play_video_callback(callback=None):
@@ -178,8 +176,7 @@ class PlayMixin(object):
 			messagebox.append(session.openWithCallback(
 					play_video_callback, MessageBox, "",
 					MessageBox.TYPE_INFO, close_on_any_key=True))
-			etimer.append(eTimer())
-			etimer.append(eConnectCallback(etimer[0].timeout, check_prefill_state))
+			etimer.append(eCompatTimer(check_prefill_state))
 			etimer[0].start(1000, True)
 
 		def finish_download_callback(download):

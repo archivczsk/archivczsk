@@ -5,12 +5,12 @@ from datetime import datetime
 
 from ..engine.tools import util
 from ..engine.tools.logger import log
-from ..compat import eConnectCallback
+from ..compat import eCompatPicLoad, eCompatTimer
 
 from Components.AVSwitch import AVSwitch
 from Tools.LoadPixmap import LoadPixmap
 
-from enigma import eTimer, ePicLoad, gPixmapPtr
+from enigma import gPixmapPtr
 from Components.config import config
 
 
@@ -114,10 +114,8 @@ class PosterPixmapHandler:
 		self._decoding_path = None
 		self.last_decoded_url = None
 		self.last_selected_url = None
-		self.picload = ePicLoad()
-		self.picload_conn = eConnectCallback(self.picload.PictureData, self._got_picture_data)
-		self.retry_timer = eTimer()
-		self.retry_timer_conn = eConnectCallback(self.retry_timer.timeout, self._decode_current_image)
+		self.picload = eCompatPicLoad(self._got_picture_data)
+		self.retry_timer = eCompatTimer(self._decode_current_image)
 		self._max_retry_times = 3
 		self._retry_times = 0
 		self.last_picPtr = None
@@ -125,9 +123,7 @@ class PosterPixmapHandler:
 	def __del__(self):
 		log.debug("PosterImageHandler.__del__")
 		self.retry_timer.stop()
-		del self.retry_timer_conn
 		del self.retry_timer
-		del self.picload_conn
 		del self.picload
 		del self.last_picPtr
 
