@@ -461,7 +461,7 @@ class ArchivCZSK():
 				ArchivCZSK.force_skin_reload = False
 
 			if ArchivCZSKUpdateInfoScreen.canCheckUpdate():
-				self.session.openWithCallback(self.update_checked, ArchivCZSKUpdateInfoScreen, self )
+				self.session.openWithCallback(self.update_checked, ArchivCZSKUpdateInfoScreen )
 			else:
 				self.open_archive_screen()
 

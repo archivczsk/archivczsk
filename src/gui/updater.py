@@ -14,9 +14,8 @@ from ..engine.tools.util import toString
 from ..engine.updater import ArchivUpdater, AddonsUpdater
 
 class ArchivCZSKUpdateInfoScreen(Screen):
-	def __init__(self, session, archivInstance):
+	def __init__(self, session):
 		Screen.__init__(self, session)
-		self.archiv = archivInstance
 		self.__update_started = False
 		self.__upd = None
 
@@ -69,7 +68,7 @@ class ArchivCZSKUpdateInfoScreen(Screen):
 	def checkArchivUpdate(self):
 		try:
 			log.info("Checking ArchivCZSK update ...")
-			self.__upd = ArchivUpdater(self.archiv, self.archiv_update_finished, self)
+			self.__upd = ArchivUpdater(self.archiv_update_finished, self)
 			self.__upd.checkUpdate()
 		except:
 			log.error(traceback.format_exc())
@@ -86,7 +85,7 @@ class ArchivCZSKUpdateInfoScreen(Screen):
 	def checkAddonsUpdate(self):
 		try:
 			log.info("Checking addons update ...")
-			self.__upd = AddonsUpdater(self.archiv, self.addons_update_finished, self)
+			self.__upd = AddonsUpdater(self.addons_update_finished, self)
 			self.__upd.checkUpdate()
 		except:
 			log.error(traceback.format_exc())

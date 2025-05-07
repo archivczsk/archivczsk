@@ -62,11 +62,14 @@ class RunNext(object):
 		if self.__updateDialog != None:
 			self.__updateDialog.hide()
 
+class FakeSession(object):
+	def openWithCallback(cbk, *args, **kwargs):
+		cbk(True)
 
 class ArchivUpdater(RunNext):
-	def __init__(self, archivInstance, finish_cbk, update_dialog=None):
+	def __init__(self, finish_cbk, update_dialog=None):
 		super(ArchivUpdater, self).__init__(update_dialog)
-		self.archiv = archivInstance
+		self.session = update_dialog.session if update_dialog else FakeSession()
 		self.finish_cbk = finish_cbk
 		self.tmpPath = config.plugins.archivCZSK.tmpPath.value
 		if not self.tmpPath:
@@ -124,7 +127,7 @@ class ArchivUpdater(RunNext):
 		if self.needUpdate:
 			log.logInfo("ArchivUpdater update found...%s"%self.remote_version)
 			strMsg = "%s %s?" %(_("Do you want to update archivCZSK to version"), toString(self.remote_version))
-			self.archiv.session.openWithCallback(
+			self.session.openWithCallback(
 				self.processUpdateArchivYesNoAnswer,
 				MessageBox,
 				strMsg,
@@ -166,7 +169,7 @@ class ArchivUpdater(RunNext):
 
 	def downloadIpkFailed(self):
 		log.debug("[Updater] downloadIpkFailed - opening message box")
-		self.archiv.session.openWithCallback(self.updateFailed,
+		self.session.openWithCallback(self.updateFailed,
 				MessageBox,
 				_("Failed to download archivCZSK update package"),
 				type=MessageBox.TYPE_ERROR)
@@ -188,9 +191,9 @@ class ArchivUpdater(RunNext):
 
 		# restart enigma
 		if config.plugins.archivCZSK.no_restart.value and self.check_api_level():
-			self.archiv.session.openWithCallback(self.reloadArchiv, MessageBox, _("Update complete. Please start ArchivCZSK again."), type=MessageBox.TYPE_INFO)
+			self.session.openWithCallback(self.reloadArchiv, MessageBox, _("Update complete. Please start ArchivCZSK again."), type=MessageBox.TYPE_INFO)
 		else:
-			self.archiv.session.openWithCallback(self.restartArchiv, MessageBox, _("Update archivCZSK complete."), type=MessageBox.TYPE_INFO)
+			self.session.openWithCallback(self.restartArchiv, MessageBox, _("Update archivCZSK complete."), type=MessageBox.TYPE_INFO)
 
 	def restartArchiv(self, *args):
 		self.stop_timers()
@@ -205,7 +208,7 @@ class ArchivUpdater(RunNext):
 	def updateArchivIpkFailed(self):
 		log.logError("ArchivUpdater update archivCZSK from ipk/deb failed. %s ### retval=%s" % (self.update_data, self.update_retval))
 
-		self.archiv.session.openWithCallback(self.updateFailed,
+		self.session.openWithCallback(self.updateFailed,
 				MessageBox,
 				_("Update archivCZSK failed. {cmd} returned error\n{msg}".format(cmd=self.updateMode, msg=self.update_data) ),
 				type=MessageBox.TYPE_ERROR)
@@ -271,9 +274,9 @@ class ArchivUpdater(RunNext):
 
 
 class AddonsUpdater(RunNext):
-	def __init__(self, archivInstance, finish_cbk, update_dialog=None):
+	def __init__(self, finish_cbk, update_dialog=None):
 		super(AddonsUpdater, self).__init__(update_dialog)
-		self.archiv = archivInstance
+		self.session = update_dialog.session if update_dialog else FakeSession()
 		self.finish_cbk = finish_cbk
 		self.updated_addons = []
 		self.to_update_addons = []
@@ -283,6 +286,7 @@ class AddonsUpdater(RunNext):
 		self.run_next(self.check_addon_updates, _("Checking for addons update"))
 
 	def check_addon_updates(self):
+		from ..archivczsk import ArchivCZSK
 		lock = threading.Lock()
 		threads = []
 		def check_repository(repository):
@@ -297,7 +301,7 @@ class AddonsUpdater(RunNext):
 			except Exception:
 				traceback.print_exc()
 				log.error('error when checking updates for repository %s', repository)
-		for repository in self.archiv.get_repositories():
+		for repository in ArchivCZSK.get_repositories():
 			threads.append(threading.Thread(target=check_repository, args=(repository,)))
 		for t in threads:
 			t.start()
@@ -320,7 +324,7 @@ class AddonsUpdater(RunNext):
 			self.continueToArchiv()
 
 	def ask_update_addons(self, update_string):
-		self.archiv.session.openWithCallback(
+		self.session.openWithCallback(
 				self.ask_update_answer,
 				MessageBox,
 				"%s %s? (%s)\n\n%s" % (_("Do you want to update"), _("addons"), len(self.to_update_addons), toString(update_string)),
@@ -362,7 +366,8 @@ class AddonsUpdater(RunNext):
 
 	def cleanup_addons(self):
 		if config.plugins.archivCZSK.cleanupBrokenAddons.value:
-			for addon in self.archiv.get_addons():
+			from ..archivczsk import ArchivCZSK
+			for addon in ArchivCZSK.get_addons():
 				if addon.info.broken and not addon.supported:
 					log.logInfo("Addon %s is broken and not supported - removing" % addon.id)
 					addon.remove()
@@ -373,7 +378,7 @@ class AddonsUpdater(RunNext):
 		updated_string = self.__update_string
 		del self.__update_string
 
-		self.archiv.session.openWithCallback(self.update_finished2,
+		self.session.openWithCallback(self.update_finished2,
 				MessageBox,
 				"%s: (%s/%s):\n\n%s" % (_("Following addons were updated"), len(self.updated_addons), self.to_update_addons_len, toString(updated_string)),
 				type=MessageBox.TYPE_INFO)
@@ -387,7 +392,8 @@ class AddonsUpdater(RunNext):
 			self.finish_cbk('restart')
 
 	def reload_addons(self):
-		self.archiv.reload_addons()
+		from ..archivczsk import ArchivCZSK
+		ArchivCZSK.reload_addons()
 		self.updated_addons = []
 		self.run_next(self.continueToArchiv, _("Addons were reloaded"))
 
