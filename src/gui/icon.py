@@ -86,23 +86,24 @@ class ArchivCZSKDonateScreen(BaseArchivCZSKListSourceScreen):
 			self.check_license()
 
 	def update_license_status(self):
-		if self.license.get_aes_module() == None:
-			self["donate_result_yes"].hide()
-			self["donate_result_no"].setText(_("Error"))
-			self["donate_validity"].setText(_("Reinstall ArchivCZSK to resolve problem"))
-			self["donate_result_no"].show()
-			self["donate_validity"].show()
-		else:
-			if self.license.is_valid():
-				self["donate_result_no"].hide()
-				self["donate_validity"].setText(_("(Bonuses activated until {date})").format(date=self.license.valid_to()))
-				self["donate_validity"].show()
-				self["donate_result_yes"].show()
-			else:
-				self["donate_validity"].hide()
+		if hasattr(self, 'license'):
+			if self.license.get_aes_module() == None:
 				self["donate_result_yes"].hide()
-				self["donate_result_no"].setText(_("Inactive"))
+				self["donate_result_no"].setText(_("Error"))
+				self["donate_validity"].setText(_("Reinstall ArchivCZSK to resolve problem"))
 				self["donate_result_no"].show()
+				self["donate_validity"].show()
+			else:
+				if self.license.is_valid():
+					self["donate_result_no"].hide()
+					self["donate_validity"].setText(_("(Bonuses activated until {date})").format(date=self.license.valid_to()))
+					self["donate_validity"].show()
+					self["donate_result_yes"].show()
+				else:
+					self["donate_validity"].hide()
+					self["donate_result_yes"].hide()
+					self["donate_result_no"].setText(_("Inactive"))
+					self["donate_result_no"].show()
 
 
 	def updateTitle(self):
