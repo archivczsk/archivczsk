@@ -430,7 +430,7 @@ class trakt_tv(object):
 			del self.login_data['access_token']
 
 		if 'refresh_token' in self.login_data:
-			code, data = self.call_trakt_api('/oauth/device/token', data={'refresh_token':self.login_data['refresh_token'], 'client_id':self.client_id, 'client_secret':self.client_secret, 'redirect_uri':'urn:ietf:wg:oauth:2.0:oob', 'grant_type':'refresh_token'}, auto_refresh_token=False )
+			code, data = self.call_trakt_api('/oauth/token', data={'refresh_token':self.login_data['refresh_token'], 'client_id':self.client_id, 'client_secret':self.client_secret, 'redirect_uri':'urn:ietf:wg:oauth:2.0:oob', 'grant_type':'refresh_token'}, auto_refresh_token=False )
 		else:
 			code = 500
 
