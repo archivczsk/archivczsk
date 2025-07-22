@@ -1,3 +1,6 @@
+archivCZSK 3.4.7, 22.07.2025
+    - oprava obnovenia prihlásenia pre trakt.tv
+
 archivCZSK 3.4.6, 30.06.2025
     - zjednodušenie existujúceho kódu
     - vylepšenie a zjednodušenie kódu pre aktualizácie
