@@ -553,6 +553,7 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		DownloadsMixin.__init__(self, downloads_path, allowed_download)
 		FavoritesMixin.__init__(self, shortcuts_path)
 		self._dependencies = []
+		self.content_received_cbk = None
 
 		self.on_start.append(self.__stats_start)
 		self.on_start.append(self.__set_resolving_provider_light)
@@ -567,6 +568,10 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 
 	def __stats_start(self):
 		UsageStats.get_instance().addon_start(self.video_addon)
+
+	def content_received(self, success):
+		if self.content_received_cbk:
+			self.content_received_cbk(self, success)
 
 	def __stats_stop(self):
 		UsageStats.get_instance().addon_stop(self.video_addon)
@@ -794,6 +799,8 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 	def _get_content_cb(self, success, result):
 		log.info('%s get_content_cb - success: %s, items: %d, guicmd: %r - %r' % (
 			self, success, len(self.__gui_item_list[0]), self.__gui_item_list[1], self.__gui_item_list[2]))
+
+		self.content_received(success)
 
 		# resetting timeout for resolving content
 		socket.setdefaulttimeout(socket.getdefaulttimeout())

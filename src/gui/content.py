@@ -322,6 +322,8 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 		categoryItem = categoryAddons = None
 		if autorun_addon:
 			categoryItems = provider.get_content({'addon': autorun_addon})
+			for i in categoryItems:
+				i.addon.provider.content_received_cbk = self.mark_autorun_handled
 		else:
 			if defaultCategory != 'categories':
 				categoryItem = provider.get_content({'category':defaultCategory})
@@ -388,11 +390,23 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 
 	def handle_autorun(self):
 		if self.autorun_addon:
-			if self.autorun_handled:
+			if self.autorun_handled == True:
+				log.debug("Autorun was already handled - closing plugin")
 				self.closePlugin(True)
-			else:
-				self.autorun_handled = True
+			elif self.autorun_handled == False:
+				log.debug("Autorun is enabled - starting addon in autorun mode")
+				self.autorun_handled = None
 				self.ok()
+			else:
+				log.debug("Autorun is not yet handled - addon is still running")
+
+	def mark_autorun_handled(self, provider, success):
+		# unregister itself - we no longer need to receive this event
+		provider.content_received_cbk = None
+		if self.autorun_handled == None:
+			self.autorun_handled = True
+			log.debug("Marking autorun as handled - plugin will be closed on addon exit")
+
 
 	def __onClose(self):
 		self.provider.stop()
@@ -582,7 +596,7 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 			}, -2)
 		#self.onUpdateGUI.append(self.updateFullTitle)
 		self.onLayoutFinish.append(self.setWindowTitle)
-		self.onShow.append(self.handleAutorun)
+#		self.onShow.append(self.handleAutorun)
 
 	def handleAutorun(self):
 		log.debug("Handling autorun: %d / %d" % (self.autorun, len(self.lst_items)) )
