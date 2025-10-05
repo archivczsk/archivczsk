@@ -59,7 +59,7 @@ class BaseContentScreen(BaseArchivCZSKListSourceScreen):
 		self.onClose.append(self.__onClose)
 
 		if parental_pin.is_locked():
-			self.ctx_items.append((_("Unlock protected content"), None, lambda: parental_pin.check_and_unlock(session, cbk=lambda r: self.refreshList())))
+			self.ctx_items.append((_("Unlock protected content"), None, lambda: parental_pin.check_and_unlock(session, cbk=lambda r: isinstance(self.parent_it, PRoot) or self.refreshList())))
 
 	def __onClose(self):
 		self.session.deleteDialog(self.loadingScreen)
