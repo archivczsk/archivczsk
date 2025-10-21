@@ -596,7 +596,7 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 			}, -2)
 		#self.onUpdateGUI.append(self.updateFullTitle)
 		self.onLayoutFinish.append(self.setWindowTitle)
-#		self.onShow.append(self.handleAutorun)
+		self.onShow.append(self.handleAutorun)
 
 	def handleAutorun(self):
 		log.debug("Handling autorun: %d / %d" % (self.autorun, len(self.lst_items)) )
