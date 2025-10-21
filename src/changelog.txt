@@ -1,3 +1,6 @@
+archivCZSK 3.4.9, 21.10.2025
+    - oprava spustenia skratky z EPG enigmy
+
 archivCZSK 3.4.8, 20.10.2025
     - oprava spustenia niektorých doplnkov s hlavného menu enigmy
     - oprava pádu pri odblokovaní rodičovského zámku z koreňového menu doplnku
