@@ -1,3 +1,6 @@
+archivCZSK 3.4.10, 04.01.2026
+    - oprava interného CSFD prehliadača
+
 archivCZSK 3.4.9, 21.10.2025
     - oprava spustenia skratky z EPG enigmy
 
