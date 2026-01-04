@@ -200,7 +200,7 @@ class ArchivCSFD(Screen):
 				self.unikatni = False
 				self["statusbar"].setText("Downloading movie information: '%s'" % (self.link))
 				localfile = os.path.join(config.plugins.archivCZSK.tmpPath.value, "archivCSFDquery2.html")
-				fetchurl = "https://www.csfd.cz/film/" + self.link + "/recenze/?all=1" + str(randint(1000, 9999))
+				fetchurl = "https://www.csfd.cz/film/" + self.link.replace('/prehled/','') + "/recenze/?all=1" + str(randint(1000, 9999))
 				downloadPage(fetchurl.encode('utf-8'),localfile).addCallback(self.CSFDquery2).addErrback(self.fetchFailed)
 				self["menu"].hide()
 				self.resetLabels()
