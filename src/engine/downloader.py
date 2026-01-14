@@ -54,10 +54,11 @@ def getFilenameAndLength(url=None, headers=None, filename=None):
 		filename = sanitize_filename(filename)
 		filename_tmp, extension = os.path.splitext(filename)
 		if extension not in VIDEO_EXTENSIONS + AUDIO_EXTENSIONS:
-			if info_dict['is_hls']:
-				filename = filename_tmp + ".ts"
-			else:
-				filename = filename_tmp + ".mp4"
+			# if info_dict['is_hls']:
+			# 	filename = filename_tmp + ".ts"
+			# else:
+			# always download to mkv - it supports all kinds of formats + webvtt subtitles
+			filename = filename_tmp + ".mkv"
 	return filename, length
 
 class DownloadManager(object):
@@ -435,6 +436,6 @@ class FFMpegDownload(DownloadProcessMixin, Download):
 			cmd += " -headers '%s'" % '\\r\\n'.join(["%s: %s" % (k, v)
 				for k,v in self.headers.items()])
 
-		cmd += " -i '%s' -c copy %s" % (self.url, self.local)
+		cmd += " -i '%s' -c:v copy -c:a copy -c:s copy -map 0 %s" % (self.url, self.local)
 		#log.logDebug("Download cmd:\n%s"%cmd)
 		return cmd
