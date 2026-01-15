@@ -18,6 +18,9 @@ BASE = 'https://api.trakt.tv'
 class TraktRefreshException(Exception):
 	pass
 
+class TraktException(Exception):
+	pass
+
 def _log_dummy(message):
 	print('[TRAKTTV]: ' + message )
 	pass
@@ -92,6 +95,10 @@ class trakt_tv(object):
 			if auto_refresh_token:
 				if self.refresh_token() == 200:
 					return self.call_trakt_api(endpoint, params, data, False)
+		elif response.status_code == 429:
+			raise TraktException(_('Trakt request limit exceeded. Try again in {seconds}s.').format(seconds=response.headers.get('Retry-After', '30')))
+		elif response.status_code > 210 and not endpoint.startswith('/oauth/'):
+			raise TraktException(_('Wrong response code from Trakt server: {code}').format(code=response.status_code))
 
 		return response.status_code, response.json() if response.status_code < 300 else None
 
@@ -142,9 +149,6 @@ class trakt_tv(object):
 		# list_type = trending, popular
 		code, data = self.call_trakt_api('/lists/' + list_type, params={'page': page + 1, 'limit': limit})
 
-		if code > 210:
-			raise Exception('Wrong response from Trakt server: %d' % code)
-
 		for m in data:
 			l = m['list']
 			ret.append({ 'name': l['name'], 'description': l['description'], 'user': l['user']['ids']['slug'], 'id': l['ids']['slug'] })
@@ -162,9 +166,6 @@ class trakt_tv(object):
 
 			code, data = self.call_trakt_api('/users/%s/lists' % user)
 
-			if code > 210:
-				raise Exception('Wrong response from Trakt server: %d' % code )
-
 			for m in data:
 				ret.append( { 'name': m['name'], 'description': m['description'], 'id': m['ids']['slug'] } )
 
@@ -181,8 +182,6 @@ class trakt_tv(object):
 			else:
 				code, data = self.call_trakt_api('/users/%s/lists/%s/items' % (user, list_name))
 
-			if code > 210:
-				raise Exception('Wrong response from Trakt server: %d' % code )
 			return data
 
 #			ret = []
@@ -205,9 +204,6 @@ class trakt_tv(object):
 
 		code, data = self.call_trakt_api('/sync/watchlist', data=postdata)
 
-		if code > 210:
-			raise Exception('Wrong response from Trakt.tv server: %d' % code )
-
 		if not (int(data['added'][item_type])==1 or int(data['existing'][item_type])==1):
 			raise Exception('{item_type} item not added to watchlist.'.format(item_type=item['type']))
 
@@ -223,9 +219,6 @@ class trakt_tv(object):
 		postdata = { item_type: [{"ids": self.getTraktIds(item)}] }
 
 		code, data = self.call_trakt_api('/sync/watchlist/remove', data=postdata)
-
-		if code > 210:
-			raise Exception('Wrong response from Trakt.tv server: %d' % code )
 
 		if int(data['deleted'][item_type]) != 1:
 			raise Exception('Trakt.tv item of type {item_type} not removed from watchlist.'.format(item_type=item['type']))
@@ -250,8 +243,6 @@ class trakt_tv(object):
 			raise Exception('Unknown Trakt.tv item type: {item_type}'.format(item_type=item['type']))
 
 		code, data = self.call_trakt_api('/sync/history', data=postdata)
-		if code > 210:
-			raise Exception('Wrong response from Trakt.tv server: %d' % code )
 
 		if item['type'] == 'movie':
 			if int(data['added']['movies']) != 1:
@@ -287,9 +278,6 @@ class trakt_tv(object):
 			raise Exception('Unknown Trakt.tv item type: {item_type}'.format(item_type=item['type']))
 
 		code, data = self.call_trakt_api('/sync/history/remove', data=postdata)
-
-		if code > 210:
-			raise Exception('Wrong response from Trakt server: %d' % code )
 
 		if item['type'] in ('movie', 'episode', 'season'):
 			if int(data['deleted'][item['type'] + 's']) != 1:
