@@ -630,4 +630,7 @@ class ArchivCZSK():
 		ArchivCZSK.init_addons()
 		ArchivCZSK.preload_addons()
 
+		from . import UpdateInfo
+		UpdateInfo.resetDates()
+
 		log.info("Addons reloaded in {:.02f} seconds".format(time.time() - start_time))
