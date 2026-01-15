@@ -38,7 +38,7 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 			self.content_screen.stopLoading()
 			self.open_video_addon(item.addon, list_items)
 
-		@AddonExceptionHandler(self.session, self.content_provider)
+		@AddonExceptionHandler(self.session, item.addon)
 		def open_item_error_cb(failure):
 			log.logError("Addon get_content error cb.\n%s"%failure)
 			self.open_video_addon_cb(item.addon.provider)
@@ -46,7 +46,7 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 			self.content_screen.workingFinished()
 			failure.raiseException()
 
-		@AddonExceptionHandler(self.session, self.content_provider)
+		@AddonExceptionHandler(self.session, item.addon)
 		def get_content(addon, params):
 			try:
 				content_provider = addon.provider

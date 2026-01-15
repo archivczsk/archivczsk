@@ -351,4 +351,7 @@ class UsageStats(object):
 			s.close()
 
 	def send_bug_report(self, addon=None):
+		if addon:
+			addon.bugreport_sent()
+
 		self.bgservice.run_task("SendBugReport", None, self.__send_bug_report, addon)

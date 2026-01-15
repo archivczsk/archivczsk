@@ -17,6 +17,8 @@ from ..engine.exceptions import addon, download, play
 from ..engine.usage import UsageStats
 from ..engine.tools.lang import _
 from ..engine.tools.logger import log
+from ..engine.addon import Addon
+from ..engine.trakttv import TraktException
 import requests
 
 # this is needed for compatibility with Python 2.7
@@ -74,18 +76,22 @@ class AddonExceptionHandler(GUIExceptionHandler):
 	warningName = _("Addon warning")
 	infoName = _("Addon info")
 
-	def __init__(self, session, content_provider=None, timeout = 6):
+	def __init__(self, session, cp_or_addon=None, timeout = 6):
 		GUIExceptionHandler.__init__(self, session, timeout)
-		if content_provider != None:
-			self.addon = getattr(content_provider, "video_addon", None)
-		else:
+
+		if cp_or_addon == None:
 			self.addon = None
+		elif isinstance(cp_or_addon, Addon):
+			self.addon = cp_or_addon
+		else:
+			self.addon = getattr(cp_or_addon, "video_addon", None)
 
 	def __call__(self, func):
 		def wrapped(*args, **kwargs):
 			try:
 				try:
 					func(*args, **kwargs)
+
 				# addon specific exceptions
 				except addon.AddonSilentExit as er:
 					log.logInfo("Addon (AddonSilentExit) '%s'" % er.value)
@@ -98,6 +104,10 @@ class AddonExceptionHandler(GUIExceptionHandler):
 				except addon.AddonError as er:
 					log.logError("Addon (AddonError) error '%s'.\n%s"%(er.value,traceback.format_exc()))
 					self.errorMessage(er.value)
+				except TraktException as er:
+					log.logError("Addon (TraktException) error '%s'.\n%s"%(str(er),traceback.format_exc()))
+					self.errorMessage(str(er))
+
 				# loading exceptions
 				except HTTPError as e:
 					log.logError("Addon (HTTPError) error '%s'.\n%s"%(e.code,traceback.format_exc()))
@@ -145,6 +155,7 @@ class AddonExceptionHandler(GUIExceptionHandler):
 				except OSError as e:
 					log.logError("Addon (OSError) error.\n%s"%traceback.format_exc())
 					self.errorMessage(_("System error occured") + ':\n' + str(e))
+
 				# we handle all possible exceptions since we dont want plugin to crash because of addon error...
 				except Exception as e:
 					if isinstance(e, ValueError) and str(e) == 'filedescriptor out of range in select()':
@@ -153,8 +164,10 @@ class AddonExceptionHandler(GUIExceptionHandler):
 					else:
 						if self.addon:
 							UsageStats.get_instance().addon_exception(self.addon)
-						log.logError("Addon error.\n%s"%traceback.format_exc())
-						if config.plugins.archivCZSK.bugReports.value and config.plugins.archivCZSK.autoUpdate.value and (not self.addon or not self.addon.need_update()):
+
+						log.logError("Unhandled exception in addon %s\n%s" % (self.addon.id if self.addon else "unknown", traceback.format_exc()))
+
+						if config.plugins.archivCZSK.bugReports.value and config.plugins.archivCZSK.autoUpdate.value and (not self.addon or self.addon.bugreport_allowed()):
 							self.errorMessageAskReport(_("An unhandled error occurred while calling the addon. Should I send bug report to addon authors?\nReport will contain part of log file, informations about your system and addon settings needed for problem analysis."), addon=self.addon)
 						elif (self.addon and self.addon.need_update()):
 							self.errorMessage(_("An unhandled error occurred while calling the addon. Update addon to the latest available version."))

@@ -12,6 +12,7 @@ import copy
 import uuid
 from hashlib import md5
 from functools import partial
+from time import time
 
 from .tools import util, parser
 from .tools.lang import get_language_id
@@ -41,11 +42,13 @@ class Addon(object):
 		self.relative_path = os.path.relpath(self.path, repository.path)
 		self.supported = True
 		self.dependencies_checked = False
+		self.integrity = None
+		self.last_bugreport = 0
 
 		log.info("%s - initializing", self)
 
 		self._updater = repository._updater
-		self.__need_update = False
+		self.__need_update = None
 		self.remote_hash = None
 
 		# load settings
@@ -232,10 +235,18 @@ class Addon(object):
 			# remote hash is not known
 			return True
 
-		return self.get_addon_data_hash() == self.remote_hash
+		self.integrity = (self.get_addon_data_hash() == self.remote_hash)
+		return self.integrity
 
 	def set_remote_hash(self, hash):
 		self.remote_hash = hash
+
+	def bugreport_sent(self):
+		self.last_bugreport = int(time())
+
+	def bugreport_allowed(self):
+		return self.need_update() == False and self.integrity == True and (int(time()) - self.last_bugreport) > 600
+
 
 
 class XBMCAddon(object):
