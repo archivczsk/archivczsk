@@ -132,31 +132,17 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 		reason = py2_encode_utf8( addon.get_info('broken') )
 		message = _("Addon is broken") + '\n'
 		message += _("Reason") + ':\n' + reason
-		self.session.open(MessageBox, message, type=MessageBox.TYPE_INFO)
+
+		if addon.supported:
+			self.session.open(MessageBox, message, type=MessageBox.TYPE_INFO)
+		else:
+			message += '\n' + _("Do you want to remove this addon?")
+			self.session.openWithCallback(lambda cb: self.remove_addon(addon, cb), MessageBox, message, type=MessageBox.TYPE_YESNO)
 
 	def _handle_deprecated_addon(self, addon):
 		def disable_addon(cb):
 			if cb:
 				addon.set_enabled(False)
-				self.content_screen.workingStarted()
-				self.content_screen.refreshList()
-				self.content_screen.workingFinished()
-
-		def remove_addon(cb):
-			if cb:
-				log.info("removing addon: %s" % addon.id)
-				try:
-					shutil.rmtree(addon.path)
-				except Exception as e:
-					log.error("cannot remove addon: %s" % str(e))
-					message = ("Unable to remove addon")
-					self.session.open(MessageBox, message, type=MessageBox.TYPE_WARNING)
-
-				log.info("addon was removed: %s" % addon.id)
-
-				from ...archivczsk import ArchivCZSK
-				ArchivCZSK.remove_addon(addon)
-
 				self.content_screen.workingStarted()
 				self.content_screen.refreshList()
 				self.content_screen.workingFinished()
@@ -167,7 +153,26 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 			self.session.openWithCallback(disable_addon, MessageBox, message, type=MessageBox.TYPE_YESNO)
 		else:
 			message += _("Do you want to remove this addon?")
-			self.session.openWithCallback(remove_addon, MessageBox, message, type=MessageBox.TYPE_YESNO)
+			self.session.openWithCallback(lambda cb: self.remove_addon(addon, cb), MessageBox, message, type=MessageBox.TYPE_YESNO)
+
+	def _remove_addon(self, addon, cb):
+		if cb:
+			log.info("removing addon: %s" % addon.id)
+			try:
+				shutil.rmtree(addon.path)
+			except Exception as e:
+				log.error("cannot remove addon: %s" % str(e))
+				message = ("Unable to remove addon")
+				self.session.open(MessageBox, message, type=MessageBox.TYPE_WARNING)
+
+			log.info("addon was removed: %s" % addon.id)
+
+			from ...archivczsk import ArchivCZSK
+			ArchivCZSK.remove_addon(addon)
+
+			self.content_screen.workingStarted()
+			self.content_screen.refreshList()
+			self.content_screen.workingFinished()
 
 	def resolve_command(self):
 		pass
@@ -306,7 +311,7 @@ class VideoAddonManagement(ItemHandler):
 								   params={'session':self.session})
 
 		item.add_context_menu_item(_("Remove"),
-								enabled=not addon.supported,
+								enabled=not addon.supported or addon.info.broken,
 								action=self._remove_addon,
 								params={'addon':addon})
 		ItemHandler._init_menu(self, item)
