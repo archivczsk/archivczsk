@@ -79,6 +79,7 @@ class XBMCAddonXMLParser(XMLParser):
 			raise Exception("Parse error: Mandatory atrribute 'version' is missing")
 
 		hash = addon.attrib.get('rhash')
+		supported = addon.attrib.get('supported') != 'no'
 
 		addon_type = 'unknown'
 		description = {}
@@ -159,6 +160,7 @@ class XBMCAddonXMLParser(XMLParser):
 			"seekers": seekers,
 			"shortcuts": shortcuts,
 			"hash": hash,
+			"supported": supported,
 		}
 
 

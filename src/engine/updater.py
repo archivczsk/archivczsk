@@ -497,10 +497,15 @@ class Updater(object):
 			remote_addon = self.remote_addons_dict[addon_id]
 			if remote_addon['id'] in self.repository._addons:
 				local_addon = self.repository.get_addon(addon_id)
-				if local_addon.version == remote_addon['version']:
+				local_addon.supported = remote_addon.get('supported', True)
+
+				if local_addon.supported and local_addon.version == remote_addon['version']:
 					local_addon.set_remote_hash(remote_addon.get('hash'))
-				if local_addon.check_update(False):
+
+				# we need to always call check_addon(), because it sets broken message from remote repository
+				if local_addon.check_update(False) and local_addon.supported:
 					update_needed.append(local_addon)
+
 			elif new:
 				if not remote_addon['broken']:
 					log.debug("[%s] not in local repository, adding dummy Addon to update" % remote_addon['name'])

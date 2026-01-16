@@ -137,7 +137,7 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 			self.session.open(MessageBox, message, type=MessageBox.TYPE_INFO)
 		else:
 			message += '\n' + _("Do you want to remove this addon?")
-			self.session.openWithCallback(lambda cb: self.remove_addon(addon, cb), MessageBox, message, type=MessageBox.TYPE_YESNO)
+			self.session.openWithCallback(lambda cb: self._remove_addon(addon, cb), MessageBox, message, type=MessageBox.TYPE_YESNO)
 
 	def _handle_deprecated_addon(self, addon):
 		def disable_addon(cb):
@@ -153,7 +153,7 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 			self.session.openWithCallback(disable_addon, MessageBox, message, type=MessageBox.TYPE_YESNO)
 		else:
 			message += _("Do you want to remove this addon?")
-			self.session.openWithCallback(lambda cb: self.remove_addon(addon, cb), MessageBox, message, type=MessageBox.TYPE_YESNO)
+			self.session.openWithCallback(lambda cb: self._remove_addon(addon, cb), MessageBox, message, type=MessageBox.TYPE_YESNO)
 
 	def _remove_addon(self, addon, cb):
 		if cb:
