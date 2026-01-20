@@ -174,13 +174,17 @@ class trakt_tv(object):
 
 	# #################################################################################################
 
-	def get_list_items(self, list_name, user='me'):
+	def get_list_items(self, list_name, user='me', page=1, limit=100):
 		if self.valid() or user != 'me':
+			params = {
+				'page': page,
+				'limit': limit
+			}
 			if list_name == 'watchlist':
 				# watchlist category has different url
-				code, data = self.call_trakt_api('/users/%s/watchlist/items' % user)
+				code, data = self.call_trakt_api('/users/%s/watchlist/items' % user, params=params)
 			else:
-				code, data = self.call_trakt_api('/users/%s/lists/%s/items' % (user, list_name))
+				code, data = self.call_trakt_api('/users/%s/lists/%s/items' % (user, list_name), params=params)
 
 			return data
 
