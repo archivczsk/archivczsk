@@ -298,7 +298,7 @@ class DownloadsMixin(object):
 					stream=item.stream, filename=filename[0],
 					live=item.live, destination=destination[0],
 					startCB=start_cb, finishCB=finish_cb, quiet=False,
-					playDownload=play_download, headers=headers, mode=mode)
+					playDownload=play_download, headers=headers, mode=mode, filename_ext=item.download if isinstance(item.download, str) else None)
 
 				if item.subs:
 					remote = item.subs
@@ -342,7 +342,8 @@ class DownloadsMixin(object):
 							#text = toString(filename[0]))
 
 		def ask_if_download():
-			filename[0], size_bytes = getFilenameAndLength(item.url, headers, filename[0])
+			filename_ext = item.download if isinstance(item.download, str) else None
+			filename[0], size_bytes = getFilenameAndLength(item.url, headers, filename[0], filename_ext)
 			size_mbytes = size_bytes and util.BtoMB(size_bytes) or "???"
 			free_bytes = util.get_free_space(destination[0])
 			free_mbytes = free_bytes and util.BtoMB(free_bytes) or "???"

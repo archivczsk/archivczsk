@@ -43,7 +43,7 @@ def isHLSUrl(url):
 def isMPDUrl(url):
 	return url.startswith('http') and urlparse(url).path.endswith('.mpd')
 
-def getFilenameAndLength(url=None, headers=None, filename=None):
+def getFilenameAndLength(url=None, headers=None, filename=None, filename_ext=None):
 	length = None
 	if url is not None:
 		info_dict = url_get_file_info(url, headers, timeout=3)
@@ -57,8 +57,12 @@ def getFilenameAndLength(url=None, headers=None, filename=None):
 			# if info_dict['is_hls']:
 			# 	filename = filename_tmp + ".ts"
 			# else:
-			# always download to mkv - it supports all kinds of formats + webvtt subtitles
-			filename = filename_tmp + ".mkv"
+
+			if filename_ext and ('.'+filename_ext) in VIDEO_EXTENSIONS + AUDIO_EXTENSIONS:
+				filename = filename_tmp + '.' + filename_ext
+			else:
+				# always download to mkv - it supports all kinds of formats + webvtt subtitles
+				filename = filename_tmp + ".mkv"
 	return filename, length
 
 class DownloadManager(object):
@@ -106,7 +110,7 @@ class DownloadManager(object):
 				return download
 		return None
 
-	def createDownload(self, name, url, destination, filename=None, live=False, startCB=None, finishCB=None, stream=None, quiet=False, playDownload=False, headers=None, mode=""):
+	def createDownload(self, name, url, destination, filename=None, live=False, startCB=None, finishCB=None, stream=None, quiet=False, playDownload=False, headers=None, mode="", filename_ext=None):
 		log.info("Downloader.createDownload(url=%s,mode=%s"%(toString(url), mode))
 		#log.logDebug("Creating download\name=%s\nurl=%s\ndestination=%s\nfilename=%s\nheaders=%s\nmode=%s" % (name, url, destination, filename, headers, mode))
 		d = None
@@ -120,7 +124,7 @@ class DownloadManager(object):
 			pass
 		from ..settings import USER_AGENT
 		headers.setdefault('User-Agent', USER_AGENT)
-		filename, length = getFilenameAndLength(url, headers, filename)
+		filename, length = getFilenameAndLength(url, headers, filename, filename_ext)
 		log.info("Downloader.createDownload() filename=%s, length=%s", toString(filename), length)
 		if url[0:4] == 'http' and (isHLSUrl(url) or isMPDUrl(url)) and mode in ('auto', 'ffmpeg') and FFMPEG_PATH is not None:
 			d = FFMpegDownload(url=url, name=name, destDir=destination, filename=filename, headers=headers)

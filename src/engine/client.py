@@ -280,6 +280,7 @@ def __process_info_labels(item, info_labels):
 	# this is really hacky implementation ...
 	def set_info_labels(info_labels, cbk_continue=None):
 		infolabel_uni = {}
+		info_labels = info_labels or {}
 
 		for key, value in info_labels.items():
 			if value != None:
