@@ -126,8 +126,14 @@ class DownloadManager(object):
 		headers.setdefault('User-Agent', USER_AGENT)
 		filename, length = getFilenameAndLength(url, headers, filename, filename_ext)
 		log.info("Downloader.createDownload() filename=%s, length=%s", toString(filename), length)
-		if url[0:4] == 'http' and (isHLSUrl(url) or isMPDUrl(url)) and mode in ('auto', 'ffmpeg') and FFMPEG_PATH is not None:
-			d = FFMpegDownload(url=url, name=name, destDir=destination, filename=filename, headers=headers)
+
+		if '&suburi=' in url:
+			url, url2 = url.split('&suburi=')
+		else:
+			url2 = None
+
+		if url[0:4] == 'http' and (isHLSUrl(url) or isMPDUrl(url) or url2) and mode in ('auto', 'ffmpeg') and FFMPEG_PATH is not None:
+			d = FFMpegDownload(url=url, name=name, destDir=destination, filename=filename, headers=headers, url2=url2)
 		elif (((url[0:4] == 'rtmp' and mode in ('auto', 'gstreamer')) or
 			  (url[0:4] == 'http' and mode	in ('auto', 'gstreamer') and isHLSUrl(url)) or
 			  (url[0:4] == 'http' and mode	in ('auto', 'gstreamer') and isMPDUrl(url)) or
@@ -423,10 +429,11 @@ class GstDownload(DownloadProcessMixin, Download):
 
 
 class FFMpegDownload(DownloadProcessMixin, Download):
-	def __init__(self, name, url, destDir, filename, quiet=False, headers=None):
+	def __init__(self, name, url, destDir, filename, quiet=False, headers=None, url2=None):
 		Download.__init__(self, name, url, destDir, filename, quiet)
 		DownloadProcessMixin.__init__(self)
 		self.headers = headers or {}
+		self.url2 = url2
 
 	def _buildCmd(self):
 		cmd = FFMPEG_PATH
@@ -440,6 +447,10 @@ class FFMpegDownload(DownloadProcessMixin, Download):
 			cmd += " -headers '%s'" % '\\r\\n'.join(["%s: %s" % (k, v)
 				for k,v in self.headers.items()])
 
-		cmd += " -i '%s' -c:v copy -c:a copy -c:s copy -map 0 %s" % (self.url, self.local)
+		if self.url2:
+			cmd += " -i '%s' -i '%s' -c:v copy -c:a copy -c:s copy -map 0 -map 1 %s" % (self.url, self.url2, self.local)
+		else:
+			cmd += " -i '%s' -c:v copy -c:a copy -c:s copy -map 0 %s" % (self.url, self.local)
+
 		#log.logDebug("Download cmd:\n%s"%cmd)
 		return cmd
