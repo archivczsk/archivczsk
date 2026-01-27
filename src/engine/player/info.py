@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 '''
 Created on 22.12.2012
 
@@ -326,3 +327,27 @@ class VideoPlayerInfo(object):
 #########################################################################
 
 videoPlayerInfo = VideoPlayerInfo()
+
+#########################################################################
+
+def player2stype( player ):
+	# enum: 'Predvolený|gstplayer|exteplayer3|DMM|DVB (OE>=2.5)'
+	player_mapping = {
+		'0' : 4097, # Default
+	}
+
+	# fill only available players - if not available player is choosen then default service 4097 will be used
+	if videoPlayerInfo.serviceappAvailable:
+		if videoPlayerInfo.gstplayerAvailable:
+			player_mapping['1'] = 5001  # gstplayer
+		if videoPlayerInfo.exteplayer3Available:
+			player_mapping['2'] = 5002  # exteplayer3
+
+	if DMM_IMAGE:
+		# this is only available on DreamOS
+		player_mapping['3'] = 8193  # DMM player
+		player_mapping['4'] = 1     # DVB service
+
+	return player_mapping.get( player, 4097 )
+
+#########################################################################

@@ -20,6 +20,7 @@ from ..engine.tools.lang import _
 from ..engine.downloader import DownloadManager
 from ..engine.tools import util
 from ..engine.items import PVideo
+from ..engine.player.info import player2stype
 from ..gsession import GlobalSession
 from . import info
 from .base import BaseArchivCZSKScreen, BaseArchivCZSKMenuListScreen
@@ -387,7 +388,8 @@ class ArchivCZSKDownloadsScreen(BaseArchivCZSKMenuListScreen, DownloadList):
 		self.name = name
 		self.content_provider = content_provider
 		from ..engine.player.player import Player
-		self.player = Player(session, self.workingFinished)
+		stype = player2stype( self.content_provider.video_addon.settings.get_setting('auto_used_player') )
+		self.player = Player(session, self.workingFinished, stype=stype)
 		self.sort_options = [{'id':'az', 'name':_('Sort alphabetically')},
 							 {'id':'date', 'name':_('Sort by date')},
 							 {'id':'size', 'name':_('Sort by size')},

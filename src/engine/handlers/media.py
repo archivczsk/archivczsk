@@ -13,7 +13,7 @@ from ..items import PExit, PVideo, PVideoResolved, PVideoNotResolved, PPlaylist
 from ..tools.util import toString
 from ...gui.common import showInfoMessage, showErrorMessage, showWarningMessage
 from ...colors import DeleteColors
-from ..player.info import videoPlayerInfo
+from ..player.info import videoPlayerInfo, player2stype
 from ...compat import DMM_IMAGE
 from ..trakttv import trakttv
 from ..serialize import is_serializable
@@ -208,26 +208,6 @@ class MediaItemHandler(ItemHandler):
 				self.cmdStats(item, command, duration, position)
 			else:
 				sync_info['stats_command_running'] = False
-
-		def player2stype( player ):
-			# enum: 'Predvolený|gstplayer|exteplayer3|DMM|DVB (OE>=2.5)'
-			player_mapping = {
-				'0' : 4097, # Default
-			}
-
-			# fill only available players - if not available player is choosen then default service 4097 will be used
-			if videoPlayerInfo.serviceappAvailable:
-				if videoPlayerInfo.gstplayerAvailable:
-					player_mapping['1'] = 5001  # gstplayer
-				if videoPlayerInfo.exteplayer3Available:
-					player_mapping['2'] = 5002  # exteplayer3
-
-			if DMM_IMAGE:
-				# this is only available on DreamOS
-				player_mapping['3'] = 8193  # DMM player
-				player_mapping['4'] = 1     # DVB service
-
-			return player_mapping.get( player, 4097 )
 
 		stype = None
 		if forced_player is not None:
