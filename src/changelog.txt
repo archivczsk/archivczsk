@@ -1,3 +1,8 @@
+archivCZSK 3.4.12, 26.01.2026
+    - pridanie doplnkom možnosť nastaviť formát sťahovaného súboru
+    - implementovanie sťahovania s oddelenou video a audio stopou
+    - pre prehrávaní nahrávok sa použije prehrávač nastavený v nastaveniach doplnku
+
 archivCZSK 3.4.11, 20.01.2026
     - oprava sťahovania pomocou ffmpeg
     - sťahovanie prebieha po novom stále do formátu mkv, ktorý podporuje rôzne kodeky vrátane webvtt titulkov
