@@ -5,6 +5,7 @@ from Components.Label import Label
 from Screens.Screen import Screen
 from .engine.tools.util import toString
 from .engine.tools.lang import _
+import traceback
 
 class eCompatTimer(object):
 	def __init__(self, callbackFun):
@@ -109,27 +110,6 @@ class ArchivCZSKReloader(object):
 		if not ArchivCZSK.isLoaded():
 			return self.run_next(self.unload_finished, self._("Old version not running"))
 
-		def __unload():
-			if not stopped:
-				from .engine.tools.logger import log
-				log.debug("HTTP server still running ...")
-
-			self.__stop_t.stop()
-			del self.__stop_t
-
-			if self.force_e2_restart:
-				self.stop_timers()
-				from Screens.Standby import TryQuitMainloop
-				self.session.open(TryQuitMainloop, 3)
-				return
-
-			ArchivCZSK.unload(addon_modules)
-			return self.run_next(self.unload_finished, self._("Old version stopped"))
-
-		stopped = False
-		def __stop_cbk():
-			stopped = True
-
 		try:
 			addon_modules = ArchivCZSK.get_addon_modules()
 		except:
@@ -137,10 +117,22 @@ class ArchivCZSKReloader(object):
 			# this is needed in order to update version 3.4.0, that has bug in addons reload
 			self.force_e2_restart = True
 
-		ArchivCZSK.stop(__stop_cbk)
-		# now we need to wait a little bit in order to HTTP server completely stops
-		self.__stop_t = eCompatTimer(__unload)
-		self.__stop_t.start(1000)
+		try:
+			ArchivCZSK.stop(True)
+		except:
+			from .engine.tools.logger import log
+			log.error("Failed to stop ArchivCZSK\n%s" % traceback.format_exc())
+			# if something failed, then restart enigma
+			self.force_e2_restart = True
+
+		if self.force_e2_restart:
+			self.stop_timers()
+			from Screens.Standby import TryQuitMainloop
+			self.session.open(TryQuitMainloop, 3)
+			return
+
+		ArchivCZSK.unload(addon_modules)
+		return self.run_next(self.unload_finished, self._("Old version stopped"))
 
 	def unload_finished(self):
 		self.run_next(self.start_archivczsk, self._("Initialising new version of ArchivCZSK"))

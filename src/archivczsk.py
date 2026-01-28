@@ -395,7 +395,7 @@ class ArchivCZSK():
 		return
 
 	@staticmethod
-	def stop(stop_cbk=None):
+	def stop(reload_running=False):
 		if not ArchivCZSK.isLoaded():
 			return
 
@@ -403,7 +403,7 @@ class ArchivCZSK():
 		# this is little hack
 		# If Enigma shutdowns, then stop_cbk is not set. We use this information to notify addons to not to remove shortcuts to main menu, because it will result in crash in buggy enigma code
 		# if stop_cbk is set, then plugin reload is requested, and we must remove shortcuts, because addons will be reloaded and old shortcuts will no longer be valid
-		ArchivCZSK.close_addons(stop_cbk != None)
+		ArchivCZSK.close_addons(reload_running)
 		ArchivCZSK.close_repositories()
 		UsageStats.stop()
 		ArchivCZSKLicense.stop()
@@ -411,7 +411,7 @@ class ArchivCZSK():
 		BGServiceTask.stopMessagePump()
 		ArchivCZSK.__loaded = False
 		DownloadManager.instance = None
-		ArchivCZSKHttpServer.stop(stop_cbk)
+		ArchivCZSKHttpServer.stop()
 		log.info("ArchivCZSK stopped")
 		return
 

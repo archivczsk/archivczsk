@@ -1,31 +1,42 @@
 # -*- coding: UTF-8 -*-
-from twisted.internet import reactor
-from twisted.web import server, http, resource
+import threading
 from .tools.logger import log
 from Components.config import config
 from ..py3compat import *
 from .usage import UsageStats
 import traceback
+import time
 from .license import ArchivCZSKLicense
+from .tools.util import set_thread_name
+from .bgservice import run_in_reactor
 
-class RequestWrapper(object):
-	def __init__(self, request):
-		self._request = request
+try:
+	from socketserver import ThreadingMixIn
+	from http.server import HTTPServer, BaseHTTPRequestHandler
+except:
+	from SocketServer import ThreadingMixIn
+	from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 
-	def __getattr__(self, name):
-		if name == 'finish':
-			return self.finish
+class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
+	def __init__(self, root, *args, **kwargs):
+		if issubclass(ThreadedHTTPServer, object):
+			super(ThreadedHTTPServer, self).__init__(*args, **kwargs)
 		else:
-			return getattr(self._request, name)
+			# ThreadingMixIn doesn't have __init__ in python2, so skip calling it
+			# ThreadingMixIn.__init__(self)
+			HTTPServer.__init__(self, *args, **kwargs)
 
-	# if connection was lost, original finish() will raise exception
-	# this small wrapper check if this will happen and don't call finish() in this case
-	def finish(self):
-		if not hasattr(self._request, '_disconnected') or not self._request._disconnected:
-			return self._request.finish()
+		self.root = root
+		self.developer_mode = ArchivCZSKLicense.get_instance().check_level(ArchivCZSKLicense.LEVEL_DEVELOPER)
 
-class AddonHttpRequestHandler(resource.Resource):
-	isLeaf = True
+	def handle_error(self, request, client_address):
+		if self.developer_mode:
+			tb = traceback.format_exc()
+			if not tb.endswith( ('Connection reset by peer\n', 'Broken pipe\n',) ):
+				log.error("Failed to process request from %s\n%s" % (client_address, tb))
+
+
+class AddonHttpRequestHandler(object):
 
 	@staticmethod
 	def addonIdToEndpoint( addon_id ):
@@ -41,7 +52,6 @@ class AddonHttpRequestHandler(resource.Resource):
 		return name.replace('.', '-').replace('_', '-')
 
 	def __init__(self, addon):
-		self.NOT_DONE_YET = server.NOT_DONE_YET
 		self.name = AddonHttpRequestHandler.addonIdToEndpoint(addon.id)
 		self.addon = addon
 		self.prefix_len = len(self.name)+2
@@ -56,94 +66,155 @@ class AddonHttpRequestHandler(resource.Resource):
 		if relative:
 			return "/%s" % self.name
 		else:
-			server_name = request.getRequestHostname()
-			server_port = request.getHost().port
+			host = request.headers.get('Host').split(':')
+			server_name = host[0]
+			server_port = host[1] if len(host) > 1 else request.server.server_port
 			return "http://%s:%d/%s" % (server_name, server_port, self.name)
 
 	def reply_error404(self, request):
-		request.setHeader("content-type", "text/html")
-		request.setResponseCode(http.NOT_FOUND)
+		request.send_response(404)
+		request.send_header("content-type", "text/html")
 		data = "<html><head><title>archivCZSK</title></head><body><h1>Error 404: addon %s has not set any response</h1><br />The requested URL was not found on this server.</body></html>" % self.name
 		return self.__to_bytes(data)
 
 	def reply_error500(self, request):
-		request.setHeader("content-type", "text/html")
-		request.setResponseCode(http.INTERNAL_SERVER_ERROR)
+		request.send_response(500)
+		request.send_header("content-type", "text/html")
 		data = "<html><head><title>archivCZSK</title></head><body><h1>Error 500: addon %s failed</h1><br />Internal server error</body></html>" % self.name
 		return self.__to_bytes(data)
 
 	def reply_redirect(self, request, redirect_url ):
-		request.redirect( self.__to_bytes(redirect_url) )
-		request.setHeader("content-type", "text/plain")
-		request.finish()
-		return server.NOT_DONE_YET
+		request.send_response(302)
+		request.send_header("Location", redirect_url)
+		request.send_header("content-type", "text/plain")
+		return None
 
 	def reply_ok(self, request, data, content_type=None, raw=False ):
+		request.send_response(200)
 		if content_type:
-			request.setHeader("content-type", content_type )
+			request.send_header("content-type", content_type )
 
-		request.setResponseCode(http.OK)
 		if raw:
 			return data
 		else:
 			return self.__to_bytes(data)
 
 	def get_relative_path(self, request ):
-		return request.path.decode('utf-8')[self.prefix_len:]
+		return request.path[self.prefix_len:]
 
 	def render(self, request):
 		UsageStats.get_instance().addon_http_call(self.addon)
 		# if addon wants to handle requests more flexible, then it can override this function
-
 		# function for endpoint needs to be named P_endpoint and supports only GET requests (inspired by openwebif)
-
-		# info about request API
-		# https://twistedmatrix.com/documents/21.2.0/api/twisted.web.http.Request.html
 
 		path_full = self.get_relative_path( request )
 		path = path_full.split('/')[0]
-		if len(path) > 0 and request.method == b'GET':
+		if len(path):
 			func = getattr(self, "P_" + path, None)
 
 			if callable(func):
 				try:
-					return self.__to_bytes((func(RequestWrapper(request), path_full[len(path)+1:])))
+					return self.__to_bytes((func(request, path_full[len(path)+1:])))
 				except:
-					log.error("Error by handling HTTP request:\n%s" % traceback.format_exc())
+					log.error("Error by handling HTTP request for path %s:\n%s" % (path_full, traceback.format_exc()))
 					return self.reply_error500(request)
 
-		return self.__to_bytes(self.default_handler( RequestWrapper(request), path_full ))
+		return self.__to_bytes(self.default_handler( request, path_full ))
 
 	def default_handler(self, request, path_full ):
 		# this is default handler, when request is not processed by named endpoint - it mostly prints error message
-		request.setHeader("content-type", "text/plain; charset=utf-8")
-		request.setResponseCode(http.NOT_FOUND)
-		data = "Error 404: addon %s has no handler for path %s" % (self.name, path_full)
+		request.send_response(404)
+		request.send_header("content-type", "text/plain; charset=utf-8")
+		data = "Error 404: addon %s has no handler for path %s\n" % (self.name, path_full)
 		return self.__to_bytes(data)
+
+	def run_in_reactor(self, fn, *args, **kwargs):
+		run_in_reactor(fn, *args, **kwargs)
 
 archivCZSKHttpServer = None
 
-class ArchivCZSKReloadHandler(resource.Resource):
-	isLeaf = True
-
+class ArchivCZSKReloadHandler(object):
 	def render(self, request):
 		from ..archivczsk import ArchivCZSK
 		ArchivCZSK.reload_needed(True)
-		request.setHeader("content-type", "text/plain; charset=utf-8")
-		request.setResponseCode(http.OK)
+		request.send_response(200)
+		request.send_header("content-type", "text/plain; charset=utf-8")
 		return b'Reload activated\n'
 
-class ArchivCZSKE2ReloadHandler(resource.Resource):
-	isLeaf = True
-
+class ArchivCZSKE2ReloadHandler(object):
 	def render(self, request):
 		from Components.PluginComponent import plugins
 		from Tools.Directories import resolveFilename, SCOPE_PLUGINS
 		plugins.readPluginList(resolveFilename(SCOPE_PLUGINS))
-		request.setHeader("content-type", "text/plain; charset=utf-8")
-		request.setResponseCode(http.OK)
+		request.send_response(200)
+		request.send_header("content-type", "text/plain; charset=utf-8")
+
 		return b'E2 reload activated\n'
 
+class Handler(BaseHTTPRequestHandler):
+	protocol_version = 'HTTP/1.1'
+
+	def __init__(self, *args, **kwargs):
+		set_thread_name('ArchivCZSK-htcli')
+		BaseHTTPRequestHandler.__init__(self, *args, **kwargs)
+		self.__eoh_called = False
+		self.rtime = 0
+
+	def do_GET(self):
+		request_start = time.time()
+		self.__eoh_called = False
+		resource = self.path.split('/')[1]
+
+		handler = self.server.root.get(resource)
+		if handler is not None:
+			try:
+				body = handler.render(self)
+			except:
+				log.error(traceback.format_exc())
+				self.send_error(500)
+				return
+
+			body_len = len(body) if body else 0
+			if not self.__eoh_called:
+				self.send_header('Content-Length', body_len)
+				self.end_headers()
+
+				if body:
+					self.wfile.write(body)
+			else:
+				self.write(body)
+				self.wfile.write(b'0\r\n\r\n')
+
+		else:
+			self.send_error( 404 )
+
+		if self.server.developer_mode:
+			rtime = (time.time() - request_start) * 1000
+			log.debug("Request %s took %dms" % (self.path, int(rtime)))
+
+	def write(self, data):
+		if not self.__eoh_called:
+			self.send_header('Transfer-Encoding', 'chunked')
+			self.end_headers()
+			self.__eoh_called = True
+
+		if data:
+			self.wfile.write('{:X}\r\n'.format(len(data)).encode('ascii'))
+			self.wfile.write(data)
+			self.wfile.write(b'\r\n')
+			self.wfile.flush()
+
+	def get_header(self, name, default_value=None):
+		self.headers.get(name, default_value)
+
+	def log_request(self, *args, **kwargs):
+		return
+
+	def log_error(self, format, *args):
+		log.debug('HTTP request error: ' + format, *args)
+
+	def log_message(self, format, *args):
+		return
 
 class ArchivCZSKHttpServer(object):
 	__instance = None
@@ -161,64 +232,78 @@ class ArchivCZSKHttpServer(object):
 	def stop(stop_cbk=None):
 		if ArchivCZSKHttpServer.__instance != None:
 			log.debug("Stopping HTTP server")
-			ArchivCZSKHttpServer.__instance.stop_listening(stop_cbk)
+			ArchivCZSKHttpServer.__instance.stop_listening()
 			ArchivCZSKHttpServer.__instance = None
 			global archivCZSKHttpServer
 			archivCZSKHttpServer = None
+
+			if stop_cbk:
+				stop_cbk()
 
 	@staticmethod
 	def get_instance():
 		return ArchivCZSKHttpServer.__instance
 
 	def __init__(self):
-		self.root = resource.Resource()
-		self.site = server.Site(self.root)
-		self.site.displayTracebacks = True
+		self.root = {}
 		self.port = config.plugins.archivCZSK.httpPort.value
 		self.running = None
+		self.server = None
 		if ArchivCZSKLicense.get_instance().check_level(ArchivCZSKLicense.LEVEL_DEVELOPER):
 			log.info("Adding RELOAD endpoint to HTTP server")
-			self.root.putChild(b'reload', ArchivCZSKReloadHandler())
-			self.root.putChild(b'e2reload', ArchivCZSKE2ReloadHandler())
+			self.root['reload'] = ArchivCZSKReloadHandler()
+			self.root['e2reload'] = ArchivCZSKE2ReloadHandler()
 
 	def start_listening(self, only_restart=False):
-		def continue_cbk():
-			self.port = config.plugins.archivCZSK.httpPort.value
-
-			if only_restart and not was_started:
-				# restart requiered, but server is not running - do nothing
-				return
-
-			if self.running == None:
-				if config.plugins.archivCZSK.httpLocalhost.value:
-					listen_address = '127.0.0.1'
-				else:
-					listen_address = '0.0.0.0'
-
-				log.info("Starting HTTP server on %s:%s" % (listen_address, self.port))
-				try:
-					self.running = reactor.listenTCP(self.port, self.site, interface=listen_address)
-				except:
-					log.error("Failed to start internal HTTP server:\n%s" % traceback.format_exc())
-
 		was_started = self.running != None
 
+		if self.running:
+			if only_restart:
+				self.stop_listening()
+			else:
+				return
+
+		self.port = config.plugins.archivCZSK.httpPort.value
+
+		if only_restart and not was_started:
+			# restart requiered, but server is not running - do nothing
+			return
+
 		if self.running == None:
-			continue_cbk()
-		elif only_restart:
-			self.stop_listening(continue_cbk)
+			if config.plugins.archivCZSK.httpLocalhost.value:
+				listen_address = '127.0.0.1'
+			else:
+				listen_address = '0.0.0.0'
 
-	def stop_listening(self, cbk=None):
-		def __wrap_cbk(*args):
-			cbk()
+			log.info("Starting HTTP server on %s:%s" % (listen_address, self.port))
+			try:
+				self.running = threading.Thread(target=self.httpd_run,args=(listen_address,))
+				self.running.start()
+			except:
+				log.error("Failed to start internal HTTP server:\n%s" % traceback.format_exc())
 
+
+	def httpd_run(self, listen_address):
+		try:
+			set_thread_name('ArchivCZSK-httpd')
+			self.server = ThreadedHTTPServer( self.root, (listen_address, self.port), Handler)
+			log.debug("HTTP Accept thread started")
+		except:
+			log.error("FATAL: Failed to start HTTP server\n:%s" % traceback.format_exc())
+		else:
+			self.server.serve_forever(2)
+
+
+	def stop_listening(self):
 		if self.running != None:
-			defer = self.running.stopListening()
+			if not self.server:
+				log.error("FATAL: HTTP server accept thread was started, but server itself is not running")
+			else:
+				self.server.shutdown()
+				self.server.server_close()
+
+			self.running.join()
 			self.running = None
-			if cbk:
-				defer.addCallback(__wrap_cbk)
-		elif cbk:
-			cbk()
 
 	def getAddonEndpoint(self, handler_or_id, base_url=None, relative=False):
 		if isinstance( handler_or_id, AddonHttpRequestHandler ):
@@ -237,17 +322,17 @@ class ArchivCZSKHttpServer(object):
 	def registerRequestHandler(self, requestHandler ):
 		self.start_listening()
 		log.logInfo( "Adding HTTP request handler for endpoint: %s" % requestHandler.name)
-		self.root.putChild(requestHandler.name.encode('utf-8'), requestHandler)
+		self.root[requestHandler.name] = requestHandler
 
 	def unregisterRequestHandler(self, requestHandler ):
 		try:
-			self.root.delEntity(requestHandler.name.encode('utf-8'))
+			del self.root[requestHandler.name]
 			log.info( "HTTP request handler for endpoint %s removed" % requestHandler.name)
 		except:
 			log.debug( "HTTP request handler for endpoint %s not found" % requestHandler.name)
 
 	def getAddonByEndpoint(self, endpoint):
-		handler = self.root.getStaticEntity(endpoint.encode('utf-8'))
+		handler = self.root.get(endpoint)
 		return handler.addon if handler else None
 
 	def urlToEndpoint(self, url):

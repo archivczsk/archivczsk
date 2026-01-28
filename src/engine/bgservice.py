@@ -35,6 +35,16 @@ def run_in_main_thread(val):
 
 m_pump = None
 
+def run_in_reactor(fn, *args, **kwargs):
+	'''
+	Runs function in main reactor thread and doesn't wait for result
+	'''
+	def __fn_wrapper():
+		fn(*args, **kwargs)
+
+	fnc_out_queue.put(__fn_wrapper)
+	m_pump.send(0)
+
 
 def callFromService(func):
 	"""calls function from child thread in main(reactor) thread,
