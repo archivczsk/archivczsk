@@ -16,7 +16,7 @@ from ..engine.tools.logger import log
 from ..py3compat import *
 
 class BaseArchivCZSKScreen(Screen):
-	"""Base Screen for archivCZSK screens"""
+	"""Base Screen for ArchivCZSK screens"""
 
 	def __init__(self, session, initScreen=True):
 		self.HD = False

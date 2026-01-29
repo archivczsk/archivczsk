@@ -84,7 +84,7 @@ def add_global_addon_specific_setting(addon, addon_config, setting):
 		setattr(addon_config, setting['id'], ConfigDirectory(default=download_path))
 
 
-#globally adding archivCZSK specific options to addons
+#globally adding ArchivCZSK specific options to addons
 def add_global_addon_settings(addon, addon_config):
 	for category in global_addon_settings:
 		for setting in category['subentries']:

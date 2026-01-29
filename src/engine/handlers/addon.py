@@ -147,7 +147,7 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 				self.content_screen.refreshList()
 				self.content_screen.workingFinished()
 
-		message = _("Addon is created for archivCZSK 1.x.x version and will not work anymore in this version. Author of the addon need to adopt it for this version.") + '\n'
+		message = _("Addon is created for ArchivCZSK 1.x.x version and will not work anymore in this version. Author of the addon need to adopt it for this version.") + '\n'
 		if addon.supported:
 			message += _("Do you want to disable this addon?")
 			self.session.openWithCallback(disable_addon, MessageBox, message, type=MessageBox.TYPE_YESNO)

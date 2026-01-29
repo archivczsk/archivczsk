@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-15 13:19+0100\n"
+"POT-Creation-Date: 2026-01-29 19:04+0100\n"
 "PO-Revision-Date: 2026-01-15 13:20+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
@@ -16,23 +16,23 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.5\n"
 
-#: src/reload.py:52
+#: src/reload.py:53
 msgid "Loading ArchivCZSK"
 msgstr "Načítavam ArchivCZSK"
 
-#: src/reload.py:104
+#: src/reload.py:105
 msgid "Stopping old version of ArchivCZSK"
 msgstr "Zastavujem starú verziu ArchivCZSK"
 
-#: src/reload.py:110
+#: src/reload.py:111
 msgid "Old version not running"
 msgstr "Stará verzia nie je spustená"
 
-#: src/reload.py:127
+#: src/reload.py:135
 msgid "Old version stopped"
 msgstr "Stará verzia zastavená"
 
-#: src/reload.py:146
+#: src/reload.py:138
 msgid "Initialising new version of ArchivCZSK"
 msgstr "Inicializujem novú verziu ArchivCZSK"
 
@@ -64,164 +64,164 @@ msgstr "Komentáre"
 msgid "Csfd info for"
 msgstr "Csfd info pre"
 
-#: src/gui/download.py:48 src/gui/download.py:52 src/gui/download.py:58
+#: src/gui/download.py:49 src/gui/download.py:53 src/gui/download.py:59
 msgid "ArchivCZSK - Download:"
-msgstr "ArchívCZSK - Sťahovanie:"
+msgstr "ArchivCZSK - Sťahovanie:"
 
-#: src/gui/download.py:49
+#: src/gui/download.py:50
 msgid "successfully finished."
 msgstr "úspešne skončilo."
 
-#: src/gui/download.py:53
+#: src/gui/download.py:54
 msgid "finished with errors."
 msgstr "skončilo s chybami."
 
-#: src/gui/download.py:59
+#: src/gui/download.py:60
 msgid "started."
 msgstr "začalo."
 
-#: src/gui/download.py:76
+#: src/gui/download.py:77
 msgid "You've to change download filename. Try again.."
 msgstr "Musíte zmeniť názov sťahovaného súboru. Skúste znova..."
 
-#: src/gui/download.py:78 src/gui/download.py:105 src/gui/download.py:353
+#: src/gui/download.py:79 src/gui/download.py:106 src/gui/download.py:354
 msgid "The file"
 msgstr "Súbor"
 
-#: src/gui/download.py:78
+#: src/gui/download.py:79
 msgid "already exists"
 msgstr "už existuje"
 
-#: src/gui/download.py:78
+#: src/gui/download.py:79
 msgid "Try to use another name..."
 msgstr "Skúste použiť iné meno..."
 
-#: src/gui/download.py:97
+#: src/gui/download.py:98
 msgid "Rename filename"
 msgstr "Premenovať súbor"
 
-#: src/gui/download.py:101
+#: src/gui/download.py:102
 msgid "Download is already running"
 msgstr "Sťahovanie už prebieha"
 
-#: src/gui/download.py:105
+#: src/gui/download.py:106
 msgid "already exist"
 msgstr "už existuje"
 
-#: src/gui/download.py:106
+#: src/gui/download.py:107
 msgid "Override existing file"
 msgstr "Prepísať súbor"
 
-#: src/gui/download.py:107
+#: src/gui/download.py:108
 msgid "Rename file"
 msgstr "Premenovať súbor"
 
-#: src/gui/download.py:115
+#: src/gui/download.py:116
 msgid "Download progress"
 msgstr "Priebeh sťahovania"
 
-#: src/gui/download.py:118 src/gui/common.py:197
+#: src/gui/download.py:119 src/gui/common.py:197
 msgid "Size:"
 msgstr "Veľkosť:"
 
-#: src/gui/download.py:120
+#: src/gui/download.py:121
 msgid "Path:"
 msgstr "Cesta:"
 
-#: src/gui/download.py:122
+#: src/gui/download.py:123
 msgid "Start time:"
 msgstr "Začiatok sťahovania:"
 
-#: src/gui/download.py:124
+#: src/gui/download.py:125
 msgid "Finish time:"
 msgstr "Koniec sťahovania:"
 
-#: src/gui/download.py:126
+#: src/gui/download.py:127
 msgid "State:"
 msgstr "Stav:"
 
-#: src/gui/download.py:128
+#: src/gui/download.py:129
 msgid "Speed:"
 msgstr "Rýchlosť:"
 
-#: src/gui/download.py:203
+#: src/gui/download.py:204
 msgid "not finished"
 msgstr "neukončené"
 
-#: src/gui/download.py:228 src/engine/downloader.py:233
-#: src/engine/downloader.py:261
+#: src/gui/download.py:229 src/engine/downloader.py:243
+#: src/engine/downloader.py:271
 msgid "unknown"
 msgstr "??? MB"
 
-#: src/gui/download.py:228 src/gui/download.py:230
+#: src/gui/download.py:229 src/gui/download.py:231
 msgid "downloaded"
 msgstr "stiahnutých"
 
-#: src/gui/download.py:261
+#: src/gui/download.py:262
 msgid "Show recent downloads"
 msgstr "Zobraziť sťahované súbory"
 
-#: src/gui/download.py:262
+#: src/gui/download.py:263
 msgid "ArchivCZSK changelog"
 msgstr "ArchivCZSK zmeny"
 
-#: src/gui/download.py:267
+#: src/gui/download.py:268
 msgid "show download list"
 msgstr "zobraziť aktuálne sťahované súbory"
 
-#: src/gui/download.py:285 src/gui/menu.py:47 src/gui/config.py:31
+#: src/gui/download.py:286 src/gui/menu.py:47 src/gui/config.py:31
 #: src/gui/config.py:207
 msgid "Cancel"
 msgstr "Zrušiť"
 
-#: src/gui/download.py:286 src/engine/handlers/media.py:282
-#: src/engine/handlers/media.py:497
+#: src/gui/download.py:287 src/engine/handlers/media.py:262
+#: src/engine/handlers/media.py:477
 msgid "Play"
 msgstr "Prehrať"
 
-#: src/gui/download.py:287 src/gui/download.py:399
+#: src/gui/download.py:288 src/gui/download.py:401
 #: src/engine/handlers/category.py:44 src/engine/handlers/addon.py:313
 msgid "Remove"
 msgstr "Zmazať"
 
-#: src/gui/download.py:294
+#: src/gui/download.py:295
 msgid "Recent downloads"
 msgstr "Sťahované súbory"
 
-#: src/gui/download.py:325
+#: src/gui/download.py:326
 msgid "Do you want to cancel"
 msgstr "Chcete prerušiť"
 
-#: src/gui/download.py:337 src/gui/download.py:429
+#: src/gui/download.py:338 src/gui/download.py:431
 #: src/engine/handlers/category.py:61 src/engine/handlers/addon.py:351
 msgid "Do you want to remove"
 msgstr "Chcete zmazať"
 
-#: src/gui/download.py:338
+#: src/gui/download.py:339
 msgid "from disk"
 msgstr "z disku"
 
-#: src/gui/download.py:353
+#: src/gui/download.py:354
 msgid "is not downloaded yet. Do you want to play it anyway?"
 msgstr "zatiaľ nie je stiahnutý. Chcete ho aj napriek tomu prehrať?"
 
-#: src/gui/download.py:391
+#: src/gui/download.py:393
 msgid "Sort alphabetically"
 msgstr "Podľa [A-Z]"
 
-#: src/gui/download.py:392
+#: src/gui/download.py:394
 msgid "Sort by date"
 msgstr "Podľa dátumu"
 
-#: src/gui/download.py:393
+#: src/gui/download.py:395
 msgid "Sort by size"
 msgstr "Podľa velkosťi"
 
-#: src/gui/download.py:394
+#: src/gui/download.py:396
 msgid "Sort by state"
 msgstr "Podľa stavu"
 
-#: src/gui/download.py:403 src/gui/content.py:568
+#: src/gui/download.py:405 src/gui/content.py:568
 #: src/engine/handlers/addon.py:198
 msgid "Downloads"
 msgstr "Stiahnuté súbory"
@@ -294,7 +294,7 @@ msgstr "Prerušujem načítavanie..."
 
 #: src/gui/content.py:526
 msgid "Do you want to exit ArchivCZSK?"
-msgstr "Chcete ukončiť archivCZSK?"
+msgstr "Chcete ukončiť ArchivCZSK?"
 
 #: src/gui/content.py:540
 msgid "show info in CSFD"
@@ -909,8 +909,8 @@ msgid "Default category"
 msgstr "Predvolená kategória"
 
 #: src/settings.py:190
-msgid "Allow archivCZSK auto update"
-msgstr "Povoliť kontrolu aktualizácií archívuCZSK"
+msgid "Allow ArchivCZSK auto update"
+msgstr "Povoliť kontrolu aktualizácií ArchivCZSK"
 
 #: src/settings.py:191
 msgid "Allow addons auto update"
@@ -966,7 +966,7 @@ msgstr "Pridať skratku pre vstup do archívu do menu rozšírení"
 
 #: src/settings.py:213
 msgid "Add search option in epg menu"
-msgstr "Pridať vyhľadávanie v archivCZSK na dlhé stlačenie EPG/INFO"
+msgstr "Pridať vyhľadávanie v ArchivCZSK na dlhé stlačenie EPG/INFO"
 
 #: src/settings.py:214
 msgid "Integrate into EPG viewer (need restart)"
@@ -1066,7 +1066,7 @@ msgstr "Povoliť prednačítavanie doplnkov pri štarte"
 
 #: src/settings.py:350
 msgid "Confirm exit when closing plugin"
-msgstr "Potvrdiť ukončenie archívuCZSK"
+msgstr "Potvrdiť ukončenie ArchivCZSK"
 
 #: src/settings.py:351
 msgid "Show broken addons"
@@ -1104,7 +1104,7 @@ msgstr "Spustiť HTTP server iba pre interné použitie doplnkami"
 msgid "Allow sending anonymous usage statistics"
 msgstr "Povoliť posielanie anonymných štatistík používania pluginu"
 
-#: src/engine/items.py:202 src/engine/downloader.py:252
+#: src/engine/items.py:202 src/engine/downloader.py:262
 msgid "succesfully finished"
 msgstr "úspešne skončilo"
 
@@ -1150,8 +1150,8 @@ msgid "Do you want to remove this addon?"
 msgstr "Chcete vymazať tento doplnok?"
 
 #: src/engine/handlers/addon.py:150
-msgid "Addon is created for archivCZSK 1.x.x version and will not work anymore in this version. Author of the addon need to adopt it for this version."
-msgstr "Doplnok je vytvorený pre verziu archivCZSK 1.x.x a v tejto verzii už viac nie je funkčný. Autor doplnku ho musí pre túto verziu prispôsobiť."
+msgid "Addon is created for ArchivCZSK 1.x.x version and will not work anymore in this version. Author of the addon need to adopt it for this version."
+msgstr "Doplnok je vytvorený pre verziu ArchivCZSK 1.x.x a v tejto verzii už viac nie je funkčný. Autor doplnku ho musí pre túto verziu prispôsobiť."
 
 #: src/engine/handlers/addon.py:152
 msgid "Do you want to disable this addon?"
@@ -1197,60 +1197,60 @@ msgstr "Zapnúť"
 msgid "Disable"
 msgstr "Vypnúť"
 
-#: src/engine/handlers/media.py:242
+#: src/engine/handlers/media.py:222
 msgid "Automatically generated"
 msgstr "Automaticky vygenerovaný"
 
-#: src/engine/handlers/media.py:273 src/engine/handlers/folder.py:134
+#: src/engine/handlers/media.py:253 src/engine/handlers/folder.py:134
 msgid "Trakt.tv action"
 msgstr "Trakt.tv akcia"
 
-#: src/engine/handlers/media.py:275 src/engine/handlers/folder.py:136
+#: src/engine/handlers/media.py:255 src/engine/handlers/folder.py:136
 msgid "Pair device with Trakt.tv"
 msgstr "Spárovať zariadenie s Trakt.tv"
 
-#: src/engine/handlers/media.py:280
+#: src/engine/handlers/media.py:260
 msgid "Download"
 msgstr "Stiahnuť"
 
-#: src/engine/handlers/media.py:283
+#: src/engine/handlers/media.py:263
 msgid "Play all"
 msgstr "Prehrať všetko"
 
-#: src/engine/handlers/media.py:286
+#: src/engine/handlers/media.py:266
 msgid "Play using gstplayer"
 msgstr "Prehrať pomocou gstplayer"
 
-#: src/engine/handlers/media.py:289
+#: src/engine/handlers/media.py:269
 msgid "Play using exteplayer3"
 msgstr "Prehrať pomocou exteplayer3"
 
-#: src/engine/handlers/media.py:291
+#: src/engine/handlers/media.py:271
 msgid "Play and Download"
 msgstr "Prehrávaj a sťahuj"
 
-#: src/engine/handlers/media.py:361
+#: src/engine/handlers/media.py:341
 msgid "Resolve videos"
 msgstr "Načítať videá"
 
-#: src/engine/handlers/media.py:365 src/engine/handlers/media.py:369
+#: src/engine/handlers/media.py:345 src/engine/handlers/media.py:349
 #: src/engine/handlers/folder.py:141 src/engine/handlers/folder.py:143
 msgid "Add Shortcut"
 msgstr "Pridať záložku"
 
-#: src/engine/handlers/media.py:376 src/engine/handlers/folder.py:148
+#: src/engine/handlers/media.py:356 src/engine/handlers/folder.py:148
 msgid "Do you want to add"
 msgstr "Chcete pridať"
 
-#: src/engine/handlers/media.py:376 src/engine/handlers/folder.py:148
+#: src/engine/handlers/media.py:356 src/engine/handlers/folder.py:148
 msgid "shortcut?"
 msgstr "záložku?"
 
-#: src/engine/handlers/media.py:430
+#: src/engine/handlers/media.py:410
 msgid "Please select source"
 msgstr "Prosím zvoľte zdroj"
 
-#: src/engine/handlers/media.py:501 src/engine/player/player.py:653
+#: src/engine/handlers/media.py:481 src/engine/player/player.py:653
 msgid "Show playlist"
 msgstr "Zobraziť playlist"
 
@@ -1270,7 +1270,7 @@ msgstr "Playlist z"
 msgid "No playable videos were found"
 msgstr "Nenašli sa žiadne prehrateľné videá"
 
-#: src/engine/addon.py:539 src/resources/repositories/config.py:33
+#: src/engine/addon.py:550 src/resources/repositories/config.py:33
 msgid "General"
 msgstr "Všeobecné"
 
@@ -1306,73 +1306,73 @@ msgstr "Chyba sťahovania, pozrite logovací súbor."
 msgid "Select new location"
 msgstr "Vyberte nové umiestnenie"
 
-#: src/engine/contentprovider.py:340 src/engine/contentprovider.py:356
+#: src/engine/contentprovider.py:340 src/engine/contentprovider.py:357
 msgid "Edit filename"
 msgstr "Zmeniť názov súboru"
 
-#: src/engine/contentprovider.py:351
+#: src/engine/contentprovider.py:352
 msgid "Do you want to download"
 msgstr "Chcete sťiahnuť"
 
-#: src/engine/contentprovider.py:352
+#: src/engine/contentprovider.py:353
 msgid "Source"
 msgstr "Zdroj"
 
-#: src/engine/contentprovider.py:353
+#: src/engine/contentprovider.py:354
 msgid "Destination"
 msgstr "Cieľ"
 
-#: src/engine/contentprovider.py:353
+#: src/engine/contentprovider.py:354
 msgid "free"
 msgstr "voľných"
 
-#: src/engine/contentprovider.py:354
+#: src/engine/contentprovider.py:355
 msgid "Filename"
 msgstr "Názov súboru"
 
-#: src/engine/contentprovider.py:355
+#: src/engine/contentprovider.py:356
 msgid "yes"
 msgstr "áno"
 
-#: src/engine/contentprovider.py:355
+#: src/engine/contentprovider.py:356
 msgid "no"
 msgstr "nie"
 
-#: src/engine/contentprovider.py:356
+#: src/engine/contentprovider.py:357
 msgid "Change location"
 msgstr "Zmeniť umiestnenie"
 
-#: src/engine/contentprovider.py:387 src/engine/contentprovider.py:393
+#: src/engine/contentprovider.py:388 src/engine/contentprovider.py:394
 msgid "All addons"
 msgstr "Všetky doplnky"
 
-#: src/engine/contentprovider.py:400
+#: src/engine/contentprovider.py:401
 msgid "Category list"
 msgstr "Zoznam kategórií"
 
-#: src/engine/contentprovider.py:621
+#: src/engine/contentprovider.py:622
 msgid "Loading of addon failed"
 msgstr "Načítavanie doplnku zlyhalo"
 
-#: src/engine/contentprovider.py:627
+#: src/engine/contentprovider.py:628
 msgid "Addon returned not supported communication interface"
 msgstr "Doplnok vrátil nepodporované komunikačné rozhranie"
 
-#: src/engine/contentprovider.py:662
+#: src/engine/contentprovider.py:663
 msgid "Addon is designed for ArchivCZSK version lower then 2.5.0 and incompatible with installed version. Update ArchivCZSK and addons to latest available versions."
 msgstr "Doplnok je vytvorený pre ArchivCZSK verziu menšiu ako 2.5.0 a nie je kompatibilný s nainštalovanou verziou. Zaktualizujte ArchivCZSK a doplnky na posledné dostupné verzie."
 
-#: src/engine/contentprovider.py:667
+#: src/engine/contentprovider.py:668
 #, python-brace-format
-msgid "You need to update archivCZSK at least to version {version}"
+msgid "You need to update ArchivCZSK at least to version {version}"
 msgstr "Musíte aktualizovať ArchivCZSK aspoň na verziu {version}"
 
-#: src/engine/contentprovider.py:679
+#: src/engine/contentprovider.py:680
 #, python-brace-format
 msgid "Cannot execute addon {addon_name}. Dependency {dependency_name} version {dependency_version} needs to be at least version {dependency_version_requiered}"
 msgstr "Spustenie doplnku {addon_name} zlyhalo. Nainštalovaná závislosť {dependency_name} verzia {dependency_version} musí byť aspoň vo verzii {dependency_version_requiered}"
 
-#: src/engine/contentprovider.py:687
+#: src/engine/contentprovider.py:688
 #, python-brace-format
 msgid ""
 "Cannot execute addon {addon_name}. Missing dependency: {dependency_name}\n"
@@ -1381,11 +1381,11 @@ msgstr ""
 "Spustenie doplnku {addon_name} zlyhalo. Chýba závislosť: {dependency_name}\n"
 "Skontrolujte voľné miesto v prijímači, preinštalujte ArchivCZSK a vykonajte aktualizáciu všetkých doplnkov pre vyriešenie problému."
 
-#: src/engine/downloader.py:255
+#: src/engine/downloader.py:265
 msgid "not succesfully finished"
 msgstr "neúspešne skončilo"
 
-#: src/engine/downloader.py:258
+#: src/engine/downloader.py:268
 msgid "downloading"
 msgstr "sťahujem"
 
@@ -1449,24 +1449,24 @@ msgid "No update found"
 msgstr "Nenašla sa žiadna aktualizácia"
 
 #: src/engine/updater.py:129
-msgid "Do you want to update archivCZSK to version"
-msgstr "Prajete si aktualizovať archivCZSK na verziu"
+msgid "Do you want to update ArchivCZSK to version"
+msgstr "Prajete si aktualizovať ArchivCZSK na verziu"
 
 #: src/engine/updater.py:143
 msgid "Downloading update package"
 msgstr "Sťahujem aktualizačný balík"
 
 #: src/engine/updater.py:150
-msgid "Updating archivCZSK using package manager"
-msgstr "Aktualizujem archivCZSK pomocou správcu balíkov"
+msgid "Updating ArchivCZSK using package manager"
+msgstr "Aktualizujem ArchivCZSK pomocou správcu balíkov"
 
 #: src/engine/updater.py:152
 msgid "Failed to download update package"
 msgstr "Nepodarilo sa stiahnuť aktualizačný balík"
 
 #: src/engine/updater.py:174
-msgid "Failed to download archivCZSK update package"
-msgstr "Zlyhalo sťahovanie aktualizačného balíka archivCZSK"
+msgid "Failed to download ArchivCZSK update package"
+msgstr "Zlyhalo sťahovanie aktualizačného balíka ArchivCZSK"
 
 #: src/engine/updater.py:184
 msgid "Update finished successfuly"
@@ -1481,16 +1481,16 @@ msgid "Update complete. Please start ArchivCZSK again."
 msgstr "Aktualizácia úspešná. Prosím znovu spustite ArchivCZSK."
 
 #: src/engine/updater.py:196
-msgid "Update archivCZSK complete."
-msgstr "Aktualizácia archivCZSK prebehla úspešne."
+msgid "Update ArchivCZSK complete."
+msgstr "Aktualizácia ArchivCZSK prebehla úspešne."
 
 #: src/engine/updater.py:213
 #, python-brace-format
 msgid ""
-"Update archivCZSK failed. {cmd} returned error\n"
+"Update ArchivCZSK failed. {cmd} returned error\n"
 "{msg}"
 msgstr ""
-"Aktualizácia archivCZSK zlyhala. {cmd} skončilo chybou\n"
+"Aktualizácia ArchivCZSK zlyhala. {cmd} skončilo chybou\n"
 "{msg}"
 
 #: src/engine/updater.py:286
@@ -1548,61 +1548,61 @@ msgstr "Prekročený limit požiadaviek na Trakt. Skúste to znova o {seconds}s.
 msgid "Wrong response code from Trakt server: {code}"
 msgstr "Nesprávny kód odpovede z Trakt servera: {code}"
 
-#: src/engine/trakttv.py:489
+#: src/engine/trakttv.py:493
 #, python-brace-format
 msgid "Trakt.tv operation {action} ended successfuly"
 msgstr "Trakt.tv operácia \"{action}\" skončila úspešne"
 
-#: src/engine/trakttv.py:492
+#: src/engine/trakttv.py:496
 msgid "Trakt.tv is not paired with this device."
 msgstr "Trakt.tv nie je spárovaný s týmto zariadením."
 
-#: src/engine/trakttv.py:496
+#: src/engine/trakttv.py:500
 #, python-brace-format
 msgid "Trakt.tv operation \"{action}\" failed"
 msgstr "Trakt.tv operácia \"{action}\" zlyhala"
 
-#: src/engine/trakttv.py:510
+#: src/engine/trakttv.py:514
 msgid "Add to watchlist"
 msgstr "Pridať do Watchlist"
 
-#: src/engine/trakttv.py:511
+#: src/engine/trakttv.py:515
 msgid "Delete from watchlist"
 msgstr "Vymazať z Watchlist"
 
-#: src/engine/trakttv.py:514
+#: src/engine/trakttv.py:518
 msgid "Mark as watched"
 msgstr "Označiť ako videné"
 
-#: src/engine/trakttv.py:517
+#: src/engine/trakttv.py:521
 msgid "Mark as not watched"
 msgstr "Označiť ako nevidené"
 
-#: src/engine/trakttv.py:519
+#: src/engine/trakttv.py:523
 msgid "Force data synchronisation"
 msgstr "Vynútiť synchronizáciu dát"
 
-#: src/engine/trakttv.py:520
+#: src/engine/trakttv.py:524
 msgid "Unpair this device from Trakt.tv"
 msgstr "Zrušiť spárovanie zariadenia s Trakt.tv"
 
-#: src/engine/trakttv.py:523
+#: src/engine/trakttv.py:527
 msgid "Choose Trakt.tv action"
 msgstr "Zvoľte Trakt.tv akciu"
 
-#: src/engine/trakttv.py:538
+#: src/engine/trakttv.py:542
 msgid "Pairing timed out!"
 msgstr "Časový limit párovania vypršal!"
 
-#: src/engine/trakttv.py:541 src/engine/trakttv.py:554
+#: src/engine/trakttv.py:545 src/engine/trakttv.py:558
 msgid "Pairing aborted by user"
 msgstr "Párovanie bolo zrušené používateľom"
 
-#: src/engine/trakttv.py:550
+#: src/engine/trakttv.py:554
 msgid "Pairing succesed. You can use Trakt.tv functions now"
 msgstr "Párovanie úspešné. Teraz môžete využívať funkcie Trakt.tv"
 
-#: src/engine/trakttv.py:563
+#: src/engine/trakttv.py:567
 #, python-brace-format
 msgid ""
 "To pair Trakt.tv with this device go to the activation address and enter pairing code.\n"
@@ -1770,7 +1770,7 @@ msgid "Running shortcut: {shortcut_name}"
 msgstr "Spustenie skratky: {shortcut_name}"
 
 #: src/client/shortcut.py:84
-msgid "Cannot run shortcut, archivCZSK is not installed"
+msgid "Cannot run shortcut, ArchivCZSK is not installed"
 msgstr "Nemôžem spustiť skratku, ArchivCZSK nie je nainštalovaný"
 
 #: src/client/shortcut.py:90 src/client/seeker.py:107
@@ -1799,7 +1799,7 @@ msgid "Search fatal error."
 msgstr "Vyhľadávanie zlyhalo."
 
 #: src/client/seeker.py:101
-msgid "Cannot search, archivCZSK is not installed"
+msgid "Cannot search, ArchivCZSK is not installed"
 msgstr "Nemôžem vyhľadávať, ArchivCZSK nie je nainštalovaný"
 
 #: src/client/seeker.py:137
@@ -1807,7 +1807,7 @@ msgid "Error while trying to retrieve search list"
 msgstr "Chyba pri získavaní vyhľadávaného zoznamu"
 
 #: src/client/seeker.py:158
-msgid "You cannot search, archivCZSK Search is already running"
+msgid "You cannot search, ArchivCZSK Search is already running"
 msgstr "Nemôžete vyhľadávať, ArchivCZSK vyhľadávanie práve prebieha"
 
 #: src/client/seeker.py:173
@@ -1816,7 +1816,7 @@ msgstr "Nemôžem nájsť vyhľadávač"
 
 #: src/plugin.py:10
 msgid "ArchivCZSK"
-msgstr "ArchívCZSK"
+msgstr "ArchivCZSK"
 
 #: src/plugin.py:11
 msgid "Playing CZ/SK archives"
@@ -1824,7 +1824,7 @@ msgstr "Prehrávanie CZ/SK archívov"
 
 #: src/plugin.py:97
 msgid "Open archive for current channel using ArchivCZSK addon"
-msgstr "Otvoriť archív aktuálneho kanálu pomocou doplnku pre  ArchivuCZSK"
+msgstr "Otvoriť archív aktuálneho kanálu pomocou doplnku pre ArchivuCZSK"
 
 #: src/plugin.py:97
 msgid "When current channel is managed by ArchivCZSK addon, then it opens archive for it"
@@ -1893,7 +1893,7 @@ msgstr "Vyhľadávanie v ArchivCZSK"
 #~ msgstr "Povoliť voľbu titulkov v menu pre výber audio stopy"
 
 #~ msgid "Open ArchivCZSK addon for current channel"
-#~ msgstr "Otvoriť doplnok Archívu CZSK pre aktuálny kanál"
+#~ msgstr "Otvoriť ArchivCZSK doplnok pre aktuálny kanál"
 
 #~ msgid "finished"
 #~ msgstr "ukončené"
@@ -1910,8 +1910,8 @@ msgstr "Vyhľadávanie v ArchivCZSK"
 #~ msgid "infinite"
 #~ msgstr "nekonečno"
 
-#~ msgid "Using archivCZSK on DreamBox with original software is not supported due missing HW for testing. Due this bugs related to DreamBox will not be fixed. Use at your own risk."
-#~ msgstr "Použitie archivCZSK na DreamBoxe s originálnym softvérom nie je podporované z dôvodu chýbajúceho HW na testovanie. Z tohto dôvodu chyby súvisiace s DreamBoxom nebudú opravené. Používajte na vlastné riziko."
+#~ msgid "Using ArchivCZSK on DreamBox with original software is not supported due missing HW for testing. Due this bugs related to DreamBox will not be fixed. Use at your own risk."
+#~ msgstr "Použitie ArchivCZSK na DreamBoxe s originálnym softvérom nie je podporované z dôvodu chýbajúceho HW na testovanie. Z tohto dôvodu chyby súvisiace s DreamBoxom nebudú opravené. Používajte na vlastné riziko."
 
 #~ msgid "Author: "
 #~ msgstr "Autor: "

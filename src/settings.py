@@ -187,7 +187,7 @@ def get_main_settings():
 	list.append(getConfigListEntry(_("Font size in lists (in %)"), config.plugins.archivCZSK.font_size))
 	list.append(getConfigListEntry(_("Enable colored items"), config.plugins.archivCZSK.colored_items))
 	list.append(getConfigListEntry(_("Default category"), config.plugins.archivCZSK.defaultCategory))
-	list.append(getConfigListEntry(_("Allow archivCZSK auto update"), config.plugins.archivCZSK.archivAutoUpdate))
+	list.append(getConfigListEntry(_("Allow ArchivCZSK auto update"), config.plugins.archivCZSK.archivAutoUpdate))
 	list.append(getConfigListEntry(_("Allow addons auto update"), config.plugins.archivCZSK.autoUpdate))
 	if config.plugins.archivCZSK.archivAutoUpdate.value or config.plugins.archivCZSK.autoUpdate.value:
 		list.append(getConfigListEntry(_("Update timeout"), config.plugins.archivCZSK.updateTimeout))

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <addon id="archivczsk_doplnky" name="ArchivCZSK doplnky" provider-name="archivczsk" version="2.0.0">
-	<extension point="archivczsk.addon.repository" name="archivCZSK addons repository">
+	<extension point="archivczsk.addon.repository" name="ArchivCZSK addons repository">
 		<info>https://raw.githubusercontent.com/{update_repository}/archivczsk-doplnky/{update_branch}/addons.xml</info>
 		<datadir>https://raw.githubusercontent.com/{update_repository}/archivczsk-doplnky/{update_branch}/repo</datadir>
 	</extension>

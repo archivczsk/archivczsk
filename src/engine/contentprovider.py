@@ -655,17 +655,17 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		for dependency in addon.requires:
 			addon_id, version, optional = dependency['addon'], dependency['version'], dependency['optional']
 
-			# checking if archivCZSK version is compatible with this plugin
+			# checking if ArchivCZSK version is compatible with this plugin
 			if addon_id == 'enigma2.archivczsk':
 				if	not util.check_version(aczsk.version, version, False):
 					#because of API compatibility - check if required version is >= 2.5.0
 					if util.check_version(version, "2.5.0", False):
 						raise AddonError(_("Addon is designed for ArchivCZSK version lower then 2.5.0 and incompatible with installed version. Update ArchivCZSK and addons to latest available versions."))
 					else:
-						log.debug("%s archivCZSK version %s>=%s" , log_prefix, aczsk.version, version)
+						log.debug("%s ArchivCZSK version %s>=%s" , log_prefix, aczsk.version, version)
 				else:
-					log.debug("%s archivCZSK version %s<%s" , log_prefix, aczsk.version, version)
-					raise AddonError(_("You need to update archivCZSK at least to version {version}").format(version=version))
+					log.debug("%s ArchivCZSK version %s<%s" , log_prefix, aczsk.version, version)
+					raise AddonError(_("You need to update ArchivCZSK at least to version {version}").format(version=version))
 			else:
 				log.info("%s requires %s addon, version %s" , log_prefix, addon_id, version)
 				if ArchivCZSK.has_addon(addon_id):

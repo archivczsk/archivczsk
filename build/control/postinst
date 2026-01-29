@@ -34,7 +34,7 @@ fi
 echo "Removing temp folder..."
 rm -rf ${TMP}
 
-echo "Installation of archivCZSK was successfull, starting script to install dependencies in background ..."
+echo "Installation of ArchivCZSK was successfull, starting script to install dependencies in background ..."
 
 [ -f $ARCHIVCZSK/script/install_dependencies.sh ] && (cd $ARCHIVCZSK/script/ && ./install_dependencies.sh) &
 

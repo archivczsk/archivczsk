@@ -126,7 +126,7 @@ class ArchivUpdater(RunNext):
 	def checkUpdateFinished(self):
 		if self.needUpdate:
 			log.logInfo("ArchivUpdater update found...%s"%self.remote_version)
-			strMsg = "%s %s?" %(_("Do you want to update archivCZSK to version"), toString(self.remote_version))
+			strMsg = "%s %s?" %(_("Do you want to update ArchivCZSK to version"), toString(self.remote_version))
 			self.session.openWithCallback(
 				self.processUpdateArchivYesNoAnswer,
 				MessageBox,
@@ -147,7 +147,7 @@ class ArchivUpdater(RunNext):
 		self.downloadSuccess = self.downloadIpk()
 
 		if self.downloadSuccess:
-			self.run_next(self.downloadIpkFinished, _("Updating archivCZSK using package manager"))
+			self.run_next(self.downloadIpkFinished, _("Updating ArchivCZSK using package manager"))
 		else:
 			self.run_next(self.downloadIpkFailed, _("Failed to download update package"))
 
@@ -171,7 +171,7 @@ class ArchivUpdater(RunNext):
 		log.debug("[Updater] downloadIpkFailed - opening message box")
 		self.session.openWithCallback(self.updateFailed,
 				MessageBox,
-				_("Failed to download archivCZSK update package"),
+				_("Failed to download ArchivCZSK update package"),
 				type=MessageBox.TYPE_ERROR)
 
 
@@ -186,14 +186,14 @@ class ArchivUpdater(RunNext):
 			self.run_next(self.updateArchivIpkFailed, _("Update finished with error"))
 
 	def updateArchivIpkFinished(self):
-		log.logInfo("ArchivUpdater update archivCZSK from ipk/deb success. %s" % self.update_data)
+		log.logInfo("ArchivUpdater update ArchivCZSK from ipk/deb success. %s" % self.update_data)
 		self.removeTempFiles()
 
 		# restart enigma
 		if config.plugins.archivCZSK.no_restart.value and self.check_api_level():
 			self.session.openWithCallback(self.reloadArchiv, MessageBox, _("Update complete. Please start ArchivCZSK again."), type=MessageBox.TYPE_INFO)
 		else:
-			self.session.openWithCallback(self.restartArchiv, MessageBox, _("Update archivCZSK complete."), type=MessageBox.TYPE_INFO)
+			self.session.openWithCallback(self.restartArchiv, MessageBox, _("Update ArchivCZSK complete."), type=MessageBox.TYPE_INFO)
 
 	def restartArchiv(self, *args):
 		self.stop_timers()
@@ -206,16 +206,16 @@ class ArchivUpdater(RunNext):
 		self.finish_cbk('reload')
 
 	def updateArchivIpkFailed(self):
-		log.logError("ArchivUpdater update archivCZSK from ipk/deb failed. %s ### retval=%s" % (self.update_data, self.update_retval))
+		log.logError("ArchivUpdater update ArchivCZSK from ipk/deb failed. %s ### retval=%s" % (self.update_data, self.update_retval))
 
 		self.session.openWithCallback(self.updateFailed,
 				MessageBox,
-				_("Update archivCZSK failed. {cmd} returned error\n{msg}".format(cmd=self.updateMode, msg=self.update_data) ),
+				_("Update ArchivCZSK failed. {cmd} returned error\n{msg}".format(cmd=self.updateMode, msg=self.update_data) ),
 				type=MessageBox.TYPE_ERROR)
 
 	def downloadUpdateXml(self):
 		updateXml = self.updateXml.replace('{update_repository}', config.plugins.archivCZSK.update_repository.value ).replace('{update_branch}', config.plugins.archivCZSK.update_branch.value)
-		log.debug("Checking archivCZSK update from: %s" % updateXml)
+		log.debug("Checking ArchivCZSK update from: %s" % updateXml)
 
 		try:
 			util.download_to_file(updateXml, self.updateXmlFilePath, timeout=config.plugins.archivCZSK.updateTimeout.value)

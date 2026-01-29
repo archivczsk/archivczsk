@@ -80,9 +80,9 @@ class ArchivCZSKShortcut():
 			try:
 				return ArchivCZSKShortcut(session, cb)
 			except ImportError:
-				log.logError("Cannot run shortcut, archivCZSK is not installed")
-				showInfoMessage(session, _('Cannot run shortcut, archivCZSK is not installed'), 5, cb=cb)
-				print('cannot found archivCZSK')
+				log.logError("Cannot run shortcut, ArchivCZSK is not installed")
+				showInfoMessage(session, _('Cannot run shortcut, ArchivCZSK is not installed'), 5, cb=cb)
+				print('cannot found ArchivCZSK')
 				return None
 			except Exception:
 				log.logError("ArchivCZSKShortcut fatal error.\n%s" % traceback.format_exc())

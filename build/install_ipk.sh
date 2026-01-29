@@ -17,7 +17,7 @@ IPK_NAME=$(basename $IPK_PATH)
 echo "uploading ipk to $E2_HOST..."
 scp -O $IPK_NAME $E2_HOST:/tmp
 
-echo "installing archivCZSK on $E2_HOST"
+echo "installing ArchivCZSK on $E2_HOST"
 ssh $E2_HOST << EOFSSH
 opkg --force-reinstall --force-downgrade install /tmp/$IPK_NAME
 rm /tmp/$IPK_NAME

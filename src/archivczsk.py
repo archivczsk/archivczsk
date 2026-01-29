@@ -420,7 +420,7 @@ class ArchivCZSK():
 		if not modules_to_reload:
 			modules_to_reload = []
 
-		#archivCZSK and archivCZSK.plugin can't be reloaded without restart, because there are references in enigma to them
+		#archivCZSK and ArchivCZSK.plugin can't be reloaded without restart, because there are references in enigma to them
 		modules_to_reload.extend([k for k in sys.modules.keys() if k.startswith('Plugins.Extensions.archivCZSK.') and k !='Plugins.Extensions.archivCZSK.plugin'])
 		ArchivCZSK.unload_modules(modules_to_reload)
 		log.stop()

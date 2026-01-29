@@ -1,56 +1,56 @@
-archivCZSK 3.4.12, 26.01.2026
+ArchivCZSK 3.4.12, 26.01.2026
     - pridanie doplnkom možnosť nastaviť formát sťahovaného súboru
     - implementovanie sťahovania s oddelenou video a audio stopou
     - pre prehrávaní nahrávok sa použije prehrávač nastavený v nastaveniach doplnku
 
-archivCZSK 3.4.11, 20.01.2026
+ArchivCZSK 3.4.11, 20.01.2026
     - oprava sťahovania pomocou ffmpeg
     - sťahovanie prebieha po novom stále do formátu mkv, ktorý podporuje rôzne kodeky vrátane webvtt titulkov
     - vylepšenia a zmeny pre trakt.tv
     - vylepšená práca s poškodenými a nefunkčnými doplnkami
     - opravy a vylepšenia v hláseniach o chybe
 
-archivCZSK 3.4.10, 04.01.2026
+ArchivCZSK 3.4.10, 04.01.2026
     - oprava interného CSFD prehliadača
 
-archivCZSK 3.4.9, 21.10.2025
+ArchivCZSK 3.4.9, 21.10.2025
     - oprava spustenia skratky z EPG enigmy
 
-archivCZSK 3.4.8, 20.10.2025
+ArchivCZSK 3.4.8, 20.10.2025
     - oprava spustenia niektorých doplnkov s hlavného menu enigmy
     - oprava pádu pri odblokovaní rodičovského zámku z koreňového menu doplnku
 
-archivCZSK 3.4.7, 22.07.2025
+ArchivCZSK 3.4.7, 22.07.2025
     - oprava obnovenia prihlásenia pre trakt.tv
 
-archivCZSK 3.4.6, 30.06.2025
+ArchivCZSK 3.4.6, 30.06.2025
     - zjednodušenie existujúceho kódu
     - vylepšenie a zjednodušenie kódu pre aktualizácie
     - prečistenie kódu od nepoužívaných častí
     - oprava možného pádu pri kontrole platnosti stavu "podporovateľ"
 
-archivCZSK 3.4.5, 04.05.2025
+ArchivCZSK 3.4.5, 04.05.2025
     - drobné vylepšenia a opravy pádov
 
-archivCZSK 3.4.4, 01.05.2025
+ArchivCZSK 3.4.4, 01.05.2025
     - oprava pádu pri kontrole platnosti stavu "podporovateľ"
     - oprava pádu ak je pridaná skratka na doplnok pre python2 image
     - vylepšenie ladiacich výpisov počas aktualizácie
 
-archivCZSK 3.4.3, 25.04.2025
+ArchivCZSK 3.4.3, 25.04.2025
     - do nastavení doplnkov pribudla možnosť pridať skratku do hlavného menu Enigmy
     - oprava zaseknutia GUI ak doplnok nevráti URL adresu pre prehrávanie
     - opravy okolo aktualizácie bez reštartu
     - pridanie podpory pre zobrazenie ČSFD informácií pre položky uložené v záložkách
 
-archivCZSK 3.4.2, 18.04.2025
+ArchivCZSK 3.4.2, 18.04.2025
     - oprava pádu pri zobrazení zoznamu stiahnutých súborov
 
-archivCZSK 3.4.1, 17.04.2025
+ArchivCZSK 3.4.1, 17.04.2025
     - oprava reloadu doplnkov
     - oprava globálnej konfigurácie u doplnkov
 
-archivCZSK 3.4.0, 17.04.2025
+ArchivCZSK 3.4.0, 17.04.2025
     - automatická obnova licencie pri zobrazení obrazovky "Podporte nás"
     - pridaná možnosť nastaviť jazyk pluginu ako aj doplnkov nezávisle na jazyku systému
     - oprava pádu pri prehrávaní nie je dostupné aktuálne PTS
@@ -58,40 +58,40 @@ archivCZSK 3.4.0, 17.04.2025
     - reorganizácia nastavení doplnkov
     - aktualizácia pluginu a doplnkov bez potreby reštartu enigmy (možnosť zmeniť v nastaveniach)
 
-archivCZSK 3.3.2, 31.03.2025
+ArchivCZSK 3.3.2, 31.03.2025
     - oprava inštalácie závislostí pre OpenATV 7.6
 
-archivCZSK 3.3.1, 10.03.2025
+ArchivCZSK 3.3.1, 10.03.2025
     - aktualizácia API pre doplnky
     - doplnky majú možnosť nastaviť hranice pri posúvaní prehrávania
 
-archivCZSK 3.3.0, 18.02.2025
+ArchivCZSK 3.3.0, 18.02.2025
     - aktualizácia API pre doplnky
     - vylepšenia okolo trakt.tv
     - automatické vypnutie voľby HLS explorer v ServiceApp po inštalácii
 
-archivCZSK 3.2.0, 09.02.2025
+ArchivCZSK 3.2.0, 09.02.2025
     - oprava obnovy autorizačného tokenu u trakt.tv
     - vylepšenie možností pre doplnky
     - vylepšenie zobrazenia systémových chýb
 
-archivCZSK 3.1.4, 14.01.2025
+ArchivCZSK 3.1.4, 14.01.2025
     - automatická inštalácia potrebných systémových závislosti po aktualizácii
     - vylepšená kontrola závislostí jednotlivých doplnkov
 
-archivCZSK 3.1.3, 11.01.2025
+ArchivCZSK 3.1.3, 11.01.2025
     - oprava chybných atribútov v skine (spôsobuje pád na DMM image)
 
-archivCZSK 3.1.2, 06.01.2025
+ArchivCZSK 3.1.2, 06.01.2025
     - aktualizácia API pre doplnky
 
-archivCZSK 3.1.1, 29.12.2024
+ArchivCZSK 3.1.1, 29.12.2024
     - oprava EPG pre OpenATV a VTi image (automaticky nastaví väčšiu históriu)
     - nastavenie histórie EPG pre DMM
     - oprava možného pádu pri získavaní zoznamu titulkov
     - zobrazenie stavového okna pri spustení archívu cez skratku
 
-archivCZSK 3.1.0, 23.12.2024
+ArchivCZSK 3.1.0, 23.12.2024
     - pridaná integrácia priamo do systémového EPG prehliadača
         * pridá doplnkom možnosť spustenia archívu priamo z EPG v enigme
         * spustenie sa robí stlačením tlačidla PLAY na diaľkovom ovládači
@@ -99,7 +99,7 @@ archivCZSK 3.1.0, 23.12.2024
         * integráciu a počet zobrazených dní je možné nastaviť v nastaveniach
         * integrácia je predvolene zapnutá
 
-archivCZSK 3.0.2, 05.12.2024
+ArchivCZSK 3.0.2, 05.12.2024
     - zmena spôsobu práce s doplnkom označeným ako "nefunkčný"
     - opravy a vylepšenia skinu:
         * možnosť nastavenia vlastnej farby pozadia
@@ -108,10 +108,10 @@ archivCZSK 3.0.2, 05.12.2024
         * načítanie zmien v skine vo VTi a DMM bez reštartu GUI
         * opravy skinu pre DMM
 
-archivCZSK 3.0.1, 03.12.2024
+ArchivCZSK 3.0.1, 03.12.2024
     - pridaná ochrana pred načítaním neaktuálneho skinu
 
-archivCZSK 3.0.0, 01.12.2024
+ArchivCZSK 3.0.0, 01.12.2024
     - oprava tlačidla "Preskočiť" vo video prehrávači
     - pridané simple config API pre doplnky
         * umožňuje doplnkom jednoducho vytvárať komplexné dialógové okná s nastaveniami
@@ -122,11 +122,11 @@ archivCZSK 3.0.0, 01.12.2024
     - kompletne prerobená práca so skinom
         * už existuje len jeden univerzálny skin pre všetky image a rozlíšenia
 
-archivCZSK 2.8.1, 13.09.2024
+ArchivCZSK 2.8.1, 13.09.2024
     - presnejšie zobrazenie chýb pri problémoch so spojením na vzdialený server
     - info o potrebe reštartu prijímača ak sa prekročí max. limit spojení
 
-archivCZSK 2.8.0, 21.08.2024
+ArchivCZSK 2.8.0, 21.08.2024
     - vylepšené zobrazenie chýb pri chýbajúcich závislostiach modulov
     - doplnky môžu vynútiť typ použitého prehrávača
     - odstránený interný youtube_dl pre resolvovanie youtube videí
@@ -134,78 +134,78 @@ archivCZSK 2.8.0, 21.08.2024
         * náhradou je priame volanie yt doplnku
         * zmena nie je spätne kompatibilná - je nutné zaktualizovať aj doplnky
 
-archivCZSK 2.7.4, 05.08.2024
+ArchivCZSK 2.7.4, 05.08.2024
     - aktualizácia interného youtube_dl
     - oprava pádu pri vypnutom vyfarbovaní položiek (napr. pre VTi)
     - povolenie hlásení o chybe len pri aktualizovaných doplnkoch
 
-archivCZSK 2.7.3, 01.08.2024
+ArchivCZSK 2.7.3, 01.08.2024
     - oprava nefunkčného sťahovania pre DreamOS
 
-archivCZSK 2.7.2, 31.07.2024
+ArchivCZSK 2.7.2, 31.07.2024
     - pridanie možnosti automaticky odoslať hlásenie o chybe doplnku
         * ak nastane neošetrená chyba doplnku, plugin sa spýta, či má odoslať hlásenie o chybe
         * v nastaveniach je možné otázku o nahlásení chyby vypnúť
 
-archivCZSK 2.7.1, 18.07.2024
+ArchivCZSK 2.7.1, 18.07.2024
     - ak sa u doplnku zmení adresár pre sťahovanie, tak už nie je potrebný reštart
     - vylepšené nastavovanie žánrov a hodnotenia pre zobrazené položky
         * v info okne sa môže pre hodnotenie zbrazovať zdroj + ďalšie informácie
 
-archivCZSK 2.7.0, 15.07.2024
+ArchivCZSK 2.7.0, 15.07.2024
     - vylepšenie API dostupného pre doplnky:
         * doplnok môže prerušiť načítavanie bez zobrazenia hlášky pre užívateľa
         * vylepšené dialógove okno so zoznamom
         * pridaná možnosť vynúteného reloadu predchádzajúcej obrazovky
 
-archivCZSK 2.6.9, 14.06.2024
+ArchivCZSK 2.6.9, 14.06.2024
     - oprava vytvárania názvu HTTP endpointu pre neštandardné doplnky
     - oprava zachytávania chýb z requests knižnice
     - výrazne vylepšené skratky pre vstup do archívu aktuálneho programu
         * IPTV doplnkom (AntikTV, O2 TV, OrangeTV, ...) umožní ponúkať archív aj pre DVB-S programy
         * info o skratkách je popísané na WIKI https://github.com/archivczsk/archivczsk/wiki/
 
-archivCZSK 2.6.8, 02.05.2024
+ArchivCZSK 2.6.8, 02.05.2024
     - oprava detekcie a konverzie WEBVTT tituliek
 
-archivCZSK 2.6.7, 28.04.2024
+ArchivCZSK 2.6.7, 28.04.2024
     - oprava pádu pri detegovaní verzie exteplayer3
 
-archivCZSK 2.6.6, 19.04.2024
+ArchivCZSK 2.6.6, 19.04.2024
     - oprava posunu ak sú nastavené "skip times" a stream nepodporuje posun na presnú pozíciu
     - oprava nastavovania "skip times" pri použití manuálneho posunu u OpenATV 7.x
     - oprava zapínania titulkov pri aktívnom SubsSupport plugine
     - rozšírenie informácii o video prehrávači ktoré sú dostupné pre doplnky
 
-archivCZSK 2.6.5, 11.04.2024
+ArchivCZSK 2.6.5, 11.04.2024
     - oprava pádu pri prehrávaní
     - automatické mazanie nefunkčných a nepodporovaných doplnkov pri aktualizácii
 
-archivCZSK 2.6.4, 10.04.2024
+ArchivCZSK 2.6.4, 10.04.2024
     - oprava a povolenie výberu titulkov v audio menu pre všetky image
     - podpora pre embedded titulky aj bez SubsSupport (vďaka @durinov za nasmerovanie)
 
-archivCZSK 2.6.3, 23.03.2024
+ArchivCZSK 2.6.3, 23.03.2024
     - doplnky môžu pri spustení prehrávania automaticky vyvolať playlist
     - oprava pádu ak pri prehrávaní videa nie je známe PTS
     - oprava nesprávneho obnovovania informácii o položkách v zozname
 
-archivCZSK 2.6.2, 17.03.2024
+ArchivCZSK 2.6.2, 17.03.2024
     - pridanie doplnkom možnosť zakázať relatívny posun v prehrávaných streamoch
 
-archivCZSK 2.6.1, 07.03.2024
+ArchivCZSK 2.6.1, 07.03.2024
     - oprava zobrazenia ratingu u filmov
 
-archivCZSK 2.6.0, 27.02.2024
+ArchivCZSK 2.6.0, 27.02.2024
     - pridaná kontrola integrity doplnkov
     - informácie o jednolivých položkách môže po novom doplnok dodať až pri ich zobrazení
         * hodí sa to, ak pri vytváraní zoznamu napr. nie je k dispozícii popis alebo sa popis v čase mení
     - vylepšenia v spracovávaní štatistík kvôli nespávnemu času na mnohých prijímačoch
 
-archivCZSK 2.5.1, 28.01.2024
+ArchivCZSK 2.5.1, 28.01.2024
     - oprava resetovania štatistík
 
-archivCZSK 2.5.0, 27.01.2024
+ArchivCZSK 2.5.0, 27.01.2024
     - vylepšenie, oprava a rozšírenie štatistík
     - úprava a vylepšenie inštalačného balíka (malo by vyriešiť zamrznutie pri aktualizácii na OpenATV 7.x)
     - oprava výberu skinov
@@ -217,7 +217,7 @@ archivCZSK 2.5.0, 27.01.2024
         * profil sa vytvára na úvodnej obrazovke so zoznamom doplnkov stlačením MENU a výberom "Vytvoriť nový profil"
         * po tomto kroku sa vytvorý nový virtuálny doplnok s ktorým je možné pracovať tak ako s "normálnym doplnkom"
 
-archivCZSK 2.4.1, 21.01.2024
+ArchivCZSK 2.4.1, 21.01.2024
     - oprava aktualizácie rozbaľovania aktualizačných zip súborov pre doplnky ak neobsahuju cesty
     - vylepšená detekcia hw na ktorom beží plugin
     - aktivácia anonymných štatistík používania pluginu a doplnkov:
@@ -226,7 +226,7 @@ archivCZSK 2.4.1, 21.01.2024
         * pre doplnky sa posiela verzia a info o kumulatívnom čase strávenom v používaných doplnkoch
         * zasielanie je možné vypnúť v nastaveniach pluginu, no nerobte to prosím - je to potrebné pre ďalší vývoj
 
-archivCZSK 2.4.0, 07.01.2024
+ArchivCZSK 2.4.0, 07.01.2024
     - oprava interného CSFD prehliadača
     - odstránenie integrovaných závislosti pre python 2.7 z balíka (opravuje problém s mazaním /tmp adresára pri aktualizácii)
     - prečistenie kódu na viacerých miestach
@@ -241,78 +241,78 @@ archivCZSK 2.4.0, 07.01.2024
         * PIN kód sa automaticky uzamkne pri odchode z pluginu - pri novom spustení je nutné ho zadať znovu
         * PIN kód je globálny - po jeho zadaní sa odblokuje 'adult' obsah vo všetkých doplnkoch
 
-archivCZSK 2.3.7, 30.12.2023
+ArchivCZSK 2.3.7, 30.12.2023
     - vylepšené vypisovanie chybových hlásení pokiaľ zlyhá komunikácia so serverom
 
-archivCZSK 2.3.6, 01.12.2023
+ArchivCZSK 2.3.6, 01.12.2023
     - oprava chýb pri preskakovaní časových úsekov
 
-archivCZSK 2.3.5, 23.11.2023
+ArchivCZSK 2.3.5, 23.11.2023
     - pridaná podpora pre sťahovanie MPEG-DASH streamov
 
-archivCZSK 2.3.4, 08.09.2023
+ArchivCZSK 2.3.4, 08.09.2023
     - pridaná podpora pre WQHD skiny (thx durinov)
     - pridaná možnosť odhlásenia z trakt.tv
 
-archivCZSK 2.3.3, 09.06.2023
+ArchivCZSK 2.3.3, 09.06.2023
     - pridaný limit pre maximálnu veľkosť obrázku určeného na spracovanie (veľký obrázok môže zhodiť enigmu)
 
-archivCZSK 2.3.2, 19.05.2023
+ArchivCZSK 2.3.2, 19.05.2023
     - vylepšenie možností tools doplnkov
     - pridanie podpory pre skratky - umožňujú priamo pristúpiť na nejakú funkcionalitu doplnku
     - pridanie skratky pre vstup do archívu programu ak je manažovaný pomocou doplnku
 
-archivCZSK 2.3.1, 02.05.2023
+ArchivCZSK 2.3.1, 02.05.2023
     - pridanie voľby pre povolenie/zakázanie automatickej zmeny audio stopy
 
-archivCZSK 2.3.0, 24.04.2023
+ArchivCZSK 2.3.0, 24.04.2023
     - odstránenie show_msg hack API pre doplnky (náhradou je priame volanie show_message())
     - vylepšenia pri určovaní forced titulkov u nie-DMM prijímačov
     - pridanie možnosti nastaviť prehrávaču časové úseky ktoré má preskočiť (umožní preskočiť úvodnú zvučku a záverečné titulky)
 
-archivCZSK 2.2.4, 17.04.2023
+ArchivCZSK 2.2.4, 17.04.2023
     - oprava rozbaľovania playlistu pri sťahovaní
     - nové message box api pre doplnky
 
-archivCZSK 2.2.3, 14.04.2023
+ArchivCZSK 2.2.3, 14.04.2023
     - oprava voľby kvality pri sťahovaní playlistu
     - pridanie sťahovania HLS streamu pomocou ffmpeg (opravuje sťahovanie streamov s oddelenou video a audio stopou)
 
-archivCZSK 2.2.2, 12.04.2023
+ArchivCZSK 2.2.2, 12.04.2023
     - rozdelenie skinov na normálne a s transparentným pozadím
     - pridanie zobrazenia changelogu po aktualizácii doplnku
 
-archivCZSK 2.2.1, 05.04.2023
+ArchivCZSK 2.2.1, 05.04.2023
     - oprava trakt.tv scrobble pre položky v playliste
     - pridanie možnosti pre zmenu audio streamu a automatické zapnutie vnorených titulkov
     - aktualizácia playlist api
     - vypnutie verifikácie ssl pre curl downloader
 
-archivCZSK 2.2.0, 03.04.2023
+ArchivCZSK 2.2.0, 03.04.2023
     - vylepšená podpora pre titulky vrátane podpory pre VTT
     - aktualizované trakt.tv api pre doplnky
     - aktualizované client api pre doplnky
     - opravy skinov
     - oprava pádu pri nesplnených závislostiach doplnku
 
-archivCZSK 2.1.4, 17.03.2023
+ArchivCZSK 2.1.4, 17.03.2023
     - oprava prehrávania filmov zo stiahnutých položiek
     - malé opravy v gui sťahovania
 
-archivCZSK 2.1.3, 16.03.2023
+ArchivCZSK 2.1.3, 16.03.2023
     - pridanie podpory pre playlisty s oneskoreným resolvovaním URL adresy
     - pridanie možnosti prehrať všetky videa v priečinku a od aktuálneho cez kontextové menu
 
-archivCZSK 2.1.2, 15.03.2023
+ArchivCZSK 2.1.2, 15.03.2023
     - oprava korektného ukončovania servisného vlákna
     - zmena predvoleného timeoutu pre doplnky
 
-archivCZSK 2.1.1, 11.03.2023
+ArchivCZSK 2.1.1, 11.03.2023
     - oprava skinov pre VTi a iné zastaralé image
     - pridanie pycrypto do závislosti a kontrola na konfilikt s pycryptodome (kvôli chybe vo VTi)
     - oprava načítavania doplnkov používajúciche gettext lokalizácie pri EN jazyku
 
-archivCZSK 2.1.0, 10.03.2023
+ArchivCZSK 2.1.0, 10.03.2023
     - revízia a oprava cz/sk prekladov
     - pridaná možnosť lokalizácie doplnkov cez gettext
     - oprava zobrazovania tabov pre python3
@@ -330,30 +330,30 @@ archivCZSK 2.1.0, 10.03.2023
       - oprava pádu pokiaľ bolo vypnuté prednačítavanie doplnkov
       - oprava zobrazenia infobaru pri prehrávaní
 
-archivCZSK 2.0.4, 06.03.2023
+ArchivCZSK 2.0.4, 06.03.2023
     - oprava pádu pri neskorom dekódovaní obrázka
     - oprava deadlocku pri viacerých úlohách v pracovnom threade
     - vylepšenie ukončovania pracovného threadu
     - oprava nekonečného pádu pri generovaní štatistík pre DMM
 
-archivCZSK 2.0.3, 24.02.2023
+ArchivCZSK 2.0.3, 24.02.2023
     - oprava zobrazovania správ z doplnkov
     - vylepšený spôsob lokalizácie doplnkov
     - drobné vylepšenia vzhľadu
 
-archivCZSK 2.0.2, 23.02.2023
+ArchivCZSK 2.0.2, 23.02.2023
     - oprava možného zaseknutia pri zmene prehrávača cez tlačídlo 0
     - oprava nastavovania extra hlavičiek pre gst sťahovač
     - malé opravy v generovaní názvov súborov pri sťahovaní
 
-archivCZSK 2.0.1, 21.02.2023
+ArchivCZSK 2.0.1, 21.02.2023
     - opravený pád pri rýchlom stlačení play/pause za sebou
     - zapnutá podpora pre záložky pre všetky položky
     - opravené závislosti balíka pre VTi
     - voľba titulkov v audio menu je zapnutá len pre OpenPLi a OpenATV
     - pridanie možnosti zmeniť prehrávač klávesou 0
 
-archivCZSK 2.0.0, 16.02.2023
+ArchivCZSK 2.0.0, 16.02.2023
     - zmena formátu API doplnkov - kompletne prerobný spôsob komunikácie s doplnkami
     - odstránenie podpory pre služby doplnkov a nahradenie za úlohy bežiace na pozadí
     - opravený vyhľadávač a možnosť pre doplnky automaticky pridať vyhľadávanie
@@ -363,53 +363,53 @@ archivCZSK 2.0.0, 16.02.2023
     - drobné vylepšenia skinov
     - veľké prečistenie kódu a množstvo opráv naprieč celým pluginom
 
-archivCZSK 1.6.3, 25.12.2022
+ArchivCZSK 1.6.3, 25.12.2022
     - automatické zoradenie doplnkov podľa názvu
     - oprava parsovania url z m3u8 master playlistu
     - drobné opravy okolo logovania
     - pridanie možnosti pre nastavenie user agenta pre vygenerovaný userbouquet
 
-archivCZSK 1.6.2, 06.12.2022
+ArchivCZSK 1.6.2, 06.12.2022
     - oprava pádu pri vypínaní doplnku ktorý nemá podpornú službu
 
-archivCZSK 1.6.1, 05.12.2022
+ArchivCZSK 1.6.1, 05.12.2022
     - pridanie doplnkom možnosť vypnúť spracovanie hls master playlistu
     - oprava konverzie reťazcov pre python 3.x
 
-archivCZSK 1.6.0, 02.12.2022
+ArchivCZSK 1.6.0, 02.12.2022
     - pridanie možnosti pre nastavenie autorizácie pre repozitár
     - pri zakázaní doplnku sa automaticky vypne aj služba a autostart skript
     - doplnky majú možnosť povoliť/zakázať spustenie služby (pre šetrenie prostrietkov)
 
-archivCZSK 1.5.9, 28.11.2022
+ArchivCZSK 1.5.9, 28.11.2022
     - oprava behu pod python 3.11 (OpenATV 7.2)
 
-archivCZSK 1.5.8, 24.10.2022
+ArchivCZSK 1.5.8, 24.10.2022
     - oprava pádu pri volaní vyhľadávania z EPG pre python3
 
-archivCZSK 1.5.7, 21.10.2022
+ArchivCZSK 1.5.7, 21.10.2022
     - drobné opravy a vylepšenia pre doplnky
 
-archivCZSK 1.5.6, 29.09.2022
+ArchivCZSK 1.5.6, 29.09.2022
     - oprava možného pádu pri nedostupnosti SubsSupport
 
-archivCZSK 1.5.5, 20.09.2022
+ArchivCZSK 1.5.5, 20.09.2022
     - oprava pádu pri pomalom dekódovaní obrázku
     - pridanie informácie o tom, že DreamBox s originálnym SW je nepodporovaný
 
-archivCZSK 1.5.4, 28.07.2022
+ArchivCZSK 1.5.4, 28.07.2022
     - pridanie voľby pre vypnutie farbičkovania textov v hlavnej ponuke
     - možnosť nastavenia zoznamu URL pre picony
     - aktualizácia lokalizácii
 
-archivCZSK 1.5.3, 22.07.2022
+ArchivCZSK 1.5.3, 22.07.2022
     - zmena IPC protokolu pre služby na textový kvôli kompatibilite s DreamOS
     - pridanie podpory pre reload settingov na DreamOS v zabezpečenom režime
 
-archivCZSK 1.5.2, 18.07.2022
+ArchivCZSK 1.5.2, 18.07.2022
     - oprava pádu pri chybe v IPC medzi hlavnou aplikáciou a službami doplnkov
 
-archivCZSK 1.5.1, 17.07.2022
+ArchivCZSK 1.5.1, 17.07.2022
     - pridanie dĺžky filmu do stats prikazu pre doplnky
     - pridanie interného HTTP servera pre použitie doplnkami (napr. ako proxy)
     - pridanie funkcie autostart pre doplnky
@@ -417,104 +417,104 @@ archivCZSK 1.5.1, 17.07.2022
     - pridanie všeobecného bouquet generátora pre použitie doplnkami
     - úprava lokalizácii
 
-archivCZSK 1.5.0, 09.06.2022
+ArchivCZSK 1.5.0, 09.06.2022
     - oprava detekcie prehrávača gstplayer
     - pridanie informácie pri štarte o nutnosti inštalácie ServiceApp
     - oprava konverzie názvov pri sťahovaní video súborov
     - vylepšenia spôsobu aktualizácie a možnosť prepnutia medzi stabilým a testovacím vydaním
     - nový engine pre trakt.tv vrátane automatického scrobblingu počas prehrávania (ak doplnok dodá potrebné info)
 
-archivCZSK 1.4.9, 31.05.2022
+ArchivCZSK 1.4.9, 31.05.2022
     - možnosť zapnutia/vypnutia podpory pre youtube videa (užitočné pre pomalé prijímače s málo RAM)
     - zjednodušenie aktualizácie doplnkov
     - pridanie podpory pre viac repozitárov
     - oprava pohybu v menu addonu pre OpenATV 7.0
     - úpravy pre Trakt.tv
 
-archivCZSK 1.4.8, 13.05.2022
+ArchivCZSK 1.4.8, 13.05.2022
     - oprava pádu pri obnovení prehrávania
     - pridanie podpory pre nastavenie prehrávača z addonu
     - pridanie podpory pre rozšírený stats príkaz pre addony
     - opravy lokalizácie a iné drobnosti
 
-archivCZSK 1.4.7, 28.04.2022
+ArchivCZSK 1.4.7, 28.04.2022
     - zrušenie rozlišovania video a TV doplnkov
     - automatická detekcia ServiceApp a dostupných prehrávačov
     - zmena formátu aktualizácie zo .zip na ipk/deb
     - oprava zachovávania atribútov súborov pri aktualizácii doplnkov
 
-archivCZSK 1.4.6, 19.04.2022
+ArchivCZSK 1.4.6, 19.04.2022
     - oprava mazania formatovacich znakov na dalsich miestach
     - presun aktualizacie archivu a doplnkov do noveho repozitara
 
-archivCZSK 1.4.5, 10.04.2022
+ArchivCZSK 1.4.5, 10.04.2022
     - moznost volby titulkov z menu pre vyber audio stopy
     - oprava formatovacich znakov v niektorych textoch
 
-archivCZSK 1.4.4, 07.04.2022
+ArchivCZSK 1.4.4, 07.04.2022
     - oprava ukladania favoritnych poloziek
     - oprava interneho csfd prehliadaca
 
-archivCZSK 1.4.3, 06.04.2022
+ArchivCZSK 1.4.3, 06.04.2022
     - oprava stahovania suborov pre python 3.x
 
-archivCZSK 1.4.2, 06.04.2022
+ArchivCZSK 1.4.2, 06.04.2022
     - pridana moznost volby prehravaca pre kazdy addon zvlast
     - pridana moznost volby prehravaca z kontextoveho menu filmu
     - opraveny pad pri stahovani cez HTTPS
     - oprava nespravnych odsadeni v niektotych castiach kodu
 
-archivCZSK 1.4.1, 05.04.2022
+ArchivCZSK 1.4.1, 05.04.2022
     - opraveny jeden pad + niekolko chyb pri chybajucom SubsSupport
 
-archivCZSK 1.4.0, 04.04.2022
+ArchivCZSK 1.4.0, 04.04.2022
     - pridana kompatibilita s python 3.x
 
-archivCZSK 1.3.8, 22.01.2021
+ArchivCZSK 1.3.8, 22.01.2021
     - oprava ukladani z virtualni klavesnice
     - nacteni vsech doplnku i pri jednom spatnem doplnku
     - oprava zelene smrti pri spatnem addon_order
 
-archivCZSK 1.3.6, 16.11.2020
+ArchivCZSK 1.3.6, 16.11.2020
     - update Youtube knihoven
     - cervene tlacitko zobrazi Zmeny otevreneho doplnku (Changelog)
 
-archivCZSK 1.3.5, 21.07.2020
+ArchivCZSK 1.3.5, 21.07.2020
     - zruseni kontroly knihoven
     - odstranena potreba requests
 
-archivCZSK 1.3.4, 18.07.2020
+ArchivCZSK 1.3.4, 18.07.2020
     - update youtube_dl, logovani, skinu, prekladu, seekeru pro SCC
 
-archivCZSK 1.3.3, 22.05.2020
+ArchivCZSK 1.3.3, 22.05.2020
     - oprava vnorenych titulku
 
-archivCZSK 1.3.2, 14.05.2020
+ArchivCZSK 1.3.2, 14.05.2020
     - oprava virtualni klavesnice
     - uprava logovani chyb
 
-archivCZSK 1.3.1, 13.05.2020
+ArchivCZSK 1.3.1, 13.05.2020
     - doplnky ktore su vypnute sa uz nezobrazuju
     - oprava auto-update
     - oprava krachu na DM
     - opravy prekladov
 
-archivCZSK 1.3.0, 12.05.2020
+ArchivCZSK 1.3.0, 12.05.2020
     - pridana podpora pre prehravanie youtube videii
     - umoznit nezobrazit uz nepodporovane doplnky
     - zvacsene obrazky v hd skine
 
-archivCZSK 1.2.3, 22.04.2020
+ArchivCZSK 1.2.3, 22.04.2020
     - odstranena hlaska na premium
     - odstranena nepotrebna hlaska o videoprehravaci pri prvotnom spusteni
     - odstranene zaseky pri pohybe v menu pri stahovani obrazkov
     - rychlejsia kontrola aktualizacii, zobrazena hlaska pri kontrole
     - oprava zobrazenia poloziek pre ivysilani
 
-archivCZSK 1.2.2, 05.05.2019
+ArchivCZSK 1.2.2, 05.05.2019
     - hlaska na vyskusanie premium verzie sa zobrazi len raz (ak uzivatel zvoli nie)
 
-archivCZSK 1.2.0, 03.05.2019
+ArchivCZSK 1.2.0, 03.05.2019
 ---------------------------------------------
     - drobne opravy
     - neposielanie cmdStats ked to doplnok nepodporuje
@@ -523,19 +523,19 @@ archivCZSK 1.2.0, 03.05.2019
     - odstranena poziadavka na subsupport pri instalacii .ipk
     - moznost prechodu na premiovu verziu
 
-archivCZSK 1.1.2, 14.11.2018
+ArchivCZSK 1.1.2, 14.11.2018
 ---------------------------------------------
     - uprava handlingu zobrazovania message boxov
     - uprava spravania pre Trakt.tv
     - upravene stahovanie titulkov ak su k streamu poskytnute
     - oprava priameho hladania v CSFD z EPG
 
-archivCZSK 1.1.1, 26.8.2018
+ArchivCZSK 1.1.1, 26.8.2018
 ---------------------------------------------
     - oprava hlasky stahovaneho suboru
     - oprava kontroly aktualizacii
 
-archivCZSK 1.1.0, 23.6.2018
+ArchivCZSK 1.1.0, 23.6.2018
 ---------------------------------------------
     - podpora funkcie trakt.tv ak to doplnok umoznuje (stream-cinema) aj pre OE2.5
     - automaticke oznacenie filmu ako videny po zhliadnuti viac ako 80% (trakt)
@@ -545,54 +545,54 @@ archivCZSK 1.1.0, 23.6.2018
     - drobne opravy (oprava nazvu suboru pri stiahnuti na HDD, skiny, ...)
     - zmeny v instalacnom balicku (pre openPLi[ATV] 6.2)
 
-archivCZSK 1.0.7, 14.2.2018
+ArchivCZSK 1.0.7, 14.2.2018
 ---------------------------------------------
     - stahovanie cez curl pre http download
     - uprava skinov pre DreamBox
 
-archivCZSK 1.0.6, 28.1.2018
+ArchivCZSK 1.0.6, 28.1.2018
 ---------------------------------------------
     - kozmeticka uprava skinov
     - obnovene nastavenie pre rychle vyhladavanie
     - fix oznamenia o aktualizacii archivu
     - fix prekryvania okien pre DM (vyber streamu SC, Sosac)
 
-archivCZSK 1.0.5, 14.01.2018
+ArchivCZSK 1.0.5, 14.01.2018
 ---------------------------------------------
     - fix priameho vyhladavania v pluginoch (pridany stream-cinema a Csfd)
 
-archivCZSK 1.0.4, 29.12.2017
+ArchivCZSK 1.0.4, 29.12.2017
 ---------------------------------------------
     - fix default hd skin
 
-archivCZSK 1.0.3, 28.12.2017
+ArchivCZSK 1.0.3, 28.12.2017
 ---------------------------------------------
     - pri aktualizacii sa vymazu len skiny zacinajuce default_* (/gui/skins/)
     - upraveny DMM skin
     - fix VK pri vti 13 sposoboval pad systemu
     - fix sipka hore pri spustenom filme sposobovala pad systemu
 
-archivCZSK 1.0.2, 15.12.2017
+ArchivCZSK 1.0.2, 15.12.2017
 ---------------------------------------------
     - rozsirena funkcionalita
     - upraveny FHD, UHD skin pre Dreambox
     - fix logging
 
-archivCZSK 1.0.1, 12.12.2017
+ArchivCZSK 1.0.1, 12.12.2017
 ---------------------------------------------
     - zmenena predvolena cesta ukladania plagatov (10) (/tmp)
     - UHD skin thanks @shamann1
     - logging improvements
     - fix dotahovania plagatov pri niektorych doplnkoch
 
-archivCZSK 1.0, 05.12.2017
+ArchivCZSK 1.0, 05.12.2017
 ---------------------------------------------
     - automaticka aktualizacia pluginu so zachovanim udajov
     - volba CSFD pluginu (+interny)
     - rozsirene informacie o filme (pokial ich doplnok poskytuje)
     - definovanie vlastneho radenia doplnok (prinosne pri vlastnej kategorii)
     - predny panel setoboxu zobrazuje co sa prave prehrava
-    - logovanie (default: /tmp/archivCZSK.log)
+    - logovanie (default: /tmp/ArchivCZSK.log)
     - vylepsena funkcionalita aktualizacie doplnkov
     - kontrola aktualizacii pri spusteni pluginu resp. po uplynuti 2h od poslednej kontroly
     - uprava designu skinov
@@ -850,7 +850,7 @@ dmd_xbmc
 verzia 0.7 alpha8:
 Vseobecne:
 - opraveny cesky preklad - thx Quido56
-- oprava nacitania informacii a obrazku o archive po otvoreni archivCZSK - thx shamann
+- oprava nacitania informacii a obrazku o archive po otvoreni ArchivCZSK - thx shamann
 - zmazany povodny spinner
 - pridana moznost rychleho vyhladavania v OnlineFiles:
    * spustenie po podrzani tlacidla EPG -> ArchivCZSK vyhladavanie

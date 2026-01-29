@@ -46,7 +46,7 @@ def getCapabilities():
 
 def search(session, search_exp, addon_id, mode=None, cb=None):
 	"""
-	Vyhlada v archivCZSK hladany vyraz prostrednictvom addonu s addon_id s modom vyhladavania mode
+	Vyhlada v ArchivCZSK hladany vyraz prostrednictvom addonu s addon_id s modom vyhladavania mode
 	@param : session - aktivna session
 	@param : search_exp - hladany vyraz
 	@param : addon_id - id addonu v ktorom chceme vyhladavat
@@ -97,9 +97,9 @@ class ArchivCZSKSeeker():
 			try:
 				return ArchivCZSKSeeker(session, cb)
 			except ImportError:
-				log.logError("Cannot search, archivCZSK is not installed")
-				showInfoMessage(session, _('Cannot search, archivCZSK is not installed'), 5, cb=cb)
-				print('cannot found archivCZSK')
+				log.logError("Cannot search, ArchivCZSK is not installed")
+				showInfoMessage(session, _('Cannot search, ArchivCZSK is not installed'), 5, cb=cb)
+				print('cannot found ArchivCZSK')
 				return None
 			except Exception:
 				log.logError("ArchivCZSKSeeker fatal error.\n%s" % traceback.format_exc())
@@ -155,7 +155,7 @@ class ArchivCZSKSeeker():
 
 	def search(self, search_exp, addon_id, mode=None):
 		if self.searching:
-			showInfoMessage(self.session, _("You cannot search, archivCZSK Search is already running"))
+			showInfoMessage(self.session, _("You cannot search, ArchivCZSK Search is already running"))
 			print("%s cannot search, searching is not finished" % self)
 			return
 		if addon_id.lower() == 'csfd':
