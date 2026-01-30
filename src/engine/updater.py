@@ -396,7 +396,7 @@ class AddonsUpdater(RunNext):
 		if config.plugins.archivCZSK.cleanupBrokenAddons.value:
 			from ..archivczsk import ArchivCZSK
 			for addon in ArchivCZSK.get_addons():
-				if addon.info.broken and not addon.supported:
+				if (addon.broken_msg or addon.info.broken) and not addon.supported:
 					log.logInfo("Addon %s is broken and not supported - removing" % addon.id)
 					addon.remove()
 

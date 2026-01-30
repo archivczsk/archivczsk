@@ -253,7 +253,7 @@ class ArchivCZSKVideoAddonsManagementScreen(BaseContentScreen, TipBar):
 		for item in self.lst_items:
 			addon = item.addon
 			name = item.name
-			if addon.get_info('broken'):
+			if addon.broken_msg or addon.get_info('broken'):
 				itemColor = 0xff0000
 				addonState = _("broken")
 			elif addon.get_info('deprecated'):
@@ -424,7 +424,7 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 				if getattr(item, "addon", False):
 					if item.addon.get_info('deprecated'):
 						itemColor = 0xff8000
-					elif item.addon.get_info('broken'):
+					elif item.addon.broken_msg or item.addon.get_info('broken'):
 						itemColor = 0xff0000
 					elif not item.addon.supported:
 						itemColor = 0xc0c0c0

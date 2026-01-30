@@ -44,6 +44,7 @@ class Addon(object):
 		self.dependencies_checked = False
 		self.integrity = None
 		self.last_bugreport = 0
+		self.broken_msg = None
 
 		log.info("%s - initializing", self)
 
@@ -79,9 +80,10 @@ class Addon(object):
 			return False
 
 	def check_update(self, load_xml=True, force_update=False):
-		self.__need_update, self.info.broken = self._updater.check_addon(self, load_xml)
+		self.__need_update, self.broken_msg = self._updater.check_addon(self, load_xml)
 		if force_update:
 			self.__need_update = True
+
 		return self.__need_update
 
 	def need_update(self):

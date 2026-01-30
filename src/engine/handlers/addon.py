@@ -101,7 +101,7 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 			self.session.openWithCallback(handle_integrity_fail_answer, MessageBox, message, type=MessageBox.TYPE_YESNO)
 
 		addon = item.addon
-		if addon.get_info('broken'):
+		if addon.broken_msg or addon.get_info('broken'):
 			self._handle_broken_addon(addon)
 		elif addon.get_info('deprecated'):
 			self._handle_deprecated_addon(addon)
@@ -131,7 +131,7 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 			self.open_item(self.item, params=sc_item.params)
 
 	def _handle_broken_addon(self, addon):
-		reason = py2_encode_utf8( addon.get_info('broken') )
+		reason = py2_encode_utf8( addon.broken_msg or addon.get_info('broken') )
 		message = _("Addon is broken") + '\n'
 		message += _("Reason") + ':\n' + reason
 
@@ -313,7 +313,7 @@ class VideoAddonManagement(ItemHandler):
 								   params={'session':self.session})
 
 		item.add_context_menu_item(_("Remove"),
-								enabled=not addon.supported or addon.info.broken,
+								enabled=not addon.supported or (addon.broken_msg or addon.info.broken),
 								action=self._remove_addon,
 								params={'addon':addon})
 		ItemHandler._init_menu(self, item)
