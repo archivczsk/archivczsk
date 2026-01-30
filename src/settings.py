@@ -134,8 +134,6 @@ else:
 	# only official repo is allowed
 	config.plugins.archivCZSK.update_branch=ConfigSelectionTr(tr, default='main',  choices=[ ('main', _('Stable')), ('testing', _("Testing"))])
 	config.plugins.archivCZSK.update_repository.setValue('archivczsk')
-config.plugins.archivCZSK.autoUpdate = ConfigYesNo(default=True)
-config.plugins.archivCZSK.autoUpdate.addNotifier(changeAutoUpdate)
 config.plugins.archivCZSK.no_restart = ConfigYesNo(default=True)
 config.plugins.archivCZSK.updateTimeout = ConfigInteger(default=8, limits=(0,30))
 config.plugins.archivCZSK.preload = ConfigYesNo(default=True)
@@ -187,9 +185,8 @@ def get_main_settings():
 	list.append(getConfigListEntry(_("Font size in lists (in %)"), config.plugins.archivCZSK.font_size))
 	list.append(getConfigListEntry(_("Enable colored items"), config.plugins.archivCZSK.colored_items))
 	list.append(getConfigListEntry(_("Default category"), config.plugins.archivCZSK.defaultCategory))
-	list.append(getConfigListEntry(_("Allow ArchivCZSK auto update"), config.plugins.archivCZSK.archivAutoUpdate))
-	list.append(getConfigListEntry(_("Allow addons auto update"), config.plugins.archivCZSK.autoUpdate))
-	if config.plugins.archivCZSK.archivAutoUpdate.value or config.plugins.archivCZSK.autoUpdate.value:
+	list.append(getConfigListEntry(_("Allow update check of ArchivCZSK and addons"), config.plugins.archivCZSK.archivAutoUpdate))
+	if config.plugins.archivCZSK.archivAutoUpdate.value:
 		list.append(getConfigListEntry(_("Update timeout"), config.plugins.archivCZSK.updateTimeout))
 		if config.plugins.archivCZSK.allow_custom_update.value:
 			list.append(getConfigListEntry(_("Update repository"), config.plugins.archivCZSK.update_repository))

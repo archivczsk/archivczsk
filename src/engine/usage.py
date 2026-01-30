@@ -271,7 +271,7 @@ class UsageStats(object):
 					'version': version,
 					'id': stbinfo.installation_id,
 					'update_enabled': config.plugins.archivCZSK.archivAutoUpdate.value,
-					'addons_update_enabled': config.plugins.archivCZSK.autoUpdate.value,
+					'addons_update_enabled': config.plugins.archivCZSK.archivAutoUpdate.value,
 					'update_channel': config.plugins.archivCZSK.update_branch.value,
 					'counters': self.counters,
 					'license': ArchivCZSKLicense.get_instance().is_valid(),

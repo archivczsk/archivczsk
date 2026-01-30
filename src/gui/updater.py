@@ -63,7 +63,7 @@ class ArchivCZSKUpdateInfoScreen(Screen):
 		except:
 			log.logError("canCheckUpdate failed.\n%s"%traceback.format_exc())
 
-		return config.plugins.archivCZSK.archivAutoUpdate.value or config.plugins.archivCZSK.autoUpdate.value
+		return config.plugins.archivCZSK.archivAutoUpdate.value
 
 	def checkArchivUpdate(self):
 		try:
@@ -77,7 +77,7 @@ class ArchivCZSKUpdateInfoScreen(Screen):
 
 	def archiv_update_finished(self, result='continue'):
 		self.__upd = None
-		if result == 'continue' and config.plugins.archivCZSK.autoUpdate.value:
+		if result == 'continue':
 			self.checkAddonsUpdate()
 		else:
 			self.close(result)
@@ -103,7 +103,5 @@ class ArchivCZSKUpdateInfoScreen(Screen):
 
 		if config.plugins.archivCZSK.archivAutoUpdate.value:
 			self.checkArchivUpdate()
-		elif config.plugins.archivCZSK.autoUpdate.value:
-			self.checkAddonsUpdate()
 		else:
 			self.close('continue')

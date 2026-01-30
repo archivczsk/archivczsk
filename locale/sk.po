@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-01-29 19:04+0100\n"
-"PO-Revision-Date: 2026-01-15 13:20+0100\n"
+"POT-Creation-Date: 2026-01-30 08:00+0100\n"
+"PO-Revision-Date: 2026-01-30 08:01+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: sk\n"
@@ -864,243 +864,239 @@ msgstr "Stabilný"
 msgid "Testing"
 msgstr "Testovací"
 
-#: src/settings.py:171
+#: src/settings.py:169
 msgid "Internal"
 msgstr "Interný"
 
-#: src/settings.py:171
+#: src/settings.py:169
 msgid "CSFD"
 msgstr "CSFD"
 
-#: src/settings.py:171
+#: src/settings.py:169
 msgid "CSFDLite"
 msgstr "CSFDLite"
 
-#: src/settings.py:180
+#: src/settings.py:178
 msgid "Enable developer mode (use only for developing addons)"
 msgstr "Povolenie režimu pre vývojárov (použite len na vývoj doplnkov)"
 
-#: src/settings.py:182
+#: src/settings.py:180
 msgid "Plugin language"
 msgstr "Jazyk pluginu"
 
-#: src/settings.py:183
+#: src/settings.py:181
 msgid "Use background color and transparency from system"
 msgstr "Použiť farbu pozadia a transparentnosť zo systému"
 
-#: src/settings.py:185
+#: src/settings.py:183
 msgid "Background transparency (in %)"
 msgstr "Priehľadnosť pozadia (v %)"
 
-#: src/settings.py:186
+#: src/settings.py:184
 msgid "Background color (RGB format)"
 msgstr "Farba pozadia (formát RGB)"
 
-#: src/settings.py:187
+#: src/settings.py:185
 msgid "Font size in lists (in %)"
 msgstr "Veľkosť písma v zoznamoch (v %)"
 
-#: src/settings.py:188
+#: src/settings.py:186
 msgid "Enable colored items"
 msgstr "Povoliť vyfarbovanie jednotlivých položiek v zozname"
 
-#: src/settings.py:189
+#: src/settings.py:187
 msgid "Default category"
 msgstr "Predvolená kategória"
 
+#: src/settings.py:188
+msgid "Allow update check of ArchivCZSK and addons"
+msgstr "Povoliť kontrolu aktualizácií ArchivCZSK a doplnkov"
+
 #: src/settings.py:190
-msgid "Allow ArchivCZSK auto update"
-msgstr "Povoliť kontrolu aktualizácií ArchivCZSK"
-
-#: src/settings.py:191
-msgid "Allow addons auto update"
-msgstr "Povoliť kontrolu aktualizácií doplnkov"
-
-#: src/settings.py:193
 msgid "Update timeout"
 msgstr "Časový limit aktualizácie"
 
-#: src/settings.py:195
+#: src/settings.py:192
 msgid "Update repository"
 msgstr "Aktualizačný repozitár"
 
-#: src/settings.py:196
+#: src/settings.py:193
 msgid "Update channel"
 msgstr "Aktualizačný kanál"
 
-#: src/settings.py:197
+#: src/settings.py:194
 msgid "Enable update without enigma restart"
 msgstr "Povolenie aktualizácie bez reštartu enigmy"
 
-#: src/settings.py:198
+#: src/settings.py:195
 msgid "Show changelog after update"
 msgstr "Po aktualizácii zobraziť zoznam zmien"
 
-#: src/settings.py:199
+#: src/settings.py:196
 msgid "Check addons integrity"
 msgstr "Kontrolovať integritu doplnkov"
 
-#: src/settings.py:203
+#: src/settings.py:200
 msgid "Show movie poster"
 msgstr "Zobraziť plagát filmu"
 
-#: src/settings.py:205
+#: src/settings.py:202
 msgid "Poster maximum processing size (in kB)"
 msgstr "Maximálna veľkosť plagátu pre spracovanie (v kB)"
 
-#: src/settings.py:206
+#: src/settings.py:203
 msgid "Max posters on HDD"
 msgstr "Max počet plagátov na disku"
 
-#: src/settings.py:210
+#: src/settings.py:207
 msgid "Add to extensions menu"
 msgstr "Pridať do menu rozšírení"
 
-#: src/settings.py:211
+#: src/settings.py:208
 msgid "Add to main menu"
 msgstr "Pridať do hlavného menu"
 
-#: src/settings.py:212
+#: src/settings.py:209
 msgid "Add archive enter shortcut to extensions menu"
 msgstr "Pridať skratku pre vstup do archívu do menu rozšírení"
 
-#: src/settings.py:213
+#: src/settings.py:210
 msgid "Add search option in epg menu"
 msgstr "Pridať vyhľadávanie v ArchivCZSK na dlhé stlačenie EPG/INFO"
 
-#: src/settings.py:214
+#: src/settings.py:211
 msgid "Integrate into EPG viewer (need restart)"
 msgstr "Integrácia do prehliadača EPG (potrebný reštart)"
 
-#: src/settings.py:216
+#: src/settings.py:213
 msgid "Number of history days in EPG viewer (need restart)"
 msgstr "Počet dní histórie v prehliadači EPG (potrebný reštart)"
 
-#: src/settings.py:220
+#: src/settings.py:217
 msgid "CSFD plugin"
 msgstr "CSFD plugin"
 
-#: src/settings.py:249
+#: src/settings.py:246
 msgid "Show more info about player"
 msgstr "Zobraziť informácie o prehrávači"
 
-#: src/settings.py:250
+#: src/settings.py:247
 msgid "RTMP Timeout"
 msgstr "RTMP Timeout"
 
-#: src/settings.py:251
+#: src/settings.py:248
 msgid "RTMP Buffer"
 msgstr "RTMP Buffer"
 
-#: src/settings.py:252
+#: src/settings.py:249
 msgid "Confirm exit when closing player"
 msgstr "Potvrdiť ukončenie prehrávania"
 
-#: src/settings.py:253
+#: src/settings.py:250
 msgid "Allow automatically changing audio track"
 msgstr "Povoliť automatickú zmenu zvukovej stopy"
 
-#: src/settings.py:277
+#: src/settings.py:274
 msgid "Change parental control settings"
 msgstr "Zmeniť nastavenie rodičovskej kontroly"
 
-#: src/settings.py:279
+#: src/settings.py:276
 msgid "Your PIN code is set to default 0000. Please change it to your own value."
 msgstr "Váš PIN kód je nastavený na predvolený 0000. Prosím zmeňte si ho na vlastnú hodnotu."
 
-#: src/settings.py:281
+#: src/settings.py:278
 msgid "Enable parental control"
 msgstr "Povoliť rodičovskú kontrolu"
 
-#: src/settings.py:282
+#: src/settings.py:279
 msgid "Change parental control PIN"
 msgstr "Zmeniť PIN pre rodičovskú kontrolu"
 
-#: src/settings.py:283
+#: src/settings.py:280
 msgid "Show adult content"
 msgstr "Zobrazovať obsah pre dospelých"
 
-#: src/settings.py:284
+#: src/settings.py:281
 msgid "Show posters for adult content"
 msgstr "U obsahu pre dospelých zobrazovať postery"
 
-#: src/settings.py:305
+#: src/settings.py:302
 msgid "Data path"
 msgstr "Adresár pre dáta"
 
-#: src/settings.py:306
+#: src/settings.py:303
 msgid "Temp path"
 msgstr "Dočasný adresár"
 
-#: src/settings.py:307
+#: src/settings.py:304
 msgid "Downloads path"
 msgstr "Sťahovať do"
 
-#: src/settings.py:308
+#: src/settings.py:305
 msgid "Posters path"
 msgstr "Plagáty sťahovať do"
 
-#: src/settings.py:310
+#: src/settings.py:307
 msgid "Log path"
 msgstr "Logovať do"
 
-#: src/settings.py:327
+#: src/settings.py:324
 msgid "info"
 msgstr "info"
 
-#: src/settings.py:327
+#: src/settings.py:324
 msgid "debug"
 msgstr "debug"
 
-#: src/settings.py:347
+#: src/settings.py:344
 msgid "Debug mode"
 msgstr "Debug mód"
 
-#: src/settings.py:348
+#: src/settings.py:345
 msgid "Allow sending bug reports on addon error"
 msgstr "Povoliť posielanie chybových hlásení pri chybe doplnku"
 
-#: src/settings.py:349
+#: src/settings.py:346
 msgid "Allow preloading of addons on start"
 msgstr "Povoliť prednačítavanie doplnkov pri štarte"
 
-#: src/settings.py:350
+#: src/settings.py:347
 msgid "Confirm exit when closing plugin"
 msgstr "Potvrdiť ukončenie ArchivCZSK"
 
-#: src/settings.py:351
+#: src/settings.py:348
 msgid "Show broken addons"
 msgstr "Zobraziť nefunkčné doplnky"
 
-#: src/settings.py:352
+#: src/settings.py:349
 msgid "Show not supported addons"
 msgstr "Zobraziť nepodporované doplnky"
 
-#: src/settings.py:353
+#: src/settings.py:350
 msgid "On update remove broken and not supported addons"
 msgstr "Pri aktualizácii odstrániť nefunkčné a nepodporované doplnky"
 
-#: src/settings.py:354
+#: src/settings.py:351
 msgid "Show video source selection"
 msgstr "Zobraziť výber zdroju videa"
 
-#: src/settings.py:355
+#: src/settings.py:352
 msgid "Convert captcha images to 8bit"
 msgstr "Konvertovať captcha obrázky"
 
-#: src/settings.py:356
+#: src/settings.py:353
 msgid "Drop caches on exit"
 msgstr "Vymazať medzipamäť po ukončení"
 
-#: src/settings.py:357
+#: src/settings.py:354
 msgid "Internal HTTP server listen port"
 msgstr "Port interného HTTP servera"
 
-#: src/settings.py:358
+#: src/settings.py:355
 msgid "Run HTTP only for internal addons usage"
 msgstr "Spustiť HTTP server iba pre interné použitie doplnkami"
 
-#: src/settings.py:362
+#: src/settings.py:359
 msgid "Allow sending anonymous usage statistics"
 msgstr "Povoliť posielanie anonymných štatistík používania pluginu"
 
@@ -1833,6 +1829,12 @@ msgstr "Ak je aktuálny kanál spravovaný doplnkom pre ArchivCZSK, potom otvor�
 #: src/plugin.py:106
 msgid "Search in ArchivCZSK"
 msgstr "Vyhľadávanie v ArchivCZSK"
+
+#~ msgid "Allow ArchivCZSK auto update"
+#~ msgstr "Povoliť kontrolu aktualizácií ArchivCZSK"
+
+#~ msgid "Allow addons auto update"
+#~ msgstr "Povoliť kontrolu aktualizácií doplnkov"
 
 #~ msgid "List of storage devices"
 #~ msgstr "Zoznam úložísk"
