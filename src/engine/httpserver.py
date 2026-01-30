@@ -151,6 +151,16 @@ class ArchivCZSKE2ReloadHandler(object):
 
 		return b'E2 reload activated\n'
 
+class ArchivCZSKUpdateHandler(object):
+	def render(self, request):
+		from .updater import HeadlessUpdater
+		HeadlessUpdater.get_instance().check_updates(True)
+		request.send_response(200)
+		request.send_header("content-type", "text/plain; charset=utf-8")
+
+		return b'Update finished\n'
+
+
 class Handler(BaseHTTPRequestHandler):
 	protocol_version = 'HTTP/1.1'
 
@@ -249,6 +259,8 @@ class ArchivCZSKHttpServer(object):
 		self.port = config.plugins.archivCZSK.httpPort.value
 		self.running = None
 		self.server = None
+		self.root['update'] = ArchivCZSKUpdateHandler()
+
 		if ArchivCZSKLicense.get_instance().check_level(ArchivCZSKLicense.LEVEL_DEVELOPER):
 			log.info("Adding RELOAD endpoint to HTTP server")
 			self.root['reload'] = ArchivCZSKReloadHandler()

@@ -9,6 +9,8 @@ import os
 import shutil
 import traceback
 import threading
+import json
+from datetime import datetime, timedelta
 from .tools import util, parser
 from .tools.unzip import unzip_to_dir
 from .tools.util import toString
@@ -16,17 +18,36 @@ from ..compat import eCompatTimer
 from .exceptions.updater import UpdateXMLVersionError, UpdateXMLNoUpdateUrl
 from .tools.logger import log
 from .tools.lang import _
+from .bgservice import AddonBackgroundService, callFromService
 from ..py3compat import *
 
 from Components.Console import Console
 from Components.config import config
 from Screens.MessageBox import MessageBox
 
+def canCheckUpdate():
+	limitHour = 4
+
+	try:
+		from .. import UpdateInfo
+
+		if UpdateInfo.CHECK_UPDATE_TIMESTAMP is None:
+			UpdateInfo.CHECK_UPDATE_TIMESTAMP = datetime.now()
+		else:
+			delta = UpdateInfo.CHECK_UPDATE_TIMESTAMP + timedelta(hours=limitHour)
+			if datetime.now() > delta:
+				UpdateInfo.CHECK_UPDATE_TIMESTAMP = datetime.now()
+			else:
+				return False
+	except:
+		log.logError("canCheckUpdate failed.\n%s"%traceback.format_exc())
+
+	return config.plugins.archivCZSK.archivAutoUpdate.value
+
 class RunNext(object):
 	def __init__(self, updateDialog):
 		self.__updateDialog = updateDialog
 		self.__cbk = None
-
 		self.updateCheckTimer = eCompatTimer(self.cbk_wrapper)
 
 	def stop_timers(self):
@@ -63,8 +84,15 @@ class RunNext(object):
 			self.__updateDialog.hide()
 
 class FakeSession(object):
-	def openWithCallback(cbk, *args, **kwargs):
-		cbk(True)
+	def openWithCallback(self, cbk, *args, **kwargs):
+		def _run_cbk():
+			self._t.stop()
+			cbk(True)
+			del self._t
+
+		self._t = eCompatTimer(_run_cbk)
+		self._t.start(100)
+
 
 class ArchivUpdater(RunNext):
 	def __init__(self, finish_cbk, update_dialog=None):
@@ -285,7 +313,7 @@ class AddonsUpdater(RunNext):
 		log.info("Checking addons update...")
 		self.run_next(self.check_addon_updates, _("Checking for addons update"))
 
-	def check_addon_updates(self):
+	def check_addon_updates(self, check_only=False):
 		from ..archivczsk import ArchivCZSK
 		lock = threading.Lock()
 		threads = []
@@ -299,8 +327,7 @@ class AddonsUpdater(RunNext):
 			except UpdateXMLNoUpdateUrl:
 				log.info('Repository %s has no update URL set - addons update is for this repository disabled', repository)
 			except Exception:
-				traceback.print_exc()
-				log.error('error when checking updates for repository %s', repository)
+				log.error('error when checking updates for repository %s\n%s', (repository, traceback.format_exc()))
 		for repository in ArchivCZSK.get_repositories():
 			threads.append(threading.Thread(target=check_repository, args=(repository,)))
 		for t in threads:
@@ -313,9 +340,10 @@ class AddonsUpdater(RunNext):
 			update_string += "\n...\n..."
 		self.__update_string = update_string
 
-		self.run_next(self.check_updates_finished, _("Some addons need update") if self.__update_string else _("All addons are up to date"))
+		if not check_only:
+			self.run_next(self.check_updates_finished, _("Some addons need update") if self.__update_string else _("All addons are up to date"))
 
-	def check_updates_finished(self, callback=None):
+	def check_updates_finished(self):
 		update_string = self.__update_string
 		del self.__update_string
 		if update_string != '':
@@ -395,7 +423,11 @@ class AddonsUpdater(RunNext):
 		from ..archivczsk import ArchivCZSK
 		ArchivCZSK.reload_addons()
 		self.updated_addons = []
-		self.run_next(self.continueToArchiv, _("Addons were reloaded"))
+		self.run_next(self.reread_remote_repositories, _("Addons were reloaded"))
+
+	def reread_remote_repositories(self):
+		self.check_addon_updates(True)
+		self.continueToArchiv()
 
 	def continueToArchiv(self):
 		self.stop_timers()
@@ -621,3 +653,176 @@ class DummyAddon(object):
 
 	def update(self):
 		return self.repository._updater.update_addon(self)
+
+class HeadlessUpdater(object):
+	__instance = None
+
+	@staticmethod
+	def start():
+		if HeadlessUpdater.__instance == None:
+			log.debug("Starting headless updater")
+			HeadlessUpdater.__instance = HeadlessUpdater()
+
+	@staticmethod
+	def stop():
+		if HeadlessUpdater.__instance != None:
+			log.debug("Stopping headless updater")
+			HeadlessUpdater.__instance.bgservice.stop_all()
+			HeadlessUpdater.__instance = None
+
+	@staticmethod
+	def get_instance():
+		return HeadlessUpdater.__instance
+
+	def __init__(self):
+		self.bgservice = AddonBackgroundService('HeadlessUpdater')
+		self.bgservice.run_delayed('HeadlessUpdateStart', 10, None, self.start_loop)
+		self.standby_flag = False
+		self.archiv_updated = False
+		self.addons_updated = False
+		self.archiv_update_skipped = False
+		self.load_settings()
+
+	def start_loop(self):
+		if self.standby_flag:
+			self.switch_to_standby()
+
+		self.bgservice.run_in_loop('HeadlessUpdate', 3637, self.check_updates)
+
+	def check_updates(self, force=False):
+		@callFromService
+		def _check_updates_in_reactor_thread():
+			self.check_archiv_update()
+
+		if force:
+			_check_updates_in_reactor_thread()
+			return
+
+		if not config.plugins.archivCZSK.archivAutoUpdate.value:
+			log.debug("ArchivCZSK update is disabled - giving up ...")
+			return
+
+		if not config.plugins.archivCZSK.headless_update.value:
+			log.debug("Headless update is disabled - giving up ...")
+			return
+
+		# check if enigma is in standby mode
+		from Screens.Standby import inStandby
+		if not inStandby:
+			log.info("Not checking for updates - Enigma is not in standby")
+			return
+
+		# check, if we can run update now
+		if canCheckUpdate():
+			_check_updates_in_reactor_thread()
+
+	def check_archiv_update(self):
+		if self.archiv_updated:
+			# disable archiv update check on first run after update, because if update failed for some reason, then without this update will end up in endless loop
+			self.archiv_updated = False
+			self.archiv_update_skipped = True
+			return self.archiv_update_finished()
+
+		self.archiv_update_skipped = False
+
+		try:
+			log.info("Checking ArchivCZSK update ...")
+			self.__upd = ArchivUpdater(self.archiv_update_finished)
+			self.__upd.checkUpdate()
+		except:
+			log.error(traceback.format_exc())
+			self.archiv_update_finished()
+
+
+	def archiv_update_finished(self, result='continue'):
+		self.__upd = None
+		if result == 'continue':
+			self.check_addons_update()
+		else:
+			self.process_result(result, archiv_updated=True)
+
+	def check_addons_update(self):
+		if self.addons_updated:
+			# disable addons update check on first run after update, because if update failed for some reason, then without this update will end up in endless loop
+			self.addons_updated = False
+			self.addons_update_finished()
+
+		try:
+			log.info("Checking addons update ...")
+			self.__upd = AddonsUpdater(self.addons_update_finished)
+			self.__upd.checkUpdate()
+		except:
+			log.error(traceback.format_exc())
+			self.addons_update_finished()
+
+	def addons_update_finished(self, result='continue'):
+		self.__upd = None
+		self.process_result(result, addons_updated=True)
+
+	def process_result(self, result, archiv_updated=False, addons_updated=False):
+		if result == 'continue':
+			pass
+		elif result in ('restart', 'reload'):
+			self.save_settings(archiv_updated, addons_updated)
+			log.info("Scheduling enigma restart ...")
+			self.restart_enigma()
+
+		else:
+			log.error('FATAL: Unknown update result: "%s" - don\'t know how to continue' % result )
+
+	def disable_tv_wakeup(self):
+		file_name = '/tmp/powerup_without_waking_tv.txt'
+		# disable TV wakeup (works for OpenATV)
+		if os.path.isfile(file_name):
+			with open(file_name, 'w') as f:
+				f.write('True')
+
+	def save_settings(self, archiv_updated=False, addons_updated=False):
+		from Screens.Standby import inStandby
+
+		file_name = '/tmp/archivczsk_update.json'
+		s = {
+			'switch_to_standby': inStandby is not None,
+			'archiv_updated': archiv_updated or self.archiv_update_skipped,
+			'addons_updated': addons_updated
+		}
+
+		with open(file_name, 'w') as f:
+			json.dump(s, f)
+
+	def load_settings(self):
+		file_name = '/tmp/archivczsk_update.json'
+
+		try:
+			with open(file_name, 'r') as f:
+				s = json.load(f)
+
+			self.standby_flag = s.get('switch_to_standby', False)
+			self.archiv_updated = s.get('archiv_updated', False)
+			self.addons_updated = s.get('addons_updated', False)
+
+			os.remove(file_name)
+		except:
+			pass
+
+
+	def restart_enigma(self):
+		from Screens.Standby import TryQuitMainloop
+		from ..gsession import GlobalSession
+
+		self.disable_tv_wakeup()
+
+		log.info("Restarting enigma ...")
+		GlobalSession.getSession().open(TryQuitMainloop, 3)
+
+	def switch_to_standby(self):
+		log.info("Switching enigma into standby ...")
+
+		@callFromService
+		def _switch_to_standby_in_reactor_thread():
+			from Screens.Standby import Standby, inStandby
+			if not inStandby:
+				from ..gsession import GlobalSession
+				GlobalSession.getSession().open(Standby)
+
+		_switch_to_standby_in_reactor_thread()

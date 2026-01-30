@@ -125,6 +125,7 @@ for i in range(1, 8):
 config.plugins.archivCZSK.epg_viewer_history = ConfigSelectionTr(tr, default='7', choices=choicelist)
 config.plugins.archivCZSK.archivAutoUpdate = ConfigYesNo(default=True)
 config.plugins.archivCZSK.archivAutoUpdate.addNotifier(changeAutoUpdate)
+config.plugins.archivCZSK.headless_update = ConfigYesNo(default=False)
 config.plugins.archivCZSK.allow_custom_update = ConfigYesNo(default=False)
 config.plugins.archivCZSK.update_repository=ConfigText(default='archivczsk')
 if config.plugins.archivCZSK.allow_custom_update.value:
@@ -187,13 +188,14 @@ def get_main_settings():
 	list.append(getConfigListEntry(_("Default category"), config.plugins.archivCZSK.defaultCategory))
 	list.append(getConfigListEntry(_("Allow update check of ArchivCZSK and addons"), config.plugins.archivCZSK.archivAutoUpdate))
 	if config.plugins.archivCZSK.archivAutoUpdate.value:
-		list.append(getConfigListEntry(_("Update timeout"), config.plugins.archivCZSK.updateTimeout))
+		list.append(getConfigListEntry(_("Enable automatic updates on background"), config.plugins.archivCZSK.headless_update))
 		if config.plugins.archivCZSK.allow_custom_update.value:
 			list.append(getConfigListEntry(_("Update repository"), config.plugins.archivCZSK.update_repository))
 		list.append(getConfigListEntry(_("Update channel"), config.plugins.archivCZSK.update_branch))
 		list.append(getConfigListEntry(_("Enable update without enigma restart"), config.plugins.archivCZSK.no_restart))
-	list.append(getConfigListEntry(_("Show changelog after update"), config.plugins.archivCZSK.changelogAfterUpdate))
-	list.append(getConfigListEntry(_("Check addons integrity"), config.plugins.archivCZSK.checkAddonsIntegrity))
+		list.append(getConfigListEntry(_("Show changelog after update"), config.plugins.archivCZSK.changelogAfterUpdate))
+		list.append(getConfigListEntry(_("Check addons integrity"), config.plugins.archivCZSK.checkAddonsIntegrity))
+		list.append(getConfigListEntry(_("Update timeout"), config.plugins.archivCZSK.updateTimeout))
 
 	list.append(MENU_SEPARATOR)
 

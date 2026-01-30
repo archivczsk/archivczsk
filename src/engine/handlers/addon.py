@@ -106,7 +106,9 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 		elif addon.get_info('deprecated'):
 			self._handle_deprecated_addon(addon)
 		else:
-			if item.first_open:
+			if config.plugins.archivCZSK.developer_mode.value:
+				continue_to_addon()
+			elif item.first_open:
 				item.first_open = False
 				if config.plugins.archivCZSK.checkAddonsIntegrity.value and addon.check_addon_integrity() == False:
 					handle_integrity_fail()

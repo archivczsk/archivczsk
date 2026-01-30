@@ -5,9 +5,7 @@ from Components.Label import Label
 from Components.ActionMap import ActionMap
 from Screens.Screen import Screen
 from Components.config import config
-from datetime import datetime, timedelta
 from ..engine.tools.logger import log
-from .. import UpdateInfo
 from ..engine.tools.lang import _
 from ..engine.tools.util import toString
 
@@ -46,24 +44,6 @@ class ArchivCZSKUpdateInfoScreen(Screen):
 			self.__upd.cbk_wrapper()
 		except:
 			log.error(traceback.format_exc())
-
-	@staticmethod
-	def canCheckUpdate():
-		limitHour = 4
-
-		try:
-			if UpdateInfo.CHECK_UPDATE_TIMESTAMP is None:
-				UpdateInfo.CHECK_UPDATE_TIMESTAMP = datetime.now()
-			else:
-				delta = UpdateInfo.CHECK_UPDATE_TIMESTAMP + timedelta(hours=limitHour)
-				if datetime.now() > delta:
-					UpdateInfo.CHECK_UPDATE_TIMESTAMP = datetime.now()
-				else:
-					return False
-		except:
-			log.logError("canCheckUpdate failed.\n%s"%traceback.format_exc())
-
-		return config.plugins.archivCZSK.archivAutoUpdate.value
 
 	def checkArchivUpdate(self):
 		try:

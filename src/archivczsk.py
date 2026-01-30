@@ -24,6 +24,7 @@ from .compat import DMM_IMAGE, VTI_IMAGE
 from .engine.bgservice import BGServiceTask
 from .engine.license import ArchivCZSKLicense
 from .engine.usage import UsageStats
+from .engine.updater import HeadlessUpdater, canCheckUpdate
 from .gsession import GlobalSession
 
 def have_valid_ssl_certificates():
@@ -365,6 +366,7 @@ class ArchivCZSK():
 		log.debug("Starting stats collection")
 		UsageStats.start()
 		ArchivCZSK.preload_addons()
+		HeadlessUpdater.start()
 
 		if config.plugins.archivCZSK.epg_viewer.value:
 			try:
@@ -400,9 +402,8 @@ class ArchivCZSK():
 			return
 
 		log.info("Stopping ArchivCZSK ...")
-		# this is little hack
-		# If Enigma shutdowns, then stop_cbk is not set. We use this information to notify addons to not to remove shortcuts to main menu, because it will result in crash in buggy enigma code
-		# if stop_cbk is set, then plugin reload is requested, and we must remove shortcuts, because addons will be reloaded and old shortcuts will no longer be valid
+
+		HeadlessUpdater.stop()
 		ArchivCZSK.close_addons(reload_running)
 		ArchivCZSK.close_repositories()
 		UsageStats.stop()
@@ -460,7 +461,7 @@ class ArchivCZSK():
 				ArchivCZSK.load_skin()
 				ArchivCZSK.force_skin_reload = False
 
-			if ArchivCZSKUpdateInfoScreen.canCheckUpdate():
+			if canCheckUpdate():
 				self.session.openWithCallback(self.update_checked, ArchivCZSKUpdateInfoScreen )
 			else:
 				self.open_archive_screen()
@@ -629,8 +630,5 @@ class ArchivCZSK():
 		ArchivCZSK.load_repositories()
 		ArchivCZSK.init_addons()
 		ArchivCZSK.preload_addons()
-
-		from . import UpdateInfo
-		UpdateInfo.resetDates()
 
 		log.info("Addons reloaded in {:.02f} seconds".format(time.time() - start_time))
