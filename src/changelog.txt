@@ -1,3 +1,19 @@
+ArchivCZSK 3.5.0, 31.01.2026
+    - automatické aktualizácie ArchivCZSK a doplnkov na pozadí bez zásahu používateľa
+        * umožňuje udržiavať produkt a doplnky neustále aktuálne
+        * je nutné to zapnúť v nastaveniach - predvolene je to vypnuté
+        * aktualizácia prebehne len vtedy, ak sa prijímač nepoužíva (je v standby)
+        * ak je nutný reštart, tak sa automaticky reštartuje enigma
+    - zmenené nastavenia, ktoré povoľujú kontrolu aktualizácii
+        * zrušená voľba, ktorou sa povoľovali aktualizácie doplnkov
+        * povolenie aktualizácie sa po novom týka ArchivCZSK aj doplnkov
+        * nie je možné zakázať aktualizáciu ArchivCZSK alebo len doplnkov
+    - kompletne nový interný HTTP server
+        * nový HTTP server používa vlákna a zjednodušuje písanie doplnkov
+        * počas spracovávania požiadavky už nebude dochádzať k zasekávaniu GUI
+        * zmena nie je spätne kompatibilná - niektoré doplnky potrebujú úpravu
+    - vylepšená práca s doplnkami označenými ako "nefunkčné"
+
 ArchivCZSK 3.4.12, 26.01.2026
     - pridanie doplnkom možnosť nastaviť formát sťahovaného súboru
     - implementovanie sťahovania s oddelenou video a audio stopou
