@@ -277,7 +277,9 @@ class UsageStats(object):
 					'license': ArchivCZSKLicense.get_instance().is_valid(),
 					'settings' : {
 						'csfd_mode': config.plugins.archivCZSK.csfdMode.value,
-						'parental_enabled': config.plugins.archivCZSK.parental.enable.value
+						'parental_enabled': config.plugins.archivCZSK.parental.enable.value,
+						'headless_update': config.plugins.archivCZSK.headless_update.value,
+						'plugin_lang': config.plugins.archivCZSK.lang
 					}
 				},
 				'addons': []
