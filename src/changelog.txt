@@ -1,3 +1,6 @@
+ArchivCZSK 3.5.1, 02.02.2026
+    - opravy interných preklepov
+
 ArchivCZSK 3.5.0, 31.01.2026
     - automatické aktualizácie ArchivCZSK a doplnkov na pozadí bez zásahu používateľa
         * umožňuje udržiavať produkt a doplnky neustále aktuálne
