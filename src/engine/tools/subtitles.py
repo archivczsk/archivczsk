@@ -169,6 +169,8 @@ def download_subtitles(url):
 		return url
 
 	file_name = os.path.basename(urlparse(url).path)
+	if not file_name:
+		file_name = 'Subtitles'
 	file_name = os.path.join(config.plugins.archivCZSK.tmpPath.getValue(), file_name)
 
 	try:
