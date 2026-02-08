@@ -1,3 +1,6 @@
+ArchivCZSK 3.5.2, 08.02.2026
+    - oprava sťahovania titulkov v prípade, že nie je možné získať názov súboru
+
 ArchivCZSK 3.5.1, 02.02.2026
     - opravy interných preklepov
 
