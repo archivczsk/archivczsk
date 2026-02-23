@@ -1,11 +1,19 @@
-import os
+import os, traceback
 import shutil
 import random
+import time
 from datetime import datetime
+from base64 import b64encode
+from hashlib import md5
+import json
 
 from ..engine.tools import util
 from ..engine.tools.logger import log
 from ..compat import eCompatPicLoad, eCompatTimer
+from ..settings import USER_AGENT
+
+from twisted.internet import reactor
+import requests
 
 from Components.AVSwitch import AVSwitch
 from Tools.LoadPixmap import LoadPixmap
@@ -52,7 +60,7 @@ class PosterProcessing:
 	def _create_poster_path(self):
 		dt = datetime.now()
 		filename = datetime.strftime(dt, "poster_%y_%m_%d__%H_%M_%S")
-		filename += "_"+ str(random.randint(1,9)) + ".jpg"
+		filename += "_"+ str(random.randint(1,9))
 		dest = os.path.join(self.poster_dir, filename)
 		return dest
 
@@ -80,7 +88,7 @@ class PosterProcessing:
 			return
 
 		if len(self.poster_files) == self.poster_limit:
-			log.debug("PosterProcessing._image_downloaded: download limit reached({0})".format(self.poster_limit))
+#			log.debug("PosterProcessing._image_downloaded: download limit reached({0})".format(self.poster_limit))
 			self._remove_oldest_poster_file()
 		log.debug("PosterProcessing._image_downloaded: {0}".format(path))
 		self.poster_files.append((url, path))
@@ -95,13 +103,101 @@ class PosterProcessing:
 
 		for idx, (url, path) in enumerate(self.poster_files):
 			if (url == poster_url):
-				print("PosterProcessing.get_image_file: found poster path on position {0}/{1}".format(idx, self.poster_limit))
+				log.debug("PosterProcessing.get_image_file: found poster path on position {0}/{1}".format(idx, self.poster_limit))
 				return self._check_file_size_limit(path)
 
-		from ..settings import USER_AGENT
-		headers = {"User-Agent": USER_AGENT }
-		util.download_to_file_async(util.toString(poster_url), self._create_poster_path(), self._image_downloaded, headers=headers, timeout=3)
+#		log.debug("Starting download_in_thread for url %s" % poster_url)
+		reactor.callInThread(self.download_in_thread, util.toString(poster_url), self._create_poster_path(), self._image_downloaded )
+#		log.debug("Started")
 		return None
+
+	def download_in_thread(self, url, dest, callback):
+		log.debug("Downloading %s in thread" % url)
+		headers = {"User-Agent": USER_AGENT }
+
+		try:
+			response = requests.get(url, headers=headers, verify=False, timeout=10)
+			response.raise_for_status()
+		except Exception as e:
+			log.error(str(e))
+			return reactor.callFromThread(callback, None, None)
+
+		content_type = response.headers.get('content-type')
+		data = response.content
+
+		if content_type == 'image/webp':
+			# convert to jpeg
+			dest += '.jpg'
+			if self.convert_to_jpeg('webp', data, dest):
+				return reactor.callFromThread(callback, url, dest)
+			else:
+				# conversion failed
+				data = None
+
+		elif content_type == 'image/png':
+			dest += '.png'
+		elif content_type == 'image/jpeg':
+			dest += '.jpg'
+		elif content_type == 'image/gif':
+			dest += '.gif'
+		elif content_type == 'image/bmp':
+			dest += '.bmp'
+		else:
+			# unsupported content type
+			log.error("Unsupported image content type: %s" % content_type)
+			return reactor.callFromThread(callback, None, None)
+
+		with open(dest, 'wb') as f:
+			if data:
+				f.write(data)
+
+		return reactor.callFromThread(callback, url, dest)
+
+	def convert_to_jpeg(self, data_type, original_data, dest):
+		s = time.time()
+		try:
+			ret = self._convert_to_jpeg(data_type, original_data, dest)
+		except:
+			log.error(traceback.format_exc())
+			ret = False
+		log.debug("Conversion from %s to to JPEG took %d ms" % (data_type, int((time.time() - s) * 1000)))
+		return ret
+
+	def _convert_to_jpeg(self, data_type, original_data, dest):
+		from ..engine.license import ArchivCZSKLicense
+		from ..engine.tools.stbinfo import stbinfo
+
+		def calc_data_checksum(req_data):
+			req_data = json.dumps(req_data, sort_keys=True, ensure_ascii=True, separators=('','')).encode('ascii')
+			return md5(b'svg2png' + req_data).hexdigest()
+
+		if ArchivCZSKLicense.get_instance().is_valid():
+			req_data = {
+				'version': 1,
+				'id': stbinfo.installation_id,
+				data_type: b64encode(original_data).decode('ascii')
+			}
+			req_data['checksum'] = calc_data_checksum(req_data)
+			try:
+				r = requests.post('http://archivczsk.webredirect.org/tojpeg/' + data_type, json=req_data, timeout=5)
+				r.raise_for_status()
+			except:
+				log.error("Conversion to JPEG failed")
+			else:
+				with open(dest, 'wb') as f:
+					f.write(r.content)
+
+				return True
+
+		# fallback - local slow conversion using ffmpeg
+		webp_dest = dest + '.webp'
+		with open(webp_dest, 'wb') as f:
+			f.write(original_data)
+
+		os.system('ffmpeg -i "{}" -frames:v 1 {}'.format(webp_dest, dest))
+		os.remove(webp_dest)
+
+		return os.path.isfile(dest)
 
 
 class PosterPixmapHandler:
@@ -142,7 +238,7 @@ class PosterPixmapHandler:
 	def _start_decode_image(self, url, path):
 		log.debug("PosterImageHandler._start_decode_image: {0}".format(path))
 		if self._decode_image(path):
-			log.debug("PosterImageHandler._start_decode_image: started...")
+#			log.debug("PosterImageHandler._start_decode_image: started...")
 			self.retry_timer.stop()
 			self._decoding_path = None
 			self._decoding_url = url
