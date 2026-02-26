@@ -73,15 +73,23 @@ def showCSFDInfo(session, item):
 		# remove languages ... "Mother - CZ, EN, KO (2017)"
 		name = re.sub("\s-\s[A-Z]{2}(,\s[A-Z]{2})*\s\(", " (", name)
 
-		year = 0
-		yearStr = ""
-		try:
-			mask = re.compile('([0-9]{4})', re.DOTALL)
-			yearStr = mask.findall(name)[0]
-			year = int(yearStr)
-		except:
-			pass
-		# remove year
+		if item.info.get('year'):
+			year = item.info.get('year')
+			yearStr = '({})'.format(year)
+		else:
+			# try to extract year from name
+			year = 0
+			yearStr = ""
+			try:
+				mask = re.compile('([0-9]{4})', re.DOTALL)
+				yearStr = mask.findall(name)[0]
+				year = int(yearStr)
+			except:
+				year = 0
+				yearStr = ""
+				pass
+
+		# remove year from name (if provided)
 		name = re.sub("\([0-9]{4}\)","", name)
 
 		name = name.strip()
@@ -96,7 +104,7 @@ def showCSFDInfo(session, item):
 		elif csfdType == 2:
 			from Plugins.Extensions.CSFD.plugin import CSFD
 			UsageStats.get_instance().update_counter('csfd_e')
-			session.open(CSFD, name)
+			session.open(CSFD, name, EPG=yearStr)
 		elif csfdType == 3:
 			from Plugins.Extensions.CSFDLite.plugin import CSFDLite
 			UsageStats.get_instance().update_counter('csfd_l')
