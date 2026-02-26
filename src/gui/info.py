@@ -8,7 +8,6 @@ import os
 import traceback
 import re
 
-from twisted.web.client import downloadPage
 from Components.Label import Label
 from Components.ActionMap import ActionMap, NumberActionMap
 from Components.ScrollLabel import ScrollLabel
@@ -17,9 +16,8 @@ from Components.AVSwitch import AVSwitch
 from Components.config import config
 
 from .base import BaseArchivCZSKScreen
-from .. import settings
 from .common import showInfoMessage, PanelColorListEntry, PanelList
-from .poster import PosterProcessing, PosterPixmapHandler
+from .poster import PosterPixmapHandler
 from ..engine.player.info import videoPlayerInfo
 from ..engine.parental import parental_pin
 from ..engine.usage import UsageStats
@@ -61,7 +59,7 @@ def showChangelog(session, changelog_title, changelog_path):
 	session.open(ArchivCZSKChangelogScreen, changelog_title, changelog_text)
 
 def showItemInfo(session, item):
-	Info(session, item)
+	session.open(ArchivCZSKItemInfoScreen, item)
 
 def showCSFDInfo(session, item):
 	try:
@@ -170,56 +168,15 @@ class ArchivCZSKChangelogScreen(BaseArchivCZSKScreen):
 		self["changelog"].endPage()
 
 
-class Info(object):
-	def __init__(self, session, it):
-		self.session = session
-		self.it = it
-		self.dest = ''
-		self.imagelink = ''
-		it.load_info()
-		if it.image is not None and (it.info.get('adult', False) == False or parental_pin.get_settings('show_posters')):
-			self.imagelink = py2_encode_utf8( it.image )
-			self.dest = os.path.join('/tmp/', self.imagelink.split('/')[-1])
-
-			if os.path.exists(self.dest):
-				self.showInfo()
-			else:
-				self.downloadPicture()
-		else:
-			self.showInfo()
-
-	def downloadPicture(self):
-		print('[Info] downloadPicture %s to %s' % (self.imagelink, self.dest) )
-		imagelink = self.imagelink
-		if isinstance( self.imagelink, str ):
-			imagelink = self.imagelink.encode('utf-8')
-
-		downloadPage(imagelink, self.dest).addCallback(self.downloadPictureCallback).addErrback(self.downloadPictureErrorCallback)
-
-	def downloadPictureCallback(self, txt=""):
-		print('[Info] picture was succesfully downloaded')
-		self.showInfo()
-
-	def downloadPictureErrorCallback(self, err):
-		print('[Info] picture was not succesfully downloaded: %s' % str(err))
-		self.showInfo()
-
-	def closeInfo(self):
-		print('[Info] closeInfo')
-
-	def showInfo(self):
-		print('[Info] showInfo')
-		self.session.openWithCallback(self.closeInfo, ArchivCZSKItemInfoScreen, self.it)
-
 class ArchivCZSKItemInfoScreen(BaseArchivCZSKScreen):
 	def __init__(self, session, it):
 		BaseArchivCZSKScreen.__init__(self, session)
 		self.image_link = None
 		self.it = it
-		self.image_dest = None
+#		self.image_dest = None
 		if it.image is not None:
 			self.image_link = py2_encode_utf8( it.image )
-			self.image_dest = os.path.join('/tmp/', self.image_link.split('/')[-1])
+#			self.image_dest = os.path.join('/tmp/', self.image_link.split('/')[-1])
 		self.plot = ''
 		self.genre = ''
 		self.rating = ''
@@ -267,8 +224,7 @@ class ArchivCZSKItemInfoScreen(BaseArchivCZSKScreen):
 		self.onLayoutFinish.append(self.showPicture)
 		self.onClose.append(self.__onClose)
 
-		poster_processing = PosterProcessing(1, os.path.join(config.plugins.archivCZSK.posterPath.getValue(), 'archivczsk_poster2'))
-		self.poster = PosterPixmapHandler(self["img"], poster_processing, os.path.join(settings.PLUGIN_PATH, 'gui', 'icon', 'no_movie_image.png'))
+		self.poster = PosterPixmapHandler(self["img"])
 
 	def convert_genre(self, genre):
 		if isinstance(genre, list):
@@ -304,7 +260,7 @@ class ArchivCZSKItemInfoScreen(BaseArchivCZSKScreen):
 		showCSFDInfo(self.session, self.it)
 
 	def showPicture(self):
-		if self.image_link is not None:
+		if self.image_link is not None and (self.it.info.get('adult', False) == False or parental_pin.get_settings('show_posters')):
 			self.poster.set_image(self.image_link)
 
 	def __onClose(self):

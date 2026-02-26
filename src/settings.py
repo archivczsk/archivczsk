@@ -161,7 +161,7 @@ choicelist = []
 #choicelist.append(("%d" % 0, "%d" % 0))
 for i in range(0, 310, 10):
 	choicelist.append(("%d" % i, "%d" % i))
-config.plugins.archivCZSK.posterImageMax = ConfigSelection(default="20", choices=choicelist)
+config.plugins.archivCZSK.posterImageMax = ConfigSelection(default="30", choices=choicelist)
 
 for i in range(0, 10000, 500):
 	choicelist.append(("%d" % i, "%d" % i))

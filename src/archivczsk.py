@@ -18,6 +18,7 @@ from .engine.httpserver import ArchivCZSKHttpServer
 from .gui.content import ArchivCZSKContentScreen
 from .gui.info import openPartialChangelog
 from .gui.icon import ArchivCZSKDonateScreen
+from .gui.poster import PosterProcessing
 from .gui.updater import ArchivCZSKUpdateInfoScreen
 from .engine.parental import parental_pin
 from .compat import DMM_IMAGE, VTI_IMAGE
@@ -567,6 +568,7 @@ class ArchivCZSK():
 		self.__console = None
 		# We dont need worker thread anymore so we stop it
 		Task.stopWorkerThread()
+		PosterProcessing.stop()
 
 		# finally save all cfg changes - edit by shamman
 		configfile.save()

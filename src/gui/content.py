@@ -10,7 +10,7 @@ from Screens.InputBox import InputBox
 from Screens.MessageBox import MessageBox
 from Tools.LoadPixmap import LoadPixmap
 
-from .poster import PosterProcessing, PosterPixmapHandler
+from .poster import PosterPixmapHandler
 
 from .. import settings
 from ..compat import eCompatTimer
@@ -557,8 +557,6 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 
 		#settigns
 		self.showImageEnabled = config.plugins.archivCZSK.downloadPoster.getValue()
-		self.maxSavedImages = int(config.plugins.archivCZSK.posterImageMax.getValue())
-		self.imagePosterDir = os.path.join(config.plugins.archivCZSK.posterPath.getValue(),'archivczsk_poster')
 		self.noImage = os.path.join(settings.PLUGIN_PATH, 'gui','icon', 'no_movie_image.png')
 
 		# include TipList
@@ -569,11 +567,7 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 		self["key_yellow"] = Label(_("Shortcuts"))
 		self["key_blue"] = Label(_("Settings"))
 		self["movie_poster_image"] = Pixmap()
-		poster_processing = PosterProcessing(self.maxSavedImages,
-											 self.imagePosterDir)
-		self.poster = PosterPixmapHandler(self["movie_poster_image"],
-										  poster_processing,
-										  self.noImage)
+		self.poster = PosterPixmapHandler(self["movie_poster_image"], self.noImage)
 		self["movie_rating"] = Label("")
 		self["movie_duration"] = Label("")
 		self["movie_plot"] = Label("")
@@ -693,7 +687,7 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 				# disable posters for adult content
 				self.poster.set_image(None, no_image_path)
 			else:
-				self.poster.set_image(item.image, no_image_path)
+				self.poster.set_image(item.image, no_image_path, item.info.get('img_cache', True))
 
 	def updateAddonGUI(self):
 		try:
