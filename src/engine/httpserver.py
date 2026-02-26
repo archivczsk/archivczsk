@@ -215,7 +215,10 @@ class Handler(BaseHTTPRequestHandler):
 			self.wfile.flush()
 
 	def get_header(self, name, default_value=None):
-		self.headers.get(name, default_value)
+		name = name.lower()
+		for k, v in filter(lambda x: x[0].lower() == name, self.headers.items()):
+			return v
+		return default_value
 
 	def log_request(self, *args, **kwargs):
 		return
