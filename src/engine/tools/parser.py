@@ -4,11 +4,17 @@ Created on 30.10.2012
 @author: marko
 '''
 from . import util
+import xml.etree.ElementTree as ET
 
 class XMLParser():
-	def __init__(self, xml_file):
-		xml = util.load_xml(xml_file)
-		self.xml = xml.getroot()
+	def __init__(self, xml_file=None, xml_str=None):
+		if xml_file:
+			xml = util.load_xml(xml_file)
+			self.xml = xml.getroot()
+		elif xml_str:
+			self.xml = ET.fromstring(xml_str)
+		else:
+			raise Exception("No imput file or string provided")
 
 	def parse(self):
 		pass

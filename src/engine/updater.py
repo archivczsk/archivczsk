@@ -8,8 +8,9 @@ Updated on 28.10.2017 by chaoss
 import os
 import shutil
 import traceback
-import threading
 import json
+import requests
+import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from .tools import util, parser
 from .tools.unzip import unzip_to_dir
@@ -99,15 +100,10 @@ class ArchivUpdater(RunNext):
 		super(ArchivUpdater, self).__init__(update_dialog)
 		self.session = update_dialog.session if update_dialog else FakeSession()
 		self.finish_cbk = finish_cbk
-		self.tmpPath = config.plugins.archivCZSK.tmpPath.value
-		if not self.tmpPath:
-			self.tmpPath = "/tmp"
-
-		self.tmpPath = "/tmp"
+		self.tmpPath = config.plugins.archivCZSK.tmpPath.value or '/tmp'
 		self.__console = None
 		self.remote_version = ""
 		self.remote_date = ""
-		self.updateXmlFilePath = os.path.join(self.tmpPath, 'archivczskupdate.xml')
 		self.updateIpkFilePathTemplate = os.path.join(self.tmpPath, 'archivczsk_{version}-{date}.ipk')
 		self.updateIpkFilePath = None
 
@@ -127,27 +123,21 @@ class ArchivUpdater(RunNext):
 		self.run_next(self.checkUpdateStarted, _("Checking for updates"))
 
 	def checkUpdateStarted(self):
-		try:
-			if self.downloadUpdateXml():
-				from ..version import version
-				local_version = version
-				xmlroot = util.load_xml(self.updateXmlFilePath).getroot()
-				self.remote_version = xmlroot.attrib.get('version')
-				self.remote_date = xmlroot.attrib.get('date')
+		xmlroot = self.downloadUpdateXml()
 
-				log.logDebug("ArchivUpdater remote date: '%s'" % self.remote_date )
-				log.logDebug("ArchivUpdater version local/remote: %s/%s" % (local_version, self.remote_version))
+		if xmlroot:
+			from ..version import version
+			local_version = version
+			self.remote_version = xmlroot.attrib.get('version') or '0'
+			self.remote_date = xmlroot.attrib.get('date')
 
-				if util.check_version(local_version, self.remote_version):
-					self.needUpdate = True
-				else:
-					self.needUpdate = False
+			log.logDebug("ArchivUpdater remote date: '%s'" % self.remote_date )
+			log.logDebug("ArchivUpdater version local/remote: %s/%s" % (local_version, self.remote_version))
+
+			if util.check_version(local_version, self.remote_version):
+				self.needUpdate = True
 			else:
 				self.needUpdate = False
-
-
-		except:
-			log.logError("ArchivUpdater update failed.\n%s" % traceback.format_exc())
 
 		self.run_next(self.checkUpdateFinished, _("New version found") if self.needUpdate else _("No update found"))
 
@@ -246,11 +236,12 @@ class ArchivUpdater(RunNext):
 		log.debug("Checking ArchivCZSK update from: %s" % updateXml)
 
 		try:
-			util.download_to_file(updateXml, self.updateXmlFilePath, timeout=config.plugins.archivCZSK.updateTimeout.value)
-			return True
+			response = requests.get(updateXml, timeout=config.plugins.archivCZSK.updateTimeout.value, verify=False)
+			response.raise_for_status()
+			return ET.fromstring(response.text)
 		except Exception:
 			log.logError("ArchivUpdater download archiv update xml failed.\n%s" % traceback.format_exc())
-			return False
+			return None
 
 	def downloadIpk(self):
 		try:
@@ -274,8 +265,6 @@ class ArchivUpdater(RunNext):
 
 	def removeTempFiles(self):
 		try:
-			if os.path.isfile(self.updateXmlFilePath):
-				os.remove(self.updateXmlFilePath)
 			if self.updateIpkFilePath and os.path.isfile(self.updateIpkFilePath):
 				os.remove(self.updateIpkFilePath)
 		except:
@@ -315,25 +304,20 @@ class AddonsUpdater(RunNext):
 
 	def check_addon_updates(self, check_only=False):
 		from ..archivczsk import ArchivCZSK
-		lock = threading.Lock()
-		threads = []
+
 		def check_repository(repository):
 			try:
-				to_update = repository.check_updates()
-				with lock:
-					self.to_update_addons += to_update
+				self.to_update_addons.extend(repository.check_updates())
 			except UpdateXMLVersionError:
 				log.error('cannot retrieve update xml for repository %s', repository)
 			except UpdateXMLNoUpdateUrl:
 				log.info('Repository %s has no update URL set - addons update is for this repository disabled', repository)
 			except Exception:
 				log.error('error when checking updates for repository %s\n%s', (repository, traceback.format_exc()))
+
 		for repository in ArchivCZSK.get_repositories():
-			threads.append(threading.Thread(target=check_repository, args=(repository,)))
-		for t in threads:
-			t.start()
-		for t in threads:
-			t.join()
+			check_repository(repository)
+
 		update_string = '\n'.join(addon.name for addon in self.to_update_addons)
 		if len(self.to_update_addons) > 5:
 			update_string = '\n'.join(addon.name for addon in self.to_update_addons[:6])
@@ -437,13 +421,12 @@ class AddonsUpdater(RunNext):
 class Updater(object):
 	"""Updater for updating addons in repository, every repository has its own updater"""
 
-	def __init__(self, repository, tmp_path):
+	def __init__(self, repository):
 		self.repository = repository
 		self.remote_path = repository.update_datadir_url
 		self.local_path = repository.path
-		self.tmp_path = tmp_path
+		self.tmp_path = config.plugins.archivCZSK.tmpPath.value or '/tmp'
 		self.update_xml_url = repository.update_xml_url
-		self.update_xml_file = os.path.join(self.tmp_path, repository.id + 'addons.xml')
 		self.update_authorization = repository.update_authorization
 		self.remote_addons_dict = {}
 
@@ -453,7 +436,8 @@ class Updater(object):
 		"""
 		try:
 			log.debug("[%s] checking updates" % addon.name)
-			self._get_server_addon(addon, update_xml)
+			if update_xml:
+				self._get_server_addons()
 
 			broken = self.remote_addons_dict[addon.id]['broken']
 			remote_version = self.remote_addons_dict[addon.id]['version']
@@ -473,7 +457,6 @@ class Updater(object):
 		"""updates addon"""
 
 		log.debug("[%s] starting update" % addon.name)
-		self._get_server_addon(addon)
 
 		# real path where addon is installed
 		local_base = os.path.join(self.local_path, addon.relative_path)
@@ -566,26 +549,10 @@ class Updater(object):
 		return update_success
 
 
-
 	def _get_server_addons(self):
 		"""loads info about addons from remote repository to remote_addons_dict"""
-		self._download_update_xml()
-
-		pars = parser.XBMCMultiAddonXMLParser(self.update_xml_file)
+		pars = parser.XBMCMultiAddonXMLParser(xml_str=self._download_update_xml())
 		self.remote_addons_dict = pars.parse_addons()
-		os.remove(self.update_xml_file)
-
-
-	def _get_server_addon(self, addon, load_again=False):
-		"""load info about addon from remote repository"""
-
-		if load_again:
-			self._get_server_addons()
-
-		if addon.id not in self.remote_addons_dict:
-			pars = parser.XBMCMultiAddonXMLParser(self.update_xml_url)
-			addon_el = pars.find_addon(addon.id)
-			self.remote_addons_dict[addon.id] = pars.parse(addon_el)
 
 
 	def _download(self, addon):
@@ -593,9 +560,8 @@ class Updater(object):
 		zip_filename = "%s-%s.zip" % (addon.id, self.remote_addons_dict[addon.id]['version'])
 
 		remote_base = self.remote_path + '/' + addon.id
-		tmp_base = os.path.normpath(os.path.join(self.tmp_path, addon.relative_path))
 
-		local_file = os.path.join(tmp_base, zip_filename)
+		local_file = os.path.join(self.tmp_path, zip_filename)
 		remote_file = remote_base + '/' + zip_filename
 
 		# if update data path contains variables configurable by user, then set it here
@@ -608,7 +574,11 @@ class Updater(object):
 		try:
 			util.download_to_file(remote_file, local_file, debugfnc=log.debug, timeout=config.plugins.archivCZSK.updateTimeout.value, headers=headers)
 		except:
-			shutil.rmtree(tmp_base)
+			try:
+				os.remove(local_file)
+			except:
+				pass
+
 			return None
 		return local_file
 
@@ -629,7 +599,9 @@ class Updater(object):
 			headers['Authorization'] = self.update_authorization
 
 		try:
-			util.download_to_file(update_xml_url, self.update_xml_file, debugfnc=log.debug, timeout=config.plugins.archivCZSK.updateTimeout.value, headers=headers)
+			response = requests.get(update_xml_url, timeout=config.plugins.archivCZSK.updateTimeout.value, headers=headers, verify=False)
+			response.raise_for_status()
+			return response.text
 		except Exception:
 			log.error('[%s] download update xml failed' % self.repository.name)
 			log.logError( traceback.format_exc())
