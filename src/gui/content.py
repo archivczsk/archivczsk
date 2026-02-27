@@ -649,8 +649,9 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 			log.logError("Duration parse failed..\n%s"%traceback.format_exc())
 
 		try:
-			if 'plot' in item.info:
-				iplot = toString(item.info['plot'])[0:800]
+			plot = item.info.get('short_plot') or item.info.get('plot')
+			if plot:
+				iplot = toString(plot)[0:800]
 		except:
 			log.logError("Plot parse failed..\n%s"%traceback.format_exc())
 
