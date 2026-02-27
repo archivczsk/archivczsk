@@ -573,28 +573,6 @@ class ArchivCZSK():
 		# finally save all cfg changes - edit by shamman
 		configfile.save()
 
-		# clear tmp content by shamman
-		filelist = [ f for f in os.listdir("/tmp") if f.endswith(".url") ]
-		for f in filelist:
-			try:
-				os.remove(os.path.join('/tmp', f))
-			except OSError:
-				continue
-		filelist = [ f for f in os.listdir("/tmp") if f.endswith(".png") ]
-		for f in filelist:
-			try:
-				os.remove(os.path.join('/tmp', f))
-			except OSError:
-				continue
-		shutil.rmtree("/tmp/archivCZSK", True)
-
-		if config.plugins.archivCZSK.clearMemory.getValue():
-			try:
-				with open("/proc/sys/vm/drop_caches", "w") as f:
-					f.write("1")
-			except IOError as e:
-				log.error('cannot drop caches : %s' % str(e))
-
 	@staticmethod
 	def get_menu_shortcuts():
 		log.info("Returning addon shortcuts for Enigma's main menu")
