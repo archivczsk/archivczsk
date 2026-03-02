@@ -125,7 +125,7 @@ class ArchivUpdater(RunNext):
 	def checkUpdateStarted(self):
 		xmlroot = self.downloadUpdateXml()
 
-		if xmlroot:
+		if xmlroot != None:
 			from ..version import version
 			local_version = version
 			self.remote_version = xmlroot.attrib.get('version') or '0'
@@ -236,7 +236,8 @@ class ArchivUpdater(RunNext):
 		log.debug("Checking ArchivCZSK update from: %s" % updateXml)
 
 		try:
-			response = requests.get(updateXml, timeout=config.plugins.archivCZSK.updateTimeout.value, verify=False)
+			s = requests.Session()
+			response = s.get(updateXml, timeout=config.plugins.archivCZSK.updateTimeout.value, verify=False)
 			response.raise_for_status()
 			return ET.fromstring(response.text)
 		except Exception:
@@ -599,7 +600,8 @@ class Updater(object):
 			headers['Authorization'] = self.update_authorization
 
 		try:
-			response = requests.get(update_xml_url, timeout=config.plugins.archivCZSK.updateTimeout.value, headers=headers, verify=False)
+			s = requests.Session()
+			response = s.get(update_xml_url, timeout=config.plugins.archivCZSK.updateTimeout.value, headers=headers, verify=False)
 			response.raise_for_status()
 			return response.text
 		except Exception:
