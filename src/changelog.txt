@@ -1,3 +1,6 @@
+ArchivCZSK 3.5.5, 02.03.2026
+    - oprava nefunkčnej aktualizácie archívu
+
 ArchivCZSK 3.5.4, 02.03.2026
     - oprava chyby v spracovávaní hlavičiek v internom HTTP serveri
     - vylepšené vyhľadávanie pri použití ČSFD pluginu
