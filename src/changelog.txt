@@ -1,3 +1,10 @@
+ArchivCZSK 3.5.4, 02.03.2026
+    - oprava chyby v spracovávaní hlavičiek v internom HTTP serveri
+    - vylepšené vyhľadávanie pri použití ČSFD pluginu
+    - vylepšené spracovávanie a zobrazenie posterov
+    - vylepšený a zjednodušený proces vyhľadávania novej verzie archívu a doplnkov
+    - rozšírenie dostupnej funkcionality pre doplnky
+
 ArchivCZSK 3.5.3, 23.02.2026
     - pridaná podpora pre plagáty filmov vo formáte webp
 
