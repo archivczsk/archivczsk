@@ -196,7 +196,7 @@ class ArchivCZSKItemInfoScreen(BaseArchivCZSKScreen):
 				elif key == 'year':
 					self.year = py2_encode_utf8( value )
 				elif key == 'title':
-					self.title = py2_encode_utf8(value)
+					self.title = py2_encode_utf8(DeleteColors(value))
 				elif key == 'img':
 					self.image_link = py2_encode_utf8(value)
 		except:

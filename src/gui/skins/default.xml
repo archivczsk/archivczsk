@@ -333,6 +333,34 @@
 		<widget name="list" position="*5*,*78*" size="*1142*,*534*" scrollbarMode="showOnDemand" transparent="1"/>
 	</screen>
 
+	<screen name="ArchivCZSKMultiLineChoiceBox" position="center,center" size="*1252*,*688*" backgroundColor="#0a000000">
+		<widget name="text" position="*12*,*12*" size="*1230*,*40*" foregroundColor="#00e5b243" font="Regular;*30*" transparent="1"/>
+		<widget source="menu" render="Listbox" position="*5*,*78*" size="*1242*,*574*" transparent="1">
+			<convert type="ACZSKKodiToE2List">Index:1.2,ColorCodes,Bold:FCE083,Italic:FCE083</convert>
+			<convert type="TemplatedMultiContent">
+			{
+				"templates": {
+					"default": (
+						*f70*,
+						[
+							MultiContentEntryText(pos=(*7*, *1*), size=(*1235*, *70*), font=0, flags=RT_VALIGN_CENTER | RT_HALIGN_LEFT, text=0),
+							MultiContentEntryText(pos=(*60*, *1*), size=(*1129*, *70*), font=0, flags=RT_VALIGN_TOP | RT_HALIGN_LEFT, text=1),
+							MultiContentEntryText(pos=(*60*, *1*), size=(*1129*, *70*), font=1, flags=RT_VALIGN_BOTTOM | RT_HALIGN_LEFT, text=2)
+						],
+						True,
+						"showOnDemand"
+					),
+				},
+				"fonts": [
+					gFont("Regular", *f32*),
+					gFont("Regular", *f22*)
+				],
+				"itemHeight": *f80*
+			}
+			</convert>
+		</widget>
+	</screen>
+
 	<screen name="ArchivCSFD" position="center,center" size="*1478*,*840*" backgroundColor="#0a000000" title="Archiv CSFD">
 		<widget font="Regular;*30*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
 		<widget font="Regular;*30*" halign="center" name="key_green" position="*377*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>

@@ -24,6 +24,7 @@ from .usage import UsageStats
 from ..gui.captcha import Captcha
 from ..gui.common import LoadingScreen
 from ..gui.config import ArchivCZSKSimpleConfigScreen
+from ..gui.choicebox import ArchivCZSKMultiLineChoiceBox
 from ..colors import DeleteColors, ConvertColors
 from ..py3compat import *
 GItem_lst = VideoAddonContentProvider.get_shared_itemlist()
@@ -189,12 +190,24 @@ def getListInput(session, choices_list, title="", selection=0):
 
 	d = defer.Deferred()
 
-	if config.plugins.archivCZSK.colored_items.value:
-		newlist = [(ConvertColors(toString(name)),) for name in choices_list]
-	else:
-		newlist = [(DeleteColors(toString(name)),) for name in choices_list]
+	colored_items = config.plugins.archivCZSK.colored_items.value
+	newlist = []
+	multiline_choicebox = False
 
-	session.openWithCallback(getListInputCB, ChoiceBox, toString(title), newlist, selection=selection, skin_name="ArchivCZSKChoiceBox")
+	for name in choices_list:
+		if isinstance(name, (list, tuple,)):
+			multiline_choicebox = True
+			newlist.append( [ConvertColors(x) if colored_items else DeleteColors(x) for x in name] )
+		elif '\n' in name:
+			multiline_choicebox = True
+			newlist.append( [ConvertColors(x) if colored_items else DeleteColors(x) for x in name.split('\n')] )
+		else:
+			newlist.append( (ConvertColors(name) if colored_items else DeleteColors(name),) )
+
+	if multiline_choicebox:
+		session.openWithCallback(getListInputCB, ArchivCZSKMultiLineChoiceBox, toString(title), newlist, selection=selection)
+	else:
+		session.openWithCallback(getListInputCB, ChoiceBox, toString(title), newlist, selection=selection, skin_name="ArchivCZSKChoiceBox")
 	return d
 
 @callFromThread
