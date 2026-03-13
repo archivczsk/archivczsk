@@ -197,12 +197,12 @@ def getListInput(session, choices_list, title="", selection=0):
 	for name in choices_list:
 		if isinstance(name, (list, tuple,)):
 			multiline_choicebox = True
-			newlist.append( [ConvertColors(x) if colored_items else DeleteColors(x) for x in name] )
+			newlist.append( [ConvertColors(toString(x)) if colored_items else DeleteColors(toString(x)) for x in name] )
 		elif '\n' in name:
 			multiline_choicebox = True
-			newlist.append( [ConvertColors(x) if colored_items else DeleteColors(x) for x in name.split('\n')] )
+			newlist.append( [ConvertColors(toString(x)) if colored_items else DeleteColors(toString(x)) for x in name.split('\n')] )
 		else:
-			newlist.append( (ConvertColors(name) if colored_items else DeleteColors(name),) )
+			newlist.append( (ConvertColors(toString(name)) if colored_items else DeleteColors(toString(name)),) )
 
 	if multiline_choicebox:
 		session.openWithCallback(getListInputCB, ArchivCZSKMultiLineChoiceBox, toString(title), newlist, selection=selection)
