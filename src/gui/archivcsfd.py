@@ -8,10 +8,8 @@ import traceback
 import re
 
 try:
-	from urllib2 import build_opener, HTTPRedirectHandler
 	from urllib import quote
 except:
-	from urllib.request import build_opener, HTTPRedirectHandler
 	from urllib.request import quote
 
 from random import randint
@@ -21,16 +19,17 @@ from Components.ActionMap import ActionMap
 from Components.Label import Label
 from Components.ScrollLabel import ScrollLabel
 from Components.Button import Button
-from Components.AVSwitch import AVSwitch
 from Components.MenuList import MenuList
 from Components.ProgressBar import ProgressBar
 from Components.Pixmap import Pixmap
-from twisted.web.client import downloadPage
 from .. import settings
 from ..engine.tools.logger import log
 from ..engine.tools.lang import _
-from ..compat import eCompatPicLoad
 from ..engine.tools.util import removeDiac
+from .poster import PosterPixmapHandler
+
+from twisted.internet import reactor
+import requests
 
 from ..py3compat import *
 
@@ -40,7 +39,6 @@ class ArchivCSFD(Screen):
 			Screen.__init__(self, session)
 			self.eventName = eventName
 			self["poster"] = Pixmap()
-			self.picload = eCompatPicLoad(self.paintPosterPixmapCB)
 			self["stars"] = ProgressBar()
 			self["starsbg"] = Pixmap()
 			self["stars"].hide()
@@ -90,13 +88,15 @@ class ArchivCSFD(Screen):
 
 			self.rokEPG = year
 
+			self.poster = PosterPixmapHandler(self["poster"], os.path.join(settings.IMAGE_PATH, 'empty.png'))
+
 			self.getCSFD()
 		except:
 			log.logError("Init ArchivCSFD failed.\n%s"%traceback.format_exc())
 			#raise
 
 	def __onClose(self):
-		del self.picload
+		del self.poster
 		self.close()
 
 	def toInt(self, s):
@@ -184,6 +184,31 @@ class ArchivCSFD(Screen):
 			self["statusbar"].setText("Fatal ERROR")
 			log.logError("Action showMenu failed.\n%s"%traceback.format_exc())
 
+	def downloadPage(self, url, callback, errback):
+		headers = {
+			'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:109.0) Gecko/20100101 Firefox/116.0',
+			'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+			'Accept-Language': 'en-US,en;q=0.9',
+			'Accept-Encoding': 'gzip, deflate, br, zstd',
+			'Sec-GPC': '1',
+			'Connection': 'keep-alive',
+			'Upgrade-Insecure-Requests': '1',
+			'Sec-Fetch-Dest': 'document',
+			'Sec-Fetch-Mode': 'navigate',
+			'Sec-Fetch-Site': 'none',
+			'Sec-Fetch-User': '?1',
+			'Priority': 'u=0, i'
+		}
+
+		try:
+			response = requests.get(url, headers=headers, timeout=config.plugins.archivCZSK.updateTimeout.value, verify=False)
+			response.raise_for_status()
+		except Exception as e:
+			reactor.callFromThread(errback, str(e))
+			return
+
+		reactor.callFromThread(callback, response.text)
+
 	def showDetails(self):
 		try:
 			self["ratinglabel"].show()
@@ -199,9 +224,8 @@ class ArchivCSFD(Screen):
 					self.nazevkomplet = self["menu"].getCurrent()[0]
 				self.unikatni = False
 				self["statusbar"].setText("Downloading movie information: '%s'" % (self.link))
-				localfile = os.path.join(config.plugins.archivCZSK.tmpPath.value, "archivCSFDquery2.html")
 				fetchurl = "https://www.csfd.cz/film/" + self.link.replace('/prehled/','') + "/recenze/?all=1" + str(randint(1000, 9999))
-				downloadPage(fetchurl.encode('utf-8'),localfile).addCallback(self.CSFDquery2).addErrback(self.fetchFailed)
+				reactor.callInThread(self.downloadPage, fetchurl, self.CSFDquery2, self.fetchFailed)
 				self["menu"].hide()
 				self.resetLabels()
 				self.setTitle(self.nazevkomplet)
@@ -284,10 +308,9 @@ class ArchivCSFD(Screen):
 			self.nazeveventu = self.nazeveventu.replace('%', '\\x')
 
 			self["statusbar"].setText(_("Searching for")+(" '%s'" % self.nazeveventuproskin))
-			localfile =	 os.path.join(config.plugins.archivCZSK.tmpPath.value, "archivCSFDquery.html")
 			fetchurl = "https://www.csfd.cz/hledat/?q=" + self.eventName
 			self.puvodniurl = fetchurl
-			downloadPage(fetchurl.encode('utf-8'),localfile).addCallback(self.CSFDquery).addErrback(self.fetchFailed)
+			reactor.callInThread(self.downloadPage, fetchurl, self.CSFDquery, self.fetchFailed)
 		else:
 			self["statusbar"].setText("Movie name is empty.")
 
@@ -295,15 +318,9 @@ class ArchivCSFD(Screen):
 		log.logError("Download csfd info failed.\n%s"%string)
 		self["statusbar"].setText("Download csfd info failed.")
 
-	def adresaPredPresmerovanim(self, adresa):
-		opener = build_opener(HTTPRedirectHandler)
-		request = opener.open(adresa)
-		return request.url
-
 	def CSFDquery(self, string):
 		self["statusbar"].setText(_("Download complete for")+(" '%s'" % self.nazeveventuproskin))
-		qfl = os.path.join(config.plugins.archivCZSK.tmpPath.value, "archivCSFDquery.html")
-		self.inhtml = (open(qfl, "r").read())
+		self.inhtml = string
 
 		self.resultlist = []
 		self.unikatni = False
@@ -377,8 +394,7 @@ class ArchivCSFD(Screen):
 
 	def CSFDquery2(self,string):
 		self["statusbar"].setText("Download movie info complete for '%s'" % (self.nazevkomplet))
-		qfl = os.path.join(config.plugins.archivCZSK.tmpPath.value, "archivCSFDquery2.html")
-		self.inhtml = (open(qfl, "r").read())
+		self.inhtml = string
 
 		if 'DOCTYPE html' in self.inhtml:
 			self.CSFDparse()
@@ -441,11 +457,10 @@ class ArchivCSFD(Screen):
 					posterurl = "https:" + posterurl
 				log.logDebug("posterurl: %s" % posterurl )
 				self["statusbar"].setText("Downloading movie poster for '%s'" % (posterurl))
-				localfile = os.path.join(config.plugins.archivCZSK.tmpPath.value, "csfd_archivczsk_poster.jpg")
-				downloadPage(posterurl.encode('utf-8'),localfile).addCallback(self.CSFDPoster).addErrback(self.fetchFailed)
+				self.poster.set_image(posterurl)
 			else:
 				log.logDebug("No poster found"  )
-				self.CSFDPoster(noPoster = True)
+				self.poster.set_image(None)
 
 			baseInfo = ""
 			Detailstext = ""
@@ -502,22 +517,6 @@ class ArchivCSFD(Screen):
 
 		self["baseFilmInfo"].setText(baseInfo)
 		self["detailslabel"].setText(Detailstext)
-
-	def CSFDPoster(self, noPoster = False):
-		self["statusbar"].setText(_("Csfd info for") + (" '%s'" % self.nazevkomplet))
-		if not noPoster:
-			filename = os.path.join(config.plugins.archivCZSK.tmpPath.value, "csfd_archivczsk_poster.jpg")
-		else:
-			filename = os.path.join(settings.PLUGIN_PATH, 'gui','icon', 'csfd_no_poster.png')
-		sc = AVSwitch().getFramebufferScale()
-		self.picload.setPara((self["poster"].instance.size().width(), self["poster"].instance.size().height(), sc[0], sc[1], False, 1, "#00000000"))
-		self.picload.startDecode(filename)
-
-	def paintPosterPixmapCB(self, picInfo=None):
-		ptr = self.picload.getData()
-		if ptr is not None:
-			self["poster"].instance.setPixmap(ptr.__deref__())
-			self["poster"].show()
 
 	def createSummary(self):
 		return ArchivCSFDLCDScreen
