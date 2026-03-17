@@ -211,7 +211,7 @@ class ArchivCZSKAddonConfigScreen(BaseArchivCZSKConfigScreen):
 		self.addon = addon
 
 		# to get addon config including global settings
-		categories = addon_config.getArchiveConfigList(addon)
+		categories = addon.settings.get_configlist_categories()
 
 		BaseArchivCZSKConfigScreen.__init__(self, session, categories=categories)
 		self.skinName = "ArchivCZSKConfigScreen"

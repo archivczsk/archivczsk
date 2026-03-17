@@ -7,7 +7,7 @@ Created on 21.10.2012
 import os, traceback
 import gettext
 import importlib
-from Components.config import config, ConfigSubsection, ConfigSelection, ConfigYesNo, ConfigText, ConfigNumber, ConfigIP, ConfigPassword, getConfigListEntry
+from Components.config import config, ConfigSubsection, ConfigSelection, ConfigYesNo, ConfigText, ConfigNumber, ConfigIP, ConfigPassword, ConfigDirectory, getConfigListEntry
 import copy
 import uuid
 from hashlib import md5
@@ -18,11 +18,12 @@ from .tools import util, parser
 from .tools.lang import get_language_id
 from .tools.logger import log
 from .tools.lang import _
-from ..resources.repositories import config as addon_config
+from ..resources.repositories.config import global_addon_settings
 from ..gui import menu, info, shortcuts, download
 from .contentprovider import VideoAddonContentProvider
 from .bgservice import AddonBackgroundService
 from .httpserver import ArchivCZSKHttpServer, AddonHttpRequestHandler
+from ..settings import ConfigSelectionTr
 from ..compat import DMM_IMAGE
 
 from ..py3compat import *
@@ -504,8 +505,7 @@ class AddonSettings(object):
 
 		setattr(config.plugins.archivCZSK.archives, addon_id, ConfigSubsection())
 		self.main = getattr(config.plugins.archivCZSK.archives, addon_id)
-
-		addon_config.add_global_addon_settings(addon, self.main)
+		self.category_entries = []
 
 		self.main.enabled = ConfigYesNo(default=True)
 		self.notifiers_enabled = True
@@ -519,17 +519,39 @@ class AddonSettings(object):
 			pass
 		else:
 			self.category_entries = settings_parser.parse()
-			self.initialize_settings()
+
+		self.add_global_settings()
+		self.initialize_settings()
 
 
 	def __repr__(self):
 		return "%s[settings]" % self.addon
 
 
+	def add_global_settings(self):
+		def _add_global(cat_label, cat_order, setting):
+			for i, ce in enumerate(self.category_entries):
+				if ce['label'] == cat_label or cat_order == i:
+					ce['subentries'].append(dict({'visible': 'true', 'translator': _}, **setting))
+					break
+			else:
+				self.category_entries.append({
+					'label': cat_label,
+					'translator': _,
+					'subentries': [
+						dict({'visible': 'true', 'translator': _}, **setting)
+					]
+				})
+
+		for category in global_addon_settings:
+			for setting in category['subentries']:
+					_add_global(category['label'], category.get('order'), setting)
+
+
 	def initialize_settings(self):
 		for entry in self.category_entries:
 			for subentry in entry['subentries']:
-				self.initialize_entry(self.main, subentry)
+				self.initialize_entry(subentry)
 
 
 	def get_configlist_categories(self):
@@ -537,10 +559,10 @@ class AddonSettings(object):
 			se = []
 			for subentry in self.category_entries[idx]['subentries']:
 				if subentry['visible'] == 'true':
-					if isinstance(subentry['setting_id'], addon_config.ConfigSelectionTr):
-						subentry['setting_id'].translate()
+					if isinstance(subentry['component'], ConfigSelectionTr):
+						subentry['component'].translate()
 
-					se.append(getConfigListEntry(py2_encode_utf8( self._get_label(subentry['label']) ), subentry['setting_id']))
+					se.append(getConfigListEntry(py2_encode_utf8( self._get_label(subentry['label'], subentry.get('translator')) ), subentry['component']))
 			return se
 
 		categories = []
@@ -551,7 +573,7 @@ class AddonSettings(object):
 				else:
 					category = {'label':_('General'), 'subentries': partial(__load_subcategory, i)}
 			else:
-				category = {'label':self._get_label(entry['label']), 'subentries': partial( __load_subcategory, i)}
+				category = {'label':self._get_label(entry['label'], entry.get('translator')), 'subentries': partial( __load_subcategory, i)}
 
 			categories.append(category)
 
@@ -599,48 +621,52 @@ class AddonSettings(object):
 
 		return ret
 
-	def _get_label(self, label):
-		return self.addon.get_localized_string(label)
+	def _get_label(self, label, translator=None):
+		return translator(label) if translator else self.addon.get_localized_string(label)
 
-	def initialize_entry(self, setting, entry):
+	def initialize_entry(self, entry):
 		# fix dotted id
 		entry['id'] = entry['id'].replace('.', '_')
 
 		if entry['type'] == 'bool':
-			setattr(setting, entry['id'], ConfigYesNo(default=(entry['default'] == 'true')))
+			setattr(self.main, entry['id'], ConfigYesNo(default=(entry['default'] == 'true')))
 
 		elif entry['type'] == 'text':
 			if entry['option'] == 'true':
-				setattr(setting, entry['id'], ConfigPassword(default=entry['default'], fixed_size=False))
+				setattr(self.main, entry['id'], ConfigPassword(default=entry['default'], fixed_size=False))
 			else:
-				setattr(setting, entry['id'], ConfigText(default=entry['default'], fixed_size=False))
+				setattr(self.main, entry['id'], ConfigText(default=entry['default'], fixed_size=False))
 
 		elif entry['type'] == 'password':
-			setattr(setting, entry['id'], ConfigPassword(default=entry['default'], fixed_size=False))
+			setattr(self.main, entry['id'], ConfigPassword(default=entry['default'], fixed_size=False))
 
 		elif entry['type'] == 'enum':
 			choicelist = [(str(idx), e) for idx, e in enumerate(entry['lvalues'].split("|"))]
-			setattr(setting, entry['id'], addon_config.ConfigSelectionTr(self._get_label, default=entry['default'], choices=choicelist))
+			setattr(self.main, entry['id'], ConfigSelectionTr(partial(self._get_label, translator=entry.get('translator')), default=entry['default'], choices=choicelist))
 
 		elif entry['type'] == 'labelenum':
 			choicelist = [(py2_encode_utf8(e), e) for e in entry['values'].split("|")]
-			setattr(setting, entry['id'], addon_config.ConfigSelectionTr(self._get_label, default=entry['default'], choices=choicelist))
+			setattr(self.main, entry['id'], ConfigSelectionTr(partial(self._get_label, translator=entry.get('translator')), default=entry['default'], choices=choicelist))
 
 		elif entry['type'] == 'keyenum':
 			choicelist = [(py2_encode_utf8(e.split(';')[0]), e.split(';')[1]) for e in entry['values'].split("|")]
-			setattr(setting, entry['id'], addon_config.ConfigSelectionTr(self._get_label, default=entry['default'], choices=choicelist))
+			setattr(self.main, entry['id'], ConfigSelectionTr(partial(self._get_label, translator=entry.get('translator')), default=entry['default'], choices=choicelist))
 
 		elif entry['type'] == 'ipaddress':
-			setattr(setting, entry['id'], ConfigIP(default=list(map(int, entry['default'].split('.'))), auto_jump=True))
+			setattr(self.main, entry['id'], ConfigIP(default=list(map(int, entry['default'].split('.'))), auto_jump=True))
 
 		elif entry['type'] == 'number':
-			setattr(setting, entry['id'], ConfigNumber(default=int(entry['default'])))
+			setattr(self.main, entry['id'], ConfigNumber(default=int(entry['default'])))
+
+		elif entry['type'] == 'download_path':
+			download_path = os.path.join(config.plugins.archivCZSK.downloadsPath.value, self.addon.get_real_id())
+			setattr(self.main, entry['id'], ConfigDirectory(default=download_path))
 
 		else:
 			log.error('%s cannot initialize unknown entry %s', self, entry['type'])
 			return
 
-		entry['setting_id'] = getattr(setting, entry['id'])
+		entry['component'] = getattr(self.main, entry['id'])
 
 	def close(self):
 		self.addon = None
