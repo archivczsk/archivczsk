@@ -3,6 +3,7 @@ Created on 22.5.2012
 
 @author: marko
 '''
+import os
 import json
 import time
 
@@ -41,18 +42,24 @@ def resize(t):
 
 
 try:
-	fonts = json.load(settings.CUSTOM_FONTS_PATH)
+	with open(settings.CUSTOM_FONTS_PATH, 'r') as f:
+		fonts = json.load(f)
+
 	REGULAR_FONT = fonts['regular']
 	BOLD_FONT = fonts['bold']
 	ITALIC_FONT = fonts['italic']
 except Exception as e:
-	log.error("cannot load custom fonts - %s"%str(e))
+	if os.path.exists(settings.CUSTOM_FONTS_PATH):
+		log.error("Cannot load custom fonts - %s" % str(e))
+
 	REGULAR_FONT = "Regular"#"Ubuntu-R.ttf"
 	BOLD_FONT = "Regular"#"Ubuntu-B.ttf"
 	ITALIC_FONT = "Regular" #"Ubuntu-I.ttf"
 
 try:
-	colors = json.load(settings.CUSTOM_COLORS_PATH)
+	with open(settings.CUSTOM_COLORS_PATH, 'r') as f:
+		colors = json.load(f)
+
 	class Color:
 		RED = colors['red']
 		GREEN = colors['green']
@@ -63,7 +70,9 @@ try:
 		BLACK = colors['black']
 		GREY = colors['grey']
 except Exception as e:
-	log.error("cannot load custom colors- %s"%str(e))
+	if os.path.exists(settings.CUSTOM_COLORS_PATH):
+		log.error("cannot load custom colors- %s"%str(e))
+
 	class Color:
 		RED = 0xff0000
 		GREEN = 0x00ff00
@@ -75,13 +84,18 @@ except Exception as e:
 		GREY = 0xdddddd
 
 try:
-	size = json.load(settings.CUSTOM_SIZES_PATH)
+	with open(settings.CUSTOM_SIZES_PATH, 'r' ) as f:
+		size = json.load(f)
+
 	class Size:
 		SMALL = size['small']
 		MEDIUM = size['medium']
 		BIG = size['big']
+
 except Exception as e:
-	log.error("cannot load custom sizes- %s"%str(e))
+	if os.path.exists(settings.CUSTOM_SIZES_PATH):
+		log.error("cannot load custom sizes- %s"%str(e))
+
 	class Size:
 		SMALL = 18
 		MEDIUM = 21
