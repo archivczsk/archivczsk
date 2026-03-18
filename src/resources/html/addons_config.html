@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>ArchivCZSK addons settings</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        /* Core Layout: Prevent the body from scrolling */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden; /* Critical: Body stays static */
+            background: #f4f7f6;
+        }
+
+        /* Sidebar: Fixed width, independent scroll */
+        #sidebar {
+            width: 280px;
+            background: #2c3e50;
+            color: white;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid #1a252f;
+        }
+
+        #sidebar h3 {
+            padding: 20px;
+            margin: 0;
+            background: #1a252f;
+            font-size: 1.1rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* The Scrollable Tab Container */
+        #tabs-list {
+            flex: 1;
+            overflow-y: auto; /* Separate scrollbar for tabs */
+            scrollbar-width: thin;
+            scrollbar-color: #34495e #2c3e50;
+        }
+
+        /* Scrollbar styling for Chrome/Safari/Edge */
+        #tabs-list::-webkit-scrollbar { width: 6px; }
+        #tabs-list::-webkit-scrollbar-track { background: #2c3e50; }
+        #tabs-list::-webkit-scrollbar-thumb { background: #34495e; border-radius: 10px; }
+
+        /* Tab Styles: Applied via class so they persist regardless of count */
+        .tab-link {
+            padding: 15px 20px;
+            cursor: pointer;
+            border-bottom: 1px solid #34495e;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .tab-link:hover { background: #34495e; padding-left: 25px; }
+        .tab-link.active {
+            background: #3498db;
+            font-weight: bold;
+            border-left: 5px solid #fff;
+        }
+
+        /* Content Area: Independent scroll */
+        #content-area {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            height: 100vh;
+        }
+
+        .setting-card {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .setting-item {
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding-bottom: 15px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .setting-input { padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+        #save-btn {
+            background: #27ae60; color: white; border: none;
+            padding: 12px 40px; border-radius: 4px; cursor: pointer;
+            font-weight: bold; display: block; margin-top: 30px;
+        }
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+    <nav id="sidebar">
+        <h3>Addons</h3>
+        <div id="tabs-list">
+            </div>
+    </nav>
+
+    <main id="content-area">
+        <div id="settings-pane" class="setting-card hidden">
+            <h2 id="current-tab-title">Settings</h2>
+            <div id="settings-form"></div>
+            <button id="save-btn">Save Changes</button>
+        </div>
+        <div id="empty-state" style="text-align: center; color: #7f8c8d; margin-top: 100px;">
+            <h2>Select an addon to begin</h2>
+        </div>
+    </main>
+
+    <script>
+        $(document).ready(function() {
+            let hasUnsavedChanges = false;
+			let addon_id = null;
+
+            // 1. Fetch Addons
+            $.getJSON('/addons/list', function(tabs) {
+                const list = $('#tabs-list');
+                list.empty();
+                tabs.forEach(tab => {
+                    // Using classes ensures CSS applies to all, even those off-screen
+                    list.append(`<div class="tab-link" data-id="${tab.id}">${tab.name}</div>`);
+                });
+            });
+
+            // 2. Tab Navigation
+            $(document).on('click', '.tab-link', function() {
+                if (hasUnsavedChanges && !confirm("Unsaved changes will be lost. Continue?")) return;
+
+                const id = $(this).data('id');
+                const name = $(this).text();
+
+                $('.tab-link').removeClass('active');
+                $(this).addClass('active');
+
+                loadTabSettings(id, name);
+            });
+
+            function loadTabSettings(id, name) {
+                $('#empty-state').addClass('hidden');
+                $('#settings-pane').removeClass('hidden');
+                $('#current-tab-title').text(name);
+                $('#settings-form').html('<p>Fetching configuration...</p>');
+				addon_id = null;
+
+                $.getJSON(`/addons/config/${id}`, function(data) {
+                    $('#settings-form').empty();
+                    hasUnsavedChanges = false;
+
+                    data.forEach(cat => {
+                        $('#settings-form').append(`<h3 style="margin-top:25px; color:#2c3e50;">${cat.label}</h3>`);
+                        cat.subentries.forEach(item => {
+                            const input = createInput(item);
+                            const row = $(`<div class="setting-item"><label>${item.label}</label>${input}</div>`);
+                            row.find('.setting-input').data('original', item.value);
+                            $('#settings-form').append(row);
+                        });
+                    });
+					addon_id = id;
+                });
+            }
+
+            function createInput(item) {
+                const attrs = `class="setting-input" name="${item.id}"`;
+                switch(item.type) {
+                    case 'bool':
+                        return `<input type="checkbox" ${attrs} ${item.value ? 'checked' : ''}>`;
+
+                    case 'choice':
+                        let opts = item.choices.map(c => `<option value="${c[0]}" ${c[0]==item.value?'selected':''}>${c[1]}</option>`).join('');
+                        return `<select ${attrs}>${opts}</select>`;
+
+                    case 'number':
+						return `<input type="number" ${attrs} value="${item.value}">`;
+
+                    case 'password':
+						return `<input type="password" ${attrs} value="${item.value}">`;
+
+                    default:
+						return `<input type="text" ${attrs} value="${item.value}">`;
+                }
+            }
+
+            // Dirty Check Logic
+            $(document).on('input change', '.setting-input', () => { hasUnsavedChanges = true; });
+
+            // 3. Save Changes
+            $('#save-btn').on('click', function() {
+                const changes = [];
+                $('.setting-input').each(function() {
+                    const $el = $(this);
+                    const val = $el.is(':checkbox') ? $el.is(':checked') : $el.val();
+                    if (String(val) !== String($el.data('original'))) {
+                        changes.push({ name: $el.attr('name'), value: val });
+                    }
+                });
+
+                if (!changes.length) return alert("Nothing changed.");
+
+                $.ajax({
+                    url: `/addons/config/${addon_id}`,
+                    method: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify(changes),
+                    success: function() {
+                        alert('Saved successfully!');
+                        hasUnsavedChanges = false;
+                        // Update the 'original' reference
+                        $('.setting-input').each(function() {
+                            const v = $(this).is(':checkbox') ? $(this).is(':checked') : $(this).val();
+                            $(this).data('original', v);
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

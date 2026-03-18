@@ -57,6 +57,7 @@ IMAGE_PATH = os.path.join(PLUGIN_PATH, 'gui/icon')
 SKIN_PATH = os.path.join(PLUGIN_PATH, 'gui/skins')
 REPOSITORY_PATH = os.path.join(PLUGIN_PATH, 'resources/repositories')
 LIBRARIES_PATH = os.path.join(PLUGIN_PATH, 'resources/libraries')
+HTML_PATH = os.path.join(PLUGIN_PATH, 'resources/html')
 
 CUSTOM_FONTS_PATH = os.path.join(SKIN_PATH,'font.json')
 CUSTOM_COLORS_PATH = os.path.join(SKIN_PATH,'color.json')
@@ -167,6 +168,7 @@ for i in range(0, 10000, 500):
 	choicelist.append(("%d" % i, "%d" % i))
 config.plugins.archivCZSK.posterSizeMax = ConfigSelection(default="5000", choices=choicelist)
 
+config.plugins.archivCZSK.openwebif_shortcut = ConfigYesNo(default=True)
 choicelistCsfd = [('1', _("Internal")), ('2', _("CSFD")), ('3', _("CSFDLite"))]
 config.plugins.archivCZSK.csfdMode = ConfigSelectionTr(tr, default='1', choices=choicelistCsfd)
 
@@ -213,6 +215,7 @@ def get_main_settings():
 	list.append(getConfigListEntry(_("Integrate into EPG viewer (need restart)"), config.plugins.archivCZSK.epg_viewer))
 	if (not DMM_IMAGE) and config.plugins.archivCZSK.epg_viewer.value:
 		list.append(getConfigListEntry(_("Number of history days in EPG viewer (need restart)"), config.plugins.archivCZSK.epg_viewer_history))
+	list.append(getConfigListEntry(_("Add shortcut into OpenWebIf"), config.plugins.archivCZSK.openwebif_shortcut))
 
 	list.append(MENU_SEPARATOR)
 
@@ -335,7 +338,7 @@ config.plugins.archivCZSK.convertPNG = ConfigYesNo(default=True)
 config.plugins.archivCZSK.confirmExit = ConfigYesNo(default=False)
 config.plugins.archivCZSK.httpPort = ConfigInteger(default=18888, limits=(1,65535))
 config.plugins.archivCZSK.httpPort.addNotifier(restartHttpServer, initial_call=False)
-config.plugins.archivCZSK.httpLocalhost = ConfigYesNo(default=True)
+config.plugins.archivCZSK.httpLocalhost = ConfigYesNo(default=False)
 config.plugins.archivCZSK.httpLocalhost.addNotifier(restartHttpServer, initial_call=False)
 config.plugins.archivCZSK.send_usage_stats = ConfigYesNo(default=True)
 

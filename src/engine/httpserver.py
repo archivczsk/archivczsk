@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 import threading
+import json, os
 from .tools.logger import log
 from Components.config import config
 from ..py3compat import *
@@ -9,6 +10,7 @@ import time
 from .license import ArchivCZSKLicense
 from .tools.util import set_thread_name
 from .bgservice import run_in_reactor
+from ..settings import HTML_PATH
 
 try:
 	from socketserver import ThreadingMixIn
@@ -17,8 +19,10 @@ except:
 	from SocketServer import ThreadingMixIn
 	from BaseHTTPServer import HTTPServer, BaseHTTPRequestHandler
 
+# #################################################################################################
+
 class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
-	def __init__(self, root, *args, **kwargs):
+	def __init__(self, root, fallback, *args, **kwargs):
 		if issubclass(ThreadedHTTPServer, object):
 			super(ThreadedHTTPServer, self).__init__(*args, **kwargs)
 		else:
@@ -27,6 +31,7 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 			HTTPServer.__init__(self, *args, **kwargs)
 
 		self.root = root
+		self.fallback = fallback
 		self.developer_mode = ArchivCZSKLicense.get_instance().check_level(ArchivCZSKLicense.LEVEL_DEVELOPER)
 
 	def handle_error(self, request, client_address):
@@ -35,6 +40,7 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 			if not tb.endswith( ('Connection reset by peer\n', 'Broken pipe\n',) ):
 				log.error("Failed to process request from %s\n%s" % (client_address, tb))
 
+# #################################################################################################
 
 class AddonHttpRequestHandler(object):
 
@@ -105,12 +111,14 @@ class AddonHttpRequestHandler(object):
 	def render(self, request):
 		UsageStats.get_instance().addon_http_call(self.addon)
 		# if addon wants to handle requests more flexible, then it can override this function
-		# function for endpoint needs to be named P_endpoint and supports only GET requests (inspired by openwebif)
+		# function for endpoint needs to be named P_endpoint GET requests (inspired by openwebif) and P_POST_endpoint for POST requests
 
 		path_full = self.get_relative_path( request )
 		path = path_full.split('/')[0]
+		method = request.command.upper()
+		method = '{}_'.format(method) if method != 'GET' else ''
 		if len(path):
-			func = getattr(self, "P_" + path, None)
+			func = getattr(self, "P_{}{}".format(method, path), None)
 
 			if callable(func):
 				try:
@@ -131,7 +139,7 @@ class AddonHttpRequestHandler(object):
 	def run_in_reactor(self, fn, *args, **kwargs):
 		run_in_reactor(fn, *args, **kwargs)
 
-archivCZSKHttpServer = None
+# #################################################################################################
 
 class ArchivCZSKReloadHandler(object):
 	def render(self, request):
@@ -140,6 +148,8 @@ class ArchivCZSKReloadHandler(object):
 		request.send_response(200)
 		request.send_header("content-type", "text/plain; charset=utf-8")
 		return b'Reload activated\n'
+
+# #################################################################################################
 
 class ArchivCZSKE2ReloadHandler(object):
 	def render(self, request):
@@ -151,6 +161,8 @@ class ArchivCZSKE2ReloadHandler(object):
 
 		return b'E2 reload activated\n'
 
+# #################################################################################################
+
 class ArchivCZSKUpdateHandler(object):
 	def render(self, request):
 		from .updater import HeadlessUpdater
@@ -160,9 +172,126 @@ class ArchivCZSKUpdateHandler(object):
 
 		return b'Update finished\n'
 
+# #################################################################################################
+
+class ArchivCZSKAddonsSettingsHandler(object):
+	METHODS=['GET', 'POST']
+
+	def __to_bytes(self, data):
+		if isinstance(data, unicode):
+			return data.encode('utf-8')
+
+		return data
+
+	def reply_error500(self, request):
+		request.send_response(500)
+		request.send_header("content-type", "text/html")
+		data = "<html><head><title>archivCZSK</title></head><body><h1>Error 500: settings failed</h1><br />Internal server error</body></html>"
+		return self.__to_bytes(data)
+
+	def reply_ok(self, request, data, content_type=None, raw=False ):
+		request.send_response(200)
+		if content_type:
+			request.send_header("content-type", content_type )
+
+		if raw:
+			return data
+		else:
+			return self.__to_bytes(data)
+
+	def get_relative_path(self, request ):
+		return request.path[len(request.path.split('/',2)[1])+2:]
+
+	def render(self, request):
+		path_full = self.get_relative_path( request )
+		path = path_full.split('/')[0]
+		method = request.command.upper()
+		method = '{}_'.format(method) if method != 'GET' else ''
+
+		if len(path):
+			func = getattr(self, "P_{}{}".format(method, path), None)
+
+			if callable(func):
+				try:
+					return self.__to_bytes((func(request, path_full[len(path)+1:])))
+				except:
+					log.error("Error by handling HTTP request for path %s:\n%s" % (path_full, traceback.format_exc()))
+					return self.reply_error500(request)
+
+		return self.__to_bytes(self.default_handler( request, path_full ))
+
+	def default_handler(self, request, path_full ):
+		if path_full == '' and request.command.upper() == 'GET':
+			with open(os.path.join(HTML_PATH, 'addons_config.html'), 'rb') as f:
+				request.send_response(200)
+				request.send_header("content-type", "text/html; charset=utf-8")
+				request.write(f.read())
+
+		else:
+			# this is default handler, when request is not processed by named endpoint - it mostly prints error message
+			request.send_response(404)
+			request.send_header("content-type", "text/plain; charset=utf-8")
+			data = "Error 404: has no handler for path %s\n" % path_full
+			return self.__to_bytes(data)
+
+	def P_list(self, request, path):
+		from ..archivczsk import ArchivCZSK
+
+		addons = []
+		for a in sorted(ArchivCZSK.get_video_addons(), key=lambda x: str(x.get_setting('auto_addon_order')) + '#' + x.name.lower()):
+			addons.append({
+				'name': a.name,
+				'id': a.id
+			})
+
+		return self.reply_ok(request, json.dumps(addons), 'text/json')
+
+	def P_config(self, request, path):
+		from ..archivczsk import ArchivCZSK
+
+		if not ArchivCZSK.has_addon(path):
+			return self.reply_error500(self, request)
+
+		ret = []
+		for category in ArchivCZSK.get_addon(path).settings.get_configlist_categories(True):
+			ret.append({
+				'label': category['label'],
+				'subentries': category['subentries']()
+			})
+
+		return self.reply_ok(request, json.dumps(ret), 'text/json')
+
+	def P_POST_config(self, request, path):
+		from ..archivczsk import ArchivCZSK
+
+		if not ArchivCZSK.has_addon(path):
+			return self.reply_error500(self, request)
+
+		addon = ArchivCZSK.get_addon(path)
+		for setting in json.loads(request.read()):
+			log.info("[%s] setting %s to %s" % (addon, setting['name'], setting['value']))
+			addon.set_setting(setting['name'], setting['value'])
+
+		return self.reply_ok(request, json.dumps({'status': 'ok'}), 'text/json')
+
+# #################################################################################################
+
+class ArchivCZSKFallbackHandler(object):
+	def render(self, request):
+		if request.path == '/':
+			request.send_response(302)
+			request.send_header("Location", '/addons')
+			request.send_header("content-type", "text/plain")
+		else:
+			request.send_error( 404 )
+
+		return None
+
+# #################################################################################################
 
 class Handler(BaseHTTPRequestHandler):
 	protocol_version = 'HTTP/1.1'
+	timeout = 12
 
 	def __init__(self, *args, **kwargs):
 		set_thread_name('ArchivCZSK-htcli')
@@ -170,13 +299,13 @@ class Handler(BaseHTTPRequestHandler):
 		self.__eoh_called = False
 		self.rtime = 0
 
-	def do_GET(self):
+	def do_GET_POST(self):
 		request_start = time.time()
 		self.__eoh_called = False
 		resource = self.path.split('/')[1]
 
-		handler = self.server.root.get(resource)
-		if handler is not None:
+		handler = self.server.root.get(resource, self.server.fallback)
+		if handler is not None and self.command.upper() in getattr(handler, 'METHODS', ['GET']):
 			try:
 				body = handler.render(self)
 			except:
@@ -201,6 +330,21 @@ class Handler(BaseHTTPRequestHandler):
 		if self.server.developer_mode:
 			rtime = (time.time() - request_start) * 1000
 			log.debug("Request %s took %dms" % (self.path, int(rtime)))
+
+	def do_GET(self):
+		return self.do_GET_POST()
+
+	def do_POST(self):
+		return self.do_GET_POST()
+
+	def read(self, size=None):
+		if not size:
+			size = self.get_header('Content-Length')
+			if size == None:
+				raise Exception("No body content length received")
+			size = int(size)
+
+		return self.rfile.read(size)
 
 	def write(self, data):
 		if not self.__eoh_called:
@@ -228,6 +372,8 @@ class Handler(BaseHTTPRequestHandler):
 
 	def log_message(self, format, *args):
 		return
+
+# #################################################################################################
 
 class ArchivCZSKHttpServer(object):
 	__instance = None
@@ -263,6 +409,8 @@ class ArchivCZSKHttpServer(object):
 		self.running = None
 		self.server = None
 		self.root['update'] = ArchivCZSKUpdateHandler()
+		self.root['addons'] = ArchivCZSKAddonsSettingsHandler()
+		self.fallback = ArchivCZSKFallbackHandler()
 
 		if ArchivCZSKLicense.get_instance().check_level(ArchivCZSKLicense.LEVEL_DEVELOPER):
 			log.info("Adding RELOAD endpoint to HTTP server")
@@ -301,7 +449,7 @@ class ArchivCZSKHttpServer(object):
 	def httpd_run(self, listen_address):
 		try:
 			set_thread_name('ArchivCZSK-httpd')
-			self.server = ThreadedHTTPServer( self.root, (listen_address, self.port), Handler)
+			self.server = ThreadedHTTPServer( self.root, self.fallback, (listen_address, self.port), Handler)
 			log.debug("HTTP Accept thread started")
 		except:
 			log.error("FATAL: Failed to start HTTP server\n:%s" % traceback.format_exc())
@@ -358,3 +506,32 @@ class ArchivCZSKHttpServer(object):
 
 		return None
 
+# #################################################################################################
+
+archivCZSKHttpServer = None
+
+try:
+	if config.plugins.archivCZSK.openwebif_shortcut.value and not config.plugins.archivCZSK.httpLocalhost.value:
+		from Plugins.Extensions.OpenWebif.controllers import base
+		BaseController = getattr(base, 'BaseController')
+
+		if not getattr(BaseController, 'ArchivCZSKPatchInjected', False):
+			log.info("Injecting ArchivCZSK shortcut into OpenWebIf")
+			class BaseControllerX(BaseController):
+				ArchivCZSKPatchInjected = True
+
+				def prepareMainTemplate(self, request):
+					ret = BaseController.prepareMainTemplate(self, request)
+
+					try:
+						url = "http://%s:%s/" % (request.getRequestHostname(), config.plugins.archivCZSK.httpPort.value)
+						if isinstance(ret.get('extras'), list) and not any(x.get('key') == url for x in ret['extras'] ):
+							ret['extras'].append({'key': url, 'description': 'ArchivCZSK', 'nw': '1'})
+					except:
+						print(traceback.format_exc())
+
+					return ret
+
+			setattr(base, 'BaseController', BaseControllerX)
+except:
+	log.error(traceback.format_exc())
