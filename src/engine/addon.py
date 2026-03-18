@@ -554,15 +554,18 @@ class AddonSettings(object):
 				self.initialize_entry(subentry)
 
 
-	def get_configlist_categories(self):
+	def get_configlist_categories(self, export=False):
 		def __load_subcategory(idx):
 			se = []
 			for subentry in self.category_entries[idx]['subentries']:
 				if subentry['visible'] == 'true':
-					if isinstance(subentry['component'], ConfigSelectionTr):
-						subentry['component'].translate()
+					if export:
+						se.append(self.export_entry(subentry))
+					else:
+						if isinstance(subentry['component'], ConfigSelectionTr):
+							subentry['component'].translate()
 
-					se.append(getConfigListEntry(py2_encode_utf8( self._get_label(subentry['label'], subentry.get('translator')) ), subentry['component']))
+						se.append(getConfigListEntry(py2_encode_utf8( self._get_label(subentry['label'], subentry.get('translator')) ), subentry['component']))
 			return se
 
 		categories = []
@@ -667,6 +670,39 @@ class AddonSettings(object):
 			return
 
 		entry['component'] = getattr(self.main, entry['id'])
+
+	def export_entry(self, entry):
+		ret = {
+			'label': self._get_label(entry['label'], entry.get('translator')),
+			'id': entry['id'],
+			'type': entry['type'],
+			'default': entry.get('default'),
+			'value': self.get_setting(entry['id'])
+		}
+
+		if entry['type'] == 'text':
+			if entry['option'] == 'true':
+				ret['type'] = 'password'
+
+		elif entry['type'] == 'enum':
+			ret['choices'] = [(str(idx), self._get_label(e, entry.get('translator'))) for idx, e in enumerate(entry['lvalues'].split("|"))]
+			ret['type'] = 'choice'
+
+		elif entry['type'] == 'labelenum':
+			ret['choices'] = [(e, self._get_label(e, entry.get('translator'))) for e in entry['values'].split("|")]
+			ret['type'] = 'choice'
+
+		elif entry['type'] == 'keyenum':
+			ret['choices'] = [(e.split(';')[0], self._get_label(e.split(';')[1], entry.get('translator'))) for e in entry['values'].split("|")]
+			ret['type'] = 'choice'
+
+		elif entry['type'] == 'ipaddress':
+			ret['type'] = 'text'
+
+		elif entry['type'] == 'download_path':
+			ret['type'] = 'text'
+
+		return ret
 
 	def close(self):
 		self.addon = None
