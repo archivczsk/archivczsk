@@ -1,3 +1,9 @@
+ArchivCZSK 3.6.0, 18.03.2026
+    - pridanie web rozhrania pre konfiguráciu doplnkov
+        * zjednodušuje napr. zadávanie prihlasovacích údajov
+        * web rozhranie je k dispozícii na http://adresa_prijimaca:18888
+        * odkaz na web rozhranie sa automaticky pridá aj do OpenWebIf (u kompatibilných prijímačov)
+
 ArchivCZSK 3.5.8, 15.03.2026
     - oprava interného CSFD prehliadača
 
