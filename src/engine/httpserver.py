@@ -512,26 +512,20 @@ archivCZSKHttpServer = None
 
 try:
 	if config.plugins.archivCZSK.openwebif_shortcut.value and not config.plugins.archivCZSK.httpLocalhost.value:
-		from Plugins.Extensions.OpenWebif.controllers import base
-		BaseController = getattr(base, 'BaseController')
+		from Plugins.Extensions.WebInterface.WebChilds.Toplevel import addExternalChild
+		from twisted.web import resource, server
 
-		if not getattr(BaseController, 'ArchivCZSKPatchInjected', False):
-			log.info("Injecting ArchivCZSK shortcut into OpenWebIf")
-			class BaseControllerX(BaseController):
-				ArchivCZSKPatchInjected = True
+		log.info("Adding ArchivCZSK shortcut into OpenWebIf")
 
-				def prepareMainTemplate(self, request):
-					ret = BaseController.prepareMainTemplate(self, request)
+		class ArchivCZSKRedirect(resource.Resource):
+			def render(self, request):
+				url = "http://%s:%s/" % (request.getRequestHostname(), config.plugins.archivCZSK.httpPort.value)
+				request.redirect(url.encode('utf-8'))
+				request.setHeader("Content-Type", "text/plain")
+				request.finish()
+				return server.NOT_DONE_YET
 
-					try:
-						url = "http://%s:%s/" % (request.getRequestHostname(), config.plugins.archivCZSK.httpPort.value)
-						if isinstance(ret.get('extras'), list) and not any(x.get('key') == url for x in ret['extras'] ):
-							ret['extras'].append({'key': url, 'description': 'ArchivCZSK', 'nw': '1'})
-					except:
-						print(traceback.format_exc())
+		addExternalChild(("archivczsk", ArchivCZSKRedirect(), "ArchivCZSK", 1, True))
 
-					return ret
-
-			setattr(base, 'BaseController', BaseControllerX)
 except:
 	log.error(traceback.format_exc())
