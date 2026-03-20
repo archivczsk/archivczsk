@@ -593,17 +593,18 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		if self.addon_interface:
 			# interface already resolved
 			if need_reload and config.plugins.archivCZSK.developer_mode.value:
-				try:
-					modules_to_reload = [m for m in sys.modules.values() if self.video_addon.import_package in str(m)]
-					for m in modules_to_reload:
+				self.shutdown_addon_interface()
+				modules_to_reload = [m for m in sys.modules.values() if self.video_addon.import_package in str(m)]
+				for m in modules_to_reload:
+					try:
 						log.debug("Reloading module: %s" % m)
 						if is_py3:
 							importlib.reload(m)
 						else:
 							reload(m)
-				except:
-					log.error("Failed to reload addon modules")
-					log.error(traceback.format_exc())
+					except:
+						log.error("Failed to reload addon module")
+						log.error(traceback.format_exc())
 			else:
 				return
 
@@ -823,4 +824,14 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 			content_deferred.errback(result)
 
 	def close(self):
+		self.shutdown_addon_interface()
 		self.video_addon = None
+
+	def shutdown_addon_interface(self):
+		if self.addon_interface and hasattr(self.addon_interface, 'shutdown'):
+			try:
+				self.addon_interface.shutdown()
+			except:
+				log.error("[%s] Error while shutting down addon\n%s" % (self.video_addon, traceback.format_exc()))
+
+		self.addon_interface = None
