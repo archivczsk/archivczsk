@@ -1,3 +1,8 @@
+ArchivCZSK 3.6.1, 20.03.2026
+    - oprava registrácie web rozhrania do OpenWebIf
+    - pridanie "shutdown" volania pre doplnky (informuje doplnky, že prebieha ich ukončenie)
+    - oprava chyby s neuvoľňovaním prostriedkov pri spracovávaní posterov
+
 ArchivCZSK 3.6.0, 18.03.2026
     - pridanie web rozhrania pre konfiguráciu doplnkov
         * zjednodušuje napr. zadávanie prihlasovacích údajov
