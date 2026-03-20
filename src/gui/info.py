@@ -264,7 +264,7 @@ class ArchivCZSKItemInfoScreen(BaseArchivCZSKScreen):
 			self.poster.set_image(self.image_link)
 
 	def __onClose(self):
-		del self.poster
+		self.poster.cleanup()
 
 
 class ArchivCZSKVideoPlayerInfoScreen(BaseArchivCZSKScreen):

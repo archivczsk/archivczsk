@@ -96,7 +96,7 @@ class ArchivCSFD(Screen):
 			#raise
 
 	def __onClose(self):
-		del self.poster
+		self.poster.cleanup()
 		self.close()
 
 	def toInt(self, s):

@@ -250,8 +250,7 @@ class PosterPixmapHandler(object):
 		self.last_picPtr = None
 		self.img_idx = 0
 
-	def __del__(self):
-		log.debug("PosterImageHandler.__del__")
+	def cleanup(self):
 		self.retry_timer.stop()
 		del self.retry_timer
 		del self.picload

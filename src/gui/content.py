@@ -606,7 +606,7 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 		del self.updateGUITimer
 		self.update_info_items_timer.stop()
 		del self.update_info_items_timer
-		del self.poster
+		self.poster.cleanup()
 
 	def update_info_items(self, item):
 		idur = ""
