@@ -93,12 +93,6 @@ class PItem(object):
 
 class PVideoAddon(PItem):
 
-#	  def __get_addon(self):
-#		  from Plugins.Extensions.archivCZSK import addon
-#		  return addon[self.addon_id]
-#
-#	  addon = property(__get_addon)
-
 	def __init__(self, addon):
 		PItem.__init__(self)
 		self.addon = addon
@@ -107,16 +101,22 @@ class PVideoAddon(PItem):
 		self.description = self.addon.get_info('description')
 		self.version = self.addon.get_info('version')
 		self.image = self.addon.get_info('image')
-		self.order = 99999
 		self.first_open = True
-		try:
-			self.order = int(self.addon.get_setting('auto_addon_order'))
-		except:
-			log.logError("Invalid value setting 'auto_addon_order' for addon (%s)."%self.addon_id)
-			pass
 
 	def get_id(self):
 		return self.addon_id
+
+	def get_order(self):
+		try:
+			return int(self.addon.get_setting('auto_addon_order'))
+		except:
+			log.logError("Invalid value setting 'auto_addon_order' for addon (%s)." % self.addon_id)
+			return 99999
+
+	def set_order(self, value):
+		self.addon.set_setting('auto_addon_order', value)
+
+	order = property(get_order, set_order)
 
 # addon which belongs to category
 class PCategoryVideoAddon(PVideoAddon):

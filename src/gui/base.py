@@ -317,7 +317,7 @@ class BaseArchivCZSKListSourceScreen(BaseArchivCZSKScreen):
 	def left(self):
 		try:
 			if not self.working:
-				self.__listboxRenderer.instance.move(self.__listboxRenderer.instance.pageUp)
+				self.__listboxRenderer.move(self.__listboxRenderer.instance.pageUp)
 		except:
 			log.logError("Action [left] failed.\n%s"%traceback.format_exc())
 			pass

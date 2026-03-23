@@ -31,7 +31,7 @@
 					"management": (
 						*f41*,
 						[
-							MultiContentEntryText(pos=(*7*, *1*), size=(*800*, *80*), font=0, flags=RT_VALIGN_TOP | RT_HALIGN_LEFT, text=0, color=0xffffff),
+							MultiContentEntryText(pos=(*7*, *1*), size=(*800*, *80*), font=0, flags=RT_VALIGN_TOP | RT_HALIGN_LEFT, text=0, color=0xffffff, color_sel=0xff000003),
 							MultiContentEntryText(pos=(*7*, *1*), size=(*830*, *80*), font=0, flags=RT_VALIGN_TOP | RT_HALIGN_RIGHT, text=1, color=0xff000002)
 						],
 						True,

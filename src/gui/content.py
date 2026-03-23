@@ -227,20 +227,25 @@ class ArchivCZSKVideoAddonsManagementScreen(BaseContentScreen, TipBar):
 		self["version"] = Label("")
 		self["about"] = Label("")
 		self["key_red"] = Label("")
-		self["key_green"] = Label("")
+		self["key_green"] = Label(_("Restore ordering"))
 		self["key_yellow"] = Label("")
 		self["key_blue"] = Label("")
 		self["actions"] = ActionMap(["archivCZSKActions"],
 			 {
-					"ok": self.menu,
+					"ok": self.ok,
 					"cancel": self.close,
 					"up": self.up,
 					"down": self.down,
+					"left": self.left,
+					"right": self.right,
 					"channelUp": self.home,
 					"channelDown": self.end,
-					"menu" : self.menu
+					"menu" : self.menu,
+					"red": lambda: self.set_reorder_mode(not self.reorder_mode),
+					"green": self.restore_default_order,
 			 }, -2)
 		self.onLayoutFinish.append(self.updateAddonGUI)
+		self.reorder_mode = False
 
 	def changeAddon(self):
 		if self.execing:
@@ -271,7 +276,7 @@ class ArchivCZSKVideoAddonsManagementScreen(BaseContentScreen, TipBar):
 				else:
 					itemColor = 0x008000
 				addonState = _("enabled")
-			itemList.append((toString(name), addonState, itemColor))
+			itemList.append((toString(name), addonState, itemColor, 0xc72626 if self.reorder_mode else None))
 		self["menu"].list = itemList
 		self["menu"].index = index
 
@@ -308,7 +313,99 @@ class ArchivCZSKVideoAddonsManagementScreen(BaseContentScreen, TipBar):
 		self.updateGUITimer.stop()
 		del self.updateGUITimer
 
+	def _update_addons_order(self, old_idx):
+		if not self.working and self.reorder_mode:
+			cur_idx = self.getSelectedIndex()
+			if cur_idx != old_idx:
+				item = self.lst_items.pop(old_idx)
+				self.lst_items.insert(cur_idx, item)
+				self.updateMenuList(index=cur_idx)
 
+	def up(self):
+		old_idx = self.getSelectedIndex()
+		super(ArchivCZSKVideoAddonsManagementScreen, self).up()
+		self._update_addons_order(old_idx)
+
+	def down(self):
+		old_idx = self.getSelectedIndex()
+		super(ArchivCZSKVideoAddonsManagementScreen, self).down()
+		self._update_addons_order(old_idx)
+
+
+	def right(self):
+		old_idx = self.getSelectedIndex()
+		super(ArchivCZSKVideoAddonsManagementScreen, self).right()
+		self._update_addons_order(old_idx)
+
+	def left(self):
+		old_idx = self.getSelectedIndex()
+		super(ArchivCZSKVideoAddonsManagementScreen, self).left()
+		self._update_addons_order(old_idx)
+
+	def home(self):
+		old_idx = self.getSelectedIndex()
+		super(ArchivCZSKVideoAddonsManagementScreen, self).home()
+		self._update_addons_order(old_idx)
+
+
+	def end(self):
+		old_idx = self.getSelectedIndex()
+		super(ArchivCZSKVideoAddonsManagementScreen, self).end()
+		self._update_addons_order(old_idx)
+
+	def ok(self):
+		if self.reorder_mode:
+			# remove backup list to confirm new order and exit reorder mode
+			self._lst_items_backup = None
+			self.reorder_mode = False
+			# save new order - recalculate order according to current list
+			for i, a in enumerate(self.lst_items):
+				a.order = (i+1) * 10
+		else:
+			super(ArchivCZSKVideoAddonsManagementScreen, self).menu()
+
+	def restore_default_order(self):
+		if not self.working:
+			def restore_default_order_callback(answer):
+				if answer:
+					self.reorder_mode = False
+					for a in self.lst_items:
+						a.order = 99999
+
+					cur_item = self.getSelectedItem()
+					# default order is alphabetic, so sort list by name and then select previously selected item
+					self.lst_items.sort(key=lambda x: x.addon.name.lower())
+					self.updateMenuList(index=self.lst_items.index(cur_item))
+
+			self.session.openWithCallback(restore_default_order_callback, MessageBox, _("Do you want to restore addons default order?"), type=MessageBox.TYPE_YESNO,)
+
+	def set_reorder_mode(self, value):
+		if hasattr(self, '_reorder_mode'):
+			# check if _reorder_mode is already set - if not, it means that we are in __init__ and menu is not yet created, so we dont need to update menu list
+			need_menu_update = value != self._reorder_mode
+		else:
+			need_menu_update = False
+
+		self._reorder_mode = value
+		self["key_red"].setText(_("Disable move") if value else _("Enable move"))
+
+		if need_menu_update:
+			new_idx = self.getSelectedIndex()
+
+			if value:
+				# backup current list order before move
+				self._lst_items_backup = self.lst_items[:]
+			else:
+				# restore list order from backup if move was cancelled, otherwise keep new order
+				if hasattr(self, '_lst_items_backup') and self._lst_items_backup:
+					cur_item = self.getSelectedItem()
+					self.lst_items = self._lst_items_backup
+					self._lst_items_backup = None
+					new_idx = self.lst_items.index(cur_item)
+
+			self.updateMenuList(index=new_idx)
+
+	reorder_mode = property(lambda self: self._reorder_mode, set_reorder_mode)
 
 class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 

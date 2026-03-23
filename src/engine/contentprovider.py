@@ -486,7 +486,7 @@ class ArchivCZSKContentProvider(ContentProvider):
 
 	def _sort_addons(self, addons):
 		try:
-			addons = sorted(addons, key=lambda x: str(x.order) + '#' + x.name.lower())
+			addons = sorted(addons, key=lambda x: (x.order, x.name.lower(),))
 		except:
 			pass
 		return addons

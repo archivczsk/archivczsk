@@ -238,7 +238,7 @@ class ArchivCZSKAddonsSettingsHandler(object):
 		from ..archivczsk import ArchivCZSK
 
 		addons = []
-		for a in sorted(ArchivCZSK.get_video_addons(), key=lambda x: str(x.get_setting('auto_addon_order')) + '#' + x.name.lower()):
+		for a in sorted(ArchivCZSK.get_video_addons(), key=lambda x: (x.get_setting('auto_addon_order'), x.name.lower(),)):
 			addons.append({
 				'name': a.name,
 				'id': a.id
