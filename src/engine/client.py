@@ -31,8 +31,8 @@ GItem_lst = VideoAddonContentProvider.get_shared_itemlist()
 
 def abortTask(func):
 	def wrapped_func(*args, **kwargs):
-		task = Task.getInstance()
-		if task and task._aborted:
+		task = Task.get_active_task()
+		if task and task.isCancelling():
 			raise AddonThreadException()
 		return func(*args, **kwargs)
 	return wrapped_func
@@ -54,6 +54,7 @@ def getVideoFormats(url):
 	'''
 	return []
 
+@abortTask
 @callFromThread
 def openSimpleConfig(session, config_entries, title=None, s=True):
 	def simpleConfigCB(result):
@@ -84,6 +85,7 @@ def openSimpleConfig(session, config_entries, title=None, s=True):
 	session.openWithCallback(simpleConfigCB, ArchivCZSKSimpleConfigScreen, config_entries=config_entries, title=title)
 	return d
 
+@abortTask
 @callFromThread
 def getTextInput(session, title, text=""):
 	def getTextInputCB(word):
@@ -101,7 +103,7 @@ def getTextInput(session, title, text=""):
 	session.openWithCallback(getTextInputCB, VirtualKeyBoard, title=DeleteColors(title), text=removeDiac(text))
 	return d
 
-
+@abortTask
 @callFromThread
 def getNumericInput(session, title, text="", showChars=True):
 	def getNumericInputCB(word):
@@ -118,10 +120,11 @@ def getNumericInput(session, title, text="", showChars=True):
 	session.openWithCallback(getNumericInputCB, InputBox, title=title, text=text, type=Input.NUMBER if showChars else Input.PIN)
 	return d
 
-
+@abortTask
 def getSearch(session):
 	return getTextInput(session, _("Please set your search expression"))
 
+@abortTask
 @callFromThread
 def getCaptcha(session, image):
 	def getCaptchaCB(word):
@@ -137,6 +140,7 @@ def getCaptcha(session, image):
 	Captcha(session, image, getCaptchaCB)
 	return d
 
+@abortTask
 @callFromThread
 def openSettings(session, addon):
 	def getSettingsCB(word):
@@ -149,18 +153,22 @@ def openSettings(session, addon):
 	addon.open_settings(session, addon, getSettingsCB)
 	return d
 
+@abortTask
 def showInfo(info, timeout=5):
 	raise AddonInfoError(info)
 
+@abortTask
 def showError(error, timeout=5):
 	raise AddonError(error)
 
+@abortTask
 def showWarning(warning, timeout=5):
 	raise AddonWarningError(warning)
 
 def silentExit(msg=''):
 	raise AddonSilentExit(msg)
 
+@abortTask
 @callFromThread
 def getYesNoInput(session, text):
 	def getYesNoInputCB(callback=None):
@@ -176,6 +184,7 @@ def getYesNoInput(session, text):
 	session.openWithCallback(getYesNoInputCB, MessageBox, text=toString(text), type=MessageBox.TYPE_YESNO)
 	return d
 
+@abortTask
 @callFromThread
 def getListInput(session, choices_list, title="", selection=0):
 	def getListInputCB(selected=None):
@@ -210,6 +219,7 @@ def getListInput(session, choices_list, title="", selection=0):
 		session.openWithCallback(getListInputCB, ChoiceBox, toString(title), newlist, selection=selection, skin_name="ArchivCZSKChoiceBox")
 	return d
 
+@abortTask
 @callFromThread
 def show_message(session, message, msg_type='info', timeout=5):
 	def show_message_cb(callback=None):
@@ -257,6 +267,7 @@ def refresh_screen(restoreLastPosition=True, parent=False):
 	else:
 		set_command('refreshnow_resetpos')
 
+@abortTask
 @callFromThread
 def open_donate_dialog(session):
 	from ..gui.icon import ArchivCZSKDonateScreen
@@ -271,6 +282,7 @@ def open_donate_dialog(session):
 	session.openWithCallback(close_cbk, ArchivCZSKDonateScreen)
 	return d
 
+@abortTask
 def ensure_supporter(session, msg=None):
 	if ArchivCZSKLicense.get_instance().check_level(ArchivCZSKLicense.LEVEL_SUPPORTER):
 		return

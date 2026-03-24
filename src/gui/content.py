@@ -604,13 +604,14 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 			pass
 
 	def toggleCancelLoading(self):
-		if Task.getInstance() is not None and not Task.getInstance().isCancelling():
-			self["status_label"].setText(_("Canceling..."))
-			Task.getInstance().setCancel()
-
-		elif Task.getInstance() is not None and Task.getInstance().isCancelling():
-			self["status_label"].setText(_("Loading..."))
-			Task.getInstance().setResume()
+		task = Task.get_active_task()
+		if task:
+			if not task.isCancelling():
+				task.setCancel()
+				self["status_label"].setText(_("Canceling..."))
+			else:
+				task.abort()
+				self["status_label"].setText(_("Aborting..."))
 		else:
 			log.debug("Task is not running")
 
@@ -844,13 +845,14 @@ class ArchivCZSKAddonContentScreenAdvanced(BaseContentScreen, DownloadList, TipB
 		self.info('csfd')
 
 	def toggleCancelLoading(self):
-		if Task.getInstance() is not None and not Task.getInstance().isCancelling():
-			self["status_label"].setText("Canceling...")
-			Task.getInstance().setCancel()
-
-		elif Task.getInstance() is not None and Task.getInstance().isCancelling():
-			self["status_label"].setText("Loading...")
-			Task.getInstance().setResume()
+		task = Task.get_active_task()
+		if task:
+			if not task.isCancelling():
+				task.setCancel()
+				self["status_label"].setText(_("Canceling..."))
+			else:
+				task.abort()
+				self["status_label"].setText(_("Aborting..."))
 		else:
 			log.debug("Task is not running")
 

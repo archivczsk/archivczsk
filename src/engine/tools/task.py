@@ -21,8 +21,8 @@ from .util import set_thread_name
 # object for stopping workerThread
 WorkerStop = object()
 
-# queue for function to be executed in workerThread
-fnc_queue = Queue(1)
+# queue for task to be executed in workerThread
+task_queue = Queue(1)
 
 # input queue to send results from reactor thread to running function in workerThread
 fnc_in_queue = Queue(1)
@@ -56,49 +56,57 @@ def callFromThread(func):
 	return wrapped
 
 
-
 class WorkerThread(Thread):
 
 	def __init__(self):
 		Thread.__init__(self)
 		self.name = "ArchivCZSK-workerThread"
+		self.active_task = None
+
+	def get_active_task(self):
+		return self.active_task
 
 	def run(self):
 		set_thread_name(self.name)
-		o = fnc_queue.get()
-		while o is not WorkerStop:
-			function, args, kwargs, onResult = o
-			del o
+		task = task_queue.get()
+		while task is not WorkerStop:
+			self.active_task = task
+
 			try:
-				result = function(*args, **kwargs)
+				result = task.fnc(*task.args, **task.kwargs)
 				success = True
 			except:
 				success = False
 				result = failure.Failure()
-			del function, args, kwargs
+
+			self.active_task = None
+
 			try:
-				onResult(success, result)
+				if not task._aborted:
+					task.onComplete(success, result)
+				else:
+					log.debug("[Task] aborted, not calling onComplete")
 			except:
 				log.error(traceback.format_exc())
-			del onResult, result
-			o = fnc_queue.get()
+
+			del task
+			task = task_queue.get()
 		log.debug("worker thread stopped")
 
 	def stop(self):
 		log.debug("stopping working thread")
-		fnc_queue.put(WorkerStop)
+		task_queue.put(WorkerStop)
 
 
 class Task(object):
 	"""Class for running single python task
 		at time in worker thread"""
 
-	instance = None
 	worker_thread = None
 
 	@staticmethod
-	def getInstance():
-		return Task.instance
+	def get_active_task():
+		return Task.worker_thread.get_active_task() if Task.worker_thread else None
 
 	@staticmethod
 	def startWorkerThread():
@@ -130,47 +138,39 @@ class Task(object):
 			m_pump.stop()
 		m_pump = None
 
-	@staticmethod
-	def setPollingInterval(self, interval):
-		self.polling_interval = interval
-
-
 	def __init__(self, callback, fnc, *args, **kwargs):
 		log.debug('[Task] initializing')
-		Task.instance = self
 		self.callback = callback
 		self.fnc = fnc
 		self.args = args
 		self.kwargs = kwargs
 		self._running = False
 		self._aborted = False
+		self._canceling = False
 
 	def run(self):
-		log.debug('[Task] running')
 		self._running = True
 		self._aborted = False
-
-		o = (self.fnc, self.args, self.kwargs, self.onComplete)
-		fnc_queue.put(o)
-
+		self._canceling = False
+		task_queue.put(self)
+		log.debug('[Task] running')
 
 	def setResume(self):
 		log.debug("[Task] resuming")
-		self._aborted = False
+		self._canceling = False
 
 	def setCancel(self):
 		""" setting flag to abort executing compatible task
 			 (ie. controlling this flag in task execution) """
 
 		log.debug('[Task] cancelling...')
-		self._aborted = True
+		self._canceling = True
 
 	def isCancelling(self):
-		return self._aborted
+		return self._canceling
 
 	def onComplete(self, success, result):
 		def wrapped_finish():
-			Task.instance = None
 			self.callback(success, result)
 
 		if success:
@@ -180,8 +180,14 @@ class Task(object):
 
 		# To make sure that, when we abort processing of task,
 		# that its always the same type of failure
-		if self._aborted:
+		if self._canceling:
 			success = False
 			result = failure.Failure(AddonThreadException())
 		fnc_out_queue.put(wrapped_finish)
 		m_pump.send(0)
+
+	def abort(self):
+		log.debug('[Task] aborting')
+		self._canceling = True
+		self._aborted = True
+		self.callback(False, failure.Failure(AddonThreadException()))
