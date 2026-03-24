@@ -57,8 +57,7 @@ def callFromService(func):
 			result = defer.maybeDeferred(func, *args, **kwargs)
 			result.addBoth(fnc_in_queue.put)
 
-		fnc_out_queue.put(_callFromService)
-		m_pump.send(0)
+		run_in_reactor(_callFromService)
 		result = fnc_in_queue.get()
 
 		if isinstance(result, failure.Failure):
@@ -77,33 +76,30 @@ class BGServiceThread(Thread):
 
 	def run(self):
 		set_thread_name(self.name)
-		o = fnc_queue.get()
-		while o is not WorkerStop:
-			function, args, kwargs, onResult, service_name, task_name = o
-			del o
-
+		task = fnc_queue.get()
+		while task is not WorkerStop:
 			if not self.stop_flag:
-				log.debug('[BGServiceThread] [%s] running task: %s' % (service_name, task_name))
+				log.debug('[BGServiceThread] [%s] running task: %s' % (task.service_name, task.task_name))
 				try:
-					result = function(*args, **kwargs)
+					result = task.fnc(*task.args, **task.kwargs)
 					success = True
 				except:
 					log.error(traceback.format_exc())
 					success = False
 					result = failure.Failure()
-				log.debug('[BGServiceThread] [%s] task %s completed' % (service_name, task_name))
+				log.debug('[BGServiceThread] [%s] task %s completed' % (task.service_name, task.task_name))
 			else:
-				log.debug('[BGServiceThread] [%s] not running task %s because of stop flag' % (service_name, task_name))
+				log.debug('[BGServiceThread] [%s] not running task %s because of stop flag' % (task.service_name, task.task_name))
 				success = False
 				result = None
 
-			del function, args, kwargs
 			try:
-				onResult(success, result)
+				task.onComplete(success, result)
 			except:
 				log.error(traceback.format_exc())
-			del onResult, result
-			o = fnc_queue.get()
+
+			del task
+			task = fnc_queue.get()
 		log.debug("BGService worker thread stopped")
 
 	def stop(self):
@@ -116,12 +112,7 @@ class BGServiceTask(object):
 	"""Class for running single python task
 		at time in service thread"""
 
-	instance = None
 	worker_thread = None
-
-	@staticmethod
-	def getInstance():
-		return BGServiceTask.instance
 
 	@staticmethod
 	def startMessagePump():
@@ -152,12 +143,7 @@ class BGServiceTask(object):
 			m_pump.stop()
 			m_pump = None
 
-	@staticmethod
-	def setPollingInterval(self, interval):
-		self.polling_interval = interval
-
 	def __init__(self, service_name, task_name, callback, fnc, *args, **kwargs):
-		BGServiceTask.instance = self
 		self.service_name = service_name
 		self.task_name = task_name
 		self.callback = callback
@@ -174,7 +160,6 @@ class BGServiceTask(object):
 
 		if BGServiceTask.worker_thread == False:
 			log.debug('[BGServiceTask] [%s] not running task %s - worker thread was stopped' % (self.service_name, self.task_name))
-			BGServiceTask.instance = None
 			if self.callback:
 				self.callback(False, None)
 				return
@@ -182,9 +167,7 @@ class BGServiceTask(object):
 		log.debug('[BGServiceTask] [%s] adding task to queue: %s' % (self.service_name, self.task_name))
 		self._running = True
 		self._aborted = False
-
-		o = (self.fnc, self.args, self.kwargs, self.onComplete, self.service_name, self.task_name)
-		fnc_queue.put(o)
+		fnc_queue.put(self)
 
 	def setResume(self):
 		log.debug('[BGServiceTask] [%s] resuming task %s...' % (self.service_name, self.task_name))
@@ -203,7 +186,6 @@ class BGServiceTask(object):
 	def onComplete(self, success, result):
 
 		def wrapped_finish():
-			BGServiceTask.instance = None
 			if self.callback:
 				self.callback(success, result)
 
@@ -217,8 +199,7 @@ class BGServiceTask(object):
 		if self._aborted:
 			success = False
 			result = failure.Failure(AddonServiceException())
-		fnc_out_queue.put(wrapped_finish)
-		m_pump.send(0)
+		run_in_reactor(wrapped_finish)
 
 
 # message pump must run all the time
@@ -238,8 +219,7 @@ class AddonBackgroundService(object):
 				del t['timer']
 			self.loop_timers = []
 
-		fnc_out_queue.put(__stop_timers)
-		m_pump.send(0)
+		run_in_reactor(__stop_timers)
 
 	def run_task(self, name, finish_cbk, fn, *args, **kwargs):
 		def __run_task():
@@ -260,8 +240,7 @@ class AddonBackgroundService(object):
 			self.loop_timers.append(t)
 
 		# on DMM initialisation of eTimer must be done in main reactor thread
-		fnc_out_queue.put(__init_timer)
-		m_pump.send(0)
+		run_in_reactor(__init_timer)
 		return t
 
 	def run_in_loop_stop(self, t):
@@ -272,8 +251,7 @@ class AddonBackgroundService(object):
 				t['timer'].stop()
 				del t['timer']
 
-			fnc_out_queue.put(__stop_timer)
-			m_pump.send(0)
+			run_in_reactor(__stop_timer)
 
 	def run_delayed(self, name, delay_seconds, finish_cbk, cbk, *args, **kwargs):
 		t = {}
@@ -296,8 +274,7 @@ class AddonBackgroundService(object):
 			self.one_shot_timers.append(t)
 
 		# on DMM initialisation of eTimer must be done in main reactor thread
-		fnc_out_queue.put(__init_timer)
-		m_pump.send(0)
+		run_in_reactor(__init_timer)
 
 	def __run_task_delayed(self, delay_ms, cbk, *args, **kwargs):
 		t = {}
@@ -313,8 +290,7 @@ class AddonBackgroundService(object):
 			self.one_shot_timers.append(t)
 
 		# on DMM initialisation of eTimer must be done in main reactor thread
-		fnc_out_queue.put(__init_timer)
-		m_pump.send(0)
+		run_in_reactor(__init_timer)
 
 	def __run_task_internal(self, name, finish_cbk, fn, *args, **kwargs):
 		BGServiceTask(self.name, name, finish_cbk, fn, *args, **kwargs).run()
