@@ -529,20 +529,11 @@ class DummyAddonInterface:
 
 class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, FavoritesMixin):
 
-	__resolving_provider = None
 	__gui_item_list = [[], None, {}] #[0] for items, [1] for command to GUI [2] arguments for command
 
 	@classmethod
 	def get_shared_itemlist(cls):
 		return cls.__gui_item_list
-
-	@classmethod
-	def get_resolving_provider(cls):
-		return cls.__resolving_provider
-
-	@classmethod
-	def get_resolving_addon(cls):
-		return cls.__resolving_provider.video_addon
 
 	def __init__(self, video_addon, downloads_path, shortcuts_path):
 		allowed_download = True
@@ -557,9 +548,8 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 		self.content_received_cbk = None
 
 		self.on_start.append(self.__stats_start)
-		self.on_start.append(self.__set_resolving_provider_light)
+		self.on_start.append(self.resolve_dependencies)
 		self.on_stop.append(self.__stats_stop)
-		self.on_stop.append(self.__unset_resolving_provider_light)
 
 		self.addon_interface = None
 		self.content_deferred = deque()
@@ -576,13 +566,6 @@ class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, Favo
 
 	def __stats_stop(self):
 		UsageStats.get_instance().addon_stop(self.video_addon)
-
-	def __set_resolving_provider_light(self):
-		VideoAddonContentProvider.__resolving_provider = self
-		self.resolve_dependencies()
-
-	def __unset_resolving_provider_light(self):
-		VideoAddonContentProvider.__resolving_provider = None
 
 	def __clear_list(self):
 		del VideoAddonContentProvider.__gui_item_list[0][:]
