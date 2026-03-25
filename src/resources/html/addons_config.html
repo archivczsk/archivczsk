@@ -25,7 +25,7 @@
             border-right: 1px solid #1a252f;
         }
 
-        #sidebar h3 {
+        #sidebar button {
             padding: 20px;
             margin: 0;
             background: #1a252f;
@@ -101,9 +101,29 @@
     </style>
 </head>
 <body>
-
     <nav id="sidebar">
-        <h3>Addons</h3>
+        <button id="side-panel-toggle" style="padding: 15px 20px; background: #1a252f; color: white; border: none; cursor: pointer; font-size: 1rem; width: 100%; text-align: left;">☰ Addons</button>
+        <div id="side-panel" class="hidden" style="position: fixed; left: 0; top: 50px; width: 280px; background: #34495e; box-shadow: 2px 0 10px rgba(0,0,0,0.2); z-index: 1000; padding: 20px 0;">
+            <button id="side-panel-close" style="position: absolute; top: 10px; right: 10px; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">✕</button>
+            <a href="/addons" style="display: block; padding: 12px 20px; color: white; text-decoration: none; border-bottom: 1px solid #2c3e50; transition: 0.2s;">Addons</a>
+            <a href="/log" style="display: block; padding: 12px 20px; color: white; text-decoration: none; border-bottom: 1px solid #2c3e50; transition: 0.2s;">Log</a>
+<!--            <a href="/settings" style="display: block; padding: 12px 20px; color: white; text-decoration: none; border-bottom: 1px solid #2c3e50; transition: 0.2s;">Settings</a> -->
+            <div style="padding: 20px; border-bottom: 1px solid #34495e; display: flex; flex-direction: column; gap: 10px;">
+                <button id="export-btn" style="padding: 10px 15px; background: #27ae60; color: white; border: none; cursor: pointer; border-radius: 4px; font-size: 0.9rem;">↓ Export Settings</button>
+                <button id="import-btn" style="padding: 10px 15px; background: #2980b9; color: white; border: none; cursor: pointer; border-radius: 4px; font-size: 0.9rem;">↑ Import Settings</button>
+                <input type="file" id="import-file" accept=".json" style="display: none;">
+            </div>
+
+        </div>
+
+        <script>
+        $('#side-panel-toggle').on('click', function() {
+            $('#side-panel').toggleClass('hidden');
+        });
+        $('#side-panel-close').on('click', function() {
+            $('#side-panel').addClass('hidden');
+        });
+        </script>
         <div id="tabs-list">
             </div>
     </nav>
@@ -223,6 +243,46 @@
                         });
                     }
                 });
+            });
+
+            $('#export-btn').on('click', function() {
+
+            $.ajax({
+                    url: '/addons/config_export',
+                    method: 'GET',
+                    success: function(data) {
+                        const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+                        const url = URL.createObjectURL(blob);
+                        const a = $('<a>').attr('href', url).attr('download', 'settings.json');
+                        a[0].click();
+                        URL.revokeObjectURL(url);
+                    }
+                });
+            });
+
+            $('#import-btn').on('click', function() {
+                $('#import-file').click();
+            });
+
+            $('#import-file').on('change', function() {
+                const file = this.files[0];
+                if (!file) return;
+
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    const data = JSON.parse(e.target.result);
+                    $.ajax({
+                        url: '/addons/config_import',
+                        method: 'POST',
+                        contentType: 'application/json',
+                        data: JSON.stringify(data),
+                        success: function() {
+                            alert('Settings imported successfully!');
+                            location.reload();
+                        }
+                    });
+                };
+                reader.readAsText(file);
             });
         });
     </script>
