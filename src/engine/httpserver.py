@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 import threading
 import json, os
+
 from .tools.logger import log
 from Components.config import config
 from ..py3compat import *
@@ -34,6 +35,8 @@ class ThreadedHTTPServer(ThreadingMixIn, HTTPServer):
 		self.fallback = fallback
 		self.developer_mode = ArchivCZSKLicense.get_instance().check_level(ArchivCZSKLicense.LEVEL_DEVELOPER)
 
+	# #################################################################################################
+
 	def handle_error(self, request, client_address):
 		if self.developer_mode:
 			tb = traceback.format_exc()
@@ -57,16 +60,22 @@ class AddonHttpRequestHandler(object):
 
 		return name.replace('.', '-').replace('_', '-')
 
+	# #################################################################################################
+
 	def __init__(self, addon):
 		self.name = AddonHttpRequestHandler.addonIdToEndpoint(addon.id)
 		self.addon = addon
 		self.prefix_len = len(self.name)+2
+
+	# #################################################################################################
 
 	def __to_bytes(self, data):
 		if isinstance(data, unicode):
 			return data.encode('utf-8')
 
 		return data
+
+	# #################################################################################################
 
 	def get_endpoint(self, request, relative=False):
 		if relative:
@@ -77,17 +86,23 @@ class AddonHttpRequestHandler(object):
 			server_port = host[1] if len(host) > 1 else request.server.server_port
 			return "http://%s:%d/%s" % (server_name, server_port, self.name)
 
+	# #################################################################################################
+
 	def reply_error404(self, request):
 		request.send_response(404)
 		request.send_header("content-type", "text/html")
 		data = "<html><head><title>archivCZSK</title></head><body><h1>Error 404: addon %s has not set any response</h1><br />The requested URL was not found on this server.</body></html>" % self.name
 		return self.__to_bytes(data)
 
+	# #################################################################################################
+
 	def reply_error500(self, request):
 		request.send_response(500)
 		request.send_header("content-type", "text/html")
 		data = "<html><head><title>archivCZSK</title></head><body><h1>Error 500: addon %s failed</h1><br />Internal server error</body></html>" % self.name
 		return self.__to_bytes(data)
+
+	# #################################################################################################
 
 	def reply_redirect(self, request, redirect_url ):
 		request.send_response(302)
@@ -105,8 +120,12 @@ class AddonHttpRequestHandler(object):
 		else:
 			return self.__to_bytes(data)
 
+	# #################################################################################################
+
 	def get_relative_path(self, request ):
 		return request.path[self.prefix_len:]
+
+	# #################################################################################################
 
 	def render(self, request):
 		UsageStats.get_instance().addon_http_call(self.addon)
@@ -129,12 +148,16 @@ class AddonHttpRequestHandler(object):
 
 		return self.__to_bytes(self.default_handler( request, path_full ))
 
+	# #################################################################################################
+
 	def default_handler(self, request, path_full ):
 		# this is default handler, when request is not processed by named endpoint - it mostly prints error message
 		request.send_response(404)
 		request.send_header("content-type", "text/plain; charset=utf-8")
 		data = "Error 404: addon %s has no handler for path %s\n" % (self.name, path_full)
 		return self.__to_bytes(data)
+
+	# #################################################################################################
 
 	def run_in_reactor(self, fn, *args, **kwargs):
 		run_in_reactor(fn, *args, **kwargs)
@@ -183,24 +206,35 @@ class ArchivCZSKAddonsSettingsHandler(object):
 
 		return data
 
+	# #################################################################################################
+
 	def reply_error500(self, request):
 		request.send_response(500)
 		request.send_header("content-type", "text/html")
 		data = "<html><head><title>archivCZSK</title></head><body><h1>Error 500: settings failed</h1><br />Internal server error</body></html>"
 		return self.__to_bytes(data)
 
-	def reply_ok(self, request, data, content_type=None, raw=False ):
+	# #################################################################################################
+
+	def reply_ok(self, request, data, content_type=None, raw=False, headers={}):
 		request.send_response(200)
 		if content_type:
 			request.send_header("content-type", content_type )
+
+		for key, value in headers.items():
+			request.send_header(key, value)
 
 		if raw:
 			return data
 		else:
 			return self.__to_bytes(data)
 
+	# #################################################################################################
+
 	def get_relative_path(self, request ):
 		return request.path[len(request.path.split('/',2)[1])+2:]
+
+	# #################################################################################################
 
 	def render(self, request):
 		path_full = self.get_relative_path( request )
@@ -220,6 +254,8 @@ class ArchivCZSKAddonsSettingsHandler(object):
 
 		return self.__to_bytes(self.default_handler( request, path_full ))
 
+	# #################################################################################################
+
 	def default_handler(self, request, path_full ):
 		if path_full == '' and request.command.upper() == 'GET':
 			with open(os.path.join(HTML_PATH, 'addons_config.html'), 'rb') as f:
@@ -234,8 +270,13 @@ class ArchivCZSKAddonsSettingsHandler(object):
 			data = "Error 404: has no handler for path %s\n" % path_full
 			return self.__to_bytes(data)
 
+	# #################################################################################################
+
 	def P_list(self, request, path):
 		from ..archivczsk import ArchivCZSK
+
+		if path != '':
+			return self.reply_error404(request)
 
 		addons = []
 		for a in sorted(ArchivCZSK.get_video_addons(), key=lambda x: (x.get_setting('auto_addon_order'), x.name.lower(),)):
@@ -245,6 +286,8 @@ class ArchivCZSKAddonsSettingsHandler(object):
 			})
 
 		return self.reply_ok(request, json.dumps(addons), 'text/json')
+
+	# #################################################################################################
 
 	def P_config(self, request, path):
 		from ..archivczsk import ArchivCZSK
@@ -261,6 +304,8 @@ class ArchivCZSKAddonsSettingsHandler(object):
 
 		return self.reply_ok(request, json.dumps(ret), 'text/json')
 
+	# #################################################################################################
+
 	def P_POST_config(self, request, path):
 		from ..archivczsk import ArchivCZSK
 
@@ -268,11 +313,99 @@ class ArchivCZSKAddonsSettingsHandler(object):
 			return self.reply_error500(self, request)
 
 		addon = ArchivCZSK.get_addon(path)
+		addon.settings.pause_change_notifiers()
+
 		for setting in json.loads(request.read()):
 			log.info("[%s] setting %s to %s" % (addon, setting['name'], setting['value']))
 			addon.set_setting(setting['name'], setting['value'])
 
+		addon.settings.unpause_change_notifiers()
 		return self.reply_ok(request, json.dumps({'status': 'ok'}), 'text/json')
+
+	# #################################################################################################
+
+	def P_config_export(self, request, path):
+		from ..archivczsk import ArchivCZSK
+
+		if path != '':
+			return self.reply_error404(request)
+
+		def addon_settings_to_export(addon):
+			addon_settings = {}
+			for category in ArchivCZSK.get_addon(addon.id).settings.get_configlist_categories(True):
+				for subentry in category['subentries']():
+						if str(subentry['default']) != str(subentry['value']):
+							addon_settings[subentry['id']] = subentry['value']
+						else:
+							addon_settings[subentry['id']] = None
+
+			return addon_settings
+
+		ret = {
+			'addons': {},
+			'profiles': {}
+		}
+		for addon in ArchivCZSK.get_video_addons():
+			settings = addon_settings_to_export(addon)
+			if settings:
+				ret['addons'][addon.id] = settings
+
+			if not addon.is_virtual():
+				profiles = addon.get_profiles()
+				if profiles:
+					ret['profiles'][addon.id] = profiles
+
+		return self.reply_ok(request, json.dumps(ret), 'text/json', headers={'Content-Disposition': 'attachment; filename="archivczsk_settings.json"'})
+
+	# #################################################################################################
+
+	def P_POST_config_import(self, request, path):
+		from ..archivczsk import ArchivCZSK
+		from .addon import VirtualVideoAddon
+
+		if path != '':
+			return self.reply_error404(request)
+
+		cfg = json.loads(request.read())
+
+		# firstly initialise addon profiles, because some settings can be profile specific and they need to be created before applying settings
+		for addon_id, profile_data in cfg.get('profiles', {}).items():
+			if ArchivCZSK.has_addon(addon_id):
+				addon = ArchivCZSK.get_addon(addon_id)
+				addon.set_profiles(profile_data)
+
+				for profile_id, profile_name in profile_data.items():
+					virtual_id = VirtualVideoAddon.create_virtual_id(addon_id, profile_id)
+					if not ArchivCZSK.has_addon(virtual_id):
+						log.debug("Creating profile %s for addon %s" % (profile_id, addon_id))
+						addon.repository.add_virtual_addon(addon, profile_id, profile_name)
+
+		ret = {'addons': {}}
+		for addon_id, addon_settings in cfg.get('addons', {}).items():
+			if ArchivCZSK.has_addon(addon_id):
+				addon = ArchivCZSK.get_addon(addon_id)
+				ret['addons'][addon.id] = 'ok'
+
+				addon.settings.pause_change_notifiers()
+
+				for setting_name, setting_value in addon_settings.items():
+					if setting_value == None:
+						# if setting value is null, then reset it to default value
+						if addon.settings.set_to_default(setting_name):
+							log.info("[%s] resetting config option %s to default value" % (addon, setting_name))
+
+					elif addon.get_setting(setting_name) != setting_value:
+						log.info("[%s] setting config option %s to %s" % (addon, setting_name, setting_value))
+						addon.set_setting(setting_name, setting_value)
+
+					else:
+						log.debug("[%s] config option %s already has value %s, skipping" % (addon, setting_name, setting_value))
+
+				addon.settings.unpause_change_notifiers()
+			else:
+				ret['addons'][addon_id] = 'not found'
+
+		return self.reply_ok(request, json.dumps(ret), 'text/json')
 
 # #################################################################################################
 
@@ -293,11 +426,15 @@ class Handler(BaseHTTPRequestHandler):
 	protocol_version = 'HTTP/1.1'
 	timeout = 12
 
+	# #################################################################################################
+
 	def __init__(self, *args, **kwargs):
 		set_thread_name('ArchivCZSK-htcli')
 		BaseHTTPRequestHandler.__init__(self, *args, **kwargs)
 		self.__eoh_called = False
 		self.rtime = 0
+
+	# #################################################################################################
 
 	def do_GET_POST(self):
 		request_start = time.time()
@@ -331,11 +468,17 @@ class Handler(BaseHTTPRequestHandler):
 			rtime = (time.time() - request_start) * 1000
 			log.debug("Request %s took %dms" % (self.path, int(rtime)))
 
+	# #################################################################################################
+
 	def do_GET(self):
 		return self.do_GET_POST()
 
+	# #################################################################################################
+
 	def do_POST(self):
 		return self.do_GET_POST()
+
+	# #################################################################################################
 
 	def read(self, size=None):
 		if not size:
@@ -345,6 +488,8 @@ class Handler(BaseHTTPRequestHandler):
 			size = int(size)
 
 		return self.rfile.read(size)
+
+	# #################################################################################################
 
 	def write(self, data):
 		if not self.__eoh_called:
@@ -358,17 +503,25 @@ class Handler(BaseHTTPRequestHandler):
 			self.wfile.write(b'\r\n')
 			self.wfile.flush()
 
+	# #################################################################################################
+
 	def get_header(self, name, default_value=None):
 		name = name.lower()
 		for k, v in filter(lambda x: x[0].lower() == name, self.headers.items()):
 			return v
 		return default_value
 
+	# #################################################################################################
+
 	def log_request(self, *args, **kwargs):
 		return
 
+	# #################################################################################################
+
 	def log_error(self, format, *args):
 		log.debug('HTTP request error: ' + format, *args)
+
+	# #################################################################################################
 
 	def log_message(self, format, *args):
 		return
@@ -403,6 +556,8 @@ class ArchivCZSKHttpServer(object):
 	def get_instance():
 		return ArchivCZSKHttpServer.__instance
 
+	# #################################################################################################
+
 	def __init__(self):
 		self.root = {}
 		self.port = config.plugins.archivCZSK.httpPort.value
@@ -416,6 +571,8 @@ class ArchivCZSKHttpServer(object):
 			log.info("Adding RELOAD endpoint to HTTP server")
 			self.root['reload'] = ArchivCZSKReloadHandler()
 			self.root['e2reload'] = ArchivCZSKE2ReloadHandler()
+
+	# #################################################################################################
 
 	def start_listening(self, only_restart=False):
 		was_started = self.running != None
@@ -445,6 +602,7 @@ class ArchivCZSKHttpServer(object):
 			except:
 				log.error("Failed to start internal HTTP server:\n%s" % traceback.format_exc())
 
+	# #################################################################################################
 
 	def httpd_run(self, listen_address):
 		try:
@@ -456,6 +614,7 @@ class ArchivCZSKHttpServer(object):
 		else:
 			self.server.serve_forever(2)
 
+	# #################################################################################################
 
 	def stop_listening(self):
 		if self.running != None:
@@ -467,6 +626,8 @@ class ArchivCZSKHttpServer(object):
 
 			self.running.join()
 			self.running = None
+
+	# #################################################################################################
 
 	def getAddonEndpoint(self, handler_or_id, base_url=None, relative=False):
 		if isinstance( handler_or_id, AddonHttpRequestHandler ):
@@ -482,10 +643,14 @@ class ArchivCZSKHttpServer(object):
 
 			return "http://%s:%d/%s" % (base_url, self.port, endpoint)
 
+	# #################################################################################################
+
 	def registerRequestHandler(self, requestHandler ):
 		self.start_listening()
 		log.logInfo( "Adding HTTP request handler for endpoint: %s" % requestHandler.name)
 		self.root[requestHandler.name] = requestHandler
+
+	# #################################################################################################
 
 	def unregisterRequestHandler(self, requestHandler ):
 		try:
@@ -494,9 +659,13 @@ class ArchivCZSKHttpServer(object):
 		except:
 			log.debug( "HTTP request handler for endpoint %s not found" % requestHandler.name)
 
+	# #################################################################################################
+
 	def getAddonByEndpoint(self, endpoint):
 		handler = self.root.get(endpoint)
 		return handler.addon if handler else None
+
+	# #################################################################################################
 
 	def urlToEndpoint(self, url):
 		server_url = "http://127.0.0.1:%d/" % self.port
@@ -529,3 +698,5 @@ try:
 
 except:
 	log.error(traceback.format_exc())
+
+# #################################################################################################

@@ -129,6 +129,11 @@ class Addon(object):
 	def open_settings(self, session, cb=None):
 		def __settings_closed(*args):
 			saved = args[0] if len(args) > 0  else False
+			if saved:
+				log.debug("Settings closed - searching notifiers to call")
+			else:
+				log.debug("Settings closed without save")
+
 			self.settings.unpause_change_notifiers(saved)
 			self.update_main_menu_shortcut()
 			if cb:
@@ -370,12 +375,16 @@ class VirtualVideoAddon(VideoAddon):
 
 		# modify info dictionary
 		info = copy.copy(info)
-		info.id = info.id + '_' + profile_id
+		info.id = self.create_virtual_id(info.id, profile_id)
 		info.data_path = info.data_path + '_' + profile_id
 		util.make_path(info.data_path)
 		info.name = info.name + ' - ' + profile_name
 
 		VideoAddon.__init__(self, info, repository)
+
+	@staticmethod
+	def create_virtual_id(real_id, profile_id):
+		return real_id + '_' + profile_id
 
 	def is_virtual(self):
 		return True
@@ -603,6 +612,26 @@ class AddonSettings(object):
 
 		return ""
 
+	def get_config_element(self, setting_id):
+		try:
+			if self.setting_exist(setting_id):
+				return getattr(self.main, '%s' % setting_id)
+			else:
+				log.logDebug("Cannot retrieve config element '%s' - %s" % (setting_id, self.addon))
+		except:
+			log.logError("Cannot retrieve config element '%s' - %s\n%s" % (setting_id, self.addon, traceback.format_exc()))
+
+		return None
+
+	def set_to_default(self, setting_id):
+		config_element = self.get_config_element(setting_id)
+		if config_element and str(config_element.value) != str(config_element.default):
+			config_element.value = config_element.default
+			config_element.save()
+			return True
+		else:
+			return False
+
 	def set_setting(self, setting_id, value):
 		try:
 			setting = getattr(self.main, '%s' % setting_id)
@@ -676,7 +705,7 @@ class AddonSettings(object):
 			'label': self._get_label(entry['label'], entry.get('translator')),
 			'id': entry['id'],
 			'type': entry['type'],
-			'default': entry.get('default'),
+			'default': self.get_config_element(entry['id']).default,
 			'value': self.get_setting(entry['id'])
 		}
 
@@ -713,7 +742,6 @@ class AddonSettings(object):
 
 	def unpause_change_notifiers(self, fire_delayed=True):
 		if fire_delayed:
-			log.debug("Settings closed - searching notifiers to call")
 			for name in self.delayed_notifiers:
 				cbk, value = self.delayed_notifiers[name]
 
@@ -727,8 +755,7 @@ class AddonSettings(object):
 				else:
 					log.debug("Value of setting %s not changed - not calling notifier" % name)
 				self.old_settings[name] = value
-		else:
-			log.debug("Settings closed without save")
+
 		del self.delayed_notifiers
 		self.notifiers_enabled = True
 
