@@ -2,142 +2,151 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ArchivCZSK log</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
-        /* Core Layout: Prevent the body from scrolling */
+        /* Make entire document box-sizing friendly */
+        html, body { height: 100%; }
+        *, *:before, *:after { box-sizing: border-box; }
+
+        /* Core layout: prevent page scrolling, only inner areas scroll */
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             display: flex;
             height: 100vh;
-            overflow: hidden; /* Critical: Body stays static */
+            overflow: hidden; /* important: keep body static */
             background: #f4f7f6;
         }
 
-        /* Sidebar: Fixed width, independent scroll */
+        /* Sidebar: full-height, independent scroll */
         #sidebar {
             width: 280px;
+            height: 100vh;
             background: #2c3e50;
             color: white;
             display: flex;
             flex-direction: column;
             border-right: 1px solid #1a252f;
+            overflow: auto;
+            flex-shrink: 0;
         }
 
-        #sidebar button {
+        #side-panel-toggle {
             padding: 20px;
-            margin: 0;
             background: #1a252f;
+            color: white;
+            border: none;
+            cursor: pointer;
             font-size: 1.1rem;
             text-transform: uppercase;
             letter-spacing: 1px;
+            width: 100%;
+            margin: 0;
+            text-align: left;
+            flex: 0 0 auto;
         }
 
-        .hidden { display: none; }
+        /* Side panel */
+        #side-panel { position: fixed; left: 0; top: 50px; width: 280px; background: #34495e; box-shadow: 2px 0 10px rgba(0,0,0,0.2); z-index: 1000; padding: 20px 0; }
+        #side-panel.hidden { display: none; }
+        #side-panel-close { position: absolute; top: 10px; right: 10px; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; }
+        #side-panel a { display: block; padding: 12px 20px; color: white; text-decoration: none; border-bottom: 1px solid #2c3e50; transition: 0.2s; }
+        #side-panel a:hover { background: rgba(255,255,255,0.02); }
 
+        /* Debug button */
         #debug-logs-btn {
-            transition: all 0.3s ease !important;
-            background: #27ae60 !important;
-            border: 2px solid #229954 !important;
-            box-shadow: 0 2px 5px rgba(0,0,0,0.2) !important;
+            transition: all 0.22s ease;
+            color: #fff;
+            padding: 12px 40px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 20px;
+            display: block;
+            width: calc(100% - 80px);
+            font-size: 1rem;
+            text-align: left;
+            background: #c0392b;
+            border: 2px solid #a93226;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+        }
+        #debug-logs-btn:hover:not(.btn-pressed) { background: #e74c3c; }
+        #debug-logs-btn.btn-pressed { background: #27ae60; border: 2px solid #229954; box-shadow: inset 0 3px 6px rgba(0,0,0,0.35), 0 0 0 3px rgba(46,204,113,0.18); }
+
+        /* Log area: occupies the remaining height; internal scrolling only */
+        #log-container { flex: 1 1 auto; display: flex; flex-direction: column; padding: 40px; overflow: hidden; min-height: 0; }
+        #log-display { flex: 1 1 auto; background: white; border: 1px solid #ddd; border-radius: 8px; padding: 20px; overflow-y: auto; -webkit-overflow-scrolling: touch; font-family: 'Courier New', monospace; font-size: 0.9rem; white-space: pre-wrap; word-wrap: break-word; box-shadow: 0 4px 15px rgba(0,0,0,0.06); min-height: 0; }
+
+        /* Action buttons */
+        #log-actions { display: flex; gap: 10px; margin-top: 20px; }
+        .action-btn { background: #27ae60; color: white; border: none; padding: 12px 40px; border-radius: 4px; cursor: pointer; font-weight: bold; }
+        .action-btn:hover { background: #22a155; }
+
+        /* Log line colors */
+        .log-error { color: #ec2711; }
+        .log-warning { color: #e67e22; }
+        .log-debug { color: #000000aa; }
+
+        /* Responsive */
+        @media (max-width: 800px) {
+            body { flex-direction: column; height: 94vh;}
+            #sidebar { width: 100%; height: auto; border-right: none; border-bottom: 1px solid #1a252f; }
+            #side-panel { position: fixed; left: 0; top: 56px; width: 100%; max-height: calc(100vh - 56px); overflow-y: auto; }
+            #debug-logs-btn { width: calc(100% - 40px); margin: 12px 20px; }
+            #log-container { padding: 16px; }
+            #log-display { font-size: 0.82rem; padding: 14px; }
+            #log-actions { flex-direction: row; }
+            #log-actions .action-btn { width: 100%; }
         }
 
-        #debug-logs-btn:hover:not(.btn-pressed) {
-            background: #2ecc71 !important;
-            box-shadow: 0 3px 8px rgba(0,0,0,0.3) !important;
-        }
-
-        #debug-logs-btn.btn-pressed {
-            background: #0e6251 !important;
-            border: 2px solid #0a3d2a !important;
-            box-shadow: inset 0 3px 6px rgba(0,0,0,0.5), 0 0 0 3px rgba(26, 188, 156, 0.4) !important;
-            text-shadow: 0 1px 2px rgba(0,0,0,0.5) !important;
-        }
-
-        #debug-logs-btn.btn-pressed:hover {
-            background: #155a47 !important;
-            box-shadow: inset 0 3px 6px rgba(0,0,0,0.5), 0 0 0 3px rgba(26, 188, 156, 0.6) !important;
-        }
     </style>
 </head>
 <body>
     <nav id="sidebar">
-        <button id="side-panel-toggle" style="padding: 15px 20px; background: #1a252f; color: white; border: none; cursor: pointer; font-size: 1rem; width: 100%; text-align: left;">☰ Log</button>
-        <div id="side-panel" class="hidden" style="position: fixed; left: 0; top: 50px; width: 280px; background: #34495e; box-shadow: 2px 0 10px rgba(0,0,0,0.2); z-index: 1000; padding: 20px 0;">
-            <button id="side-panel-close" style="position: absolute; top: 10px; right: 10px; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">✕</button>
-            <a href="/addons" style="display: block; padding: 12px 20px; color: white; text-decoration: none; border-bottom: 1px solid #2c3e50; transition: 0.2s;">Addons</a>
-            <a href="/log" style="display: block; padding: 12px 20px; color: white; text-decoration: none; border-bottom: 1px solid #2c3e50; transition: 0.2s;">Log</a>
+        <button id="side-panel-toggle">☰ Log</button>
+        <div id="side-panel" class="hidden">
+            <button id="side-panel-close">✕</button>
+            <a href="/addons">Addons</a>
+            <a href="/log">Log</a>
         </div>
 
-        <button id="debug-logs-btn" style="color: white; padding: 12px 40px; border-radius: 4px; cursor: pointer; font-weight: bold; margin: 20px; display: block; width: calc(100% - 80px); font-size: 1rem;">❌ Debug</button>
+        <button id="debug-logs-btn">❌ Debug</button>
 
         <script>
-        $('#side-panel-toggle').on('click', function() {
-            $('#side-panel').toggleClass('hidden');
-        });
-        $('#side-panel-close').on('click', function() {
-            $('#side-panel').addClass('hidden');
-        });
+        // Side panel
+        $('#side-panel-toggle').on('click', function() { $('#side-panel').toggleClass('hidden'); });
+        $('#side-panel-close').on('click', function() { $('#side-panel').addClass('hidden'); });
 
+        // Debug helpers
         function setDebugBtnState(isDebug) {
             const btn = $('#debug-logs-btn');
-            if (isDebug) {
-                btn.addClass('btn-pressed').text('✅ Debug');
-            } else {
-                btn.removeClass('btn-pressed').text('❌ Debug');
-            }
+            if (isDebug) btn.addClass('btn-pressed').text('✅ Debug');
+            else btn.removeClass('btn-pressed').text('❌ Debug');
         }
 
-        // Load debug status
         function loadDebugStatus() {
-            $.ajax({
-                url: '/log/status',
-                method: 'GET',
-                dataType: 'json',
-                success: function(data) {
-                    setDebugBtnState(data.status === 'debug');
-                }
-            });
+            $.ajax({ url: '/log/status', method: 'GET', dataType: 'json', success: function(data) { setDebugBtnState(data.status === 'debug'); } });
         }
 
-        // Toggle debug logs
         $('#debug-logs-btn').on('click', function() {
             const isCurrentlyPressed = $(this).hasClass('btn-pressed');
             const newStatus = isCurrentlyPressed ? 'info' : 'debug';
-            $.ajax({
-                url: '/log/status',
-                method: 'POST',
-                contentType: 'application/json',
-                data: JSON.stringify({ status: newStatus }),
-                success: function() {
-                    loadDebugStatus();
-                },
-                error: function() {
-                    loadDebugStatus();
-                }
-            });
+            $.ajax({ url: '/log/status', method: 'POST', contentType: 'application/json', data: JSON.stringify({ status: newStatus }), success: loadDebugStatus, error: loadDebugStatus });
         });
 
         loadDebugStatus();
         </script>
     </nav>
 
-    <div id="log-container" style="flex: 1; display: flex; flex-direction: column; padding: 40px; overflow: hidden;">
-        <div id="log-display" style="flex: 1; background: white; border: 1px solid #ddd; border-radius: 8px; padding: 20px; overflow-y: auto; font-family: 'Courier New', monospace; font-size: 0.9rem; white-space: pre-wrap; word-wrap: break-word; box-shadow: 0 4px 15px rgba(0,0,0,0.1);">
-            Loading log...
-        </div>
-        <div style="display: flex; gap: 10px; margin-top: 20px;">
-            <button id="log-download-btn" style="background: #27ae60; color: white; border: none; padding: 12px 40px; border-radius: 4px; cursor: pointer; font-weight: bold;">↓ Download Log</button>
-            <button id="log-download-zip-btn" style="background: #27ae60; color: white; border: none; padding: 12px 40px; border-radius: 4px; cursor: pointer; font-weight: bold;">↓ Download zip</button>
+    <div id="log-container">
+        <div id="log-display">Loading log...</div>
+        <div id="log-actions">
+            <button id="log-download-btn" class="action-btn">↓ Download Log</button>
+            <button id="log-download-zip-btn" class="action-btn">↓ Download zip</button>
         </div>
     </div>
-
-    <style>
-        .log-error { color: #ec2711; }
-        .log-warning { color: #e67e22; }
-        .log-debug { color: #000000aa; }
-    </style>
 
     <script>
     $(document).ready(function() {
@@ -149,41 +158,33 @@
             success: function(data) {
                 const lines = data.split('\n');
                 const coloredHtml = lines.map(line => {
-                    if (line.includes(' - ERROR - ')) {
-                        return `<span class="log-error">${escapeHtml(line)}</span>`;
-                    } else if (line.includes(' - WARNING - ')) {
-                        return `<span class="log-warning">${escapeHtml(line)}</span>`;
-                    } else if (line.includes(' - DEBUG - ')) {
-                        return `<span class="log-debug">${escapeHtml(line)}</span>`;
-                    }
+                    if (line.includes(' - ERROR - ')) return `<span class="log-error">${escapeHtml(line)}</span>`;
+                    if (line.includes(' - WARNING - ')) return `<span class="log-warning">${escapeHtml(line)}</span>`;
+                    if (line.includes(' - DEBUG - ')) return `<span class="log-debug">${escapeHtml(line)}</span>`;
                     return escapeHtml(line);
                 }).join('\n');
 
                 $('#log-display').html(coloredHtml);
-                $('#log-display').scrollTop($('#log-display')[0].scrollHeight);
+                // Ensure scrolling happens after render
+                const el = $('#log-display')[0];
+                function scrollToBottom() {
+                    try { el.scrollTop = el.scrollHeight; } catch (e) {}
+                }
+                if (window.requestAnimationFrame) {
+                    requestAnimationFrame(function() { scrollToBottom(); setTimeout(scrollToBottom, 50); });
+                } else {
+                    setTimeout(scrollToBottom, 0);
+                }
             },
-            error: function() {
-                $('#log-display').text('Error loading log file.');
-            }
+            error: function() { $('#log-display').text('Error loading log file.'); }
         });
 
-        // Escape HTML to prevent XSS
-        function escapeHtml(text) {
-            const div = document.createElement('div');
-            div.textContent = text;
-            return div.innerHTML;
-        }
+        function escapeHtml(text) { const div = document.createElement('div'); div.textContent = text; return div.innerHTML; }
 
-        // Download log file
-        $('#log-download-btn').on('click', function() {
-            window.location.href = '/log/download';
-        });
-
-        // Download zipped log file
-        $('#log-download-zip-btn').on('click', function() {
-            window.location.href = '/log/download_zip';
-        });
+        $('#log-download-btn').on('click', function() { window.location.href = '/log/download'; });
+        $('#log-download-zip-btn').on('click', function() { window.location.href = '/log/download_zip'; });
     });
     </script>
 
 </body>
+</html>

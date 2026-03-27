@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>ArchivCZSK addons settings</title>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
@@ -25,13 +26,19 @@
             border-right: 1px solid #1a252f;
         }
 
-        #sidebar button {
+        #side-panel-toggle {
             padding: 20px;
-            margin: 0;
             background: #1a252f;
+            color: white;
+            border: none;
+            cursor: pointer;
             font-size: 1.1rem;
             text-transform: uppercase;
             letter-spacing: 1px;
+            width: 100%;
+            margin: 0;
+            text-align: left;
+            flex: 0 0 auto;
         }
 
         /* The Scrollable Tab Container */
@@ -70,7 +77,6 @@
             flex: 1;
             padding: 40px;
             overflow-y: auto;
-            height: 100vh;
         }
 
         .setting-card {
@@ -98,20 +104,109 @@
             font-weight: bold; display: block; margin-top: 30px;
         }
         .hidden { display: none; }
+        .settings-section-title { margin-top: 25px; color: #2c3e50; }
+
+        /* Side panel and controls */
+        #side-panel { position: fixed; left: 0; top: 50px; width: 280px; background: #34495e; box-shadow: 2px 0 10px rgba(0,0,0,0.2); z-index: 1000; padding: 20px 0; }
+        #side-panel-close { position: absolute; top: 10px; right: 10px; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; }
+        #side-panel a { display: block; padding: 12px 20px; color: white; text-decoration: none; border-bottom: 1px solid #2c3e50; transition: 0.2s; }
+        #side-panel a:hover { background: rgba(255,255,255,0.02); }
+        #side-panel.hidden { display: none; }
+
+        /* Panel actions */
+        .panel-actions { padding: 20px; border-bottom: 1px solid #34495e; display: flex; flex-direction: column; gap: 10px; }
+        .panel-actions .action-btn { padding: 10px 15px; border-radius: 4px; font-size: 0.9rem; cursor: pointer; border: none; color: white; }
+        .panel-actions .export-btn { background: #27ae60; }
+        .panel-actions .import-btn { background: #2980b9; }
+        #import-file { display: none; }
+
+        /* Empty state */
+        #empty-state { text-align: center; color: #7f8c8d; margin-top: 100px; }
+
+        /* Mobile: move tabs to top and make content fill remaining space */
+        @media (max-width: 800px) {
+            /* Stack the layout vertically so top bar (tabs) sits above content */
+            body { flex-direction: column; height: 94vh; }
+
+            /* Sidebar becomes a top strip containing the toggle and tabs */
+            #sidebar {
+                width: 100%;
+                display: flex;
+                flex-direction: column;
+                height: auto;
+                border-right: none;
+            }
+
+            /* Side panel should overlay when opened on mobile */
+            #side-panel {
+                position: absolute;
+                left: 0;
+                top: 48px;
+                width: 100%;
+                z-index: 1001;
+                box-shadow: 0 6px 18px rgba(0,0,0,0.25);
+            }
+
+            /* Tabs become a horizontal, scrollable bar at the top */
+            #tabs-list {
+                display: flex;
+                flex-direction: row;
+                gap: 8px;
+                overflow-x: auto;
+                white-space: nowrap;
+                padding: 8px 6px;
+                background: #2c3e50;
+                position: sticky;
+                top: 0;
+                z-index: 900;
+                -webkit-overflow-scrolling: touch;
+            }
+
+            #tabs-list .tab-link {
+                display: inline-flex;
+                align-items: center;
+                padding: 8px 12px;
+                border-bottom: none;
+                border-right: 1px solid rgba(255,255,255,0.06);
+                color: white;
+                background: transparent;
+                min-width: 80px;
+                flex: 1 0 auto; /* grow if needed */
+                justify-content: center;
+                overflow: hidden;
+                text-overflow: ellipsis;
+                white-space: nowrap;
+            }
+
+            #tabs-list .tab-link:hover { padding-left: 12px; background: rgba(255,255,255,0.03); }
+            #tabs-list .tab-link.active { background: #3498db; border-left: none; border-right: 1px solid rgba(0,0,0,0.08); }
+
+            /* Content area should take remaining height and be independently scrollable */
+            #content-area {
+                order: 2;
+                flex: 1 1 auto;
+                min-height: 0; /* allow flex child to shrink and enable scrolling */
+                height: auto;
+                overflow-y: auto;
+                padding: 12px;
+            }
+
+            /* Make sure the main card scales nicely on small screens */
+            .setting-card { margin: 12px; padding: 18px; box-shadow: none; }
+        }
     </style>
 </head>
 <body>
     <nav id="sidebar">
-        <button id="side-panel-toggle" style="padding: 15px 20px; background: #1a252f; color: white; border: none; cursor: pointer; font-size: 1rem; width: 100%; text-align: left;">☰ Addons</button>
-        <div id="side-panel" class="hidden" style="position: fixed; left: 0; top: 50px; width: 280px; background: #34495e; box-shadow: 2px 0 10px rgba(0,0,0,0.2); z-index: 1000; padding: 20px 0;">
-            <button id="side-panel-close" style="position: absolute; top: 10px; right: 10px; background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; padding: 0; width: 30px; height: 30px; display: flex; align-items: center; justify-content: center;">✕</button>
-            <a href="/addons" style="display: block; padding: 12px 20px; color: white; text-decoration: none; border-bottom: 1px solid #2c3e50; transition: 0.2s;">Addons</a>
-            <a href="/log" style="display: block; padding: 12px 20px; color: white; text-decoration: none; border-bottom: 1px solid #2c3e50; transition: 0.2s;">Log</a>
-<!--            <a href="/settings" style="display: block; padding: 12px 20px; color: white; text-decoration: none; border-bottom: 1px solid #2c3e50; transition: 0.2s;">Settings</a> -->
-            <div style="padding: 20px; border-bottom: 1px solid #34495e; display: flex; flex-direction: column; gap: 10px;">
-                <button id="export-btn" style="padding: 10px 15px; background: #27ae60; color: white; border: none; cursor: pointer; border-radius: 4px; font-size: 0.9rem;">↓ Export Settings</button>
-                <button id="import-btn" style="padding: 10px 15px; background: #2980b9; color: white; border: none; cursor: pointer; border-radius: 4px; font-size: 0.9rem;">↑ Import Settings</button>
-                <input type="file" id="import-file" accept=".json" style="display: none;">
+        <button id="side-panel-toggle">☰ Addons</button>
+        <div id="side-panel" class="hidden">
+            <button id="side-panel-close">✕</button>
+            <a href="/addons">Addons</a>
+            <a href="/log">Log</a>
+            <div class="panel-actions">
+                <button id="export-btn" class="action-btn export-btn">↓ Export Settings</button>
+                <button id="import-btn" class="action-btn import-btn">↑ Import Settings</button>
+                <input type="file" id="import-file" accept=".json">
             </div>
 
         </div>
@@ -134,7 +229,7 @@
             <div id="settings-form"></div>
             <button id="save-btn">Save Changes</button>
         </div>
-        <div id="empty-state" style="text-align: center; color: #7f8c8d; margin-top: 100px;">
+        <div id="empty-state">
             <h2>Select an addon to begin</h2>
         </div>
     </main>
@@ -179,7 +274,7 @@
                     hasUnsavedChanges = false;
 
                     data.forEach(cat => {
-                        $('#settings-form').append(`<h3 style="margin-top:25px; color:#2c3e50;">${cat.label}</h3>`);
+                        $('#settings-form').append(`<h3 class="settings-section-title">${cat.label}</h3>`);
                         cat.subentries.forEach(item => {
                             const input = createInput(item);
                             const row = $(`<div class="setting-item"><label>${item.label}</label>${input}</div>`);
