@@ -1,3 +1,16 @@
+ArchivCZSK 3.6.2, 27.03.2026
+    - v manažérovi doplnkov pribudla možnosť usporiadať doplnky
+    - pridaná podpora pre ukončenie dlho trvajúcej operácie
+        * pokiaľ načítavanie doplnku trvá dlho, je možné ho prerušiť
+        * prvé stlačenie tlačidla EXIT nastaví signál pre ukončenie
+        * druhé stlačenie tlačidla EXIT úlohu násilne ukončí
+    - vylepšenie a rozšírenie WEB rozhrania:
+        * pridanie možnosti pre export/import nastavení doplnkov
+        * pridanie rozhrania pre zobrazenie log súboru
+        * pridanie možnosti stiahnuť log súbor ako txt alebo zip
+        * pridanie možnosti pre zapnutie/vypnutie DEBUG režimu
+        * optimalizácia web rozhrania pre mobilné zariadenia
+
 ArchivCZSK 3.6.1, 20.03.2026
     - oprava registrácie web rozhrania do OpenWebIf
     - pridanie "shutdown" volania pre doplnky (informuje doplnky, že prebieha ich ukončenie)
