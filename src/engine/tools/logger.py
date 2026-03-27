@@ -7,17 +7,23 @@ from logging.handlers import RotatingFileHandler
 from logging import StreamHandler
 
 class MemRingBuff(object):
-	def __init__(self, maxlen=200):
+	def __init__(self, maxlen, file_handler):
 		self.queue = deque(maxlen=maxlen)
+		self.file_handler = file_handler
 
 	def write(self, msg):
-		self.queue.append(msg)
+		last_file_pos = self.file_handler.last_file_pos
+		self.queue.append( (last_file_pos, msg,) )
+
+		if last_file_pos == 0:
+			for i in range(len(self.queue)-1):
+				self.queue[i] = (0, self.queue[i][1],)
 
 	def flush(self):
 		pass
 
 	def dump(self):
-		return ''.join(self.queue)
+		return ''.join(msg[1] for msg in self.queue)
 
 
 def toString(text):
@@ -26,6 +32,20 @@ def toString(text):
 	elif isinstance(text, str):
 		return text
 
+class MyRotatingFileHandler(RotatingFileHandler):
+	def __init__(self, *args, **kwargs):
+		super(MyRotatingFileHandler, self).__init__(*args, **kwargs)
+		self.last_file_pos = 0
+
+	def emit(self, record):
+		file_pos1 = self.stream.tell()
+		super(MyRotatingFileHandler, self).emit(record)
+		file_pos2 = self.stream.tell()
+
+		if file_pos2 < file_pos1:
+			self.last_file_pos = 0
+		else:
+			self.last_file_pos = file_pos2
 
 class log(object):
 	__file_handler = None
@@ -38,14 +58,15 @@ class log(object):
 	def start(path):
 		log.__file_instance = logging.getLogger("archivCZSK")
 		log.__mem_instance = logging.getLogger("archivCZSK-mem")
-		log.mem_ringbuff = MemRingBuff(200)
+
 		formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
 
-		log.__file_handler = RotatingFileHandler(path, maxBytes=2 * 1024 * 1024, backupCount=2)
+		log.__file_handler = MyRotatingFileHandler(path, maxBytes=2 * 1024 * 1024, backupCount=2)
 		log.__file_handler.setFormatter(formatter)
 		log.__file_instance.setLevel(log.DEBUG)
 		log.__file_instance.addHandler(log.__file_handler)
 
+		log.mem_ringbuff = MemRingBuff(200, log.__file_handler)
 		log.__mem_handler = StreamHandler(stream=log.mem_ringbuff)
 		log.__mem_handler.setFormatter(formatter)
 		log.__mem_instance.setLevel(log.DEBUG)
@@ -162,3 +183,14 @@ class log(object):
 			return log.mem_ringbuff.dump()
 		else:
 			return ''
+
+	@staticmethod
+	def dump_merged_bytes():
+		# dump merged log from file and mem ringbuff, based on file positions
+		first_file_pos = log.mem_ringbuff.queue[0][0]
+
+		if first_file_pos > 0:
+			with open(log.__file_handler.baseFilename, 'rb') as f:
+				return f.read(first_file_pos) + log.mem_ringbuff.dump().encode('utf-8')
+		else:
+			return log.mem_ringbuff.dump().encode('utf-8')
