@@ -261,7 +261,7 @@ class ArchivCZSKAddonsSettingsHandler(object):
 			with open(os.path.join(HTML_PATH, 'addons_config.html'), 'rb') as f:
 				request.send_response(200)
 				request.send_header("content-type", "text/html; charset=utf-8")
-				request.write(f.read())
+				return f.read()
 
 		else:
 			# this is default handler, when request is not processed by named endpoint - it mostly prints error message
@@ -408,6 +408,134 @@ class ArchivCZSKAddonsSettingsHandler(object):
 		return self.reply_ok(request, json.dumps(ret), 'text/json')
 
 # #################################################################################################
+
+class ArchivCZSKLogHandler(object):
+	METHODS=['GET', 'POST']
+
+	def __to_bytes(self, data):
+		if isinstance(data, unicode):
+			return data.encode('utf-8')
+
+		return data
+
+	# #################################################################################################
+
+	def reply_error500(self, request):
+		request.send_response(500)
+		request.send_header("content-type", "text/html")
+		data = "<html><head><title>archivCZSK</title></head><body><h1>Error 500: settings failed</h1><br />Internal server error</body></html>"
+		return self.__to_bytes(data)
+
+	# #################################################################################################
+
+	def reply_ok(self, request, data, content_type=None, raw=False, headers={}):
+		request.send_response(200)
+		if content_type:
+			request.send_header("content-type", content_type )
+
+		for key, value in headers.items():
+			request.send_header(key, value)
+
+		if raw:
+			return data
+		else:
+			return self.__to_bytes(data)
+
+	# #################################################################################################
+
+	def get_relative_path(self, request ):
+		return request.path[len(request.path.split('/',2)[1])+2:]
+
+	# #################################################################################################
+
+	def render(self, request):
+		path_full = self.get_relative_path( request )
+		path = path_full.split('/')[0]
+		method = request.command.upper()
+		method = '{}_'.format(method) if method != 'GET' else ''
+
+		if len(path):
+			func = getattr(self, "P_{}{}".format(method, path), None)
+
+			if callable(func):
+				try:
+					return self.__to_bytes((func(request, path_full[len(path)+1:])))
+				except:
+					log.error("Error by handling HTTP request for path %s:\n%s" % (path_full, traceback.format_exc()))
+					return self.reply_error500(request)
+
+		return self.__to_bytes(self.default_handler( request, path_full ))
+
+	# #################################################################################################
+
+	def P_get(self, request, path, download=False, zipped=False):
+		if path != '':
+			return self.reply_error404(request)
+
+		request.send_response(200)
+		request.send_header("content-type", "application/zip" if zipped else "text/plain; charset=utf-8")
+
+		if download:
+			request.send_header('Content-Disposition', 'attachment; filename="archivCZSK.%s"' % ('zip' if zipped else 'log'))
+
+		data = log.dump_merged_bytes()
+		if zipped:
+			import zipfile, io
+			buf = io.BytesIO()
+			with zipfile.ZipFile(buf, 'w', zipfile.ZIP_DEFLATED) as zip_file:
+				zip_file.writestr('archivCZSK.log', data)
+			data = buf.getvalue()
+
+		return data
+
+	# #################################################################################################
+
+	def P_download(self, request, path):
+		return self.P_get(request, path, download=True)
+
+	# #################################################################################################
+
+	def P_download_zip(self, request, path):
+		return self.P_get(request, path, download=True, zipped=True)
+
+	# #################################################################################################
+
+	def P_status(self, request, path):
+		if path != '':
+			return self.reply_error404(request)
+
+		return self.reply_ok(request, json.dumps({'status': {'1': 'info', '2': 'debug'}.get(config.plugins.archivCZSK.debugMode.value) }), 'text/json')
+
+	# #################################################################################################
+
+	def P_POST_status(self, request, path):
+		if path != '':
+			return self.reply_error404(request)
+
+		new_status = json.loads(request.read()).get('status')
+		if new_status in ('debug', 'info'):
+			config.plugins.archivCZSK.debugMode.value = {'info': '1', 'debug': '2'}.get(new_status)
+			config.plugins.archivCZSK.debugMode.save()
+
+		return self.P_status(request, path)
+
+	# #################################################################################################
+
+	def default_handler(self, request, path_full ):
+		if path_full == '' and request.command.upper() == 'GET':
+			with open(os.path.join(HTML_PATH, 'log.html'), 'rb') as f:
+				request.send_response(200)
+				request.send_header("content-type", "text/html; charset=utf-8")
+				return f.read()
+
+		else:
+			# this is default handler, when request is not processed by named endpoint - it mostly prints error message
+			request.send_response(404)
+			request.send_header("content-type", "text/plain; charset=utf-8")
+			data = "Error 404: has no handler for path %s\n" % path_full
+			return self.__to_bytes(data)
+
+	# #################################################################################################
 
 class ArchivCZSKFallbackHandler(object):
 	def render(self, request):
@@ -565,6 +693,7 @@ class ArchivCZSKHttpServer(object):
 		self.server = None
 		self.root['update'] = ArchivCZSKUpdateHandler()
 		self.root['addons'] = ArchivCZSKAddonsSettingsHandler()
+		self.root['log'] = ArchivCZSKLogHandler()
 		self.fallback = ArchivCZSKFallbackHandler()
 
 		if ArchivCZSKLicense.get_instance().check_level(ArchivCZSKLicense.LEVEL_DEVELOPER):
