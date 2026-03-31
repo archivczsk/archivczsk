@@ -24,8 +24,10 @@ class ArchivCZSKMultiLineChoiceBox(BaseArchivCZSKListSourceScreen):
 				"cancel": self.cancel,
 				"up": self.up,
 				"down": self.down,
-				"left": self.home,
-				"right": self.end,
+				"left": self.left,
+				"right": self.right,
+				"channelUp": self.home,
+				"channelDown": self.end,
 				}, -2)
 
 	def updateMenuList(self, index=0):
