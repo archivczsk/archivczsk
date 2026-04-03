@@ -1,3 +1,7 @@
+ArchivCZSK 3.6.3, 03.04.2026
+    - oprava ovládania viacriadkového ChoiceBox
+    - úprava API pre doplnky
+
 ArchivCZSK 3.6.2, 27.03.2026
     - v manažérovi doplnkov pribudla možnosť usporiadať doplnky
     - pridaná podpora pre ukončenie dlho trvajúcej operácie
