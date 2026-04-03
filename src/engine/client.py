@@ -56,25 +56,8 @@ def getVideoFormats(url):
 
 @abortTask
 @callFromThread
-def openSimpleConfig(session, config_entries, title=None, s=True):
+def openSimpleConfig(session, config_entries, title=None):
 	def simpleConfigCB(result):
-		if s and result and not ArchivCZSKLicense.get_instance().check_level(ArchivCZSKLicense.LEVEL_SUPPORTER):
-			def mbox_cbk(result):
-				if result:
-					def close_cbk(result2):
-						loading and loading.start()
-						d.callback(AddonSilentExit(''))
-
-					from ..gui.icon import ArchivCZSKDonateScreen
-					UsageStats.get_instance().update_counter('donate_dialog')
-					session.openWithCallback(close_cbk, ArchivCZSKDonateScreen)
-				else:
-					loading and loading.start()
-					d.callback(AddonSilentExit(''))
-
-			UsageStats.get_instance().update_counter('supporter_msg')
-			return session.openWithCallback(mbox_cbk, MessageBox, text=toString(_('This is bonus functionality available only for product supporters. Do you want to know, how to get "Supporter" status?')), type=MessageBox.TYPE_YESNO)
-
 		loading and loading.start()
 		d.callback(result)
 
@@ -283,17 +266,22 @@ def open_donate_dialog(session):
 	return d
 
 @abortTask
-def ensure_supporter(session, msg=None):
+def ensure_supporter(session, msg=None, add_bonus_msg=True):
 	if ArchivCZSKLicense.get_instance().check_level(ArchivCZSKLicense.LEVEL_SUPPORTER):
 		return
 
+	msg_list = []
 	if msg:
-		msg = msg + '\n'
+		msg_list.append(msg)
+		msg_list.append('\n')
+
+	if add_bonus_msg or msg is None:
+		msg_list.append(_('This is bonus functionality available only for product supporters.') + ' ' + _('Do you want to know, how to get "Supporter" status?'))
 	else:
-		msg = ''
+		msg_list.append(_('Do you want to know, how to get "Supporter" status?'))
 
 	UsageStats.get_instance().update_counter('supporter_msg')
-	if getYesNoInput(session, msg + _('This is bonus functionality available only for product supporters. Do you want to know, how to get "Supporter" status?')) == True:
+	if getYesNoInput(session, '\n'.join(msg_list)) == True:
 		open_donate_dialog(session)
 
 	raise AddonSilentExit('')

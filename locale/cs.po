@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-03-24 09:08+0100\n"
-"PO-Revision-Date: 2026-03-24 09:09+0100\n"
+"POT-Creation-Date: 2026-04-03 16:32+0200\n"
+"PO-Revision-Date: 2026-04-03 16:25+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -193,7 +193,7 @@ msgid "Do you want to cancel"
 msgstr "Chcete zrušit"
 
 #: src/gui/download.py:338 src/gui/download.py:431
-#: src/engine/handlers/category.py:61 src/engine/handlers/addon.py:354
+#: src/engine/handlers/category.py:61 src/engine/handlers/addon.py:353
 msgid "Do you want to remove"
 msgstr "Chcete odstranit"
 
@@ -221,7 +221,7 @@ msgstr "Podle velikosti"
 msgid "Sort by state"
 msgstr "Podle stavu"
 
-#: src/gui/download.py:405 src/gui/content.py:662
+#: src/gui/download.py:405 src/gui/content.py:664
 #: src/engine/handlers/addon.py:200
 msgid "Downloads"
 msgstr "Stažené soubory"
@@ -230,7 +230,7 @@ msgstr "Stažené soubory"
 msgid "Unlock protected content"
 msgstr "Odemknout chráněný obsah"
 
-#: src/gui/content.py:69 src/gui/content.py:611
+#: src/gui/content.py:69
 msgid "Loading..."
 msgstr "Načítám..."
 
@@ -238,7 +238,7 @@ msgstr "Načítám..."
 msgid "Developer mode is activated"
 msgstr "Vývojářský režim je aktivován"
 
-#: src/gui/content.py:209 src/gui/content.py:411
+#: src/gui/content.py:209 src/gui/content.py:412
 msgid "show menu of current addon"
 msgstr "zobrazí informace o doplňku"
 
@@ -262,69 +262,73 @@ msgstr "zastarané"
 msgid "disabled"
 msgstr "vypnutý"
 
-#: src/gui/content.py:303 src/gui/content.py:596
+#: src/gui/content.py:303 src/gui/content.py:597
 msgid "Version: "
 msgstr "Verze: "
 
-#: src/gui/content.py:379
+#: src/gui/content.py:380
 msgid "Do you want to restore addons default order?"
 msgstr "Chcete obnovit výchozí pořadí doplňků?"
 
-#: src/gui/content.py:389
+#: src/gui/content.py:390
 msgid "Disable move"
 msgstr "Zakázat přesun"
 
-#: src/gui/content.py:389
+#: src/gui/content.py:390
 msgid "Enable move"
 msgstr "Povolit přesun"
 
-#: src/gui/content.py:443
+#: src/gui/content.py:444
 msgid "Add Category"
 msgstr "Přidat kategorii"
 
-#: src/gui/content.py:464
+#: src/gui/content.py:465
 msgid "Manager"
 msgstr "Manažér"
 
-#: src/gui/content.py:465
+#: src/gui/content.py:466
 msgid "Support us"
 msgstr "Podpořte nás"
 
-#: src/gui/content.py:466 src/gui/content.py:661 src/gui/menu.py:45
+#: src/gui/content.py:467 src/gui/content.py:663 src/gui/menu.py:45
 #: src/engine/handlers/addon.py:197 src/engine/handlers/addon.py:311
 msgid "Changelog"
 msgstr "Změny"
 
-#: src/gui/content.py:467 src/gui/content.py:664 src/gui/menu.py:224
+#: src/gui/content.py:468 src/gui/content.py:666 src/gui/menu.py:224
 #: src/engine/handlers/addon.py:194 src/engine/handlers/addon.py:308
 msgid "Settings"
 msgstr "Nastavení"
 
-#: src/gui/content.py:559
+#: src/gui/content.py:560
 msgid "Set category name"
 msgstr "Zvolte jméno kategorie"
 
-#: src/gui/content.py:607
+#: src/gui/content.py:611 src/gui/content.py:852
 msgid "Canceling..."
 msgstr "Ruší se načítání..."
 
-#: src/gui/content.py:622
+#: src/gui/content.py:614 src/gui/content.py:855
+msgid "Aborting..."
+msgstr "Přerušuji..."
+
+#: src/gui/content.py:624
 msgid "Do you want to exit ArchivCZSK?"
 msgstr "Chcete ukončit ArchivCZSK?"
 
-#: src/gui/content.py:636
+#: src/gui/content.py:638
 msgid "show info in CSFD"
 msgstr "zobrazit informace v CSFD doplňku"
 
-#: src/gui/content.py:637
+#: src/gui/content.py:639
 msgid "show additional info"
 msgstr "zobrazit informace"
 
-#: src/gui/content.py:638
+#: src/gui/content.py:640
 msgid "show menu of current item"
 msgstr "zobrazí informace o vybrané položce"
 
-#: src/gui/content.py:663 src/gui/shortcuts.py:28
+#: src/gui/content.py:665 src/gui/shortcuts.py:28
 #: src/engine/handlers/addon.py:204
 msgid "Shortcuts"
 msgstr "Záložky"
@@ -1128,14 +1132,21 @@ msgstr "úspěšně dokončeno"
 msgid "Play Archive"
 msgstr "Přehrát z archívu"
 
-#: src/engine/epg_integrator.py:223 src/engine/client.py:75
-#: src/engine/client.py:284
+#: src/engine/epg_integrator.py:223
 msgid "This is bonus functionality available only for product supporters. Do you want to know, how to get \"Supporter\" status?"
 msgstr "Toto je bonusová funkcionalita dostupná pouze pro podporovatelé produktu. Chcete vědět, jak získat status \"Podporovatel\"?"
 
-#: src/engine/client.py:123
+#: src/engine/client.py:108
 msgid "Please set your search expression"
 msgstr "Prosím vložte hledaný výraz"
+
+#: src/engine/client.py:279
+msgid "This is bonus functionality available only for product supporters."
+msgstr "Toto je bonusová funkcionalita dostupná pouze pro podporovatelé produktu."
+
+#: src/engine/client.py:279 src/engine/client.py:281
+msgid "Do you want to know, how to get \"Supporter\" status?"
+msgstr "Chcete vědět, jak získat status \\\"Podporovatel\\\"?"
 
 #: src/engine/handlers/category.py:41
 msgid "Rename"
@@ -1286,7 +1297,7 @@ msgstr "Playlist z"
 msgid "No playable videos were found"
 msgstr "Nenašli se žádné přehratelné videa"
 
-#: src/engine/addon.py:577 src/resources/repositories/config.py:26
+#: src/engine/addon.py:586 src/resources/repositories/config.py:26
 msgid "General"
 msgstr "Všeobecné"
 
@@ -1368,29 +1379,29 @@ msgstr "Všechny doplňky"
 msgid "Category list"
 msgstr "Seznam kategorií"
 
-#: src/engine/contentprovider.py:623
+#: src/engine/contentprovider.py:606
 msgid "Loading of addon failed"
 msgstr "Načtení doplňku selhalo"
 
-#: src/engine/contentprovider.py:629
+#: src/engine/contentprovider.py:612
 msgid "Addon returned not supported communication interface"
 msgstr "Doplněk vrátil nepodporované komunikační rozhraní"
 
-#: src/engine/contentprovider.py:664
+#: src/engine/contentprovider.py:647
 msgid "Addon is designed for ArchivCZSK version lower then 2.5.0 and incompatible with installed version. Update ArchivCZSK and addons to latest available versions."
 msgstr "Doplněk je vytvořen pro ArchivCZSK verzi menší než 2.5.0 a není kompatibilní s nainstalovanou verzí. Zaktualizujte ArchivCZSK a doplňky na poslední dostupné verze."
 
-#: src/engine/contentprovider.py:669
+#: src/engine/contentprovider.py:652
 #, python-brace-format
 msgid "You need to update ArchivCZSK at least to version {version}"
 msgstr "Musíte aktualizovat ArchivCZSK alespoň na verzi {version}"
 
-#: src/engine/contentprovider.py:681
+#: src/engine/contentprovider.py:664
 #, python-brace-format
 msgid "Cannot execute addon {addon_name}. Dependency {dependency_name} version {dependency_version} needs to be at least version {dependency_version_requiered}"
 msgstr "Spuštění doplňku {addon_name} selhalo. Nainstalována závislost {dependency_name} verze {dependency_version} musí být aspoň ve verzi {dependency_version_requiered}"
 
-#: src/engine/contentprovider.py:689
+#: src/engine/contentprovider.py:672
 #, python-brace-format
 msgid ""
 "Cannot execute addon {addon_name}. Missing dependency: {dependency_name}\n"
