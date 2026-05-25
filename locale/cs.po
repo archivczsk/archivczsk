@@ -1715,7 +1715,7 @@ msgstr "Následující doplňky byly aktualizovány"
 
 #: src/engine/updater.py:413
 msgid "Reloading addons. Please wait ..."
-msgstr "Načítavám znovu doplňky. Počkejte prosím..."
+msgstr "Načítám znovu doplňky. Počkejte prosím..."
 
 #: src/engine/updater.py:423
 msgid "Addons were reloaded"
