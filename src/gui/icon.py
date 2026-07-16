@@ -52,7 +52,7 @@ class ArchivCZSKDonateScreen(BaseArchivCZSKListSourceScreen):
 		self["info_label1"] = Label(_('Development, maintenance and addons functionality improvement is very time consuming process. Your donation allows project continuation.'))
 
 		self["info_label_h2"] = Label(_('How much to donate?'))
-		self["info_label2"] = Label(_('For the symbolic sum {sum_czk}/{sum_eur} a month you will get "Supporter" status for your receiver.').format(sum_czk='{}{}'.format(*self.price['czk']), sum_eur='{}{}'.format(*self.price['eur'])))
+		self["info_label2"] = Label(_('For the symbolic sum {sum_czk}/{sum_eur} per 30 days you will get \"Supporter\" status for your receiver.').format(sum_czk='{}{}'.format(*self.price['czk']), sum_eur='{}{}'.format(*self.price['eur'])))
 
 		self["info_label_h3"] = Label(_('Will I get any bonus?'))
 		self["info_label3"] = Label(_('Basic functionality is available for free. Supporters will get bonus functionality and addons, which will gradually expand.'))

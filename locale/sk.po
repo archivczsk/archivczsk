@@ -49,8 +49,8 @@ msgstr "Koľko prispieť?"
 
 #: src/gui/icon.py:55
 #, python-brace-format
-msgid "For the symbolic sum {sum_czk}/{sum_eur} a month you will get \"Supporter\" status for your receiver."
-msgstr "Za symbolickou sumou {sum_czk}/{sum_eur} za mesiac získate pre svoj prijímač status \"Podporovateľ\"."
+msgid "For the symbolic sum {sum_czk}/{sum_eur} per 30 days you will get \"Supporter\" status for your receiver."
+msgstr "Za symbolickou sumou {sum_czk}/{sum_eur} za 30 dní získate pre svoj prijímač status \"Podporovateľ\"."
 
 #: src/gui/icon.py:57
 msgid "Will I get any bonus?"
