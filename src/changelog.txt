@@ -1,3 +1,7 @@
+ArchivCZSK 3.7.1, 22.09.2026
+    - pravy preklepov v lokalizáciách
+    - pokiaľ je nainštalovaný exteplayer3 ver. >= 182, tak sa na sťahovanie použije pribalená verzia ffmpeg
+
 ArchivCZSK 3.7.0, 20.05.2026
     - vylepšená práca s viacerými repozitármi
     - pridaný manažment repozitárov tretích strán v okne Manažér -> Modré tlačidlo
