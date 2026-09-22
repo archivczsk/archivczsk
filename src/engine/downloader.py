@@ -24,9 +24,11 @@ if videoPlayerInfo.type == 'gstreamer' and videoPlayerInfo.version == '1.0':
 elif videoPlayerInfo.type =='gstreamer' and videoPlayerInfo.version == '0.10':
 	GST_LAUNCH = 'gst-launch-0.10'
 
-FFMPEG_PATH = '/usr/bin/ffmpeg'
-if not os.path.isfile(FFMPEG_PATH):
-	FFMPEG_PATH = None
+def get_ffmpeg_path():
+	for p in ['/usr/lib/exteplayer3_deps/ffmpeg', '/usr/bin/ffmpeg']:
+		if os.path.isfile(p):
+			return p
+	return None
 
 RTMP_DUMP_PATH		= '/usr/bin/rtmpdump'
 WGET_PATH			= 'wget'
@@ -132,7 +134,7 @@ class DownloadManager(object):
 		else:
 			url2 = None
 
-		if url[0:4] == 'http' and (isHLSUrl(url) or isMPDUrl(url) or url2) and mode in ('auto', 'ffmpeg') and FFMPEG_PATH is not None:
+		if url[0:4] == 'http' and (isHLSUrl(url) or isMPDUrl(url) or url2) and mode in ('auto', 'ffmpeg') and get_ffmpeg_path() is not None:
 			d = FFMpegDownload(url=url, name=name, destDir=destination, filename=filename, headers=headers, url2=url2)
 		elif (((url[0:4] == 'rtmp' and mode in ('auto', 'gstreamer')) or
 			  (url[0:4] == 'http' and mode	in ('auto', 'gstreamer') and isHLSUrl(url)) or
@@ -436,7 +438,7 @@ class FFMpegDownload(DownloadProcessMixin, Download):
 		self.url2 = url2
 
 	def _buildCmd(self):
-		cmd = FFMPEG_PATH
+		cmd = get_ffmpeg_path()
 		if self.quiet:
 			cmd += ' -loglevel fatal'
 
