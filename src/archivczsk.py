@@ -16,6 +16,7 @@ from .engine.downloader import DownloadManager
 from .engine.tools.task import Task
 from .engine.httpserver import ArchivCZSKHttpServer
 from .gui.content import ArchivCZSKContentScreen
+from .engine.loader import install_encrypted_loader, uninstall_encrypted_loader
 from .gui.info import openPartialChangelog
 from .gui.icon import ArchivCZSKDonateScreen
 from .gui.poster import PosterProcessing
@@ -373,6 +374,9 @@ class ArchivCZSK():
 			return
 
 		log.info("Starting ArchivCZSK ...")
+		log.debug("Installing module loader")
+		install_encrypted_loader()
+
 		start_time = time.time()
 		BGServiceTask.startMessagePump()
 		BGServiceTask.startServiceThread()
@@ -432,6 +436,10 @@ class ArchivCZSK():
 		ArchivCZSK.__loaded = False
 		DownloadManager.instance = None
 		ArchivCZSKHttpServer.stop()
+
+		log.debug("Uninstalling module loader")
+		uninstall_encrypted_loader()
+
 		log.info("ArchivCZSK stopped")
 		return
 

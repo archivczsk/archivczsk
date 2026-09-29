@@ -7,7 +7,6 @@ tmp
 *.deb
 *.pyo
 *.pyc
-*.so
 *.la
 *.mo
 *.swp
