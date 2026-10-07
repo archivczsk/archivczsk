@@ -1,3 +1,7 @@
+ArchivCZSK 3.8.1, 07.10.2026
+    - oprava pádu u starších verzií mipsel CPU
+    - oprava podpory šifrovaných doplnkov pre DreamOS
+
 ArchivCZSK 3.8.0, 30.09.2026
     - pridanie podpory pre šifrované doplnky
 
