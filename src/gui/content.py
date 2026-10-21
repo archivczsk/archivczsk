@@ -498,6 +498,7 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 		self.autorun_addon = autorun_addon
 		self.autorun_handled = False
 		self.updateGUITimer = eCompatTimer(self.updateAddonGUI)
+		self.closeTimer = None
 
 		# include DownloadList
 		DownloadList.__init__(self)
@@ -541,7 +542,10 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 		if self.autorun_addon:
 			if self.autorun_handled == True:
 				log.debug("Autorun was already handled - closing plugin")
-				self.closePlugin(True)
+				# closing needs to be done using timer, because now we are in execBegin() and closing screen from there causes crash
+				# enigma needs time to move to onShow state, so we can close plugin from there
+				self.closeTimer = eCompatTimer(self.close)
+				self.closeTimer.start(10, True)
 			elif self.autorun_handled == False:
 				log.debug("Autorun is enabled - starting addon in autorun mode")
 				self.autorun_handled = None
@@ -561,6 +565,11 @@ class ArchivCZSKContentScreen(BaseContentScreen, DownloadList, TipBar):
 		self.provider.stop()
 		self.updateGUITimer.stop()
 		del self.updateGUITimer
+
+		if self.closeTimer is not None:
+			self.closeTimer.stop()
+			del self.closeTimer
+			self.closeTimer = None
 
 	def updateMenuList(self, index=0):
 		try:
