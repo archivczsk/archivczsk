@@ -6,11 +6,21 @@ import platform
 
 class StbInfo:
 	def __init__(self):
+		self.boxinfo = {}
+		self.fully_initialized = False
+		self.initialize()
+
+	def initialize(self):
 		try:
 			from Plugins.Extensions.OpenWebif.controllers.models.info import getInfo
 			self.boxinfo = getInfo()
+			self.fully_initialized = True
+		except AttributeError:
+			# OpenWebif is not yet full initialized - happens on OpenATV >= 8.x
+			pass
 		except:
-			self.boxinfo = {}
+			# OpenWebif is not installed or some other error occurred
+			self.fully_initialized = True
 			pass
 
 		self.hw_vendor = self.get_info_value('brand')

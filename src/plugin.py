@@ -11,10 +11,36 @@ def get_description():
 	DESCRIPTION = _("Playing CZ/SK archives")
 	return NAME, DESCRIPTION
 
+delayed_timer = None
+delayed_start_max_retry = 5
+
+def plan_delayed_start(reason, session):
+	global delayed_timer
+
+	def wrap_session_start():
+		global delayed_timer
+		delayed_timer.stop()
+		del delayed_timer
+		sessionStart(reason, session)
+
+	from .compat import eCompatTimer
+	delayed_timer = eCompatTimer(wrap_session_start)
+	delayed_timer.start(1000)  # Start timer after 1 second
 
 def sessionStart(reason, session):
-	from .archivczsk import ArchivCZSK
-	ArchivCZSK.start(session)
+	from .engine.tools.stbinfo import stbinfo
+	global delayed_start_max_retry
+
+	if not stbinfo.fully_initialized:
+		stbinfo.initialize()
+
+	if stbinfo.fully_initialized or delayed_start_max_retry <= 0:
+		from .archivczsk import ArchivCZSK
+		ArchivCZSK.start(session)
+	else:
+		# OpenWebif is not yet fully initialized, so we will wait for it to be initialized before starting the plugin
+		delayed_start_max_retry -= 1
+		plan_delayed_start(reason, session)
 
 
 def main(session, autorun_addon=None, **kwargs):
