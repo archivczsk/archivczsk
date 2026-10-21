@@ -241,9 +241,11 @@ class Addon(object):
 	def check_addon_integrity(self):
 		if not self.remote_hash:
 			# remote hash is not known
+			log.debug("%s cannot check integrity - remote hash is not known", self)
 			return True
 
 		self.integrity = (self.get_addon_data_hash() == self.remote_hash)
+		log.debug("%s integrity check result: %s", self, self.integrity)
 		return self.integrity
 
 	def set_remote_hash(self, hash):
@@ -407,6 +409,9 @@ class VirtualVideoAddon(VideoAddon):
 			del profiles[self.profile_id]
 			addon.set_profiles(profiles)
 
+	def check_addon_integrity(self):
+		# virtual addon has no remote hash, so we will check integrity of parent addon
+		return self.repository.get_addon(self.real_id).check_addon_integrity()
 
 class DummyGettext(object):
 	def __init__(self):
