@@ -62,6 +62,7 @@ class Addon(object):
 		# this is the function, that should be called on direct call
 		self.entry_point = None
 		self.e2_main_menu_plugin = None
+		self.bgservice = AddonBackgroundService(self.name)
 		self.update_main_menu_shortcut()
 
 	def __repr__(self):
@@ -190,6 +191,7 @@ class Addon(object):
 		info.showChangelog(session, self.name, self.changelog_path)
 
 	def close(self):
+		self.bgservice.stop_all()
 		self.info = None
 		self._updater = None
 		self.repository = None
@@ -294,6 +296,9 @@ class ToolsAddon(Addon):
 	def init(self):
 		importlib.import_module(self.import_package)
 
+	def close(self):
+		ArchivCZSKHttpServer.get_instance().unregisterRequestHandler(AddonHttpRequestHandler(self))
+		Addon.close(self)
 
 class VideoAddon(Addon):
 	def __init__(self, info, repository):
@@ -309,7 +314,6 @@ class VideoAddon(Addon):
 		self.downloads_path = self.get_setting('download_path')
 		self.shortcuts_path = os.path.join(config.plugins.archivCZSK.dataPath.getValue(), self.id)
 		self.provider = VideoAddonContentProvider(self, self.downloads_path, self.shortcuts_path)
-		self.bgservice = AddonBackgroundService(self.name)
 
 	def refresh_provider_paths(self, *args, **kwargs):
 		self.downloads_path = self.get_setting('download_path')
@@ -330,7 +334,6 @@ class VideoAddon(Addon):
 		download.openAddonDownloads(session, self, callback)
 
 	def close(self):
-		self.bgservice.stop_all()
 		ArchivCZSKHttpServer.get_instance().unregisterRequestHandler(AddonHttpRequestHandler(self))
 		Addon.close(self)
 		self.provider.close()
