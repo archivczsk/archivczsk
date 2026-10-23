@@ -1,3 +1,7 @@
+ArchivCZSK 3.8.2, 23.10.2026
+    - oprava pádov a chýb v OpenATV 8.x
+    - pridanie kontroly integrity aj pre virtuálne doplnky
+
 ArchivCZSK 3.8.1, 07.10.2026
     - oprava pádu u starších verzií mipsel CPU
     - oprava podpory šifrovaných doplnkov pre DreamOS
