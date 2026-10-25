@@ -531,7 +531,7 @@ class Updater(object):
 					log.debug("[%s] setting remote hash to %s" % (local_addon.name, remote_addon.get('hash')))
 					local_addon.set_remote_hash(remote_addon.get('hash'))
 				elif local_addon.supported:
-					log.debug("[%s] remote hash not set - local version %s != remote version" % (local_addon.name, local_addon.version, remote_addon['version']))
+					log.debug("[%s] remote hash not set - local version %s != remote version %s" % (local_addon.name, local_addon.version, remote_addon['version']))
 				else:
 					log.debug("[%s] remote hash not set - addon is not supported" % local_addon.name)
 
