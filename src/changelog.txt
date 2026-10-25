@@ -1,3 +1,6 @@
+ArchivCZSK 3.8.3, 25.10.2026
+    - oprava aktualizácie doplnkov
+
 ArchivCZSK 3.8.2, 23.10.2026
     - oprava pádov a chýb v OpenATV 8.x
     - pridanie kontroly integrity aj pre virtuálne doplnky
