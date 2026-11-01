@@ -18,6 +18,7 @@ from .tools import util, parser
 from .tools.lang import get_language_id
 from .tools.logger import log
 from .tools.lang import _
+from .tools.stbinfo import stbinfo
 from ..resources.repositories.config import global_addon_settings
 from ..gui import menu, info, shortcuts, download
 from .contentprovider import VideoAddonContentProvider
@@ -27,6 +28,9 @@ from ..settings import ConfigSelectionTr
 from ..compat import DMM_IMAGE
 
 from ..py3compat import *
+
+class UnsupportedArchException(Exception):
+	pass
 
 class Addon(object):
 
@@ -810,6 +814,7 @@ class AddonInfo(object):
 		log.info("AddonInfo(%s) initializing.." , '/'.join(info_file.split('/')[-3:]))
 
 		addon_dict = parser.XBMCAddonXMLParser(info_file).parse()
+		self.check_arch(addon_dict['arch'])
 
 		self.id = addon_dict['id']
 		self.name = addon_dict['name']
@@ -858,3 +863,9 @@ class AddonInfo(object):
 
 	def close(self):
 		self.addon = None
+
+	def check_arch(self, arch):
+		if arch == 'all' or arch == stbinfo.hw_arch:
+			return True
+
+		raise UnsupportedArchException("Addon works only on %s architecture" % arch)

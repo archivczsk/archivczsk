@@ -16,6 +16,7 @@ from datetime import datetime, timedelta
 from .tools import util, parser
 from .tools.unzip import unzip_to_dir
 from .tools.util import toString
+from .tools.stbinfo import stbinfo
 from ..compat import eCompatTimer
 from .exceptions.updater import UpdateXMLVersionError, UpdateXMLNoUpdateUrl
 from .tools.logger import log
@@ -516,6 +517,10 @@ class Updater(object):
 		else:
 			log.error("[%s] addons local directory not found" % addon.name)
 
+	def has_compatible_arch(self, arch):
+		return arch == 'all' or arch == stbinfo.hw_arch
+
+
 	def check_addons(self, new=True):
 		"""checks every addon in repository, and update its state accordingly"""
 		log.debug('checking addons')
@@ -523,6 +528,10 @@ class Updater(object):
 		self._get_server_addons()
 		for addon_id in list(self.remote_addons_dict.keys()):
 			remote_addon = self.remote_addons_dict[addon_id]
+			if not self.has_compatible_arch(remote_addon['arch']):
+				log.debug("[%s] skipping remote addon - incompatible architecture" % remote_addon['name'])
+				continue
+
 			if remote_addon['id'] in self.repository._addons:
 				local_addon = self.repository.get_addon(addon_id)
 				local_addon.supported = remote_addon.get('supported', True)

@@ -86,6 +86,7 @@ class XBMCAddonXMLParser(XMLParser):
 
 		hash = addon.attrib.get('rhash')
 		supported = addon.attrib.get('supported') != 'no'
+		arch = addon.attrib.get('arch', 'all')
 
 		addon_type = 'unknown'
 		description = {}
@@ -167,6 +168,7 @@ class XBMCAddonXMLParser(XMLParser):
 			"shortcuts": shortcuts,
 			"hash": hash,
 			"supported": supported,
+			"arch": arch
 		}
 
 

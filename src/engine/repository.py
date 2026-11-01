@@ -8,7 +8,7 @@ from Components.config import config, ConfigSubsection, ConfigText, ConfigYesNo
 from hashlib import md5
 
 from .. import archivczsk
-from .addon import AddonInfo, ToolsAddon, VideoAddon, VirtualVideoAddon
+from .addon import AddonInfo, ToolsAddon, VideoAddon, VirtualVideoAddon, UnsupportedArchException
 from .tools import parser
 from .tools.logger import log
 from . import updater
@@ -100,6 +100,9 @@ class Repository():
 
 			try:
 				addon_info = AddonInfo(os.path.join(addon_path, self.addon_xml_relpath))
+			except UnsupportedArchException as e:
+				log.logInfo("[%s] Skipping addon %s: %s" % (self, addon_dir, str(e)))
+				continue
 			except Exception:
 				log.logError("[%s] Failed to get addon info from dir %s\n" % (self, addon_dir) )
 				log.logError(traceback.format_exc())
