@@ -6,15 +6,15 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-01 14:36+0100\n"
-"PO-Revision-Date: 2026-05-20 14:32+0200\n"
+"POT-Creation-Date: 2026-11-01 14:40+0100\n"
+"PO-Revision-Date: 2026-11-01 14:42+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cs\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: Poedit 3.9\n"
+"X-Generator: Poedit 3.10\n"
 
 #: src/gui/icon.py:44
 #, python-brace-format
@@ -974,119 +974,123 @@ msgstr "Přidat zástupce do OpenWebIf"
 msgid "CSFD plugin"
 msgstr "CSFD plugin"
 
-#: src/settings.py:251
+#: src/settings.py:252
+msgid "Replace installed exteplayer3 with ArchivCZSK version"
+msgstr "Nahradit nainstalovaný exteplayer3 verzí z ArchivCZSK"
+
+#: src/settings.py:253
 msgid "RTMP Timeout"
 msgstr "Časový limit RTMP"
 
-#: src/settings.py:252
+#: src/settings.py:254
 msgid "RTMP Buffer"
 msgstr "RTMP zásobník"
 
-#: src/settings.py:253
+#: src/settings.py:255
 msgid "Confirm exit when closing player"
 msgstr "Potvrdit ukončení při opouštění přehrávače"
 
-#: src/settings.py:254
+#: src/settings.py:256
 msgid "Allow automatically changing audio track"
 msgstr "Povolit automatickou změnu zvukové stopy"
 
-#: src/settings.py:278
+#: src/settings.py:280
 msgid "Change parental control settings"
 msgstr "Změnit nastavení rodičovské kontroly"
 
-#: src/settings.py:280
+#: src/settings.py:282
 msgid "Your PIN code is set to default 0000. Please change it to your own value."
 msgstr "Váš PIN kód je nastaven na předvolený 0000. Prosím změňte ho na vaši vlastní hodnotu."
 
-#: src/settings.py:282
+#: src/settings.py:284
 msgid "Enable parental control"
 msgstr "Povolit rodičovskou kontrolu"
 
-#: src/settings.py:283
+#: src/settings.py:285
 msgid "Change parental control PIN"
 msgstr "Změnit PIN pro rodičovskou kontrolu"
 
-#: src/settings.py:284
+#: src/settings.py:286
 msgid "Show adult content"
 msgstr "Zobrazovat obsah pro dospělé"
 
-#: src/settings.py:285
+#: src/settings.py:287
 msgid "Show posters for adult content"
 msgstr "U obsahu pro dospělé zobrazovat postery"
 
-#: src/settings.py:306
+#: src/settings.py:308
 msgid "Data path"
 msgstr "Adresář pro data"
 
-#: src/settings.py:307
+#: src/settings.py:309
 msgid "Temp path"
 msgstr "Dočasný adresář"
 
-#: src/settings.py:308
+#: src/settings.py:310
 msgid "Downloads path"
 msgstr "Stahovat do"
 
-#: src/settings.py:309
+#: src/settings.py:311
 msgid "Posters path"
 msgstr "Plakáty stahovat do"
 
-#: src/settings.py:311
+#: src/settings.py:313
 msgid "Log path"
 msgstr "Logovat do"
 
-#: src/settings.py:328
+#: src/settings.py:330
 msgid "info"
 msgstr "info"
 
-#: src/settings.py:328
+#: src/settings.py:330
 msgid "debug"
 msgstr "debug"
 
-#: src/settings.py:347
+#: src/settings.py:349
 msgid "Debug mode"
 msgstr "Režim ladění"
 
-#: src/settings.py:348
+#: src/settings.py:350
 msgid "Allow sending bug reports on addon error"
 msgstr "Povolit posílání chybových hlášení při chybě doplňku"
 
-#: src/settings.py:349
+#: src/settings.py:351
 msgid "Allow preloading of addons on start"
 msgstr "Povolit přednačtení doplňků při startu"
 
-#: src/settings.py:350
+#: src/settings.py:352
 msgid "Confirm exit when closing plugin"
 msgstr "Potvrdit ukončení při opouštění modulu"
 
-#: src/settings.py:351
+#: src/settings.py:353
 msgid "Show broken addons"
 msgstr "Zobrazit nefunkční doplňky"
 
-#: src/settings.py:352
+#: src/settings.py:354
 msgid "Show not supported addons"
 msgstr "Zobrazit nepodporované doplňky"
 
-#: src/settings.py:353
+#: src/settings.py:355
 msgid "On update remove broken and not supported addons"
 msgstr "Při aktualizaci odstranit nefunkční a nepodporované doplňky"
 
-#: src/settings.py:354
+#: src/settings.py:356
 msgid "Show video source selection"
 msgstr "Zobrazit výběr zdroje videa"
 
-#: src/settings.py:355
+#: src/settings.py:357
 msgid "Convert captcha images to 8bit"
 msgstr "Konvertovat captcha obrázky na 8bitové"
 
-#: src/settings.py:356
+#: src/settings.py:358
 msgid "Internal HTTP server listen port"
 msgstr "Port interního HTTP serveru"
 
-#: src/settings.py:357
+#: src/settings.py:359
 msgid "Run HTTP only for internal addons usage"
 msgstr "Spustit HTTP server jen pro interní použití doplňkami"
 
-#: src/settings.py:361
+#: src/settings.py:363
 msgid "Allow sending anonymous usage statistics"
 msgstr "Povolit posílání anonymních statistik používání pluginu"
 

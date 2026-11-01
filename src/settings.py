@@ -230,6 +230,7 @@ def get_main_settings():
 
 config.plugins.archivCZSK.videoPlayer = ConfigSubsection()
 
+config.plugins.archivCZSK.videoPlayer.replace_exteplayer3 = ConfigYesNo(default=True)
 config.plugins.archivCZSK.videoPlayer.autoPlay = ConfigYesNo(default=True)
 config.plugins.archivCZSK.videoPlayer.confirmExit = ConfigYesNo(default=False)
 config.plugins.archivCZSK.videoPlayer.subtitlesInAudioSelection = ConfigYesNo(default=True if image_is_openpli() else False)
@@ -248,6 +249,7 @@ config.plugins.archivCZSK.videoPlayer.rtmpBuffer = ConfigSelection(default="1000
 def get_player_settings():
 	_ = tr
 	list = []
+	list.append(getConfigListEntry(_("Replace installed exteplayer3 with ArchivCZSK version"), config.plugins.archivCZSK.videoPlayer.replace_exteplayer3))
 	list.append(getConfigListEntry(_("RTMP Timeout"), config.plugins.archivCZSK.videoPlayer.rtmpTimeout))
 	list.append(getConfigListEntry(_("RTMP Buffer"), config.plugins.archivCZSK.videoPlayer.rtmpBuffer))
 	list.append(getConfigListEntry(_("Confirm exit when closing player"), config.plugins.archivCZSK.videoPlayer.confirmExit))
