@@ -1,3 +1,10 @@
+ArchivCZSK 3.9.0, 01.11.2026
+    - odstránenie úpravy, ktorá bránila pádu pri spustení doplnku z hlavného menu v OpenATV 8.0.1 - už viac nie je potrebná
+    - odstránenie zastaralej obrazovky s informáciami o prehrávači (neaktuálna na väčšine nových distribúcii)
+    - odstránenie kontroly exteplayer3 a gstplayer pri spustení
+    - pridanie podpory pre doplnky závislé na konkrétnej HW architektúre
+    - automatické nahradenie systémového exteplayer3 prehrávača upravenou verziou, ktorá podporuje všetky vlastnosti potrebné v doplnkoch (možnosť vypnúť v nastaveniach)
+
 ArchivCZSK 3.8.3, 25.10.2026
     - oprava aktualizácie doplnkov
 
