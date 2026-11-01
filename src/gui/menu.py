@@ -189,9 +189,7 @@ class ArchivCZSKConfigScreen(BaseArchivCZSKConfigScreen):
 
 	def keyOk(self):
 		current = self["config"].getCurrent()[1]
-		if current == config.plugins.archivCZSK.videoPlayer.info:
-			info.showVideoPlayerInfo(self.session)
-		elif current == config.plugins.archivCZSK.parental.change_settings:
+		if current == config.plugins.archivCZSK.parental.change_settings:
 			def parental_continue(response):
 				if response == True:
 					self.refreshConfigList()

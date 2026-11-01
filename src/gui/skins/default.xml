@@ -105,24 +105,6 @@
 		<widget name="img" position="*10*,*0*" zPosition="2" size="*480*,*480*" alphatest="on"/>
 	</screen>
 
-	<screen name="ArchivCZSKVideoPlayerInfoScreen" position="center,center" size="*1478*,*840*" backgroundColor="#0a000000" title="ContentScreen">
-		<widget font="Regular;*30*" halign="center" name="key_red" position="*10*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
-		<widget font="Regular;*30*" halign="center" name="key_green" position="*377*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
-		<widget font="Regular;*30*" halign="center" name="key_yellow" position="*744*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
-		<widget font="Regular;*30*" halign="center" name="key_blue" position="*1111*,*6*" shadowColor="black" shadowOffset="*-2*,*-2*" size="*357*,*57*" valign="center" zPosition="2" transparent="1"/>
-		<ePixmap name="red_pixmap" alphatest="blend" scale="stretch" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/red.png" position="*10*,*6*" size="*357*,*57*" zPosition="1"/>
-		<ePixmap name="green_pixmap" alphatest="blend" scale="stretch" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/green.png" position="*377*,*6*" size="*357*,*57*" zPosition="1"/>
-		<ePixmap name="yellow_pixmap" alphatest="blend" scale="stretch" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/yellow.png" position="*744*,*6*" size="*357*,*57*" zPosition="1"/>
-		<ePixmap name="blue_pixmap" alphatest="blend" scale="stretch" pixmap="/usr/lib/enigma2/python/Plugins/Extensions/archivCZSK/gui/icon/blue.png" position="*1111*,*6*" size="*357*,*57*" zPosition="1"/>
-		<widget name="detected player" position="*30*,*104*" size="*285*,*39*" font="Regular;*30*" transparent="1"/>
-		<widget name="detected player_val" position="*339*,*104*" size="*285*,*39*" font="Regular;*30*" transparent="1"/>
-		<widget name="protocol" position="*42*,*173*" size="*588*,*38*" foregroundColor="#00e5b243" font="Regular;*28*" transparent="1"/>
-		<widget name="container" position="*42*,*508*" size="*591*,*38*" font="Regular;*28*" foregroundColor="#00e5b243" transparent="1"/>
-		<widget name="protocol_list" position="*59*,*223*" size="*572*,*265*" transparent="1"/>
-		<widget name="container_list" position="*59*,*558*" size="*572*,*264*" transparent="1"/>
-		<widget name="info_scrolllabel" position="*699*,*102*" size="*762*,*703*" font="Regular;*28*" transparent="1"/>
-	</screen>
-
 	<screen name="ArchivCZSKContextMenuScreen" position="center,center" backgroundColor="#0a000000" size="*642*,*545*">
 		<widget name="item_pixmap" position="*12*,*15*" size="*44*,*32*" alphatest="on"/>
 		<widget name="item_label" position="*67*,*9*" size="*569*,*66*" halign="center" foregroundColor="#00e5b243" font="Regular;*f30*" transparent="1"/>

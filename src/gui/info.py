@@ -4,21 +4,19 @@ Created on 28.4.2012
 
 @author: marko
 '''
-import os
 import traceback
 import re
 
 from Components.Label import Label
-from Components.ActionMap import ActionMap, NumberActionMap
+from Components.ActionMap import NumberActionMap
 from Components.ScrollLabel import ScrollLabel
 from Components.Pixmap import Pixmap
 from Components.AVSwitch import AVSwitch
 from Components.config import config
 
 from .base import BaseArchivCZSKScreen
-from .common import showInfoMessage, PanelColorListEntry, PanelList
+from .common import showInfoMessage
 from .poster import PosterPixmapHandler
-from ..engine.player.info import videoPlayerInfo
 from ..engine.parental import parental_pin
 from ..engine.usage import UsageStats
 from ..engine.tools.util import toUnicode, removeDiac
@@ -119,12 +117,6 @@ def showCSFDInfo(session, item):
 			showInfoMessage(session, _("Show CSFD info failed."), timeout=6)
 		except:
 			pass
-
-def showVideoPlayerInfo(session, cb=None):
-	if cb:
-		session.openWithCallback(cb, ArchivCZSKVideoPlayerInfoScreen)
-	else:
-		session.open(ArchivCZSKVideoPlayerInfoScreen)
 
 
 class ArchivCZSKChangelogScreen(BaseArchivCZSKScreen):
@@ -266,107 +258,3 @@ class ArchivCZSKItemInfoScreen(BaseArchivCZSKScreen):
 	def __onClose(self):
 		self.poster.cleanup()
 
-
-class ArchivCZSKVideoPlayerInfoScreen(BaseArchivCZSKScreen):
-	def __init__(self, session):
-		BaseArchivCZSKScreen.__init__(self, session)
-		self.__settings = config.plugins.archivCZSK.videoPlayer
-
-		self["key_red"] = Label("")
-		self["key_green"] = Label("")
-		self["key_yellow"] = Label("")
-		self["key_blue"] = Label(_("Refresh"))
-		self["detected player"] = Label(_("Detected player:"))
-		self["detected player_val"] = Label("")
-		self["protocol"] = Label(_("Supported protocols:"))
-		self["protocol_list"] = PanelList([], 24)
-		self["container"] = Label(_("Supported containers:"))
-		self["container_list"] = PanelList([], 24)
-		self["info_scrolllabel"] = ScrollLabel()
-
-		self["actions"] = ActionMap(["archivCZSKActions"],
-		{
-			"up": self.pageUp,
-			"down": self.pageDown,
-			"right": self.pageDown,
-			"left": self.pageUp,
-			"cancel":self.cancel,
-			"blue": self.updateGUI,
-		}, -2)
-
-		self.onShown.append(self.setWindowTitle)
-		self.onLayoutFinish.append(self.disableSelection)
-		self.onLayoutFinish.append(self.setPlayer)
-		self.onLayoutFinish.append(self.setInfo)
-		self.onLayoutFinish.append(self.updateGUI)
-
-	def setWindowTitle(self):
-		self.title = _("VideoPlayer Info")
-
-	def disableSelection(self):
-		self["container_list"].selectionEnabled(False)
-		self["protocol_list"].selectionEnabled(False)
-
-	def updateGUI(self):
-		containerWidth = self["container_list"].instance.size().width()
-		protocolWidth = self["protocol_list"].instance.size().width()
-		self.updateProtocolList(containerWidth)
-		self.updateContainerList(protocolWidth)
-
-	def setPlayer(self):
-		self["detected player_val"].setText(videoPlayerInfo.getName())
-
-	def setInfo(self):
-		infoText=''
-		infoText += _("These informations are valid only for internal enigma2 player based on gstreamer") + "."
-		infoText += _("If you use other player like exteplayer3, then this check is not valid to you.")
-		infoText += "\n\n"
-		infoText += _("* Status UNKNOWN means, that I dont know how to get info,")
-		infoText += " " + _("it doesnt mean that protocol or container isn't supported") + "."
-		infoText += "\n\n"
-		infoText += _("* Videos are encoded by various codecs")
-		infoText += ", " + _("to play them you need to have HW support of your receiver to decode them") + "."
-		infoText += "\n" + _("For example if you have ASF(WMV) - OK state")
-		infoText += ", " + _("it doesnt already mean that you can play WMV file")
-		infoText += ", " + _("it just means that player can open WMV container and get ENCODED video out of it") + "."
-		infoText += " " + _("In WMV container is used VC1 encoded video") + "."
-		infoText += " " + _("If your player cannot decode VC1 codec, than you cannot play this video.")
-		self["info_scrolllabel"].setText(infoText)
-
-	def updateProtocolList(self,width):
-		menuList = []
-		menuList.append(self.buildEntry(_("HTTP Protocol"), videoPlayerInfo.isHTTPSupported(), width))
-		menuList.append(self.buildEntry(_("HLS Protocol"), videoPlayerInfo.isHLSSupported(), width))
-		menuList.append(self.buildEntry(_("MMS Protocol"), videoPlayerInfo.isMMSSupported(), width))
-		menuList.append(self.buildEntry(_("RTMP Protocol"), videoPlayerInfo.isRTMPSupported(), width))
-		menuList.append(self.buildEntry(_("RTSP Protocol"), videoPlayerInfo.isRTSPSupported(), width))
-		self["protocol_list"].setList(menuList)
-
-	def updateContainerList(self,width):
-		menuList = []
-		menuList.append(self.buildEntry(_("3GP container"), videoPlayerInfo.isMP4Supported(), width))
-		menuList.append(self.buildEntry(_("ASF(WMV) Container"), videoPlayerInfo.isASFSupported(), width))
-		menuList.append(self.buildEntry(_("AVI Container"), videoPlayerInfo.isAVISupported(), width))
-		menuList.append(self.buildEntry(_("FLV Container"), videoPlayerInfo.isFLVSupported(), width))
-		menuList.append(self.buildEntry(_("MKV Container"), videoPlayerInfo.isMKVSupported(), width))
-		menuList.append(self.buildEntry(_("MP4 Container"), videoPlayerInfo.isMP4Supported(), width))
-		self["container_list"].setList(menuList)
-
-
-	def buildEntry(self, name, res, width):
-		if res is None:
-			return PanelColorListEntry(name, _("UNKNOWN"), 0xffff00, width)
-		elif res:
-			return PanelColorListEntry(name, _("OK"), 0x00ff00, width)
-		else:
-			return PanelColorListEntry(name, _("FAIL"), 0xff0000, width)
-
-	def pageUp(self):
-		self["info_scrolllabel"].pageUp()
-
-	def pageDown(self):
-		self["info_scrolllabel"].pageDown()
-
-
-	def cancel(self):
-		self.close()
