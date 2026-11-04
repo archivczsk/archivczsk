@@ -230,7 +230,7 @@ def get_main_settings():
 
 config.plugins.archivCZSK.videoPlayer = ConfigSubsection()
 
-config.plugins.archivCZSK.videoPlayer.replace_exteplayer3 = ConfigYesNo(default=True)
+config.plugins.archivCZSK.videoPlayer.replace_exteplayer3 = ConfigYesNo(default=False)
 config.plugins.archivCZSK.videoPlayer.autoPlay = ConfigYesNo(default=True)
 config.plugins.archivCZSK.videoPlayer.confirmExit = ConfigYesNo(default=False)
 config.plugins.archivCZSK.videoPlayer.subtitlesInAudioSelection = ConfigYesNo(default=True if image_is_openpli() else False)
