@@ -13,19 +13,27 @@ class EncryptedModuleError(ImportError):
 	pass
 
 
-try:
-	_NATIVE = ctypes.PyDLL(os.path.join(os.path.dirname(__file__), "_loader_%s.so" % stbinfo.hw_arch))
-except OSError as error:
-	raise EncryptedModuleError("cannot load encrypted-module loader: %s" % error)
+_NATIVE = None
 
-_NATIVE.execute_file.argtypes = [ctypes.c_char_p, ctypes.py_object]
-_NATIVE.execute_file.restype = ctypes.c_int
+def get_native_loader():
+	global _NATIVE
+	if _NATIVE is None:
+		try:
+			_NATIVE = ctypes.PyDLL(os.path.join(os.path.dirname(__file__), "_loader_%s.so" % stbinfo.hw_arch))
+		except OSError as error:
+			raise EncryptedModuleError("cannot load encrypted-module loader: %s" % error)
+
+		_NATIVE.execute_file.argtypes = [ctypes.c_char_p, ctypes.py_object]
+		_NATIVE.execute_file.restype = ctypes.c_int
+
+	return _NATIVE
+
 
 
 def _execute_source(module, payload_path):
 	if not isinstance(payload_path, bytes):
 		payload_path = payload_path.encode(sys.getfilesystemencoding() or "utf-8")
-	result = _NATIVE.execute_file(payload_path, module.__dict__)
+	result = get_native_loader().execute_file(payload_path, module.__dict__)
 	if result != 0:
 		messages = {
 			1: "cannot read encrypted module",
