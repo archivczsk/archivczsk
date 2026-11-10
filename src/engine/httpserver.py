@@ -688,8 +688,9 @@ class ArchivCZSKHttpServer(object):
 
 	def __init__(self):
 		self.root = {}
-		self.port = config.plugins.archivCZSK.httpPort.value
+		self.listen_address, self.port = self.get_address_and_port()
 		self.running = None
+		self.stopping = False
 		self.server = None
 		self.root['update'] = ArchivCZSKUpdateHandler()
 		self.root['addons'] = ArchivCZSKAddonsSettingsHandler()
@@ -703,30 +704,39 @@ class ArchivCZSKHttpServer(object):
 
 	# #################################################################################################
 
+	def get_address_and_port(self):
+		if config.plugins.archivCZSK.httpLocalhost.value:
+			listen_address = '127.0.0.1'
+		else:
+			listen_address = '0.0.0.0'
+
+		return listen_address, config.plugins.archivCZSK.httpPort.value
+
+	# #################################################################################################
+
 	def start_listening(self, only_restart=False):
 		was_started = self.running != None
 
+		listen_address, port = self.get_address_and_port()
+
 		if self.running:
-			if only_restart:
+			if only_restart and (listen_address != self.listen_address or port != self.port):
 				self.stop_listening()
 			else:
+				log.info("Restart of HTTP server is not needed")
 				return
 
-		self.port = config.plugins.archivCZSK.httpPort.value
+		self.port = port
+		self.listen_address = listen_address
 
 		if only_restart and not was_started:
 			# restart requiered, but server is not running - do nothing
 			return
 
 		if self.running == None:
-			if config.plugins.archivCZSK.httpLocalhost.value:
-				listen_address = '127.0.0.1'
-			else:
-				listen_address = '0.0.0.0'
-
-			log.info("Starting HTTP server on %s:%s" % (listen_address, self.port))
+			log.info("Starting HTTP server on %s:%s" % (self.listen_address, self.port))
 			try:
-				self.running = threading.Thread(target=self.httpd_run,args=(listen_address,))
+				self.running = threading.Thread(target=self.httpd_run,args=(self.listen_address,))
 				self.running.start()
 			except:
 				log.error("Failed to start internal HTTP server:\n%s" % traceback.format_exc())
@@ -746,7 +756,13 @@ class ArchivCZSKHttpServer(object):
 	# #################################################################################################
 
 	def stop_listening(self):
+		if self.stopping:
+			log.info("HTTP server already in stopping phase")
+			return
+
 		if self.running != None:
+			self.stopping = True
+
 			if not self.server:
 				log.error("FATAL: HTTP server accept thread was started, but server itself is not running")
 			else:
@@ -755,6 +771,7 @@ class ArchivCZSKHttpServer(object):
 
 			self.running.join()
 			self.running = None
+			self.stopping = False
 
 	# #################################################################################################
 
