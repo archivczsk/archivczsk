@@ -89,6 +89,9 @@ class Addon(object):
 		self.__need_update, self.broken_msg = self._updater.check_addon(self, load_xml)
 		if force_update:
 			self.__need_update = True
+		elif self.__need_update and not self.is_enabled():
+			self.__need_update = False
+			log.info("%s update is available, but addon is disabled - skipping update", self)
 
 		return self.__need_update
 
