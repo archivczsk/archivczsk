@@ -28,6 +28,14 @@ def _get_destination_path(dest_dir, filename):
 def unzip_to_dir( zip_file, dest_dir ):
 	dest_dir = os.path.realpath(dest_dir)
 	with ZipFile( zip_file, 'r' ) as z:
+		# check if there is enough space on the disk to extract the files
+		total_size = sum(l.file_size for l in z.infolist())
+		if total_size > 0:
+			statvfs = os.statvfs(dest_dir)
+			available_space = (statvfs.f_frsize * statvfs.f_bavail) - (500 * 1024)  # reserve 500 kB for safety
+			if total_size > available_space:
+				raise ValueError("Not enough space on disk to extract ZIP file: required %d kB, available %d kB" % (total_size // 1024, available_space // 1024))
+
 		for l in z.infolist():
 			dst_file = _get_destination_path(dest_dir, l.filename)
 			mode = l.external_attr >> 16

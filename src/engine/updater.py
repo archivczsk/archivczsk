@@ -488,7 +488,15 @@ class Updater(object):
 			if os.path.isdir(local_base_id):
 				shutil.rmtree(local_base_id)
 
-			unzip_to_dir(zip_file, self.local_path)
+			try:
+				unzip_to_dir(zip_file, self.local_path)
+			except Exception as e:
+				log.logError("[%s] update failed - cannot unzip downloaded file: %s\n%s" % (addon.name, str(e), traceback.format_exc()))
+
+				if os.path.isdir(local_base):
+					shutil.rmtree(local_base)
+
+				return False
 
 			# store addon's previous version - used to show changelog on first run
 			if os.path.isdir(local_base):
