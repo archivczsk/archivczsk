@@ -26,6 +26,7 @@ if [ -d $TMP/repositories/ ] ; then
 fi
 
 touch $ARCHIVCZSK/.first_start
+rm -f $ARCHIVCZSK/engine/loader/.loader_status
 
 if [ -f ${TMP}/last_version.txt ] ; then
 	cat ${TMP}/last_version.txt > $ARCHIVCZSK/.first_start

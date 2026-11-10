@@ -6,6 +6,7 @@ import os
 import sys
 import types
 from ..tools.stbinfo import stbinfo
+from ..tools.lang import _
 
 _PAYLOAD_MAGIC = b"&PYME1"
 
@@ -15,35 +16,60 @@ class EncryptedModuleError(ImportError):
 
 _NATIVE = None
 
+status_file = os.path.join(os.path.dirname(__file__), ".loader_status")
+
+def _get_status():
+	if os.path.isfile(status_file):
+		with open(status_file, "r") as f:
+			return f.read()
+	return None
+
+def loading_started():
+	status = _get_status()
+	if status == "FAILED":
+		raise EncryptedModuleError(_("Encrypted-module loader failed to load previously and is disabled"))
+	elif status == "SUCCESS":
+		return
+
+	# mark the loader as failed in case it crashes during loading
+	with open(status_file, "w") as f:
+		f.write("FAILED")
+
+def loading_finished():
+	with open(status_file, "w") as f:
+		f.write("SUCCESS")
+
 def get_native_loader():
 	global _NATIVE
 	if _NATIVE is None:
 		try:
 			_NATIVE = ctypes.PyDLL(os.path.join(os.path.dirname(__file__), "_loader_%s.so" % stbinfo.hw_arch))
 		except OSError as error:
-			raise EncryptedModuleError("cannot load encrypted-module loader: %s" % error)
+			raise EncryptedModuleError(_("Cannot load encrypted-module loader") + ": %s" % error)
 
 		_NATIVE.execute_file.argtypes = [ctypes.c_char_p, ctypes.py_object]
 		_NATIVE.execute_file.restype = ctypes.c_int
 
 	return _NATIVE
 
-
-
 def _execute_source(module, payload_path):
 	if not isinstance(payload_path, bytes):
 		payload_path = payload_path.encode(sys.getfilesystemencoding() or "utf-8")
+
+	loading_started()
 	result = get_native_loader().execute_file(payload_path, module.__dict__)
+	loading_finished()
+
 	if result != 0:
 		messages = {
-			1: "cannot read encrypted module",
-			2: "invalid encrypted module format",
-			3: "encrypted module authentication failed",
-			4: "not enough memory to decrypt module",
-			5: "encrypted module compilation or execution failed",
-			6: "required runtime components are unavailable",
+			1: _("Cannot read encrypted module"),
+			2: _("Invalid encrypted module format"),
+			3: _("Encrypted module authentication failed"),
+			4: _("Not enough memory to decrypt module"),
+			5: _("Encrypted module compilation or execution failed"),
+			6: _("Required runtime components are unavailable"),
 		}
-		raise EncryptedModuleError(messages.get(result, "encrypted loader failure"))
+		raise EncryptedModuleError(messages.get(result, _("Encrypted loader failure")))
 
 
 class _EncryptedModuleFinder(object):
@@ -84,7 +110,7 @@ class _EncryptedModuleFinder(object):
 		if payload is None:
 			payload = self._find_payload(fullname)
 		if payload is None:
-			raise EncryptedModuleError("encrypted module not found: %s" % fullname)
+			raise EncryptedModuleError("Encrypted module not found: %s" % fullname)
 		return payload
 
 	def find_module(self, fullname, path=None):
@@ -135,6 +161,9 @@ class _EncryptedModuleFinder(object):
 
 
 def install_encrypted_loader():
+	# if _get_status() == "FAILED":
+	# 	raise EncryptedModuleError(_("Encrypted-module loader failed to load previously and is disabled"))
+
 	for finder in sys.meta_path:
 		if isinstance(finder, _EncryptedModuleFinder):
 			return

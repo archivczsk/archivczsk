@@ -375,7 +375,10 @@ class ArchivCZSK():
 
 		log.info("Starting ArchivCZSK ...")
 		log.debug("Installing module loader")
-		install_encrypted_loader()
+		try:
+			install_encrypted_loader()
+		except Exception as e:
+			log.error("Encrypted module loader failed to load: %s" % str(e))
 
 		start_time = time.time()
 		BGServiceTask.startMessagePump()
