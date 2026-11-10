@@ -67,6 +67,7 @@ class Addon(object):
 		self.entry_point = None
 		self.e2_main_menu_plugin = None
 		self.bgservice = AddonBackgroundService(self.name)
+		self.global_cfg_cbks = []
 		self.update_main_menu_shortcut()
 
 	def __repr__(self):
@@ -203,6 +204,15 @@ class Addon(object):
 		self._updater = None
 		self.repository = None
 
+		if self.global_cfg_cbks:
+			log.debug("[%s] Removing global config notifier notifiers" % self)
+
+			for cfg, cbk in self.global_cfg_cbks:
+				try:
+					cfg.removeNotifier(cbk)
+				except:
+					log.error(traceback.format_exc())
+
 	def is_enabled(self):
 		return self.get_setting('enabled')
 
@@ -211,6 +221,10 @@ class Addon(object):
 		if enabled:
 			if isinstance( self, VideoAddon ):
 				self.provider.preload_addon()
+
+	def add_global_change_notifier(self, cfg_element, cbk, initial_call=False, immediate_feedback=False ):
+		cfg_element.addNotifier(cbk, initial_call=initial_call, immediate_feedback=immediate_feedback)
+		self.global_cfg_cbks.append( (cfg_element, cbk,))
 
 	def add_setting_change_notifier(self, setting_ids, cbk):
 		self.settings.add_change_notifier(setting_ids, cbk)
