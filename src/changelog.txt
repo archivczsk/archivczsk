@@ -1,3 +1,7 @@
+ArchivCZSK 3.9.3, 10.11.2026
+    - oprava zaseknutia systému pri reštarte interného HTTP servera
+    - vylepšenie notifikátora o zmene globálnej konf. voľby pre doplnky
+
 ArchivCZSK 3.9.2, 10.11.2026
     - inštalácia loader pre šifrované doplnky len ak to je potrebné
     - ak loader pre šifrované doplnky zlyhá, tak sa automaticky zakáže
