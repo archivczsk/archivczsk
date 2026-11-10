@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-10 08:08+0100\n"
-"PO-Revision-Date: 2026-11-10 08:09+0100\n"
+"POT-Creation-Date: 2026-11-10 08:33+0100\n"
+"PO-Revision-Date: 2026-11-10 08:33+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: cs\n"
@@ -1098,11 +1098,15 @@ msgstr "Povolit posílání anonymních statistik používání pluginu"
 msgid "You need to restart E2. Do you want to restart it now?"
 msgstr "Změny se projeví po restartu E2. Chcete nyní restartovat E2?"
 
-#: src/archivczsk.py:534
+#: src/archivczsk.py:536
+msgid "There is less than 500 kB of free space on system disk. Please free up some space in order or you will encounter issues with plugin operation."
+msgstr "Na systémovém disku zbývá méně než 500 kB volného místa. Uvolněte prosím nějaké místo, jinak dojde k problémům s fungováním pluginu."
+
+#: src/archivczsk.py:545
 msgid "By system check there was no system plugin with name ServiceApp detected. This means, that your system only supports video player integrated in enigma2. Some addons doesn't work properly with internal player or don't work at all. If you will have problem with playing some videos, try to install ServiceApp system plugin from feed of your distribution. Then you can change in addon settings used video player to exteplayer3 that can handle many video formats better."
 msgstr "Při kontrole systému nebyl zjištěn žádný systémový plugin s názvem ServiceApp. To znamená, že váš systém podporuje pouze videopřehrávač integrovaný v Enigma2. Některé doplňky s interním přehrávačem nefungují správně nebo nefungují vůbec. Pokud budete mít potíže s přehráváním některých videí, zkuste nainstalovat systémový plugin ServiceApp z repozitáře vaší distribuce. Poté můžete v nastavení doplňku změnit použitý videopřehrávač na exteplayer3, který mnoho video formátů zvládá lépe."
 
-#: src/archivczsk.py:542
+#: src/archivczsk.py:553
 msgid "You are using outdated image in your receiver without updated SSL certificates used for HTTPS communication. This can cause problems connecting to some sites or services. Outdated images are not supported and errors related to SSL communication will not be fixed. Update your image to latest version or switch to other image if current one doesn't get updates anymore."
 msgstr "Ve svém přijímači používáte zastaralé image bez aktualizovaných SSL certifikátů používaných pro HTTPS komunikaci. Může to způsobit problémy s připojením k některým stránkám nebo službám. Zastaralé image nejsou podporované a chyby souvisící s SSL komunikaci nebudou opravené. Aktualizujte své image na nejnovější verzi nebo přejděte na jiné, pokud už vaše aktuální nedostává další aktualizace."
 

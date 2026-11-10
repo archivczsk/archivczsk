@@ -517,12 +517,23 @@ class ArchivCZSK():
 			self.session.open(TryQuitMainloop, 3)
 
 	def open_archive_screen(self, callback=None):
+		def enough_space():
+			# check if there is enough space on the disk for safety
+			statvfs = os.statvfs(os.path.dirname(__file__))
+			return (statvfs.f_frsize * statvfs.f_bavail) > (500 * 1024)
+
 		def first_start_handled(callback=None):
+			def _open_content_screen(c=None):
+				self.session.openWithCallback(self.close_archive_screen, ArchivCZSKContentScreen, self, self.autorun_addon)
+
 			# first screen to open when starting plugin,
 			# so we start worker thread where we can run our tasks(ie. loading archives)
 			Task.startWorkerThread()
 			parental_pin.lock_pin()
-			self.session.openWithCallback(self.close_archive_screen, ArchivCZSKContentScreen, self, self.autorun_addon)
+			if enough_space():
+				_open_content_screen()
+			else:
+				self.session.openWithCallback(_open_content_screen, MessageBox, _("There is less than 500 kB of free space on system disk. Please free up some space in order or you will encounter issues with plugin operation."), type=MessageBox.TYPE_ERROR, enable_input=True)
 
 		def check_player():
 			# check if we have all players installed
