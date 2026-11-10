@@ -1,8 +1,7 @@
 import os
 import stat
 from zipfile import ZipFile
-from .util import make_path
-
+from .util import make_path, get_free_space
 
 def _is_within_dir(directory, path):
 	try:
@@ -31,9 +30,8 @@ def unzip_to_dir( zip_file, dest_dir ):
 		# check if there is enough space on the disk to extract the files
 		total_size = sum(l.file_size for l in z.infolist())
 		if total_size > 0:
-			statvfs = os.statvfs(dest_dir)
-			available_space = (statvfs.f_frsize * statvfs.f_bavail) - (500 * 1024)  # reserve 500 kB for safety
-			if total_size > available_space:
+			available_space = get_free_space(dest_dir) or 0
+			if total_size > (available_space - 300 * 1024):  # always leave 300 kB of free space for safety
 				raise ValueError("Not enough space on disk to extract ZIP file: required %d kB, available %d kB" % (total_size // 1024, available_space // 1024))
 
 		for l in z.infolist():

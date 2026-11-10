@@ -15,7 +15,7 @@ import xml.etree.ElementTree as ET
 from datetime import datetime, timedelta
 from .tools import util, parser
 from .tools.unzip import unzip_to_dir
-from .tools.util import toString
+from .tools.util import toString, have_enough_space
 from .tools.stbinfo import stbinfo
 from ..compat import eCompatTimer
 from .exceptions.updater import UpdateXMLVersionError, UpdateXMLNoUpdateUrl
@@ -718,6 +718,10 @@ class HeadlessUpdater(object):
 		from Screens.Standby import inStandby
 		if not inStandby:
 			log.info("Not checking for updates - Enigma is not in standby")
+			return
+
+		if not have_enough_space(__file__):
+			log.error("There is not enough free space on system disk to run update - giving up ...")
 			return
 
 		# check, if we can run update now

@@ -14,6 +14,7 @@ from .engine.tools.lang import _
 from .engine.addon import ToolsAddon, VideoAddon, XBMCAddon
 from .engine.downloader import DownloadManager
 from .engine.tools.task import Task
+from .engine.tools.util import have_enough_space
 from .engine.httpserver import ArchivCZSKHttpServer
 from .gui.content import ArchivCZSKContentScreen
 from .engine.loader import install_encrypted_loader, uninstall_encrypted_loader
@@ -491,7 +492,7 @@ class ArchivCZSK():
 				ArchivCZSK.load_skin()
 				ArchivCZSK.force_skin_reload = False
 
-			if canCheckUpdate():
+			if have_enough_space(__file__) and canCheckUpdate():
 				self.session.openWithCallback(self.update_checked, ArchivCZSKUpdateInfoScreen )
 			else:
 				self.open_archive_screen()
@@ -517,11 +518,6 @@ class ArchivCZSK():
 			self.session.open(TryQuitMainloop, 3)
 
 	def open_archive_screen(self, callback=None):
-		def enough_space():
-			# check if there is enough space on the disk for safety
-			statvfs = os.statvfs(os.path.dirname(__file__))
-			return (statvfs.f_frsize * statvfs.f_bavail) > (500 * 1024)
-
 		def first_start_handled(callback=None):
 			def _open_content_screen(c=None):
 				self.session.openWithCallback(self.close_archive_screen, ArchivCZSKContentScreen, self, self.autorun_addon)
@@ -530,7 +526,7 @@ class ArchivCZSK():
 			# so we start worker thread where we can run our tasks(ie. loading archives)
 			Task.startWorkerThread()
 			parental_pin.lock_pin()
-			if enough_space():
+			if have_enough_space(__file__):
 				_open_content_screen()
 			else:
 				self.session.openWithCallback(_open_content_screen, MessageBox, _("There is less than 500 kB of free space on system disk. Please free up some space in order or you will encounter issues with plugin operation."), type=MessageBox.TYPE_ERROR, enable_input=True)

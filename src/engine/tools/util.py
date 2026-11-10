@@ -614,11 +614,21 @@ def download_to_file_async(url, dest, callback=None, data=None, headers=None, ti
 	return url_get_data_async(url, got_data, data, headers, timeout)
 
 def get_free_space(location):
+	if os.path.isfile(location):
+		location = os.path.dirname(location)
+
 	try:
 		s = os.statvfs(location)
 		return s.f_bavail * s.f_bsize
 	except Exception:
 		traceback.print_exc()
+
+def have_enough_space(location, required_space=500 * 1024):
+	free_space = get_free_space(location)
+	if free_space is not None:
+		return free_space >= required_space
+	else:
+		return False
 
 def check_program(program):
 
