@@ -499,7 +499,9 @@ class ArchivCZSKContentProvider(ContentProvider):
 		addons = []
 		for addon_id in self._categories_io.get_category(category_id):
 			try:
-				addons.append( PCategoryVideoAddon(self._archivczsk.get_addon(addon_id)) )
+				addon = self._archivczsk.get_addon(addon_id)
+				if addon.is_enabled():
+					addons.append( PCategoryVideoAddon(addon) )
 			except:
 				# there is unknown addon in categories.xml - ignore it
 				pass
