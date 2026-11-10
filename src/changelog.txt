@@ -1,3 +1,11 @@
+ArchivCZSK 3.9.2, 10.11.2026
+    - inštalácia loader pre šifrované doplnky len ak to je potrebné
+    - ak loader pre šifrované doplnky zlyhá, tak sa automaticky zakáže
+    - kontrola voľného miesta pred spustením doplnku a pred spustením aktualizície
+    - kontrola voľného miesta pred rozbalením aktualizačného súboru doplnku
+    - oprava zhodenia systému pri štarte ak dôjde voľné miesto na systémovom disku
+    - doplnky, ktoré sú vypnuté sa už viac nebudú aktualizovať
+
 ArchivCZSK 3.9.1, 04.11.2026
     - nahradenie exteplayer3 je predvolene vypnuté
 
