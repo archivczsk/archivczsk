@@ -46,8 +46,16 @@ class BaseXML(object):
 			self.xml_tree.parse(self.path)
 			self.xml_root_element = self.xml_tree.getroot()
 		except Exception as e:
-			log.error("%s invalid xml file - %s, creating backup..."%(str(self), str(e)))
-			shutil.copy2(self.path, self.path + ".bak")
+			log.error("%s invalid xml file - %s, creating backup..." % (str(self), str(e)))
+			try:
+				shutil.copy2(self.path, self.path + ".bak")
+			except Exception as e2:
+				log.error("%s cannot create backup of invalid xml file %s" % (str(self), str(e2)))
+				try:
+					os.remove(self.path + ".bak")
+				except:
+					pass
+
 			return False
 		return True
 
