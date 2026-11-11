@@ -5,6 +5,7 @@ from .item import ItemHandler
 from ..items import PUserCategory, PCategory, PExit
 
 from ...py3compat import *
+from ..tools.lang import _
 
 class CategoryItemHandlerTemplate(ItemHandler):
 	def __init__(self, session, content_screen, content_provider):

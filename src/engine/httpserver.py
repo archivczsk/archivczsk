@@ -293,7 +293,7 @@ class ArchivCZSKAddonsSettingsHandler(object):
 		from ..archivczsk import ArchivCZSK
 
 		if not ArchivCZSK.has_addon(path):
-			return self.reply_error500(self, request)
+			return self.reply_error500(request)
 
 		ret = []
 		for category in ArchivCZSK.get_addon(path).settings.get_configlist_categories(True):
@@ -310,7 +310,7 @@ class ArchivCZSKAddonsSettingsHandler(object):
 		from ..archivczsk import ArchivCZSK
 
 		if not ArchivCZSK.has_addon(path):
-			return self.reply_error500(self, request)
+			return self.reply_error500(request)
 
 		addon = ArchivCZSK.get_addon(path)
 		addon.settings.pause_change_notifiers()
