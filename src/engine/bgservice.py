@@ -140,6 +140,14 @@ class BGServiceTask(object):
 		log.debug("[BGServiceTask] stopping service -> reactor message pump")
 		global m_pump
 		if m_pump is not None:
+			# run everything that still waits for the main thread (e.g. stopping of timers),
+			# because nobody will process it after the pump is stopped
+			while not fnc_out_queue.empty():
+				try:
+					fnc_out_queue.get_nowait()()
+				except:
+					log.error(traceback.format_exc())
+
 			m_pump.stop()
 			m_pump = None
 
@@ -218,6 +226,12 @@ class AddonBackgroundService(object):
 				t['timer'].stop()
 				del t['timer']
 			self.loop_timers = []
+
+			# pending one shot timers must not fire after the service is stopped
+			for t in self.one_shot_timers:
+				t['timer'].stop()
+				del t['timer']
+			self.one_shot_timers = []
 
 		run_in_reactor(__stop_timers)
 
