@@ -132,13 +132,13 @@ class AddonExceptionHandler(GUIExceptionHandler):
 					log.logError("Addon (ReadTimeout) error '%s'.\n%s"%(str(e),traceback.format_exc()))
 					message = "%s: %s" % (_("Error in loading"), _("Waiting for data from server timed out"))
 					self.errorMessage(message)
-				except requests.ConnectionError as e:
-					log.logError("Addon (ConnectionError) error '%s'.\n%s"%(str(e),traceback.format_exc()))
-					message = "%s: %s" % (_("Error in loading"), _("Connection to server failed"))
-					self.errorMessage(message)
 				except requests.exceptions.SSLError as e:
 					log.logError("Addon (SSLError) error '%s'.\n%s"%(str(e),traceback.format_exc()))
 					message = "%s: %s" % (_("Error in loading"), _("Unable to establish SSL connection to server"))
+					self.errorMessage(message)
+				except requests.ConnectionError as e:
+					log.logError("Addon (ConnectionError) error '%s'.\n%s"%(str(e),traceback.format_exc()))
+					message = "%s: %s" % (_("Error in loading"), _("Connection to server failed"))
 					self.errorMessage(message)
 				except requests.RequestException as e:
 					log.logError("Addon (RequestException) error '%s'.\n%s"%(str(e),traceback.format_exc()))

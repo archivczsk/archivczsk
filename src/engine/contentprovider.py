@@ -517,7 +517,7 @@ class ArchivCZSKContentProvider(ContentProvider):
 
 
 class DummyAddonInterface:
-	def __init__(self, addon, run, trakt=None, stats=None, search=None, run_silent=None):
+	def __init__(self, addon, run, trakt=None, stats=None, search=None, run_silent=None, run_shortcut=None):
 		self.addon = addon
 		self.run = lambda *args, **kwargs: run(self.addon, *args, **kwargs)
 		self.run_silent = lambda *args, **kwargs: run_silent(self.addon, *args, **kwargs) if run_silent else self.run
@@ -527,6 +527,8 @@ class DummyAddonInterface:
 			self.stats = lambda *args, **kwargs: stats(self.addon, *args, **kwargs)
 		if search:
 			self.search = lambda *args, **kwargs: search(self.addon, *args, **kwargs)
+		if run_shortcut:
+			self.run_shortcut = lambda *args, **kwargs: run_shortcut(self.addon, *args, **kwargs)
 
 
 class VideoAddonContentProvider(ContentProvider, PlayMixin, DownloadsMixin, FavoritesMixin):

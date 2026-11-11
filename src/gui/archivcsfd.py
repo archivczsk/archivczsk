@@ -286,7 +286,7 @@ class ArchivCSFD(Screen):
 	def getCSFD(self):
 		self.resetLabels()
 
-		if self.eventName is not "":
+		if self.eventName != "":
 			if self.eventName[-3:] == "...":
 				self.eventName = self.eventName[:-3]
 			self.nazeveventuproskin = self.eventName
