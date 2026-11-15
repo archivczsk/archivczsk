@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: enigma2-plugin-extension-archivczsk\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2026-11-14 18:40+0100\n"
-"PO-Revision-Date: 2026-11-14 18:41+0100\n"
+"POT-Creation-Date: 2026-11-15 15:06+0100\n"
+"PO-Revision-Date: 2026-11-15 15:06+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: sk\n"
@@ -486,7 +486,7 @@ msgid "Play"
 msgstr "Prehrať"
 
 #: src/gui/download.py:288 src/gui/download.py:401
-#: src/engine/handlers/category.py:45 src/engine/handlers/addon.py:315
+#: src/engine/handlers/category.py:45 src/engine/handlers/addon.py:339
 msgid "Remove"
 msgstr "Zmazať"
 
@@ -499,7 +499,7 @@ msgid "Do you want to cancel"
 msgstr "Chcete prerušiť"
 
 #: src/gui/download.py:338 src/gui/download.py:431
-#: src/engine/handlers/category.py:62 src/engine/handlers/addon.py:353
+#: src/engine/handlers/category.py:62 src/engine/handlers/addon.py:377
 msgid "Do you want to remove"
 msgstr "Chcete zmazať"
 
@@ -528,12 +528,12 @@ msgid "Sort by state"
 msgstr "Podľa stavu"
 
 #: src/gui/download.py:405 src/gui/content.py:716
-#: src/engine/handlers/addon.py:200
+#: src/engine/handlers/addon.py:224
 msgid "Downloads"
 msgstr "Stiahnuté súbory"
 
 #: src/gui/shortcuts.py:28 src/gui/content.py:717
-#: src/engine/handlers/addon.py:204
+#: src/engine/handlers/addon.py:228
 msgid "Shortcuts"
 msgstr "Záložky"
 
@@ -658,12 +658,12 @@ msgid "Support us"
 msgstr "Podporte nás"
 
 #: src/gui/content.py:519 src/gui/content.py:715 src/gui/menu.py:45
-#: src/engine/handlers/addon.py:197 src/engine/handlers/addon.py:311
+#: src/engine/handlers/addon.py:221 src/engine/handlers/addon.py:335
 msgid "Changelog"
 msgstr "Zmeny"
 
 #: src/gui/content.py:520 src/gui/content.py:718 src/gui/menu.py:225
-#: src/engine/handlers/addon.py:194 src/engine/handlers/addon.py:308
+#: src/engine/handlers/addon.py:218 src/engine/handlers/addon.py:332
 msgid "Settings"
 msgstr "Nastavenia"
 
@@ -1453,67 +1453,76 @@ msgstr "Playlist z"
 msgid "No playable videos were found"
 msgstr "Nenašli sa žiadne prehrateľné videá"
 
-#: src/engine/handlers/addon.py:100
-msgid "Addon integrity check failed. Do you want to reinstall addon? Enigma will be automaticaly restarted after reinstall."
-msgstr "Kontrola integrity doplnku zlyhala. Chcete doplnok preinštalovať? Enigma bude po preinštalovaní automaticky reštartovaná."
+#: src/engine/handlers/addon.py:103
+#, python-brace-format
+msgid ""
+"Integrity check of the following addons failed:\n"
+"{addons}\n"
+"\n"
+"Do you want to reinstall broken addons? Enigma will be automaticaly restarted after reinstall."
+msgstr ""
+"Kontrola integrity nasledujúcich doplnkov zlyhala:\n"
+"{addons}\n"
+"\n"
+"Chcete poškodené doplnky nainštalovať znova? Po opätovnej inštalácii sa Enigma automaticky reštartuje."
 
-#: src/engine/handlers/addon.py:135
+#: src/engine/handlers/addon.py:159
 msgid "Addon is broken"
 msgstr "Doplnok je nefunkčný"
 
-#: src/engine/handlers/addon.py:136
+#: src/engine/handlers/addon.py:160
 msgid "Reason"
 msgstr "Dôvod"
 
-#: src/engine/handlers/addon.py:141 src/engine/handlers/addon.py:157
+#: src/engine/handlers/addon.py:165 src/engine/handlers/addon.py:181
 msgid "Do you want to remove this addon?"
 msgstr "Chcete vymazať tento doplnok?"
 
-#: src/engine/handlers/addon.py:152
+#: src/engine/handlers/addon.py:176
 msgid "Addon is created for ArchivCZSK 1.x.x version and will not work anymore in this version. Author of the addon need to adopt it for this version."
 msgstr "Doplnok je vytvorený pre verziu ArchivCZSK 1.x.x a v tejto verzii už viac nie je funkčný. Autor doplnku ho musí pre túto verziu prispôsobiť."
 
-#: src/engine/handlers/addon.py:154
+#: src/engine/handlers/addon.py:178
 msgid "Do you want to disable this addon?"
 msgstr "Chcete vypnúť tento doplnok?"
 
-#: src/engine/handlers/addon.py:187
+#: src/engine/handlers/addon.py:211
 msgid "Rename this profile"
 msgstr "Premenovať tento profil"
 
-#: src/engine/handlers/addon.py:188
+#: src/engine/handlers/addon.py:212
 msgid "Delete this profile"
 msgstr "Vymazať tento profil"
 
-#: src/engine/handlers/addon.py:190
+#: src/engine/handlers/addon.py:214
 msgid "Create new profile"
 msgstr "Vytvoriť nový profil"
 
-#: src/engine/handlers/addon.py:222
+#: src/engine/handlers/addon.py:246
 msgid "Do you want to remove this profile?"
 msgstr "Naozaj chcete odstrániť tento profil?"
 
-#: src/engine/handlers/addon.py:234
+#: src/engine/handlers/addon.py:258
 msgid "Enter name of new profile"
 msgstr "Zadajte meno nového profilu"
 
-#: src/engine/handlers/addon.py:244
+#: src/engine/handlers/addon.py:268
 msgid "Enter new profile name"
 msgstr "Zadajte nové meno profilu"
 
-#: src/engine/handlers/addon.py:252
+#: src/engine/handlers/addon.py:276
 msgid "Add to category"
 msgstr "Pridať do kategórie"
 
-#: src/engine/handlers/addon.py:278
+#: src/engine/handlers/addon.py:302
 msgid "Remove from category"
 msgstr "Zmazať z kategórie"
 
-#: src/engine/handlers/addon.py:300
+#: src/engine/handlers/addon.py:324
 msgid "Enable"
 msgstr "Zapnúť"
 
-#: src/engine/handlers/addon.py:304
+#: src/engine/handlers/addon.py:328
 msgid "Disable"
 msgstr "Vypnúť"
 
@@ -1812,6 +1821,9 @@ msgstr "Zobraziť skratku na doplnok v hlavnom menu Enigmy"
 #: src/resources/repositories/config.py:74
 msgid "Download path"
 msgstr "Adresár pre sťahovanie"
+
+#~ msgid "Addon integrity check failed. Do you want to reinstall addon? Enigma will be automaticaly restarted after reinstall."
+#~ msgstr "Kontrola integrity doplnku zlyhala. Chcete doplnok preinštalovať? Enigma bude po preinštalovaní automaticky reštartovaná."
 
 #~ msgid "By system check there was no system plugin with name ServiceApp detected. This means, that your system only supports video player integrated in enigma2. Some addons doesn't work properly with internal player or don't work at all. If you will have problem with playing some videos, try to install ServiceApp system plugin from feed of your distribution. Then you can change in addon settings used video player to gstplayer or exteplayer3 that can handle some video formats better."
 #~ msgstr "Pri kontrole systému nebol nájdený systémový plugin s názvom ServiceApp. To znamená, že váš systém podporuje iba video prehrávač integrovaný v enigma2. Niektoré doplnky s interným prehrávačom nefungujú správne alebo nefungujú vôbec. Ak budete mať problém s prehrávaním niektorých videí, skúste si nainštalovať systémový plugin ServiceApp z feedu vašej distribúcie. Potom môžete v nastaveniach doplnku zmeniť použitý video prehrávač na gstplayer alebo exteplayer3, ktorý lepšie zvládne niektoré formáty videa."

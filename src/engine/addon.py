@@ -234,7 +234,7 @@ class Addon(object):
 			if file.startswith('.') or os.path.basename(file).startswith('.'):
 				return True
 
-			for ext in ('.pyo', '.pyc', '.so'):
+			for ext in ('.pyo', '.pyc'):
 				if file.endswith(ext):
 					return True
 

@@ -85,11 +85,14 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 			else:
 				continue_to_addon()
 
-		def handle_integrity_fail():
+		def handle_integrity_fail(integrity_result):
 			def handle_integrity_fail_answer(res):
 				if res:
-					addon.check_update(force_update=True)
-					addon.update()
+					for a, result in integrity_result:
+						if not result:
+							a.check_update(force_update=True)
+							a.update()
+
 					from ...archivczsk import ArchivCZSK
 					from Screens.Standby import TryQuitMainloop
 					ArchivCZSK.stop()
@@ -97,8 +100,21 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 				else:
 					check_changelog()
 
-			message = _("Addon integrity check failed. Do you want to reinstall addon? Enigma will be automaticaly restarted after reinstall.")
+			message = _("Integrity check of the following addons failed:\n{addons}\n\nDo you want to reinstall broken addons? Enigma will be automaticaly restarted after reinstall.").format(
+				addons='\n'.join([a.name for a, result in integrity_result if not result])
+			)
 			self.session.openWithCallback(handle_integrity_fail_answer, MessageBox, message, type=MessageBox.TYPE_YESNO)
+
+		def get_dependency_addons(addon, dependency_addons=[]):
+			from ...archivczsk import ArchivCZSK
+
+			for dependency in addon.requires:
+				a = (ArchivCZSK.has_addon(dependency['addon']) and ArchivCZSK.get_addon(dependency['addon'])) or None
+				if a and a not in dependency_addons:
+					dependency_addons.append(a)
+					get_dependency_addons(a, dependency_addons)
+
+			return dependency_addons
 
 		addon = item.addon
 		if addon.broken_msg or addon.get_info('broken'):
@@ -110,8 +126,16 @@ class VideoAddonItemHandlerTemplate(ItemHandler):
 				continue_to_addon()
 			elif item.first_open:
 				item.first_open = False
-				if config.plugins.archivCZSK.checkAddonsIntegrity.value and addon.check_addon_integrity() == False:
-					handle_integrity_fail()
+				if config.plugins.archivCZSK.checkAddonsIntegrity.value:
+					integrity_result = [ (addon, addon.check_addon_integrity(),) ]
+
+					for a in get_dependency_addons(addon):
+						integrity_result.append( (a, a.check_addon_integrity(),) )
+
+					if any(not result[1] for result in integrity_result):
+						handle_integrity_fail(integrity_result)
+					else:
+						check_changelog()
 				else:
 					check_changelog()
 			else:
